@@ -1,0 +1,9 @@
+# Initial dependencies; pin verified versions before the final experiments.
+numpy
+pandas
+scikit-learn
+imbalanced-learn
+matplotlib
+seaborn
+mlxtend
+

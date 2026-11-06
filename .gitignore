@@ -1,0 +1,27 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Local source and processed data; keep data/README.md tracked
+/data/*
+!/data/README.md
+
+# Temporary models and logs
+*.joblib
+*.pkl
+*.log
+
+# Credentials, operating-system files and Office lock files
+.env
+.env.*
+.DS_Store
+Thumbs.db
+~$*
+
+# Local submission archives
+/Group_20_Project.zip
+
