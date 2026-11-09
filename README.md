@@ -2,6 +2,8 @@
 
 AIAA 3111 Course Project · Group 20
 
+负责人：A 维护运行与环境说明，D 协调文档整合，全组核对实验约定。
+
 本仓库按课程最终提交要求组织，使用 ULB 信用卡交易数据研究有限审核预算下的欺诈检测。
 
 ## 项目范围与投入比重
@@ -50,7 +52,9 @@ poster/                  海报编辑稿与最终 Poster.pdf
 code/main.py             命令入口
 code/preprocessing.py    数据检查、划分与预处理
 code/classification.py   分类模型与类别不平衡处理
-code/evaluation.py       评价指标、审核预算与绘图
+code/unsupervised.py     C：K-means、Isolation Forest 与簇距离
+code/evaluation.py       C：公共评价、等预算组合、群体分析与绘图
+code/temporal.py         A：相对时间窗口评价
 code/pattern_mining.py   特征组合与关联规则挖掘
 data/                    本地原始数据及下载说明
 results/figures/         正式实验图表
@@ -98,8 +102,11 @@ python -m pip install -r requirements.txt
 
 ```bash
 python code/main.py --help
+python code/main.py --tasks
 python code/main.py --check-data
 ```
+
+`--tasks` 显示四人模块分工，不需要数据文件。
 
 `--check-data` 检查列名、数值、标签、缺失值、重复记录和时间范围，不修改数据。
 也可以指定其他 CSV 路径：
@@ -108,7 +115,7 @@ python code/main.py --check-data
 python code/main.py --check-data --data /path/to/creditcard.csv
 ```
 
-**当前是初始框架。** 数据划分、分类、评价和规则挖掘函数仍有待实现；聚类、异常检测和时间分析尚未实现。上面的新路线是计划，不是完成记录。后续最多新增 `code/unsupervised.py`（聚类与异常方法）和 `code/temporal.py`（时间窗口分析），保留现有简单目录。数据检查通过不代表实验已完成。
+**当前是初始框架。** 数据划分、分类、评价和规则挖掘函数仍有待实现；聚类、异常检测和时间分析尚未实现。上面的新路线是计划，不是完成记录。已新增 `code/unsupervised.py` 和 `code/temporal.py` 的任务说明与待实现接口，保留现有简单目录。数据检查通过不代表实验已完成。
 
 ## 实施顺序与时间安排
 
@@ -131,9 +138,9 @@ python code/main.py --check-data --data /path/to/creditcard.csv
 
 | 成员 | 职责 | 主要文件 | 交付物 |
 |---|---|---|---|
-| A：数据、时间分析与整合 | 数据获取检查、统一划分、相对时间窗口分析、运行整合 | `code/preprocessing.py`、`code/main.py`、后续 `code/temporal.py`、`data/README.md` | 统一数据、可复现入口、各窗口统计和表现分析 |
+| A：数据、时间分析与整合 | 数据获取检查、统一划分、相对时间窗口分析、运行整合 | `code/preprocessing.py`、`code/main.py`、`code/temporal.py`、`data/README.md` | 统一数据、可复现入口、各窗口统计和表现分析 |
 | B：分类模型 | 四种基础模型、有限调参、不平衡处理，提供分类风险排序 | `code/classification.py` | 模型流程、验证风险分数、冻结后的分类方案 |
-| C：聚类、异常检测与统一评价 | K-means、Isolation Forest、簇距离、统一预算评价及互补分析 | 后续 `code/unsupervised.py`、`code/evaluation.py`、`results/` | 聚类画像、异常排序、共同评价和等预算组合结果 |
+| C：聚类、异常检测与统一评价 | K-means、Isolation Forest、簇距离、统一预算评价及互补分析 | `code/unsupervised.py`、`code/evaluation.py`、`results/` | 聚类画像、异常排序、共同评价和等预算组合结果 |
 | D：模式挖掘与文档协调 | 分箱、Apriori、规则验证，协助跨方法案例分析和文档整合 | `code/pattern_mining.py`、`report/`、`poster/` | 规则结果、代表案例、统一排版的报告和海报 |
 
 C 的范围限于上述两个基础算法与公共评价，不额外增加算法。A、B、D 各自整理本模块图表和分析，避免将全部结果分析集中给 C 或全部写作集中给 D。
@@ -145,6 +152,23 @@ C 的范围限于上述两个基础算法与公共评价，不额外增加算法
 - C 的 `evaluate_scores` 统一负责所有分类、异常与组合方法的指标。提前约定 K 的取整、并列排序、无正类窗口及零分母处理。A 的时间分析直接复用这一接口。
 - D 只在训练阶段拟合分箱并发现规则，在验证集检查稳定性，冻结选择后再进行测试评价。
 - 标准化、特征选择、重采样和规则发现均遵守训练边界。参数、阈值和规则筛选在验证阶段确定。
+
+### 公共预测表
+
+分类与异常方法统一使用以下列，表格保留原始交易行身份，不把 row_id 当成模型输入：
+
+| 列 | 含义 |
+|---|---|
+| `row_id` | 原始 CSV 的稳定行编号，排序/划分后保持不变 |
+| `Class` | 真实标签，仅用于评价 |
+| `Time` | 相对经过秒数，用于窗口分析 |
+| `method` | 模型与策略的唯一名称 |
+| `score` | 连续风险分数，越高越可疑 |
+| `cluster_id`（可选） | 群体编号，不等同于欺诈标签 |
+
+B/C 的打分数组与输入行顺序一致，C 的 `make_prediction_frame` 负责统一组表。`evaluate_scores` 必须接收 `row_ids`，用于确定并列排序；A 的 `evaluate_time_windows` 复用该函数。按群体或窗口单独分配预算与全局 top-K 的分布是不同分析，结果必须注明口径。无正类时 AP/Recall 为不适用；空窗口另行标记。D 的规则结果保留覆盖的 row_id，便于交叉分析。
+
+每个 Python 文件开头均写明负责人、输入输出和实现状态。`NotImplementedError` 表示待实现，不能将接口数量当成完成实验的数量。
 
 ### 第一个共同里程碑
 

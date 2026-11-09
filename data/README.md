@@ -1,5 +1,7 @@
 # Data preparation
 
+负责人 A：维护数据获取、版本、格式、校验值与划分说明。B/C/D 按此获取同一份数据。
+
 ## Dataset
 
 ULB / Worldline Credit Card Fraud Detection:
@@ -36,6 +38,8 @@ From the repository root:
 ```bash
 python code/main.py --check-data
 ```
+
+The loader adds a stable zero-based `row_id` from the original CSV row order. This is metadata, never a model feature. Exact duplicate counts exclude this generated ID.
 
 Record the download date, source/version, file SHA-256 and any cleaning decisions when implementing the experiment workflow. All members should use the same raw data and split procedure.
 

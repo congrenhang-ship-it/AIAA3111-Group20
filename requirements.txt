@@ -1,3 +1,5 @@
+# 负责人 A：统一并验证运行环境；B/C/D 提供各自新增依赖。
+# 当前为初始清单，正式实验前固定并复核共同使用的版本。
 # Initial dependencies; pin verified versions before the final experiments.
 numpy
 pandas
