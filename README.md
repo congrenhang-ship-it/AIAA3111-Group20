@@ -54,6 +54,8 @@ code/preprocessing.py    数据检查、划分与预处理
 code/classification.py   分类模型与类别不平衡处理
 code/unsupervised.py     C：K-means、Isolation Forest 与簇距离
 code/evaluation.py       C：公共评价、等预算组合、群体分析与绘图
+code/run_c_validation.py C：独立验证入口（合成检查或 A 提供的划分）
+tests/test_c_modules.py  C：公共评价与无监督模块检查
 code/temporal.py         A：相对时间窗口评价
 code/pattern_mining.py   特征组合与关联规则挖掘
 data/                    本地原始数据及下载说明
@@ -61,7 +63,7 @@ results/figures/         正式实验图表
 results/tables/          正式实验汇总表
 ```
 
-`report/`、`poster/` 和结果目录目前使用 `.gitkeep` 保留空目录；尚未创建报告、海报或实验结果。
+`report/C_HANDOFF.md` 提供 C 的运行说明和方法素材；最终报告、海报和真实实验结果尚未完成。
 
 ## 环境安装
 
@@ -115,7 +117,14 @@ python code/main.py --check-data
 python code/main.py --check-data --data /path/to/creditcard.csv
 ```
 
-**当前是初始框架。** 数据划分、分类、评价和规则挖掘函数仍有待实现；聚类、异常检测和时间分析尚未实现。上面的新路线是计划，不是完成记录。已新增 `code/unsupervised.py` 和 `code/temporal.py` 的任务说明与待实现接口，保留现有简单目录。数据检查通过不代表实验已完成。
+**C 的公共评价、K-means、Isolation Forest、等预算组合、群体评价和绘图已实现。** 检查和独立验证入口如下：
+
+```bash
+python -m unittest discover -s tests -v
+python code/run_c_validation.py --demo
+```
+
+合成演示输出到本地 `data/c_demo/`，仅验证程序。正式运行方式、参数口径和英文方法稿见 [C 模块交付说明](report/C_HANDOFF.md)。C1/C2 已完成；其余 C 任务的独立实现已准备，真实实验仍依赖 A 的划分和 B 的分类预测。数据划分、分类、规则和时间分析目前仍待相应成员实现；主入口还未接入完整实验。不要把合成演示或接口数量当作真实实验结果。
 
 ## 实施顺序与时间安排
 
@@ -145,7 +154,7 @@ python code/main.py --check-data --data /path/to/creditcard.csv
 | C：聚类、异常检测与统一评价 | K-means、Isolation Forest、簇距离、统一预算评价及互补分析 | `code/unsupervised.py`、`code/evaluation.py`、`results/` | 聚类画像、异常排序、共同评价和等预算组合结果 |
 | D：模式挖掘与文档协调 | 分箱、Apriori、规则验证，协助跨方法案例分析和文档整合 | `code/pattern_mining.py`、`report/`、`poster/` | 规则结果、代表案例、统一排版的报告和海报 |
 
-C 的范围限于上述两个基础算法与公共评价，不额外增加算法。A、B、D 各自整理本模块图表和分析，避免将全部结果分析集中给 C 或全部写作集中给 D。
+C 的范围限于既定 K-means、Isolation Forest、簇距离与公共评价，不额外增加算法。A、B、D 各自整理本模块图表和分析，避免将全部结果分析集中给 C 或全部写作集中给 D。
 
 ### 共同接口
 
