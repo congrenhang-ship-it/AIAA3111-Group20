@@ -9,18 +9,18 @@ Working branch: `codex/d-pattern-mining`.
 
 | Task | Actual status | Evidence / remaining condition |
 |---|---|---|
-| D1 | Implementation and local checks complete; local commit prepared, remote PR pending | pattern_mining.py, tests, report/OUTLINE.md, poster/OUTLINE.md, RULE_METHOD.md |
+| D1 | Implementation and local checks complete; task branch pushed, PR pending | pattern_mining.py, tests, report/OUTLINE.md, poster/OUTLINE.md, RULE_METHOD.md |
 | D2 | Training binning/Apriori code prepared on synthetic data; real experiment pending | A3 split_data still raises NotImplementedError; no fixed raw data version/hash |
 | D3 | Held-out application code checked on synthetic data; real stability analysis pending | requires D2 and the unique validation split |
 | D4 | Not frozen | no real selected feature set, boundaries or surviving rules |
 | D5 | Not complete | --help/--tasks work, but the shared experimental flow is not implemented |
 | D6/D7 | Outlines only | await authors' evidence, G2/G3; no final report/poster/PDF |
 
-TASKS.md remains unchecked pending remote submission. The user supplied Git
-author/committer identity has been configured for this repository only. This
-change set is being recorded as a local commit on the task branch; no remote
-push, PR, Issue or notification has been made. Obtain the resulting commit ID
-with `git log -1 --format=%H` rather than embedding a self-referential hash here.
+TASKS.md remains unchecked pending the collaboration PR. The user supplied Git
+author/committer identity has been configured for this repository only. D1's
+implementation commit `74af196` was pushed successfully to the task branch
+after repository access was granted. No PR, Issue or notification has been made.
+The task branch remains separate from main.
 
 ## Files and checks
 
@@ -68,7 +68,7 @@ and strict JSON serialization. These are program checks, not ULB results.
 
 ## Next work, without bypassing dependencies
 
-1. Push the local D1 task branch and open a PR when authenticated access is available.
+1. Open a PR from the pushed D1 task branch to main for collaboration review.
    Suggested title: `D1: prepare rule interfaces and document outlines`.
 2. When A3 lands, use the shared split; record hash/counts/commit and select a
    small feature set using training data only. Run both proposed binning schemes.
