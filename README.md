@@ -100,7 +100,7 @@ Task A 交接与文件索引 · [中文](docs/TASK_A.zh-CN.md) · [English](docs
 
 ## C 的实现与结果
 
-C 的算法与实验流程放在 `code/unsupervised.py`，共同评价、绘图和结果导出放在 `code/evaluation.py`，统一由 `main.py` 调用。运行与分析见 [C 说明](report/C_IMPROVEMENTS.md)。当前改进 IF 在验证 1% 预算下检出 24/57，原 IF 为 10/57、原距离为 14/57；最终测试尚未执行。
+C 的算法与实验流程放在 `code/unsupervised.py`，共同评价、绘图和结果导出放在 `code/evaluation.py`，统一由 `main.py` 调用。运行与分析见 [C 说明](report/C_IMPROVEMENTS.md)。当前改进 IF 在验证 1% 预算下检出 24/57，B 的类别权重逻辑回归检出 49/57；五种配额组合没有超过分类器，C 最终配额为 100% 分类排序。参数和模型包已准备，最终测试尚未执行。
 
 共享文件保持原目录：`results/tables/c_baseline.json`、`c_improved.json`、`c_ablation.csv`；图均为 `results/figures/c_*.png`。原始数据、模型和详细中间记录留在本地 `data/`。
 
@@ -110,7 +110,7 @@ C 的算法与实验流程放在 `code/unsupervised.py`，共同评价、绘图�
 python code/main.py --run-c --output data/c_reproduction/run --results data/c_reproduction/shared
 ```
 
-`--run-c-baseline` 重现第一轮，`--demo` 仅检查程序。B 的标准预测到位后追加 `--classification-predictions`。C 的检查集中在 `tests/test_c_modules.py`。
+`--run-c-baseline` 重现第一轮，`--demo` 仅检查程序。B 已接入：追加 `--classification-freeze results/tables/b_freeze.json` 会在固定依赖下复核 B 并完成 C 组合；也可传 `--classification-predictions` 使用已有标准预测。C 的检查集中在 `tests/test_c_modules.py`。
 
 ## 当前可运行的命令
 
@@ -133,7 +133,7 @@ python -m unittest discover -s tests -v
 python code/main.py --check-data --data /path/to/creditcard.csv
 ```
 
-A 的准备与时间窗口、C 的模型与评价均已接入。G1 入口 `python code/main.py --run-validation` 仍需 B2 的真实分类实现。正式测试安排在全组 G2 冻结后。
+A 的准备与时间窗口、C 的模型与评价均已接入。B 的实际分类已接入，G1 入口 `python code/main.py --run-validation` 已在共同环境用真实数据复现。正式测试安排在全组 G2 冻结后。
 
 ## 实施顺序与时间安排
 

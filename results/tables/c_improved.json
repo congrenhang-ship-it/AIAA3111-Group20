@@ -2,17 +2,16 @@
   "metadata": {
     "phase": "validation",
     "run_complete": true,
-    "elapsed_seconds": 66.09380462497938,
-    "source_commit": "991023e3a2a2dcdef811f00012d52660934b325a",
+    "elapsed_seconds": 56.26145108300261,
+    "source_commit": "4510b6b716a698fdd3030f5249653e59f502df76",
     "source_dirty": false,
     "code_sha256": {
-      "code/c_improvements.py": "5c48d8f7b19c28b656dbd7edee46d48fcf3674d8d46c5eda03a23138774ddb66",
-      "code/run_c_improvements.py": "06e578b1ad7a73f6e40ec521f54c38f2a546604feeb9732ba7f4d023ae36c88c",
-      "code/evaluation.py": "abe7be056d0eb1ade504807921c4e822c8aa2d910ae67d683536d438259222d0",
-      "code/c_reporting.py": "fc82fee6026ee3d5baaf0d4d482924871c83f27afbd988751d981211e14a2d6b",
+      "code/unsupervised.py": "5f22a0455304ac26c983624b9d179d826e05f5f9d24a3397bba250719cf5be6a",
+      "code/evaluation.py": "3ef15d2ebf1c0ff4d44960573d9d70c99d89e606dc8d1075a936506f23ac4699",
+      "code/main.py": "aa243fab24c446c726b627d0ea50a299407390b963a67b3eff8db0df7e2c3a14",
       "code/preprocessing.py": "8d1eaa9e986b2f29a0beca26f9de29a565c0280a7db23411bf7af8799f1c4baa",
       "code/temporal.py": "f45b13e63e78f3d7d202906d85d0088eea3e40930ca3bcb91074abf8f0e74ae0",
-      "report/C_IMPROVEMENT_PROTOCOL.md": "006f1999dd5b74b80d09bf512f56da1dce199705c5f20a08ada4563071eaf927"
+      "report/C_IMPROVEMENTS.md": "5d19447572ca225f7be953593b815432d07c6147a8fe83f0dd8807ebdd0e40eb"
     },
     "versions": {
       "numpy": "2.5.4",
@@ -122,23 +121,25 @@
       }
     },
     "B_combination": {
-      "status": "waiting_for_B5",
-      "method": null,
-      "share": null
+      "status": "C_quota_frozen_B_reproduced_in_common_environment",
+      "method": "logistic_regression_class_weight",
+      "share": 1.0,
+      "manifest_sha256": "470d9a2063a2bd8d45c1d24de84720fa217e6cf83072351a545309d86ade44ff",
+      "prediction_sha256": "34482b9e195d7826579ebacb9a7cfaa7bc98dd7c50d0d7f72235df463c1419e0",
+      "source_branch_commit": "55ee15119a1fad1ddce0ac3c7a59cc6555d22bfb"
     },
     "refit_policy": "full A training only, final seed 42; never train+validation",
-    "selection_locked_at_UTC": "2026-11-11T04:49:12.039516+00:00",
+    "selection_locked_at_UTC": "2026-11-11T12:33:52.080936+00:00",
     "prior_validation_already_observed": true,
-    "source_commit": "991023e3a2a2dcdef811f00012d52660934b325a",
+    "source_commit": "4510b6b716a698fdd3030f5249653e59f502df76",
     "source_dirty": false,
     "code_sha256": {
-      "code/c_improvements.py": "5c48d8f7b19c28b656dbd7edee46d48fcf3674d8d46c5eda03a23138774ddb66",
-      "code/run_c_improvements.py": "06e578b1ad7a73f6e40ec521f54c38f2a546604feeb9732ba7f4d023ae36c88c",
-      "code/evaluation.py": "abe7be056d0eb1ade504807921c4e822c8aa2d910ae67d683536d438259222d0",
-      "code/c_reporting.py": "fc82fee6026ee3d5baaf0d4d482924871c83f27afbd988751d981211e14a2d6b",
+      "code/unsupervised.py": "5f22a0455304ac26c983624b9d179d826e05f5f9d24a3397bba250719cf5be6a",
+      "code/evaluation.py": "3ef15d2ebf1c0ff4d44960573d9d70c99d89e606dc8d1075a936506f23ac4699",
+      "code/main.py": "aa243fab24c446c726b627d0ea50a299407390b963a67b3eff8db0df7e2c3a14",
       "code/preprocessing.py": "8d1eaa9e986b2f29a0beca26f9de29a565c0280a7db23411bf7af8799f1c4baa",
       "code/temporal.py": "f45b13e63e78f3d7d202906d85d0088eea3e40930ca3bcb91074abf8f0e74ae0",
-      "report/C_IMPROVEMENT_PROTOCOL.md": "006f1999dd5b74b80d09bf512f56da1dce199705c5f20a08ada4563071eaf927"
+      "report/C_IMPROVEMENTS.md": "5d19447572ca225f7be953593b815432d07c6147a8fe83f0dd8807ebdd0e40eb"
     },
     "versions": {
       "numpy": "2.5.4",
@@ -150,7 +151,8 @@
     "python": "3.12.14",
     "mode": "validation",
     "verified_ulb_split": true,
-    "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89"
+    "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "B_prediction_sha256": "81d3f8d3916bddef43301eda5ad74aace67ef25c3c66c822ffa9c8f11d691da7"
   },
   "validation_metrics": {
     "km_base_raw": {
@@ -1492,6 +1494,73 @@
       ],
       "threshold": null,
       "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+    },
+    "logistic_regression_class_weight": {
+      "status": "ok",
+      "n_samples": 56745,
+      "n_positive": 57,
+      "prevalence": 0.0010044937879989425,
+      "AP": 0.7726808523329118,
+      "budgets": [
+        {
+          "review_fraction": 0.001,
+          "actual_review_fraction": 0.0010044937879989425,
+          "K": 57,
+          "TP": 42,
+          "FP": 15,
+          "FN": 15,
+          "TN": 56673,
+          "precision_at_k": 0.7368421052631579,
+          "recall_at_k": 0.7368421052631579,
+          "random_expected_TP": 0.05725614591593972,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.0010044937879989425
+        },
+        {
+          "review_fraction": 0.005,
+          "actual_review_fraction": 0.005004846241959644,
+          "K": 284,
+          "TP": 48,
+          "FP": 236,
+          "FN": 9,
+          "TN": 56452,
+          "precision_at_k": 0.16901408450704225,
+          "recall_at_k": 0.8421052631578947,
+          "random_expected_TP": 0.2852762357916997,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.005004846241959644
+        },
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010009692483919287,
+          "K": 568,
+          "TP": 49,
+          "FP": 519,
+          "FN": 8,
+          "TN": 56169,
+          "precision_at_k": 0.08626760563380281,
+          "recall_at_k": 0.8596491228070176,
+          "random_expected_TP": 0.5705524715833994,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.010009692483919287
+        },
+        {
+          "review_fraction": 0.02,
+          "actual_review_fraction": 0.020001762269803505,
+          "K": 1135,
+          "TP": 49,
+          "FP": 1086,
+          "FN": 8,
+          "TN": 55602,
+          "precision_at_k": 0.04317180616740088,
+          "recall_at_k": 0.8596491228070176,
+          "random_expected_TP": 1.1401004493787998,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.020001762269803505
+        }
+      ],
+      "threshold": null,
+      "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
     }
   },
   "inner_summary": [
@@ -2471,6 +2540,305 @@
               "reviewed_in_group": 678,
               "frauds_detected_in_group": 23,
               "recall_within_group": 0.5348837209302325
+            }
+          ]
+        },
+        {
+          "cluster_id": 2,
+          "fraud_coverage": 0.0,
+          "within_group": {
+            "status": "empty",
+            "n_samples": 0,
+            "n_positive": 0,
+            "prevalence": null,
+            "AP": null,
+            "pr_curve": null,
+            "budgets": [
+              {
+                "review_fraction": 0.001,
+                "actual_review_fraction": null,
+                "K": 0,
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "TN": 0,
+                "precision_at_k": null,
+                "recall_at_k": null,
+                "random_expected_TP": null,
+                "random_expected_precision": null,
+                "random_expected_recall": null
+              },
+              {
+                "review_fraction": 0.005,
+                "actual_review_fraction": null,
+                "K": 0,
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "TN": 0,
+                "precision_at_k": null,
+                "recall_at_k": null,
+                "random_expected_TP": null,
+                "random_expected_precision": null,
+                "random_expected_recall": null
+              },
+              {
+                "review_fraction": 0.01,
+                "actual_review_fraction": null,
+                "K": 0,
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "TN": 0,
+                "precision_at_k": null,
+                "recall_at_k": null,
+                "random_expected_TP": null,
+                "random_expected_precision": null,
+                "random_expected_recall": null
+              },
+              {
+                "review_fraction": 0.02,
+                "actual_review_fraction": null,
+                "K": 0,
+                "TP": 0,
+                "FP": 0,
+                "FN": 0,
+                "TN": 0,
+                "precision_at_k": null,
+                "recall_at_k": null,
+                "random_expected_TP": null,
+                "random_expected_precision": null,
+                "random_expected_recall": null
+              }
+            ],
+            "threshold": null,
+            "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+          },
+          "global_budget_allocation": [
+            {
+              "review_fraction": 0.001,
+              "reviewed_in_group": 0,
+              "frauds_detected_in_group": 0,
+              "recall_within_group": null
+            },
+            {
+              "review_fraction": 0.005,
+              "reviewed_in_group": 0,
+              "frauds_detected_in_group": 0,
+              "recall_within_group": null
+            },
+            {
+              "review_fraction": 0.01,
+              "reviewed_in_group": 0,
+              "frauds_detected_in_group": 0,
+              "recall_within_group": null
+            },
+            {
+              "review_fraction": 0.02,
+              "reviewed_in_group": 0,
+              "frauds_detected_in_group": 0,
+              "recall_within_group": null
+            }
+          ]
+        }
+      ]
+    },
+    "logistic_regression_class_weight": {
+      "budget_note": "within-group quotas and global top-K allocations are distinct",
+      "groups": [
+        {
+          "cluster_id": 0,
+          "fraud_coverage": 0.24561403508771928,
+          "within_group": {
+            "status": "ok",
+            "n_samples": 9596,
+            "n_positive": 14,
+            "prevalence": 0.0014589412255106293,
+            "AP": 0.9100269693676286,
+            "pr_curve": null,
+            "budgets": [
+              {
+                "review_fraction": 0.001,
+                "actual_review_fraction": 0.0010421008753647354,
+                "K": 10,
+                "TP": 10,
+                "FP": 0,
+                "FN": 4,
+                "TN": 9582,
+                "precision_at_k": 1.0,
+                "recall_at_k": 0.7142857142857143,
+                "random_expected_TP": 0.014589412255106293,
+                "random_expected_precision": 0.0014589412255106293,
+                "random_expected_recall": 0.0010421008753647354
+              },
+              {
+                "review_fraction": 0.005,
+                "actual_review_fraction": 0.005002084201750729,
+                "K": 48,
+                "TP": 13,
+                "FP": 35,
+                "FN": 1,
+                "TN": 9547,
+                "precision_at_k": 0.2708333333333333,
+                "recall_at_k": 0.9285714285714286,
+                "random_expected_TP": 0.07002917882451021,
+                "random_expected_precision": 0.0014589412255106293,
+                "random_expected_recall": 0.005002084201750729
+              },
+              {
+                "review_fraction": 0.01,
+                "actual_review_fraction": 0.010004168403501459,
+                "K": 96,
+                "TP": 13,
+                "FP": 83,
+                "FN": 1,
+                "TN": 9499,
+                "precision_at_k": 0.13541666666666666,
+                "recall_at_k": 0.9285714285714286,
+                "random_expected_TP": 0.14005835764902042,
+                "random_expected_precision": 0.0014589412255106293,
+                "random_expected_recall": 0.010004168403501459
+              },
+              {
+                "review_fraction": 0.02,
+                "actual_review_fraction": 0.020008336807002917,
+                "K": 192,
+                "TP": 13,
+                "FP": 179,
+                "FN": 1,
+                "TN": 9403,
+                "precision_at_k": 0.06770833333333333,
+                "recall_at_k": 0.9285714285714286,
+                "random_expected_TP": 0.28011671529804083,
+                "random_expected_precision": 0.0014589412255106293,
+                "random_expected_recall": 0.020008336807002917
+              }
+            ],
+            "threshold": null,
+            "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+          },
+          "global_budget_allocation": [
+            {
+              "review_fraction": 0.001,
+              "reviewed_in_group": 17,
+              "frauds_detected_in_group": 13,
+              "recall_within_group": 0.9285714285714286
+            },
+            {
+              "review_fraction": 0.005,
+              "reviewed_in_group": 46,
+              "frauds_detected_in_group": 13,
+              "recall_within_group": 0.9285714285714286
+            },
+            {
+              "review_fraction": 0.01,
+              "reviewed_in_group": 62,
+              "frauds_detected_in_group": 13,
+              "recall_within_group": 0.9285714285714286
+            },
+            {
+              "review_fraction": 0.02,
+              "reviewed_in_group": 99,
+              "frauds_detected_in_group": 13,
+              "recall_within_group": 0.9285714285714286
+            }
+          ]
+        },
+        {
+          "cluster_id": 1,
+          "fraud_coverage": 0.7543859649122807,
+          "within_group": {
+            "status": "ok",
+            "n_samples": 47149,
+            "n_positive": 43,
+            "prevalence": 0.0009120023754480476,
+            "AP": 0.7241931993602972,
+            "pr_curve": null,
+            "budgets": [
+              {
+                "review_fraction": 0.001,
+                "actual_review_fraction": 0.001018049163290844,
+                "K": 48,
+                "TP": 30,
+                "FP": 18,
+                "FN": 13,
+                "TN": 47088,
+                "precision_at_k": 0.625,
+                "recall_at_k": 0.6976744186046512,
+                "random_expected_TP": 0.04377611402150629,
+                "random_expected_precision": 0.0009120023754480476,
+                "random_expected_recall": 0.001018049163290844
+              },
+              {
+                "review_fraction": 0.005,
+                "actual_review_fraction": 0.005005408386179982,
+                "K": 236,
+                "TP": 35,
+                "FP": 201,
+                "FN": 8,
+                "TN": 46905,
+                "precision_at_k": 0.1483050847457627,
+                "recall_at_k": 0.813953488372093,
+                "random_expected_TP": 0.21523256060573923,
+                "random_expected_precision": 0.0009120023754480476,
+                "random_expected_recall": 0.005005408386179982
+              },
+              {
+                "review_fraction": 0.01,
+                "actual_review_fraction": 0.010010816772359965,
+                "K": 472,
+                "TP": 36,
+                "FP": 436,
+                "FN": 7,
+                "TN": 46670,
+                "precision_at_k": 0.07627118644067797,
+                "recall_at_k": 0.8372093023255814,
+                "random_expected_TP": 0.43046512121147845,
+                "random_expected_precision": 0.0009120023754480476,
+                "random_expected_recall": 0.010010816772359965
+              },
+              {
+                "review_fraction": 0.02,
+                "actual_review_fraction": 0.02000042418715137,
+                "K": 943,
+                "TP": 36,
+                "FP": 907,
+                "FN": 7,
+                "TN": 46199,
+                "precision_at_k": 0.03817603393425239,
+                "recall_at_k": 0.8372093023255814,
+                "random_expected_TP": 0.8600182400475089,
+                "random_expected_precision": 0.0009120023754480476,
+                "random_expected_recall": 0.02000042418715137
+              }
+            ],
+            "threshold": null,
+            "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+          },
+          "global_budget_allocation": [
+            {
+              "review_fraction": 0.001,
+              "reviewed_in_group": 40,
+              "frauds_detected_in_group": 29,
+              "recall_within_group": 0.6744186046511628
+            },
+            {
+              "review_fraction": 0.005,
+              "reviewed_in_group": 238,
+              "frauds_detected_in_group": 35,
+              "recall_within_group": 0.813953488372093
+            },
+            {
+              "review_fraction": 0.01,
+              "reviewed_in_group": 506,
+              "frauds_detected_in_group": 36,
+              "recall_within_group": 0.8372093023255814
+            },
+            {
+              "review_fraction": 0.02,
+              "reviewed_in_group": 1036,
+              "frauds_detected_in_group": 36,
+              "recall_within_group": 0.8372093023255814
             }
           ]
         },
@@ -4399,6 +4767,614 @@
         "threshold": null,
         "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
       }
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "window_id": 33,
+      "start_seconds": 118800,
+      "end_seconds": 122400,
+      "n_samples": 4684,
+      "n_positives": 1,
+      "status": "ok",
+      "evaluation": {
+        "status": "ok",
+        "n_samples": 4684,
+        "n_positive": 1,
+        "prevalence": 0.0002134927412467976,
+        "AP": 1.0,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.001067463706233988,
+            "K": 5,
+            "TP": 1,
+            "FP": 4,
+            "FN": 0,
+            "TN": 4679,
+            "precision_at_k": 0.2,
+            "recall_at_k": 1.0,
+            "random_expected_TP": 0.001067463706233988,
+            "random_expected_precision": 0.0002134927412467976,
+            "random_expected_recall": 0.001067463706233988
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005123825789923143,
+            "K": 24,
+            "TP": 1,
+            "FP": 23,
+            "FN": 0,
+            "TN": 4660,
+            "precision_at_k": 0.041666666666666664,
+            "recall_at_k": 1.0,
+            "random_expected_TP": 0.005123825789923143,
+            "random_expected_precision": 0.0002134927412467976,
+            "random_expected_recall": 0.005123825789923143
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010034158838599488,
+            "K": 47,
+            "TP": 1,
+            "FP": 46,
+            "FN": 0,
+            "TN": 4637,
+            "precision_at_k": 0.02127659574468085,
+            "recall_at_k": 1.0,
+            "random_expected_TP": 0.010034158838599488,
+            "random_expected_precision": 0.0002134927412467976,
+            "random_expected_recall": 0.010034158838599488
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020068317677198976,
+            "K": 94,
+            "TP": 1,
+            "FP": 93,
+            "FN": 0,
+            "TN": 4590,
+            "precision_at_k": 0.010638297872340425,
+            "recall_at_k": 1.0,
+            "random_expected_TP": 0.020068317677198976,
+            "random_expected_precision": 0.0002134927412467976,
+            "random_expected_recall": 0.020068317677198976
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "window_id": 34,
+      "start_seconds": 122400,
+      "end_seconds": 126000,
+      "n_samples": 8302,
+      "n_positives": 6,
+      "status": "ok",
+      "evaluation": {
+        "status": "ok",
+        "n_samples": 8302,
+        "n_positive": 6,
+        "prevalence": 0.0007227174174897615,
+        "AP": 0.6717908249158249,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010840761262346423,
+            "K": 9,
+            "TP": 4,
+            "FP": 5,
+            "FN": 2,
+            "TN": 8291,
+            "precision_at_k": 0.4444444444444444,
+            "recall_at_k": 0.6666666666666666,
+            "random_expected_TP": 0.006504456757407854,
+            "random_expected_precision": 0.0007227174174897615,
+            "random_expected_recall": 0.0010840761262346423
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.00505902192242833,
+            "K": 42,
+            "TP": 5,
+            "FP": 37,
+            "FN": 1,
+            "TN": 8259,
+            "precision_at_k": 0.11904761904761904,
+            "recall_at_k": 0.8333333333333334,
+            "random_expected_TP": 0.030354131534569985,
+            "random_expected_precision": 0.0007227174174897615,
+            "random_expected_recall": 0.00505902192242833
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.01011804384485666,
+            "K": 84,
+            "TP": 5,
+            "FP": 79,
+            "FN": 1,
+            "TN": 8217,
+            "precision_at_k": 0.05952380952380952,
+            "recall_at_k": 0.8333333333333334,
+            "random_expected_TP": 0.06070826306913997,
+            "random_expected_precision": 0.0007227174174897615,
+            "random_expected_recall": 0.01011804384485666
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020115634786798363,
+            "K": 167,
+            "TP": 5,
+            "FP": 162,
+            "FN": 1,
+            "TN": 8134,
+            "precision_at_k": 0.029940119760479042,
+            "recall_at_k": 0.8333333333333334,
+            "random_expected_TP": 0.12069380872079018,
+            "random_expected_precision": 0.0007227174174897615,
+            "random_expected_recall": 0.020115634786798363
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "window_id": 35,
+      "start_seconds": 126000,
+      "end_seconds": 129600,
+      "n_samples": 8307,
+      "n_positives": 10,
+      "status": "ok",
+      "evaluation": {
+        "status": "ok",
+        "n_samples": 8307,
+        "n_positive": 10,
+        "prevalence": 0.001203804020705429,
+        "AP": 0.781019162416937,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010834236186348862,
+            "K": 9,
+            "TP": 8,
+            "FP": 1,
+            "FN": 2,
+            "TN": 8296,
+            "precision_at_k": 0.8888888888888888,
+            "recall_at_k": 0.8,
+            "random_expected_TP": 0.010834236186348862,
+            "random_expected_precision": 0.001203804020705429,
+            "random_expected_recall": 0.0010834236186348862
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005055976886962802,
+            "K": 42,
+            "TP": 8,
+            "FP": 34,
+            "FN": 2,
+            "TN": 8263,
+            "precision_at_k": 0.19047619047619047,
+            "recall_at_k": 0.8,
+            "random_expected_TP": 0.05055976886962802,
+            "random_expected_precision": 0.001203804020705429,
+            "random_expected_recall": 0.005055976886962802
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010111953773925604,
+            "K": 84,
+            "TP": 8,
+            "FP": 76,
+            "FN": 2,
+            "TN": 8221,
+            "precision_at_k": 0.09523809523809523,
+            "recall_at_k": 0.8,
+            "random_expected_TP": 0.10111953773925604,
+            "random_expected_precision": 0.001203804020705429,
+            "random_expected_recall": 0.010111953773925604
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.02010352714578067,
+            "K": 167,
+            "TP": 8,
+            "FP": 159,
+            "FN": 2,
+            "TN": 8138,
+            "precision_at_k": 0.04790419161676647,
+            "recall_at_k": 0.8,
+            "random_expected_TP": 0.20103527145780664,
+            "random_expected_precision": 0.001203804020705429,
+            "random_expected_recall": 0.02010352714578067
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "window_id": 36,
+      "start_seconds": 129600,
+      "end_seconds": 133200,
+      "n_samples": 7675,
+      "n_positives": 8,
+      "status": "ok",
+      "evaluation": {
+        "status": "ok",
+        "n_samples": 7675,
+        "n_positive": 8,
+        "prevalence": 0.001042345276872964,
+        "AP": 0.6061907838070628,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.001042345276872964,
+            "K": 8,
+            "TP": 4,
+            "FP": 4,
+            "FN": 4,
+            "TN": 7663,
+            "precision_at_k": 0.5,
+            "recall_at_k": 0.5,
+            "random_expected_TP": 0.008338762214983713,
+            "random_expected_precision": 0.001042345276872964,
+            "random_expected_recall": 0.001042345276872964
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.0050814332247557,
+            "K": 39,
+            "TP": 5,
+            "FP": 34,
+            "FN": 3,
+            "TN": 7633,
+            "precision_at_k": 0.1282051282051282,
+            "recall_at_k": 0.625,
+            "random_expected_TP": 0.0406514657980456,
+            "random_expected_precision": 0.001042345276872964,
+            "random_expected_recall": 0.0050814332247557
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.01003257328990228,
+            "K": 77,
+            "TP": 7,
+            "FP": 70,
+            "FN": 1,
+            "TN": 7597,
+            "precision_at_k": 0.09090909090909091,
+            "recall_at_k": 0.875,
+            "random_expected_TP": 0.08026058631921823,
+            "random_expected_precision": 0.001042345276872964,
+            "random_expected_recall": 0.01003257328990228
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.02006514657980456,
+            "K": 154,
+            "TP": 7,
+            "FP": 147,
+            "FN": 1,
+            "TN": 7520,
+            "precision_at_k": 0.045454545454545456,
+            "recall_at_k": 0.875,
+            "random_expected_TP": 0.16052117263843646,
+            "random_expected_precision": 0.001042345276872964,
+            "random_expected_recall": 0.02006514657980456
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "window_id": 37,
+      "start_seconds": 133200,
+      "end_seconds": 136800,
+      "n_samples": 7758,
+      "n_positives": 8,
+      "status": "ok",
+      "evaluation": {
+        "status": "ok",
+        "n_samples": 7758,
+        "n_positive": 8,
+        "prevalence": 0.0010311936065996391,
+        "AP": 0.8753453038674033,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010311936065996391,
+            "K": 8,
+            "TP": 7,
+            "FP": 1,
+            "FN": 1,
+            "TN": 7749,
+            "precision_at_k": 0.875,
+            "recall_at_k": 0.875,
+            "random_expected_TP": 0.008249548852797113,
+            "random_expected_precision": 0.0010311936065996391,
+            "random_expected_recall": 0.0010311936065996391
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005027068832173241,
+            "K": 39,
+            "TP": 7,
+            "FP": 32,
+            "FN": 1,
+            "TN": 7718,
+            "precision_at_k": 0.1794871794871795,
+            "recall_at_k": 0.875,
+            "random_expected_TP": 0.04021655065738593,
+            "random_expected_precision": 0.0010311936065996391,
+            "random_expected_recall": 0.005027068832173241
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010054137664346482,
+            "K": 78,
+            "TP": 7,
+            "FP": 71,
+            "FN": 1,
+            "TN": 7679,
+            "precision_at_k": 0.08974358974358974,
+            "recall_at_k": 0.875,
+            "random_expected_TP": 0.08043310131477185,
+            "random_expected_precision": 0.0010311936065996391,
+            "random_expected_recall": 0.010054137664346482
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020108275328692964,
+            "K": 156,
+            "TP": 7,
+            "FP": 149,
+            "FN": 1,
+            "TN": 7601,
+            "precision_at_k": 0.04487179487179487,
+            "recall_at_k": 0.875,
+            "random_expected_TP": 0.1608662026295437,
+            "random_expected_precision": 0.0010311936065996391,
+            "random_expected_recall": 0.020108275328692964
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "window_id": 38,
+      "start_seconds": 136800,
+      "end_seconds": 140400,
+      "n_samples": 8508,
+      "n_positives": 10,
+      "status": "ok",
+      "evaluation": {
+        "status": "ok",
+        "n_samples": 8508,
+        "n_positive": 10,
+        "prevalence": 0.0011753643629525152,
+        "AP": 0.823312347684809,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010578279266572638,
+            "K": 9,
+            "TP": 8,
+            "FP": 1,
+            "FN": 2,
+            "TN": 8497,
+            "precision_at_k": 0.8888888888888888,
+            "recall_at_k": 0.8,
+            "random_expected_TP": 0.010578279266572637,
+            "random_expected_precision": 0.0011753643629525152,
+            "random_expected_recall": 0.0010578279266572638
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005054066760695816,
+            "K": 43,
+            "TP": 9,
+            "FP": 34,
+            "FN": 1,
+            "TN": 8464,
+            "precision_at_k": 0.20930232558139536,
+            "recall_at_k": 0.9,
+            "random_expected_TP": 0.050540667606958155,
+            "random_expected_precision": 0.0011753643629525152,
+            "random_expected_recall": 0.005054066760695816
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010108133521391631,
+            "K": 86,
+            "TP": 9,
+            "FP": 77,
+            "FN": 1,
+            "TN": 8421,
+            "precision_at_k": 0.10465116279069768,
+            "recall_at_k": 0.9,
+            "random_expected_TP": 0.10108133521391631,
+            "random_expected_precision": 0.0011753643629525152,
+            "random_expected_recall": 0.010108133521391631
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.02009873060648801,
+            "K": 171,
+            "TP": 9,
+            "FP": 162,
+            "FN": 1,
+            "TN": 8336,
+            "precision_at_k": 0.05263157894736842,
+            "recall_at_k": 0.9,
+            "random_expected_TP": 0.2009873060648801,
+            "random_expected_precision": 0.0011753643629525152,
+            "random_expected_recall": 0.02009873060648801
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "window_id": 39,
+      "start_seconds": 140400,
+      "end_seconds": 144000,
+      "n_samples": 8567,
+      "n_positives": 12,
+      "status": "ok",
+      "evaluation": {
+        "status": "ok",
+        "n_samples": 8567,
+        "n_positive": 12,
+        "prevalence": 0.0014007237072487452,
+        "AP": 0.7907624604086033,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.001050542780436559,
+            "K": 9,
+            "TP": 9,
+            "FP": 0,
+            "FN": 3,
+            "TN": 8555,
+            "precision_at_k": 1.0,
+            "recall_at_k": 0.75,
+            "random_expected_TP": 0.012606513365238707,
+            "random_expected_precision": 0.0014007237072487452,
+            "random_expected_recall": 0.001050542780436559
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.00501925995097467,
+            "K": 43,
+            "TP": 10,
+            "FP": 33,
+            "FN": 2,
+            "TN": 8522,
+            "precision_at_k": 0.23255813953488372,
+            "recall_at_k": 0.8333333333333334,
+            "random_expected_TP": 0.060231119411696045,
+            "random_expected_precision": 0.0014007237072487452,
+            "random_expected_recall": 0.00501925995097467
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.01003851990194934,
+            "K": 86,
+            "TP": 10,
+            "FP": 76,
+            "FN": 2,
+            "TN": 8479,
+            "precision_at_k": 0.11627906976744186,
+            "recall_at_k": 0.8333333333333334,
+            "random_expected_TP": 0.12046223882339209,
+            "random_expected_precision": 0.0014007237072487452,
+            "random_expected_recall": 0.01003851990194934
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.02007703980389868,
+            "K": 172,
+            "TP": 10,
+            "FP": 162,
+            "FN": 2,
+            "TN": 8393,
+            "precision_at_k": 0.05813953488372093,
+            "recall_at_k": 0.8333333333333334,
+            "random_expected_TP": 0.24092447764678418,
+            "random_expected_precision": 0.0014007237072487452,
+            "random_expected_recall": 0.02007703980389868
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "window_id": 40,
+      "start_seconds": 144000,
+      "end_seconds": 147600,
+      "n_samples": 2944,
+      "n_positives": 2,
+      "status": "ok",
+      "evaluation": {
+        "status": "ok",
+        "n_samples": 2944,
+        "n_positive": 2,
+        "prevalence": 0.0006793478260869565,
+        "AP": 1.0,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010190217391304348,
+            "K": 3,
+            "TP": 2,
+            "FP": 1,
+            "FN": 0,
+            "TN": 2941,
+            "precision_at_k": 0.6666666666666666,
+            "recall_at_k": 1.0,
+            "random_expected_TP": 0.0020380434782608695,
+            "random_expected_precision": 0.0006793478260869565,
+            "random_expected_recall": 0.0010190217391304348
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005095108695652174,
+            "K": 15,
+            "TP": 2,
+            "FP": 13,
+            "FN": 0,
+            "TN": 2929,
+            "precision_at_k": 0.13333333333333333,
+            "recall_at_k": 1.0,
+            "random_expected_TP": 0.010190217391304348,
+            "random_expected_precision": 0.0006793478260869565,
+            "random_expected_recall": 0.005095108695652174
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010190217391304348,
+            "K": 30,
+            "TP": 2,
+            "FP": 28,
+            "FN": 0,
+            "TN": 2914,
+            "precision_at_k": 0.06666666666666667,
+            "recall_at_k": 1.0,
+            "random_expected_TP": 0.020380434782608696,
+            "random_expected_precision": 0.0006793478260869565,
+            "random_expected_recall": 0.010190217391304348
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020040760869565216,
+            "K": 59,
+            "TP": 2,
+            "FP": 57,
+            "FN": 0,
+            "TN": 2885,
+            "precision_at_k": 0.03389830508474576,
+            "recall_at_k": 1.0,
+            "random_expected_TP": 0.04008152173913043,
+            "random_expected_precision": 0.0006793478260869565,
+            "random_expected_recall": 0.020040760869565216
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
     }
   ],
   "frozen_pair_comparisons": [
@@ -5341,7 +6317,1366 @@
       "review_fraction": 0.02
     }
   ],
-  "B_comparisons": [],
+  "B_comparisons": [
+    {
+      "K": 57,
+      "classifier_share": 0.0,
+      "classifier_quota": 0,
+      "anomaly_quota": 57,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 4,
+      "shared_frauds": 0,
+      "classifier_only_frauds": 42,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 57,
+        "TP": 42,
+        "FP": 15,
+        "FN": 15,
+        "TN": 56673,
+        "precision_at_k": 0.7368421052631579,
+        "recall_at_k": 0.7368421052631579
+      },
+      "anomaly": {
+        "K": 57,
+        "TP": 0,
+        "FP": 57,
+        "FN": 57,
+        "TN": 56631,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0
+      },
+      "combined": {
+        "K": 57,
+        "TP": 0,
+        "FP": 57,
+        "FN": 57,
+        "TN": 56631,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0
+      },
+      "review_fraction": 0.001
+    },
+    {
+      "K": 57,
+      "classifier_share": 0.25,
+      "classifier_quota": 14,
+      "anomaly_quota": 43,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 4,
+      "shared_frauds": 0,
+      "classifier_only_frauds": 42,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 57,
+        "TP": 42,
+        "FP": 15,
+        "FN": 15,
+        "TN": 56673,
+        "precision_at_k": 0.7368421052631579,
+        "recall_at_k": 0.7368421052631579
+      },
+      "anomaly": {
+        "K": 57,
+        "TP": 0,
+        "FP": 57,
+        "FN": 57,
+        "TN": 56631,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0
+      },
+      "combined": {
+        "K": 57,
+        "TP": 14,
+        "FP": 43,
+        "FN": 43,
+        "TN": 56645,
+        "precision_at_k": 0.24561403508771928,
+        "recall_at_k": 0.24561403508771928
+      },
+      "review_fraction": 0.001
+    },
+    {
+      "K": 57,
+      "classifier_share": 0.5,
+      "classifier_quota": 28,
+      "anomaly_quota": 29,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 4,
+      "shared_frauds": 0,
+      "classifier_only_frauds": 42,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 57,
+        "TP": 42,
+        "FP": 15,
+        "FN": 15,
+        "TN": 56673,
+        "precision_at_k": 0.7368421052631579,
+        "recall_at_k": 0.7368421052631579
+      },
+      "anomaly": {
+        "K": 57,
+        "TP": 0,
+        "FP": 57,
+        "FN": 57,
+        "TN": 56631,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0
+      },
+      "combined": {
+        "K": 57,
+        "TP": 28,
+        "FP": 29,
+        "FN": 29,
+        "TN": 56659,
+        "precision_at_k": 0.49122807017543857,
+        "recall_at_k": 0.49122807017543857
+      },
+      "review_fraction": 0.001
+    },
+    {
+      "K": 57,
+      "classifier_share": 0.75,
+      "classifier_quota": 42,
+      "anomaly_quota": 15,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 4,
+      "shared_frauds": 0,
+      "classifier_only_frauds": 42,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 57,
+        "TP": 42,
+        "FP": 15,
+        "FN": 15,
+        "TN": 56673,
+        "precision_at_k": 0.7368421052631579,
+        "recall_at_k": 0.7368421052631579
+      },
+      "anomaly": {
+        "K": 57,
+        "TP": 0,
+        "FP": 57,
+        "FN": 57,
+        "TN": 56631,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0
+      },
+      "combined": {
+        "K": 57,
+        "TP": 39,
+        "FP": 18,
+        "FN": 18,
+        "TN": 56670,
+        "precision_at_k": 0.6842105263157895,
+        "recall_at_k": 0.6842105263157895
+      },
+      "review_fraction": 0.001
+    },
+    {
+      "K": 57,
+      "classifier_share": 1.0,
+      "classifier_quota": 57,
+      "anomaly_quota": 0,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 4,
+      "shared_frauds": 0,
+      "classifier_only_frauds": 42,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 57,
+        "TP": 42,
+        "FP": 15,
+        "FN": 15,
+        "TN": 56673,
+        "precision_at_k": 0.7368421052631579,
+        "recall_at_k": 0.7368421052631579
+      },
+      "anomaly": {
+        "K": 57,
+        "TP": 0,
+        "FP": 57,
+        "FN": 57,
+        "TN": 56631,
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0
+      },
+      "combined": {
+        "K": 57,
+        "TP": 42,
+        "FP": 15,
+        "FN": 15,
+        "TN": 56673,
+        "precision_at_k": 0.7368421052631579,
+        "recall_at_k": 0.7368421052631579
+      },
+      "review_fraction": 0.001
+    },
+    {
+      "K": 284,
+      "classifier_share": 0.0,
+      "classifier_quota": 0,
+      "anomaly_quota": 284,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 46,
+      "shared_frauds": 8,
+      "classifier_only_frauds": 40,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 284,
+        "TP": 48,
+        "FP": 236,
+        "FN": 9,
+        "TN": 56452,
+        "precision_at_k": 0.16901408450704225,
+        "recall_at_k": 0.8421052631578947
+      },
+      "anomaly": {
+        "K": 284,
+        "TP": 8,
+        "FP": 276,
+        "FN": 49,
+        "TN": 56412,
+        "precision_at_k": 0.028169014084507043,
+        "recall_at_k": 0.14035087719298245
+      },
+      "combined": {
+        "K": 284,
+        "TP": 8,
+        "FP": 276,
+        "FN": 49,
+        "TN": 56412,
+        "precision_at_k": 0.028169014084507043,
+        "recall_at_k": 0.14035087719298245
+      },
+      "review_fraction": 0.005
+    },
+    {
+      "K": 284,
+      "classifier_share": 0.25,
+      "classifier_quota": 71,
+      "anomaly_quota": 213,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 46,
+      "shared_frauds": 8,
+      "classifier_only_frauds": 40,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 284,
+        "TP": 48,
+        "FP": 236,
+        "FN": 9,
+        "TN": 56452,
+        "precision_at_k": 0.16901408450704225,
+        "recall_at_k": 0.8421052631578947
+      },
+      "anomaly": {
+        "K": 284,
+        "TP": 8,
+        "FP": 276,
+        "FN": 49,
+        "TN": 56412,
+        "precision_at_k": 0.028169014084507043,
+        "recall_at_k": 0.14035087719298245
+      },
+      "combined": {
+        "K": 284,
+        "TP": 44,
+        "FP": 240,
+        "FN": 13,
+        "TN": 56448,
+        "precision_at_k": 0.15492957746478872,
+        "recall_at_k": 0.7719298245614035
+      },
+      "review_fraction": 0.005
+    },
+    {
+      "K": 284,
+      "classifier_share": 0.5,
+      "classifier_quota": 142,
+      "anomaly_quota": 142,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 46,
+      "shared_frauds": 8,
+      "classifier_only_frauds": 40,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 284,
+        "TP": 48,
+        "FP": 236,
+        "FN": 9,
+        "TN": 56452,
+        "precision_at_k": 0.16901408450704225,
+        "recall_at_k": 0.8421052631578947
+      },
+      "anomaly": {
+        "K": 284,
+        "TP": 8,
+        "FP": 276,
+        "FN": 49,
+        "TN": 56412,
+        "precision_at_k": 0.028169014084507043,
+        "recall_at_k": 0.14035087719298245
+      },
+      "combined": {
+        "K": 284,
+        "TP": 45,
+        "FP": 239,
+        "FN": 12,
+        "TN": 56449,
+        "precision_at_k": 0.15845070422535212,
+        "recall_at_k": 0.7894736842105263
+      },
+      "review_fraction": 0.005
+    },
+    {
+      "K": 284,
+      "classifier_share": 0.75,
+      "classifier_quota": 213,
+      "anomaly_quota": 71,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 46,
+      "shared_frauds": 8,
+      "classifier_only_frauds": 40,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 284,
+        "TP": 48,
+        "FP": 236,
+        "FN": 9,
+        "TN": 56452,
+        "precision_at_k": 0.16901408450704225,
+        "recall_at_k": 0.8421052631578947
+      },
+      "anomaly": {
+        "K": 284,
+        "TP": 8,
+        "FP": 276,
+        "FN": 49,
+        "TN": 56412,
+        "precision_at_k": 0.028169014084507043,
+        "recall_at_k": 0.14035087719298245
+      },
+      "combined": {
+        "K": 284,
+        "TP": 46,
+        "FP": 238,
+        "FN": 11,
+        "TN": 56450,
+        "precision_at_k": 0.1619718309859155,
+        "recall_at_k": 0.8070175438596491
+      },
+      "review_fraction": 0.005
+    },
+    {
+      "K": 284,
+      "classifier_share": 1.0,
+      "classifier_quota": 284,
+      "anomaly_quota": 0,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 46,
+      "shared_frauds": 8,
+      "classifier_only_frauds": 40,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 284,
+        "TP": 48,
+        "FP": 236,
+        "FN": 9,
+        "TN": 56452,
+        "precision_at_k": 0.16901408450704225,
+        "recall_at_k": 0.8421052631578947
+      },
+      "anomaly": {
+        "K": 284,
+        "TP": 8,
+        "FP": 276,
+        "FN": 49,
+        "TN": 56412,
+        "precision_at_k": 0.028169014084507043,
+        "recall_at_k": 0.14035087719298245
+      },
+      "combined": {
+        "K": 284,
+        "TP": 48,
+        "FP": 236,
+        "FN": 9,
+        "TN": 56452,
+        "precision_at_k": 0.16901408450704225,
+        "recall_at_k": 0.8421052631578947
+      },
+      "review_fraction": 0.005
+    },
+    {
+      "K": 568,
+      "classifier_share": 0.0,
+      "classifier_quota": 0,
+      "anomaly_quota": 568,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 102,
+      "shared_frauds": 24,
+      "classifier_only_frauds": 25,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 568,
+        "TP": 49,
+        "FP": 519,
+        "FN": 8,
+        "TN": 56169,
+        "precision_at_k": 0.08626760563380281,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 568,
+        "TP": 24,
+        "FP": 544,
+        "FN": 33,
+        "TN": 56144,
+        "precision_at_k": 0.04225352112676056,
+        "recall_at_k": 0.42105263157894735
+      },
+      "combined": {
+        "K": 568,
+        "TP": 24,
+        "FP": 544,
+        "FN": 33,
+        "TN": 56144,
+        "precision_at_k": 0.04225352112676056,
+        "recall_at_k": 0.42105263157894735
+      },
+      "review_fraction": 0.01
+    },
+    {
+      "K": 568,
+      "classifier_share": 0.25,
+      "classifier_quota": 142,
+      "anomaly_quota": 426,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 102,
+      "shared_frauds": 24,
+      "classifier_only_frauds": 25,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 568,
+        "TP": 49,
+        "FP": 519,
+        "FN": 8,
+        "TN": 56169,
+        "precision_at_k": 0.08626760563380281,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 568,
+        "TP": 24,
+        "FP": 544,
+        "FN": 33,
+        "TN": 56144,
+        "precision_at_k": 0.04225352112676056,
+        "recall_at_k": 0.42105263157894735
+      },
+      "combined": {
+        "K": 568,
+        "TP": 45,
+        "FP": 523,
+        "FN": 12,
+        "TN": 56165,
+        "precision_at_k": 0.07922535211267606,
+        "recall_at_k": 0.7894736842105263
+      },
+      "review_fraction": 0.01
+    },
+    {
+      "K": 568,
+      "classifier_share": 0.5,
+      "classifier_quota": 284,
+      "anomaly_quota": 284,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 102,
+      "shared_frauds": 24,
+      "classifier_only_frauds": 25,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 568,
+        "TP": 49,
+        "FP": 519,
+        "FN": 8,
+        "TN": 56169,
+        "precision_at_k": 0.08626760563380281,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 568,
+        "TP": 24,
+        "FP": 544,
+        "FN": 33,
+        "TN": 56144,
+        "precision_at_k": 0.04225352112676056,
+        "recall_at_k": 0.42105263157894735
+      },
+      "combined": {
+        "K": 568,
+        "TP": 48,
+        "FP": 520,
+        "FN": 9,
+        "TN": 56168,
+        "precision_at_k": 0.08450704225352113,
+        "recall_at_k": 0.8421052631578947
+      },
+      "review_fraction": 0.01
+    },
+    {
+      "K": 568,
+      "classifier_share": 0.75,
+      "classifier_quota": 426,
+      "anomaly_quota": 142,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 102,
+      "shared_frauds": 24,
+      "classifier_only_frauds": 25,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 568,
+        "TP": 49,
+        "FP": 519,
+        "FN": 8,
+        "TN": 56169,
+        "precision_at_k": 0.08626760563380281,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 568,
+        "TP": 24,
+        "FP": 544,
+        "FN": 33,
+        "TN": 56144,
+        "precision_at_k": 0.04225352112676056,
+        "recall_at_k": 0.42105263157894735
+      },
+      "combined": {
+        "K": 568,
+        "TP": 49,
+        "FP": 519,
+        "FN": 8,
+        "TN": 56169,
+        "precision_at_k": 0.08626760563380281,
+        "recall_at_k": 0.8596491228070176
+      },
+      "review_fraction": 0.01
+    },
+    {
+      "K": 568,
+      "classifier_share": 1.0,
+      "classifier_quota": 568,
+      "anomaly_quota": 0,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 102,
+      "shared_frauds": 24,
+      "classifier_only_frauds": 25,
+      "anomaly_only_frauds": 0,
+      "classifier": {
+        "K": 568,
+        "TP": 49,
+        "FP": 519,
+        "FN": 8,
+        "TN": 56169,
+        "precision_at_k": 0.08626760563380281,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 568,
+        "TP": 24,
+        "FP": 544,
+        "FN": 33,
+        "TN": 56144,
+        "precision_at_k": 0.04225352112676056,
+        "recall_at_k": 0.42105263157894735
+      },
+      "combined": {
+        "K": 568,
+        "TP": 49,
+        "FP": 519,
+        "FN": 8,
+        "TN": 56169,
+        "precision_at_k": 0.08626760563380281,
+        "recall_at_k": 0.8596491228070176
+      },
+      "review_fraction": 0.01
+    },
+    {
+      "K": 1135,
+      "classifier_share": 0.0,
+      "classifier_quota": 0,
+      "anomaly_quota": 1135,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 191,
+      "shared_frauds": 34,
+      "classifier_only_frauds": 15,
+      "anomaly_only_frauds": 1,
+      "classifier": {
+        "K": 1135,
+        "TP": 49,
+        "FP": 1086,
+        "FN": 8,
+        "TN": 55602,
+        "precision_at_k": 0.04317180616740088,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 1135,
+        "TP": 35,
+        "FP": 1100,
+        "FN": 22,
+        "TN": 55588,
+        "precision_at_k": 0.030837004405286344,
+        "recall_at_k": 0.6140350877192983
+      },
+      "combined": {
+        "K": 1135,
+        "TP": 35,
+        "FP": 1100,
+        "FN": 22,
+        "TN": 55588,
+        "precision_at_k": 0.030837004405286344,
+        "recall_at_k": 0.6140350877192983
+      },
+      "review_fraction": 0.02
+    },
+    {
+      "K": 1135,
+      "classifier_share": 0.25,
+      "classifier_quota": 283,
+      "anomaly_quota": 852,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 191,
+      "shared_frauds": 34,
+      "classifier_only_frauds": 15,
+      "anomaly_only_frauds": 1,
+      "classifier": {
+        "K": 1135,
+        "TP": 49,
+        "FP": 1086,
+        "FN": 8,
+        "TN": 55602,
+        "precision_at_k": 0.04317180616740088,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 1135,
+        "TP": 35,
+        "FP": 1100,
+        "FN": 22,
+        "TN": 55588,
+        "precision_at_k": 0.030837004405286344,
+        "recall_at_k": 0.6140350877192983
+      },
+      "combined": {
+        "K": 1135,
+        "TP": 49,
+        "FP": 1086,
+        "FN": 8,
+        "TN": 55602,
+        "precision_at_k": 0.04317180616740088,
+        "recall_at_k": 0.8596491228070176
+      },
+      "review_fraction": 0.02
+    },
+    {
+      "K": 1135,
+      "classifier_share": 0.5,
+      "classifier_quota": 567,
+      "anomaly_quota": 568,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 191,
+      "shared_frauds": 34,
+      "classifier_only_frauds": 15,
+      "anomaly_only_frauds": 1,
+      "classifier": {
+        "K": 1135,
+        "TP": 49,
+        "FP": 1086,
+        "FN": 8,
+        "TN": 55602,
+        "precision_at_k": 0.04317180616740088,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 1135,
+        "TP": 35,
+        "FP": 1100,
+        "FN": 22,
+        "TN": 55588,
+        "precision_at_k": 0.030837004405286344,
+        "recall_at_k": 0.6140350877192983
+      },
+      "combined": {
+        "K": 1135,
+        "TP": 49,
+        "FP": 1086,
+        "FN": 8,
+        "TN": 55602,
+        "precision_at_k": 0.04317180616740088,
+        "recall_at_k": 0.8596491228070176
+      },
+      "review_fraction": 0.02
+    },
+    {
+      "K": 1135,
+      "classifier_share": 0.75,
+      "classifier_quota": 851,
+      "anomaly_quota": 284,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 191,
+      "shared_frauds": 34,
+      "classifier_only_frauds": 15,
+      "anomaly_only_frauds": 1,
+      "classifier": {
+        "K": 1135,
+        "TP": 49,
+        "FP": 1086,
+        "FN": 8,
+        "TN": 55602,
+        "precision_at_k": 0.04317180616740088,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 1135,
+        "TP": 35,
+        "FP": 1100,
+        "FN": 22,
+        "TN": 55588,
+        "precision_at_k": 0.030837004405286344,
+        "recall_at_k": 0.6140350877192983
+      },
+      "combined": {
+        "K": 1135,
+        "TP": 49,
+        "FP": 1086,
+        "FN": 8,
+        "TN": 55602,
+        "precision_at_k": 0.04317180616740088,
+        "recall_at_k": 0.8596491228070176
+      },
+      "review_fraction": 0.02
+    },
+    {
+      "K": 1135,
+      "classifier_share": 1.0,
+      "classifier_quota": 1135,
+      "anomaly_quota": 0,
+      "refill_rule": "classifier first; anomaly scan skipping duplicates",
+      "overlap_count": 191,
+      "shared_frauds": 34,
+      "classifier_only_frauds": 15,
+      "anomaly_only_frauds": 1,
+      "classifier": {
+        "K": 1135,
+        "TP": 49,
+        "FP": 1086,
+        "FN": 8,
+        "TN": 55602,
+        "precision_at_k": 0.04317180616740088,
+        "recall_at_k": 0.8596491228070176
+      },
+      "anomaly": {
+        "K": 1135,
+        "TP": 35,
+        "FP": 1100,
+        "FN": 22,
+        "TN": 55588,
+        "precision_at_k": 0.030837004405286344,
+        "recall_at_k": 0.6140350877192983
+      },
+      "combined": {
+        "K": 1135,
+        "TP": 49,
+        "FP": 1086,
+        "FN": 8,
+        "TN": 55602,
+        "precision_at_k": 0.04317180616740088,
+        "recall_at_k": 0.8596491228070176
+      },
+      "review_fraction": 0.02
+    }
+  ],
+  "B_reproduction": {
+    "owner": "C",
+    "purpose": "B handoff reproduction, not a new classifier search",
+    "B_manifest_sha256": "470d9a2063a2bd8d45c1d24de84720fa217e6cf83072351a545309d86ade44ff",
+    "B_manifest_source_commit": "e85209443496c836b356b0d3961913ca87830656",
+    "B_branch_commit": "55ee15119a1fad1ddce0ac3c7a59cc6555d22bfb",
+    "B_published_versions": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.1"
+    },
+    "actual_versions": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.1",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1"
+    },
+    "dependency_lock_mismatches": {},
+    "code_sha256": {
+      "code/classification.py": "d78499308ca49b407569dac0e6f636c67492ca4b4325b6451ab6c81058668ffa",
+      "code/run_b_validation.py": "2586e7c7085b879db7894783da98959442231a8831d07adb1c434fbd4a7f8da2",
+      "requirements.txt": "3002c581c4ecbf0108116561a218702ce694cc26175659437c805f2e40be3416"
+    },
+    "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "partitions": {
+      "train": {
+        "rows": 170235,
+        "frauds": 342,
+        "time_min": 0.0,
+        "time_max": 120392.0,
+        "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+      },
+      "validation": {
+        "rows": 56745,
+        "frauds": 57,
+        "time_min": 120393.0,
+        "time_max": 145233.0,
+        "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+      }
+    },
+    "experiments": [
+      {
+        "method": "logistic_regression_original",
+        "model_name": "logistic_regression",
+        "strategy": "original",
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.6424292493857157,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 37,
+              "FP": 20,
+              "FN": 20,
+              "TN": 56668,
+              "precision_at_k": 0.6491228070175439,
+              "recall_at_k": 0.6491228070175439,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 46,
+              "FP": 238,
+              "FN": 11,
+              "TN": 56450,
+              "precision_at_k": 0.1619718309859155,
+              "recall_at_k": 0.8070175438596491,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 48,
+              "FP": 520,
+              "FN": 9,
+              "TN": 56168,
+              "precision_at_k": 0.08450704225352113,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 48,
+              "FP": 1087,
+              "FN": 9,
+              "TN": 55601,
+              "precision_at_k": 0.04229074889867841,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        },
+        "classifier_parameters": {
+          "C": 1.0,
+          "class_weight": null,
+          "dual": false,
+          "fit_intercept": true,
+          "intercept_scaling": 1,
+          "l1_ratio": 0.0,
+          "max_iter": 1000,
+          "n_jobs": null,
+          "penalty": "deprecated",
+          "random_state": 42,
+          "solver": "lbfgs",
+          "tol": 0.0001,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "fit_score_evaluation_seconds": 0.2487205830111634
+      },
+      {
+        "method": "decision_tree_original",
+        "model_name": "decision_tree",
+        "strategy": "original",
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.3019221328499679,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 25,
+              "FP": 32,
+              "FN": 32,
+              "TN": 56656,
+              "precision_at_k": 0.43859649122807015,
+              "recall_at_k": 0.43859649122807015,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 38,
+              "FP": 246,
+              "FN": 19,
+              "TN": 56442,
+              "precision_at_k": 0.13380281690140844,
+              "recall_at_k": 0.6666666666666666,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 38,
+              "FP": 530,
+              "FN": 19,
+              "TN": 56158,
+              "precision_at_k": 0.06690140845070422,
+              "recall_at_k": 0.6666666666666666,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 38,
+              "FP": 1097,
+              "FN": 19,
+              "TN": 55591,
+              "precision_at_k": 0.033480176211453744,
+              "recall_at_k": 0.6666666666666666,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        },
+        "classifier_parameters": {
+          "ccp_alpha": 0.0,
+          "class_weight": null,
+          "criterion": "gini",
+          "max_depth": null,
+          "max_features": null,
+          "max_leaf_nodes": null,
+          "min_impurity_decrease": 0.0,
+          "min_samples_leaf": 1,
+          "min_samples_split": 2,
+          "min_weight_fraction_leaf": 0.0,
+          "monotonic_cst": null,
+          "random_state": 42,
+          "splitter": "best"
+        },
+        "fit_score_evaluation_seconds": 6.485064791981131
+      },
+      {
+        "method": "gaussian_nb_original",
+        "model_name": "gaussian_nb",
+        "strategy": "original",
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.03376255989545022,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 1,
+              "FP": 56,
+              "FN": 56,
+              "TN": 56632,
+              "precision_at_k": 0.017543859649122806,
+              "recall_at_k": 0.017543859649122806,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 7,
+              "FP": 277,
+              "FN": 50,
+              "TN": 56411,
+              "precision_at_k": 0.02464788732394366,
+              "recall_at_k": 0.12280701754385964,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 20,
+              "FP": 548,
+              "FN": 37,
+              "TN": 56140,
+              "precision_at_k": 0.035211267605633804,
+              "recall_at_k": 0.3508771929824561,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 43,
+              "FP": 1092,
+              "FN": 14,
+              "TN": 55596,
+              "precision_at_k": 0.03788546255506608,
+              "recall_at_k": 0.7543859649122807,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        },
+        "classifier_parameters": {
+          "priors": null,
+          "var_smoothing": 1e-09
+        },
+        "fit_score_evaluation_seconds": 0.11441583299892955
+      },
+      {
+        "method": "random_forest_original",
+        "model_name": "random_forest",
+        "strategy": "original",
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7556152196966235,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 43,
+              "FP": 14,
+              "FN": 14,
+              "TN": 56674,
+              "precision_at_k": 0.7543859649122807,
+              "recall_at_k": 0.7543859649122807,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 46,
+              "FP": 238,
+              "FN": 11,
+              "TN": 56450,
+              "precision_at_k": 0.1619718309859155,
+              "recall_at_k": 0.8070175438596491,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 47,
+              "FP": 521,
+              "FN": 10,
+              "TN": 56167,
+              "precision_at_k": 0.08274647887323944,
+              "recall_at_k": 0.8245614035087719,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 48,
+              "FP": 1087,
+              "FN": 9,
+              "TN": 55601,
+              "precision_at_k": 0.04229074889867841,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        },
+        "classifier_parameters": {
+          "bootstrap": true,
+          "ccp_alpha": 0.0,
+          "class_weight": null,
+          "criterion": "gini",
+          "max_depth": null,
+          "max_features": "sqrt",
+          "max_leaf_nodes": null,
+          "max_samples": null,
+          "min_impurity_decrease": 0.0,
+          "min_samples_leaf": 1,
+          "min_samples_split": 2,
+          "min_weight_fraction_leaf": 0.0,
+          "monotonic_cst": null,
+          "n_estimators": 100,
+          "n_jobs": 1,
+          "oob_score": false,
+          "random_state": 42,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "fit_score_evaluation_seconds": 66.82481849999749
+      },
+      {
+        "method": "logistic_regression_class_weight",
+        "model_name": "logistic_regression",
+        "strategy": "class_weight",
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7726808523329118,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 42,
+              "FP": 15,
+              "FN": 15,
+              "TN": 56673,
+              "precision_at_k": 0.7368421052631579,
+              "recall_at_k": 0.7368421052631579,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 48,
+              "FP": 236,
+              "FN": 9,
+              "TN": 56452,
+              "precision_at_k": 0.16901408450704225,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 49,
+              "FP": 519,
+              "FN": 8,
+              "TN": 56169,
+              "precision_at_k": 0.08626760563380281,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 49,
+              "FP": 1086,
+              "FN": 8,
+              "TN": 55602,
+              "precision_at_k": 0.04317180616740088,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        },
+        "classifier_parameters": {
+          "C": 1.0,
+          "class_weight": "balanced",
+          "dual": false,
+          "fit_intercept": true,
+          "intercept_scaling": 1,
+          "l1_ratio": 0.0,
+          "max_iter": 1000,
+          "n_jobs": null,
+          "penalty": "deprecated",
+          "random_state": 42,
+          "solver": "lbfgs",
+          "tol": 0.0001,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "fit_score_evaluation_seconds": 0.41741483300575055
+      },
+      {
+        "method": "logistic_regression_random_undersample",
+        "model_name": "logistic_regression",
+        "strategy": "random_undersample",
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.15742211623121063,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 10,
+              "FP": 47,
+              "FN": 47,
+              "TN": 56641,
+              "precision_at_k": 0.17543859649122806,
+              "recall_at_k": 0.17543859649122806,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 42,
+              "FP": 242,
+              "FN": 15,
+              "TN": 56446,
+              "precision_at_k": 0.14788732394366197,
+              "recall_at_k": 0.7368421052631579,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 48,
+              "FP": 520,
+              "FN": 9,
+              "TN": 56168,
+              "precision_at_k": 0.08450704225352113,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 50,
+              "FP": 1085,
+              "FN": 7,
+              "TN": 55603,
+              "precision_at_k": 0.04405286343612335,
+              "recall_at_k": 0.8771929824561403,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        },
+        "classifier_parameters": {
+          "C": 1.0,
+          "class_weight": null,
+          "dual": false,
+          "fit_intercept": true,
+          "intercept_scaling": 1,
+          "l1_ratio": 0.0,
+          "max_iter": 1000,
+          "n_jobs": null,
+          "penalty": "deprecated",
+          "random_state": 42,
+          "solver": "lbfgs",
+          "tol": 0.0001,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "fit_score_evaluation_seconds": 0.03601300000445917
+      }
+    ],
+    "proposed_method": "logistic_regression_class_weight",
+    "selected_under_common_environment": "logistic_regression_class_weight",
+    "selection_matches_published": true,
+    "parameters_match_published": true,
+    "model_replay_scores_and_full_ranking_match": true,
+    "test_evaluated": false,
+    "prediction_sha256": "34482b9e195d7826579ebacb9a7cfaa7bc98dd7c50d0d7f72235df463c1419e0",
+    "published_prediction_sha256": "924ccb64a4e5d6ac1b41bc477e069cf7e7d673c75c5311d2052a38f027af92de"
+  },
   "selection_record": {
     "candidate_specifications": [
       {
@@ -6617,7 +8952,7 @@
     },
     "selected_anomaly": "if_sample4096",
     "distance_share": 0.0,
-    "selection_locked_at_UTC": "2026-11-11T04:49:12.039516+00:00"
+    "selection_locked_at_UTC": "2026-11-11T12:33:52.080936+00:00"
   },
   "training_distance_calibration": {
     "km_base": [
@@ -6764,390 +9099,451 @@
       "stage": "inner",
       "seed": 42,
       "configuration": "km_base",
-      "seconds": 1.405219083011616
+      "seconds": 1.4180927919805981
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "km_no_time",
-      "seconds": 1.0036440410185605
+      "seconds": 1.1781151670147665
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "km_log_amount",
-      "seconds": 1.3087931660120375
+      "seconds": 1.1881175419839565
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "km_no_time_log",
-      "seconds": 1.8245661660039332
+      "seconds": 1.5118413750024047
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "km_robust",
-      "seconds": 1.4423656250000931
+      "seconds": 1.4234480419836473
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "km_no_time_log_robust",
-      "seconds": 2.3328653750068042
+      "seconds": 2.5983792079787236
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "if_base",
-      "seconds": 0.22822570899734274
+      "seconds": 0.2283789580105804
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "if_no_time",
-      "seconds": 0.20409049998852424
+      "seconds": 0.22658629098441452
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "if_log_amount",
-      "seconds": 0.20908349999808706
+      "seconds": 0.22323529102141038
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "if_no_time_log",
-      "seconds": 0.20766462499159388
+      "seconds": 0.23936445801518857
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "if_sample1024",
-      "seconds": 0.33974858399596997
+      "seconds": 0.3286203750176355
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "if_sample4096",
-      "seconds": 0.3869127919897437
+      "seconds": 0.3741679170052521
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "if_trees300",
-      "seconds": 0.5977819590189029
+      "seconds": 0.565781417011749
     },
     {
       "stage": "inner",
       "seed": 42,
       "configuration": "if_joint",
-      "seconds": 0.9446952500147745
+      "seconds": 0.910373583988985
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "km_base",
-      "seconds": 1.4439413329819217
+      "seconds": 1.2957349579955917
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "km_no_time",
-      "seconds": 1.3568082500132732
+      "seconds": 1.2057370410184376
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "km_log_amount",
-      "seconds": 1.5649245000095107
+      "seconds": 1.4345394170086365
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "km_no_time_log",
-      "seconds": 1.305485958000645
+      "seconds": 1.2218442089797463
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "km_robust",
-      "seconds": 1.6333841249870602
+      "seconds": 1.3309254590130877
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "km_no_time_log_robust",
-      "seconds": 1.9876414159953129
+      "seconds": 1.8130305840168148
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "if_base",
-      "seconds": 0.24692391700227745
+      "seconds": 0.20281820802483708
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "if_no_time",
-      "seconds": 0.2114720829995349
+      "seconds": 0.20305974999791943
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "if_log_amount",
-      "seconds": 0.21207612499711104
+      "seconds": 0.2066596669901628
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "if_no_time_log",
-      "seconds": 0.20784608300891705
+      "seconds": 0.20578404201660305
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "if_sample1024",
-      "seconds": 0.31926254197605886
+      "seconds": 0.31159845797810704
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "if_sample4096",
-      "seconds": 0.44556304201250896
+      "seconds": 0.3549257919949014
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "if_trees300",
-      "seconds": 0.6028195840190165
+      "seconds": 0.5485002079803962
     },
     {
       "stage": "inner",
       "seed": 43,
       "configuration": "if_joint",
-      "seconds": 1.0609735829930287
+      "seconds": 0.8922071249980945
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "km_base",
-      "seconds": 1.414086667005904
+      "seconds": 1.231857292004861
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "km_no_time",
-      "seconds": 1.182379709003726
+      "seconds": 0.947991417022422
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "km_log_amount",
-      "seconds": 1.3559492920176126
+      "seconds": 1.1759181669913232
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "km_no_time_log",
-      "seconds": 1.236170916003175
+      "seconds": 1.1176812920020893
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "km_robust",
-      "seconds": 1.4525420410209335
+      "seconds": 1.3335789999982808
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "km_no_time_log_robust",
-      "seconds": 1.739577583008213
+      "seconds": 1.7379988750035409
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "if_base",
-      "seconds": 0.21466354100266472
+      "seconds": 0.20637137501034886
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "if_no_time",
-      "seconds": 0.22708874999079853
+      "seconds": 0.20184366701869294
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "if_log_amount",
-      "seconds": 0.49310012502246536
+      "seconds": 0.21048350000637583
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "if_no_time_log",
-      "seconds": 0.44007970902021043
+      "seconds": 0.20402520798961632
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "if_sample1024",
-      "seconds": 0.5908918749773875
+      "seconds": 0.31158079198212363
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "if_sample4096",
-      "seconds": 0.9492476249870379
+      "seconds": 0.358417916984763
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "if_trees300",
-      "seconds": 0.7874548329855315
+      "seconds": 0.5665799170092214
     },
     {
       "stage": "inner",
       "seed": 44,
       "configuration": "if_joint",
-      "seconds": 1.5470387499954086
+      "seconds": 0.918464332993608
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "km_base",
-      "seconds": 2.256418625009246
+      "seconds": 1.5454898749885615
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "km_no_time",
-      "seconds": 1.4699314160097856
+      "seconds": 1.325014874979388
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "km_log_amount",
-      "seconds": 2.055349957983708
+      "seconds": 1.9149524579988793
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "km_no_time_log",
-      "seconds": 1.7438184159982484
+      "seconds": 1.4168580420082435
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "km_robust",
-      "seconds": 2.7024697919841856
+      "seconds": 1.760928916017292
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "km_no_time_log_robust",
-      "seconds": 4.10431675001746
+      "seconds": 3.031904375005979
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "if_base",
-      "seconds": 0.33282337500713766
+      "seconds": 0.2775742079829797
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "if_no_time",
-      "seconds": 0.301500749978004
+      "seconds": 0.26951316598569974
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "if_log_amount",
-      "seconds": 0.3588742919964716
+      "seconds": 0.27613895799731836
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "if_no_time_log",
-      "seconds": 0.314777708001202
+      "seconds": 0.2736832500086166
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "if_sample1024",
-      "seconds": 0.7313024580071215
+      "seconds": 0.39394029101822525
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "if_sample4096",
-      "seconds": 1.1595752499997616
+      "seconds": 0.4882393750012852
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "if_trees300",
-      "seconds": 0.8953759580035694
+      "seconds": 0.7945966660045087
     },
     {
       "stage": "full_train",
       "seed": 42,
       "configuration": "if_joint",
-      "seconds": 1.2265089169959538
+      "seconds": 1.257024457998341
     }
   ],
   "verification": {
     "persisted_selected_scores_match": true,
     "test_evaluated": false,
-    "baseline_reproduced": true,
-    "A_C_tests_passed": 43,
-    "inner_scoring_rows": 60,
-    "validation_scoring_candidates": 20,
-    "fitted_pipelines": 56,
-    "selected_choices_match_prevalidation_lock": true,
-    "full_validation_frozen_replay_matches": true,
-    "group_global_counts_reconcile": true,
-    "exact_K_frozen_combinations": true,
-    "reporting_fix_leaves_all_choices_and_metrics_unchanged": true,
-    "source_hashes_match": true,
-    "source_worktree_clean": true,
-    "aggregate_export_checked": true,
-    "visually_checked_figures": [
-      "ablation.png",
-      "cluster_prevalence.png",
-      "complementarity.png",
-      "pr_curve.png",
-      "review_precision.png",
-      "review_recall.png"
-    ],
-    "temporary_A_C_D_tests": {
-      "passed": 50,
-      "skipped": 0,
-      "D_commit": "d638da1",
-      "merge_conflicts": false,
-      "D_actually_merged": false
-    },
-    "final_figures_identical_to_visually_checked_first_export": true
+    "baseline_reproduced": true
   },
-  "layout_verification": {
-    "prior_snapshot_commit": "997cdb7",
-    "A_C_tests_passed": 44,
-    "original_metrics_and_choices_unchanged": true,
-    "original_plot_bytes_preserved": true,
-    "saved_model_module_migration_verified": true,
-    "test_partition_scored": false,
-    "entry_point": "code/main.py",
-    "C_modules": [
-      "code/unsupervised.py",
-      "code/evaluation.py"
-    ],
-    "runtime_file_sha256": {
-      "code/unsupervised.py": "8b1b9f012b135dd64343d11262b5da9e2f33122231a90835e2e1b052ec8cfe93",
-      "code/evaluation.py": "e007fa022c6ba4d62373b14b0d6b00f17d559288f831563a41ae8102789fd0b8",
-      "code/main.py": "fed6dc9d7819ce79837da01901971af252b607e0030749d4b1b6109cfe71743e"
+  "G1_reproduction": {
+    "real_baseline_and_window_flow_passed": true,
+    "method": "logistic_regression_original",
+    "metrics_match_B_common_environment": true,
+    "AP": 0.6424292493857157,
+    "budgets": [
+      {
+        "review_fraction": 0.001,
+        "actual_review_fraction": 0.0010044937879989425,
+        "K": 57,
+        "TP": 37,
+        "FP": 20,
+        "FN": 20,
+        "TN": 56668,
+        "precision_at_k": 0.6491228070175439,
+        "recall_at_k": 0.6491228070175439,
+        "random_expected_TP": 0.05725614591593972,
+        "random_expected_precision": 0.0010044937879989425,
+        "random_expected_recall": 0.0010044937879989425
+      },
+      {
+        "review_fraction": 0.005,
+        "actual_review_fraction": 0.005004846241959644,
+        "K": 284,
+        "TP": 46,
+        "FP": 238,
+        "FN": 11,
+        "TN": 56450,
+        "precision_at_k": 0.1619718309859155,
+        "recall_at_k": 0.8070175438596491,
+        "random_expected_TP": 0.2852762357916997,
+        "random_expected_precision": 0.0010044937879989425,
+        "random_expected_recall": 0.005004846241959644
+      },
+      {
+        "review_fraction": 0.01,
+        "actual_review_fraction": 0.010009692483919287,
+        "K": 568,
+        "TP": 48,
+        "FP": 520,
+        "FN": 9,
+        "TN": 56168,
+        "precision_at_k": 0.08450704225352113,
+        "recall_at_k": 0.8421052631578947,
+        "random_expected_TP": 0.5705524715833994,
+        "random_expected_precision": 0.0010044937879989425,
+        "random_expected_recall": 0.010009692483919287
+      },
+      {
+        "review_fraction": 0.02,
+        "actual_review_fraction": 0.020001762269803505,
+        "K": 1135,
+        "TP": 48,
+        "FP": 1087,
+        "FN": 9,
+        "TN": 55601,
+        "precision_at_k": 0.04229074889867841,
+        "recall_at_k": 0.8421052631578947,
+        "random_expected_TP": 1.1401004493787998,
+        "random_expected_precision": 0.0010044937879989425,
+        "random_expected_recall": 0.020001762269803505
+      }
+    ]
+  },
+  "case_studies": [
+    {
+      "case": "C1",
+      "label": 1,
+      "B_rank": 4,
+      "IF_rank": 605,
+      "meaning": "B detects a fraud outside IF 1% review"
     },
-    "temporary_A_C_D_tests_passed": 51,
-    "D_actually_merged": false
+    {
+      "case": "C2",
+      "label": 1,
+      "B_rank": 11505,
+      "IF_rank": 867,
+      "meaning": "IF-only fraud at 2%; mixed policy exchanges one B-only fraud for it"
+    },
+    {
+      "case": "C3",
+      "label": 0,
+      "B_rank": 56545,
+      "IF_rank": 1,
+      "meaning": "Highest IF score is a normal transaction, not a calibrated fraud probability"
+    }
+  ],
+  "completion_verification": {
+    "B_branch_commit": "55ee151",
+    "C5_completed": true,
+    "C6_completed": true,
+    "C8_method_validation_and_QA_ready": true,
+    "C7_final_test_pending_A8": true,
+    "group_G2_complete": false,
+    "all_previous_C_metrics_and_choices_unchanged": true,
+    "B_six_candidates_reproduced_in_pinned_environment": true,
+    "selected_B_model_and_full_ranking_replayed": true,
+    "C_plus_B_frozen_full_validation_replay_matches": true,
+    "all_fixed_capacity_lists_have_exact_K_unique_ids": true,
+    "group_global_counts_reconcile": true,
+    "real_G1_reproduced": true,
+    "A_C_tests": 46,
+    "B_tests": 8,
+    "temporary_ABCD_tests": 61,
+    "plotting_source_commit": "4aaf2cb31a7eb5a6d2efb2b3056d47ca8bff2147",
+    "plotting_code_sha256": "d3337990a483580ae41deb48e150905487a31f82d20d4205d92fc5a7d02580cd",
+    "B_original_files_unchanged": true,
+    "test_evaluated": false
   }
 }

@@ -1351,7 +1351,7 @@ def reproduce_b_for_c(train, validation, freeze_path, output, dataset_digest):
                 "method": method,
                 "model_name": name,
                 "strategy": strategy,
-                "train_seconds": perf_counter() - clock,
+                "fit_score_evaluation_seconds": perf_counter() - clock,
                 "metrics": metric,
                 "classifier_parameters": model.named_steps["classifier"].get_params(),
             }
