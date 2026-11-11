@@ -1,6 +1,10 @@
 # C 模块交付与运行说明
 
-负责人 C。更新：2026-11-11。已把 A 的 `Task_A`（`26c1c32`）合并到 C 分支，并处理 README/TASKS 的文字冲突；A 的数据/时间代码与 B 的分类代码没有被重写。
+负责人 C。更新：2026-11-11。
+
+**当前改进版本 v2 已完成：** 见 [C_IMPROVEMENTS.md](C_IMPROVEMENTS.md) 和 `results/c_improvements/`。训练内三种子选择 IF 抽样 4096，正式验证 1% 预算检出 24/57；43 项 A/C 检查通过。v1 的数据与下方说明保留作为原始基线；A8 使用 v2 时应调用 `c_improvements.evaluate_improved_frozen`。
+
+已把 A 的 `Task_A`（`26c1c32`）合并到 C 分支，并处理 README/TASKS 的文字冲突；A 的数据/时间代码与 B 的分类代码没有被重写。
 
 ## 当前交付
 

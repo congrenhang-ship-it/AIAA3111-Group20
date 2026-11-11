@@ -100,6 +100,16 @@ Task A 交接与文件索引 · [中文](docs/TASK_A.zh-CN.md) · [English](docs
 
 每位组员在仓库根目录运行 `python code/download_data.py` 获取并验证同一份原始数据。文件保存在被 Git 忽略的 `data/creditcard.csv`。手动下载、校验值和预期结果见 [数据说明](data/README.md)。
 
+## C 的改进版本
+
+C 已完成训练内三种子、20 个评分候选的有界改进实验；内层选择的 IF 在正式验证 1% 预算下检出 24/57，原 IF 为 10/57、原距离为 14/57。完整方法、未改善的候选、局限与 A8 接法见 [C 改进说明](report/C_IMPROVEMENTS.md)。公开聚合/图表在 `results/c_improvements/`，第一轮基线在 `results/c_validation/`。两者均为验证证据，最终测试尚未执行。
+
+```bash
+python code/run_c_improvements.py --output data/c_improvements_new --publish results/c_improvements_new
+```
+
+`code/c_improvements.py` 与 `code/run_c_improvements.py` 由 C 负责。B 的实际预测到位后追加 `--classification-predictions`；模型和完整预测保留本地。当前 A/C 集合 43 项检查通过。
+
 ## 当前可运行的命令
 
 在仓库根目录执行：

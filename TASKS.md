@@ -55,7 +55,9 @@
 
 主责文件：code/evaluation.py、code/unsupervised.py；汇总 results/ 的公共格式。只做既定基础方法，不新增其他算法。
 
-C 交付记录（2026-11-11）：已合并 A 的 Task_A（26c1c32），完成真实 ULB 的 C3/C4 验证、群体与异常名单分析、7 张验证图及无监督配置冻结；35 项 A/C 检查通过。C5/C6 的分类组合代码已完整实现，正式选择仍待 B5；C7 的最终评价入口已实现，最终图等待 G2 后 A8；C8 方法、真实验证分析与问答已整理，分类/测试结论需后续补入。详见 [C_HANDOFF.md](report/C_HANDOFF.md)、[真实验证分析](report/C_VALIDATION_RESULTS.md) 与 results/c_validation/。不以代码完成或验证结果替代最终测试。
+C 第二轮改进已完成（2026-11-11）：协议预先提交，内层三种子比较 20 候选，固定选择 IF 抽样 4096；同样 K=568，检出从原 IF 的 10 笔提高到 24 笔。43 项 A/C 检查通过，保存/恢复与冻结入口已核对。见 [改进结果与交接](report/C_IMPROVEMENTS.md)，当前配置在 results/c_improvements/；原 results/c_validation/ 保留。B5 和全组 G2/A8 依赖继续按下述任务记录，不提前勾选。
+
+C 第一轮交付记录（2026-11-11）：已合并 A 的 Task_A（26c1c32），完成真实 ULB 的 C3/C4 验证、群体与异常名单分析、7 张验证图及无监督配置冻结；35 项 A/C 检查通过。C5/C6 的分类组合代码已完整实现，正式选择仍待 B5；C7 的最终评价入口已实现，最终图等待 G2 后 A8；C8 方法、真实验证分析与问答已整理，分类/测试结论需后续补入。详见 [C_HANDOFF.md](report/C_HANDOFF.md)、[真实验证分析](report/C_VALIDATION_RESULTS.md) 与 results/c_validation/。不以代码完成或验证结果替代最终测试。
 
 - [x] **C1 固定预测表和排名规则。** 确认 row_id/Class/Time/method/score；规定 K 取整、稳定并列顺序、无正类及空组处理。先做 make_prediction_frame，验证 ID、长度、有限分数和对齐。完成后做 C2。
 - [x] **C2 完成公共评价并优先合并。** 用小型人工可核算例子检查 AP、top-K 的 TP/FP、Precision/Recall 和阈值混淆计数，额外检查并列、无正类。提供 evaluate_scores，使 A/B 可继续开发，不等聚类完成再交付。完成后做 C3。
