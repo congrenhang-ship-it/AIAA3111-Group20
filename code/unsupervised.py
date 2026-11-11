@@ -1190,11 +1190,11 @@ def run_experiment(
                 if row["classifier_share"] == config["B_combination"]["share"]
             ],
             figures,
-            "Validation - frozen B quota",
+            f"Validation - frozen classifier share {config['B_combination']['share']:.0%}",
             method_labels={
                 "classifier": config["B_combination"]["method"],
                 "anomaly": overall,
-                "combined": "B + anomaly",
+                "combined": "Frozen policy",
             },
             filename="B_complementarity.png",
         )

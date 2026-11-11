@@ -541,7 +541,13 @@ def save_comparison_figures(
     ax.set_xticks(x, [str(c["K"]) for c in comparisons])
     ax.set(xlabel="Review count K", ylabel="Fraud detected", title=label)
     if comparisons:
-        ax.legend()
+        ax.legend(fontsize=8)
+        maximum = max(
+            row[key]["TP"]
+            for row in comparisons
+            for key in ["classifier", "anomaly", "combined"]
+        )
+        ax.set_ylim(0, max(1, 1.3 * maximum))
     fig.tight_layout()
     path = output / filename
     fig.savefig(path, dpi=160)
