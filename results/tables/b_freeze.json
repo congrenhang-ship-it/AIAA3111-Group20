@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "owner": "B",
+  "status": "B_validation_selection_pending_group_review",
+  "group_G2_complete": false,
+  "test_evaluated": false,
+  "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+  "partitions": {
+    "train": {
+      "rows": 170235,
+      "frauds": 342,
+      "time_min": 0.0,
+      "time_max": 120392.0,
+      "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+    },
+    "validation": {
+      "rows": 56745,
+      "frauds": 57,
+      "time_min": 120393.0,
+      "time_max": 145233.0,
+      "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+    },
+    "test": {
+      "rows": 56746,
+      "frauds": 74,
+      "time_min": 145234.0,
+      "time_max": 172792.0,
+      "row_ids_sha256": "4909103f5579d282c4faa1ca32c3c57fdf328e5d2ade9533a297d3e0254ca5c9"
+    }
+  },
+  "feature_columns": [
+    "Time",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
+    "V16",
+    "V17",
+    "V18",
+    "V19",
+    "V20",
+    "V21",
+    "V22",
+    "V23",
+    "V24",
+    "V25",
+    "V26",
+    "V27",
+    "V28",
+    "Amount"
+  ],
+  "seed": 42,
+  "method": "logistic_regression_class_weight",
+  "model_name": "logistic_regression",
+  "strategy": "class_weight",
+  "classifier_parameters": {
+    "C": 1.0,
+    "class_weight": "balanced",
+    "dual": false,
+    "fit_intercept": true,
+    "intercept_scaling": 1,
+    "l1_ratio": 0.0,
+    "max_iter": 1000,
+    "n_jobs": null,
+    "penalty": "deprecated",
+    "random_state": 42,
+    "solver": "lbfgs",
+    "tol": 0.0001,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "preprocessing": "StandardScaler for logistic_regression/gaussian_nb; passthrough for trees",
+  "resampling": "training only; seeded 1:1 random undersampling without replacement when selected",
+  "selection_rule": "maximum validation TP at 1%; then AP; then method name ascending",
+  "primary_review_fraction": 0.01,
+  "review_fractions": [
+    0.001,
+    0.005,
+    0.01,
+    0.02
+  ],
+  "ranking": "score descending; row_id ascending; K=ceil(N*q)",
+  "threshold": null,
+  "threshold_reason": "Budget ranking defines decisions; no fixed probability threshold selected.",
+  "refit_policy": "training partition only, never train+validation",
+  "predictions_path": "data/b_validation/selected_validation_predictions.csv",
+  "predictions_sha256": "924ccb64a4e5d6ac1b41bc477e069cf7e7d673c75c5311d2052a38f027af92de",
+  "provenance": {
+    "owner": "B",
+    "phase": "validation",
+    "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "partitions": {
+      "train": {
+        "rows": 170235,
+        "frauds": 342,
+        "time_min": 0.0,
+        "time_max": 120392.0,
+        "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+      },
+      "validation": {
+        "rows": 56745,
+        "frauds": 57,
+        "time_min": 120393.0,
+        "time_max": 145233.0,
+        "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+      },
+      "test": {
+        "rows": 56746,
+        "frauds": 74,
+        "time_min": 145234.0,
+        "time_max": 172792.0,
+        "row_ids_sha256": "4909103f5579d282c4faa1ca32c3c57fdf328e5d2ade9533a297d3e0254ca5c9"
+      }
+    },
+    "python": "3.12.6",
+    "versions": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.1"
+    },
+    "dependency_lock_mismatches": {
+      "numpy": {
+        "actual": "2.4.4",
+        "required": "2.5.4"
+      },
+      "pandas": {
+        "actual": "3.0.2",
+        "required": "3.1.1"
+      },
+      "scikit-learn": {
+        "actual": "1.8.0",
+        "required": "1.9.1"
+      },
+      "scipy": {
+        "actual": "1.17.1",
+        "required": "1.18.1"
+      }
+    },
+    "source_commit": "e85209443496c836b356b0d3961913ca87830656",
+    "source_dirty": true,
+    "code_sha256": {
+      "code/classification.py": "2232c6063dbedd132678b8f40b2d4c8b6516a52c049c0ce539f023fdab4886c4",
+      "code/run_b_validation.py": "2586e7c7085b879db7894783da98959442231a8831d07adb1c434fbd4a7f8da2",
+      "code/preprocessing.py": "45f94c471a4d71129ab7a66a3693e81ee534b7293060db4584438a8b398d9e50",
+      "code/evaluation.py": "79618e84e60c0535f7c2059bc38f0a39df3ba85be1ab20ebb334e778b7eccdf0"
+    },
+    "command": "py -3.12 code/run_b_validation.py"
+  },
+  "fitted_model_path": "data/b_validation/selected_model.joblib"
+}

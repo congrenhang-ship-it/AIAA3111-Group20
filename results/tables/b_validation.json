@@ -1,0 +1,624 @@
+{
+  "metadata": {
+    "owner": "B",
+    "phase": "validation",
+    "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "partitions": {
+      "train": {
+        "rows": 170235,
+        "frauds": 342,
+        "time_min": 0.0,
+        "time_max": 120392.0,
+        "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+      },
+      "validation": {
+        "rows": 56745,
+        "frauds": 57,
+        "time_min": 120393.0,
+        "time_max": 145233.0,
+        "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+      },
+      "test": {
+        "rows": 56746,
+        "frauds": 74,
+        "time_min": 145234.0,
+        "time_max": 172792.0,
+        "row_ids_sha256": "4909103f5579d282c4faa1ca32c3c57fdf328e5d2ade9533a297d3e0254ca5c9"
+      }
+    },
+    "python": "3.12.6",
+    "versions": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.1"
+    },
+    "dependency_lock_mismatches": {
+      "numpy": {
+        "actual": "2.4.4",
+        "required": "2.5.4"
+      },
+      "pandas": {
+        "actual": "3.0.2",
+        "required": "3.1.1"
+      },
+      "scikit-learn": {
+        "actual": "1.8.0",
+        "required": "1.9.1"
+      },
+      "scipy": {
+        "actual": "1.17.1",
+        "required": "1.18.1"
+      }
+    },
+    "source_commit": "e85209443496c836b356b0d3961913ca87830656",
+    "source_dirty": true,
+    "code_sha256": {
+      "code/classification.py": "2232c6063dbedd132678b8f40b2d4c8b6516a52c049c0ce539f023fdab4886c4",
+      "code/run_b_validation.py": "2586e7c7085b879db7894783da98959442231a8831d07adb1c434fbd4a7f8da2",
+      "code/preprocessing.py": "45f94c471a4d71129ab7a66a3693e81ee534b7293060db4584438a8b398d9e50",
+      "code/evaluation.py": "79618e84e60c0535f7c2059bc38f0a39df3ba85be1ab20ebb334e778b7eccdf0"
+    },
+    "command": "py -3.12 code/run_b_validation.py"
+  },
+  "selection_rule": "maximum validation TP at 1%; then AP; then method name ascending",
+  "experiments": [
+    {
+      "method": "logistic_regression_original",
+      "model_name": "logistic_regression",
+      "strategy": "original",
+      "train_seconds": 0.5827028000494465,
+      "seed": 42,
+      "classifier_parameters": {
+        "C": 1.0,
+        "class_weight": null,
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": 0.0,
+        "max_iter": 1000,
+        "n_jobs": null,
+        "penalty": "deprecated",
+        "random_state": 42,
+        "solver": "lbfgs",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "fitted_class_counts": {
+        "0": 169893,
+        "1": 342
+      },
+      "metrics": {
+        "status": "ok",
+        "n_samples": 56745,
+        "n_positive": 57,
+        "prevalence": 0.0010044937879989425,
+        "AP": 0.6424292493857157,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010044937879989425,
+            "K": 57,
+            "TP": 37,
+            "FP": 20,
+            "FN": 20,
+            "TN": 56668,
+            "precision_at_k": 0.6491228070175439,
+            "recall_at_k": 0.6491228070175439,
+            "random_expected_TP": 0.05725614591593972,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.0010044937879989425
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005004846241959644,
+            "K": 284,
+            "TP": 46,
+            "FP": 238,
+            "FN": 11,
+            "TN": 56450,
+            "precision_at_k": 0.1619718309859155,
+            "recall_at_k": 0.8070175438596491,
+            "random_expected_TP": 0.2852762357916997,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.005004846241959644
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010009692483919287,
+            "K": 568,
+            "TP": 48,
+            "FP": 520,
+            "FN": 9,
+            "TN": 56168,
+            "precision_at_k": 0.08450704225352113,
+            "recall_at_k": 0.8421052631578947,
+            "random_expected_TP": 0.5705524715833994,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.010009692483919287
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020001762269803505,
+            "K": 1135,
+            "TP": 48,
+            "FP": 1087,
+            "FN": 9,
+            "TN": 55601,
+            "precision_at_k": 0.04229074889867841,
+            "recall_at_k": 0.8421052631578947,
+            "random_expected_TP": 1.1401004493787998,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.020001762269803505
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "decision_tree_original",
+      "model_name": "decision_tree",
+      "strategy": "original",
+      "train_seconds": 11.33752150007058,
+      "seed": 42,
+      "classifier_parameters": {
+        "ccp_alpha": 0.0,
+        "class_weight": null,
+        "criterion": "gini",
+        "max_depth": null,
+        "max_features": null,
+        "max_leaf_nodes": null,
+        "min_impurity_decrease": 0.0,
+        "min_samples_leaf": 1,
+        "min_samples_split": 2,
+        "min_weight_fraction_leaf": 0.0,
+        "monotonic_cst": null,
+        "random_state": 42,
+        "splitter": "best"
+      },
+      "fitted_class_counts": {
+        "0": 169893,
+        "1": 342
+      },
+      "metrics": {
+        "status": "ok",
+        "n_samples": 56745,
+        "n_positive": 57,
+        "prevalence": 0.0010044937879989425,
+        "AP": 0.3019221328499679,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010044937879989425,
+            "K": 57,
+            "TP": 25,
+            "FP": 32,
+            "FN": 32,
+            "TN": 56656,
+            "precision_at_k": 0.43859649122807015,
+            "recall_at_k": 0.43859649122807015,
+            "random_expected_TP": 0.05725614591593972,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.0010044937879989425
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005004846241959644,
+            "K": 284,
+            "TP": 38,
+            "FP": 246,
+            "FN": 19,
+            "TN": 56442,
+            "precision_at_k": 0.13380281690140844,
+            "recall_at_k": 0.6666666666666666,
+            "random_expected_TP": 0.2852762357916997,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.005004846241959644
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010009692483919287,
+            "K": 568,
+            "TP": 38,
+            "FP": 530,
+            "FN": 19,
+            "TN": 56158,
+            "precision_at_k": 0.06690140845070422,
+            "recall_at_k": 0.6666666666666666,
+            "random_expected_TP": 0.5705524715833994,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.010009692483919287
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020001762269803505,
+            "K": 1135,
+            "TP": 38,
+            "FP": 1097,
+            "FN": 19,
+            "TN": 55591,
+            "precision_at_k": 0.033480176211453744,
+            "recall_at_k": 0.6666666666666666,
+            "random_expected_TP": 1.1401004493787998,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.020001762269803505
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "gaussian_nb_original",
+      "model_name": "gaussian_nb",
+      "strategy": "original",
+      "train_seconds": 0.2382037000497803,
+      "seed": 42,
+      "classifier_parameters": {
+        "priors": null,
+        "var_smoothing": 1e-09
+      },
+      "fitted_class_counts": {
+        "0": 169893,
+        "1": 342
+      },
+      "metrics": {
+        "status": "ok",
+        "n_samples": 56745,
+        "n_positive": 57,
+        "prevalence": 0.0010044937879989425,
+        "AP": 0.03376255989545022,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010044937879989425,
+            "K": 57,
+            "TP": 1,
+            "FP": 56,
+            "FN": 56,
+            "TN": 56632,
+            "precision_at_k": 0.017543859649122806,
+            "recall_at_k": 0.017543859649122806,
+            "random_expected_TP": 0.05725614591593972,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.0010044937879989425
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005004846241959644,
+            "K": 284,
+            "TP": 7,
+            "FP": 277,
+            "FN": 50,
+            "TN": 56411,
+            "precision_at_k": 0.02464788732394366,
+            "recall_at_k": 0.12280701754385964,
+            "random_expected_TP": 0.2852762357916997,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.005004846241959644
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010009692483919287,
+            "K": 568,
+            "TP": 20,
+            "FP": 548,
+            "FN": 37,
+            "TN": 56140,
+            "precision_at_k": 0.035211267605633804,
+            "recall_at_k": 0.3508771929824561,
+            "random_expected_TP": 0.5705524715833994,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.010009692483919287
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020001762269803505,
+            "K": 1135,
+            "TP": 43,
+            "FP": 1092,
+            "FN": 14,
+            "TN": 55596,
+            "precision_at_k": 0.03788546255506608,
+            "recall_at_k": 0.7543859649122807,
+            "random_expected_TP": 1.1401004493787998,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.020001762269803505
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "random_forest_original",
+      "model_name": "random_forest",
+      "strategy": "original",
+      "train_seconds": 121.46874350006692,
+      "seed": 42,
+      "classifier_parameters": {
+        "bootstrap": true,
+        "ccp_alpha": 0.0,
+        "class_weight": null,
+        "criterion": "gini",
+        "max_depth": null,
+        "max_features": "sqrt",
+        "max_leaf_nodes": null,
+        "max_samples": null,
+        "min_impurity_decrease": 0.0,
+        "min_samples_leaf": 1,
+        "min_samples_split": 2,
+        "min_weight_fraction_leaf": 0.0,
+        "monotonic_cst": null,
+        "n_estimators": 100,
+        "n_jobs": 1,
+        "oob_score": false,
+        "random_state": 42,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "fitted_class_counts": {
+        "0": 169893,
+        "1": 342
+      },
+      "metrics": {
+        "status": "ok",
+        "n_samples": 56745,
+        "n_positive": 57,
+        "prevalence": 0.0010044937879989425,
+        "AP": 0.757047898737923,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010044937879989425,
+            "K": 57,
+            "TP": 43,
+            "FP": 14,
+            "FN": 14,
+            "TN": 56674,
+            "precision_at_k": 0.7543859649122807,
+            "recall_at_k": 0.7543859649122807,
+            "random_expected_TP": 0.05725614591593972,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.0010044937879989425
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005004846241959644,
+            "K": 284,
+            "TP": 46,
+            "FP": 238,
+            "FN": 11,
+            "TN": 56450,
+            "precision_at_k": 0.1619718309859155,
+            "recall_at_k": 0.8070175438596491,
+            "random_expected_TP": 0.2852762357916997,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.005004846241959644
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010009692483919287,
+            "K": 568,
+            "TP": 47,
+            "FP": 521,
+            "FN": 10,
+            "TN": 56167,
+            "precision_at_k": 0.08274647887323944,
+            "recall_at_k": 0.8245614035087719,
+            "random_expected_TP": 0.5705524715833994,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.010009692483919287
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020001762269803505,
+            "K": 1135,
+            "TP": 48,
+            "FP": 1087,
+            "FN": 9,
+            "TN": 55601,
+            "precision_at_k": 0.04229074889867841,
+            "recall_at_k": 0.8421052631578947,
+            "random_expected_TP": 1.1401004493787998,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.020001762269803505
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "model_name": "logistic_regression",
+      "strategy": "class_weight",
+      "train_seconds": 0.9402163999620825,
+      "seed": 42,
+      "classifier_parameters": {
+        "C": 1.0,
+        "class_weight": "balanced",
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": 0.0,
+        "max_iter": 1000,
+        "n_jobs": null,
+        "penalty": "deprecated",
+        "random_state": 42,
+        "solver": "lbfgs",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "fitted_class_counts": {
+        "0": 169893,
+        "1": 342
+      },
+      "metrics": {
+        "status": "ok",
+        "n_samples": 56745,
+        "n_positive": 57,
+        "prevalence": 0.0010044937879989425,
+        "AP": 0.7726808523329118,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010044937879989425,
+            "K": 57,
+            "TP": 42,
+            "FP": 15,
+            "FN": 15,
+            "TN": 56673,
+            "precision_at_k": 0.7368421052631579,
+            "recall_at_k": 0.7368421052631579,
+            "random_expected_TP": 0.05725614591593972,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.0010044937879989425
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005004846241959644,
+            "K": 284,
+            "TP": 48,
+            "FP": 236,
+            "FN": 9,
+            "TN": 56452,
+            "precision_at_k": 0.16901408450704225,
+            "recall_at_k": 0.8421052631578947,
+            "random_expected_TP": 0.2852762357916997,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.005004846241959644
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010009692483919287,
+            "K": 568,
+            "TP": 49,
+            "FP": 519,
+            "FN": 8,
+            "TN": 56169,
+            "precision_at_k": 0.08626760563380281,
+            "recall_at_k": 0.8596491228070176,
+            "random_expected_TP": 0.5705524715833994,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.010009692483919287
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020001762269803505,
+            "K": 1135,
+            "TP": 49,
+            "FP": 1086,
+            "FN": 8,
+            "TN": 55602,
+            "precision_at_k": 0.04317180616740088,
+            "recall_at_k": 0.8596491228070176,
+            "random_expected_TP": 1.1401004493787998,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.020001762269803505
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    },
+    {
+      "method": "logistic_regression_random_undersample",
+      "model_name": "logistic_regression",
+      "strategy": "random_undersample",
+      "train_seconds": 0.0464855000609532,
+      "seed": 42,
+      "classifier_parameters": {
+        "C": 1.0,
+        "class_weight": null,
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": 0.0,
+        "max_iter": 1000,
+        "n_jobs": null,
+        "penalty": "deprecated",
+        "random_state": 42,
+        "solver": "lbfgs",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "fitted_class_counts": {
+        "0": 342,
+        "1": 342
+      },
+      "metrics": {
+        "status": "ok",
+        "n_samples": 56745,
+        "n_positive": 57,
+        "prevalence": 0.0010044937879989425,
+        "AP": 0.15742211623121063,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010044937879989425,
+            "K": 57,
+            "TP": 10,
+            "FP": 47,
+            "FN": 47,
+            "TN": 56641,
+            "precision_at_k": 0.17543859649122806,
+            "recall_at_k": 0.17543859649122806,
+            "random_expected_TP": 0.05725614591593972,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.0010044937879989425
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005004846241959644,
+            "K": 284,
+            "TP": 42,
+            "FP": 242,
+            "FN": 15,
+            "TN": 56446,
+            "precision_at_k": 0.14788732394366197,
+            "recall_at_k": 0.7368421052631579,
+            "random_expected_TP": 0.2852762357916997,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.005004846241959644
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010009692483919287,
+            "K": 568,
+            "TP": 48,
+            "FP": 520,
+            "FN": 9,
+            "TN": 56168,
+            "precision_at_k": 0.08450704225352113,
+            "recall_at_k": 0.8421052631578947,
+            "random_expected_TP": 0.5705524715833994,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.010009692483919287
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020001762269803505,
+            "K": 1135,
+            "TP": 50,
+            "FP": 1085,
+            "FN": 7,
+            "TN": 55603,
+            "precision_at_k": 0.04405286343612335,
+            "recall_at_k": 0.8771929824561403,
+            "random_expected_TP": 1.1401004493787998,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.020001762269803505
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    }
+  ],
+  "selected": "logistic_regression_class_weight"
+}
