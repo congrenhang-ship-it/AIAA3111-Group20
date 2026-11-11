@@ -3821,5 +3821,324 @@
         "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
       }
     }
-  ]
+  ],
+  "frozen_config": {
+    "schema_version": 1,
+    "owner": "C",
+    "status": "unsupervised_frozen",
+    "group_G2_complete": false,
+    "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "partitions": {
+      "train": {
+        "rows": 170235,
+        "frauds": 342,
+        "time_min": 0.0,
+        "time_max": 120392.0,
+        "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+      },
+      "validation": {
+        "rows": 56745,
+        "frauds": 57,
+        "time_min": 120393.0,
+        "time_max": 145233.0,
+        "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+      }
+    },
+    "feature_columns": [
+      "Time",
+      "V1",
+      "V2",
+      "V3",
+      "V4",
+      "V5",
+      "V6",
+      "V7",
+      "V8",
+      "V9",
+      "V10",
+      "V11",
+      "V12",
+      "V13",
+      "V14",
+      "V15",
+      "V16",
+      "V17",
+      "V18",
+      "V19",
+      "V20",
+      "V21",
+      "V22",
+      "V23",
+      "V24",
+      "V25",
+      "V26",
+      "V27",
+      "V28",
+      "Amount"
+    ],
+    "seed": 42,
+    "scaler": "StandardScaler fitted on training only",
+    "n_clusters": 3,
+    "kmeans_n_init": 10,
+    "k_selection": "highest mean training sample silhouette; smaller k on ties",
+    "forest_params": {
+      "bootstrap": false,
+      "contamination": "auto",
+      "max_features": 1.0,
+      "max_samples": 256,
+      "n_estimators": 100,
+      "n_jobs": 1,
+      "random_state": 42,
+      "verbose": 0,
+      "warm_start": false
+    },
+    "forest_score": "negative score_samples",
+    "primary_review_fraction": 0.01,
+    "review_fractions": [
+      0.001,
+      0.005,
+      0.01,
+      0.02
+    ],
+    "selected_anomaly_method": "kmeans_distance",
+    "anomaly_selection": "validation TP at 1%; then AP; then method name",
+    "combination": {
+      "status": "waiting_for_B5",
+      "classifier_method": null,
+      "anomaly_method": "kmeans_distance",
+      "classifier_share": null
+    },
+    "combination_selection": "validation TP at 1%; ties prefer larger classifier share",
+    "combination_candidates": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "ranking": "score descending; row_id ascending; K=ceil(N*q)",
+    "refill": "floor(K*classifier_share) classifier first; scan anomaly skipping duplicates to K",
+    "refit_policy": "retain training-only fitted pipelines; no train+validation refit",
+    "time_window_diagnostic": {
+      "window_seconds": 3600,
+      "origin": 0,
+      "note": "validation diagnostic using A interface; final windows owned by A"
+    },
+    "source_commit": "bce1c5e40d33522fa266bb5719b3254c30ed32f2",
+    "code_sha256": {
+      "run_c_validation.py": "0faef0f48a994714a2c4652568dd05ac1e9376b362cafd6b3ae2bccb335b2ee2",
+      "evaluation.py": "abe7be056d0eb1ade504807921c4e822c8aa2d910ae67d683536d438259222d0",
+      "unsupervised.py": "06b5c6a380ed83187019c9432f4ff585f1509941a6760cf26cffce3feb5d8af2",
+      "c_reporting.py": "fc82fee6026ee3d5baaf0d4d482924871c83f27afbd988751d981211e14a2d6b",
+      "preprocessing.py": "8d1eaa9e986b2f29a0beca26f9de29a565c0280a7db23411bf7af8799f1c4baa",
+      "temporal.py": "f45b13e63e78f3d7d202906d85d0088eea3e40930ca3bcb91074abf8f0e74ae0"
+    },
+    "versions": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.1",
+      "scikit-learn": "1.9.1",
+      "matplotlib": "3.11.2"
+    },
+    "test_evaluated": false
+  },
+  "training_structure": [
+    {
+      "k": 3,
+      "seed": 42,
+      "inertia": 4704629.112612293,
+      "sample_size": 1000,
+      "sample_silhouette": 0.14350045165766398,
+      "seed_stability_ARI": 0.5558339949480329
+    },
+    {
+      "k": 3,
+      "seed": 43,
+      "inertia": 4694360.116096775,
+      "sample_size": 1000,
+      "sample_silhouette": 0.1639753427015326,
+      "seed_stability_ARI": 0.5558339949480329
+    },
+    {
+      "k": 5,
+      "seed": 42,
+      "inertia": 4412185.216539814,
+      "sample_size": 1000,
+      "sample_silhouette": 0.0633965134669502,
+      "seed_stability_ARI": 0.15299248743121796
+    },
+    {
+      "k": 5,
+      "seed": 43,
+      "inertia": 4407329.653706987,
+      "sample_size": 1000,
+      "sample_silhouette": 0.07048848648862552,
+      "seed_stability_ARI": 0.15299248743121796
+    },
+    {
+      "k": 8,
+      "seed": 42,
+      "inertia": 3961372.4419296724,
+      "sample_size": 1000,
+      "sample_silhouette": 0.06452401307116984,
+      "seed_stability_ARI": 0.13168826317343071
+    },
+    {
+      "k": 8,
+      "seed": 43,
+      "inertia": 4028542.5187917966,
+      "sample_size": 1000,
+      "sample_silhouette": 0.05826822302094314,
+      "seed_stability_ARI": 0.13168826317343071
+    }
+  ],
+  "training_cluster_profile": [
+    {
+      "cluster_id": 0,
+      "n_samples": 23559,
+      "n_positive": 182,
+      "prevalence": 0.007725285453542171,
+      "fraud_coverage": 0.5321637426900585
+    },
+    {
+      "cluster_id": 1,
+      "n_samples": 126540,
+      "n_positive": 109,
+      "prevalence": 0.0008613877034929667,
+      "fraud_coverage": 0.31871345029239767
+    },
+    {
+      "cluster_id": 2,
+      "n_samples": 20136,
+      "n_positive": 51,
+      "prevalence": 0.002532777115613826,
+      "fraud_coverage": 0.14912280701754385
+    }
+  ],
+  "validation_cluster_feature_means": [
+    {
+      "cluster_id": 0,
+      "Time": 132680.5393914131,
+      "V1": 0.17453499956939972,
+      "V2": -1.6189729416752563,
+      "V3": -0.8548644854348733,
+      "V4": -1.1304213684511677,
+      "V5": -0.7350790981075525,
+      "V6": 0.21677907455956388,
+      "V7": -0.15584478043684236,
+      "V8": -0.11283291463203733,
+      "V9": -0.894358467519836,
+      "V10": 0.7491610408741177,
+      "V11": -0.4029017372358085,
+      "V12": -0.2005923549476457,
+      "V13": 0.186575075384816,
+      "V14": -0.08396536325940028,
+      "V15": -0.2939781083409613,
+      "V16": -0.8750162271603521,
+      "V17": 0.045542236221738516,
+      "V18": 0.7488908934650352,
+      "V19": -0.36565906181442576,
+      "V20": -0.14113846979226113,
+      "V21": -0.06098753385116588,
+      "V22": -0.11119488901544747,
+      "V23": 0.006546300944032827,
+      "V24": -0.039696400992926255,
+      "V25": -0.18554873578624892,
+      "V26": -0.042149541187123434,
+      "V27": 0.004750812785430758,
+      "V28": 0.008385441093092248,
+      "Amount": 270.6243090871196
+    },
+    {
+      "cluster_id": 1,
+      "Time": 132921.21415088337,
+      "V1": 0.2584232178628717,
+      "V2": 0.1127555323300146,
+      "V3": -0.7259786900157609,
+      "V4": 0.014783987283087559,
+      "V5": 0.4814812206935546,
+      "V6": -0.10891518788632353,
+      "V7": 0.19633842920371544,
+      "V8": -0.07713927385424281,
+      "V9": 0.12348838688070601,
+      "V10": -0.05244212911132267,
+      "V11": -0.24593856707334547,
+      "V12": 0.1745752884857081,
+      "V13": -0.19217423157154165,
+      "V14": -0.12362917502846041,
+      "V15": -0.18400980796357014,
+      "V16": 0.17793165935789915,
+      "V17": -0.08819713434212356,
+      "V18": -0.07732575979371104,
+      "V19": 0.11019892500719397,
+      "V20": -0.03473150837334762,
+      "V21": 0.08281006831552175,
+      "V22": 0.2140229361653782,
+      "V23": 0.03194456379352013,
+      "V24": -0.01848586089862598,
+      "V25": -0.11225917456496029,
+      "V26": -0.024124030323988875,
+      "V27": -0.006043849357245254,
+      "V28": -0.0006083118318719901,
+      "Amount": 66.93982268977074
+    }
+  ],
+  "verification": {
+    "verified_on": "2026-11-11",
+    "owner": "C",
+    "data_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "experiment_source_commit": "bce1c5e40d33522fa266bb5719b3254c30ed32f2",
+    "experiment_worktree_clean": true,
+    "A_C_unittest": {
+      "passed": 35,
+      "skipped": 0,
+      "command": "python -m unittest discover -s tests -v"
+    },
+    "temporary_A_C_D_combined_unittest": {
+      "passed": 42,
+      "skipped": 0,
+      "D_commit": "d638da1",
+      "merge_conflicts": false,
+      "D_actually_merged": false
+    },
+    "pip_check": "No broken requirements found",
+    "real_validation_audit": {
+      "restored_model_scores_match": true,
+      "restored_model_metrics_match": true,
+      "reporting_revisions_leave_metrics_unchanged": true,
+      "code_sha256_match": true,
+      "group_global_counts_reconcile": true,
+      "exact_K_unique_combination_ids": true,
+      "empty_trained_cluster_reported": true,
+      "public_export_no_transaction_lists_or_models": true
+    },
+    "visually_checked_figures": [
+      "anomaly_complementarity.png",
+      "cluster_prevalence.png",
+      "cluster_structure.png",
+      "group_performance.png",
+      "pr_curve.png",
+      "review_precision.png",
+      "review_recall.png"
+    ],
+    "official_classifier_evaluated": false,
+    "final_test_evaluated": false
+  },
+  "layout_verification": {
+    "prior_snapshot_commit": "997cdb7",
+    "A_C_tests_passed": 44,
+    "original_metrics_and_choices_unchanged": true,
+    "original_plot_bytes_preserved": true,
+    "saved_model_module_migration_verified": true,
+    "test_partition_scored": false,
+    "entry_point": "code/main.py",
+    "C_modules": [
+      "code/unsupervised.py",
+      "code/evaluation.py"
+    ],
+    "runtime_file_sha256": {
+      "code/unsupervised.py": "8b1b9f012b135dd64343d11262b5da9e2f33122231a90835e2e1b052ec8cfe93",
+      "code/evaluation.py": "e007fa022c6ba4d62373b14b0d6b00f17d559288f831563a41ae8102789fd0b8",
+      "code/main.py": "fed6dc9d7819ce79837da01901971af252b607e0030749d4b1b6109cfe71743e"
+    }
+  }
 }

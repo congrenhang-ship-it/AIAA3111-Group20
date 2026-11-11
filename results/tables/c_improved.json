@@ -5341,5 +5341,1811 @@
       "review_fraction": 0.02
     }
   ],
-  "B_comparisons": []
+  "B_comparisons": [],
+  "selection_record": {
+    "candidate_specifications": [
+      {
+        "id": "km_base",
+        "family": "kmeans",
+        "drop_time": false,
+        "log_amount": false,
+        "scaler": "standard",
+        "n_clusters": 3
+      },
+      {
+        "id": "km_no_time",
+        "family": "kmeans",
+        "drop_time": true,
+        "log_amount": false,
+        "scaler": "standard",
+        "n_clusters": 3
+      },
+      {
+        "id": "km_log_amount",
+        "family": "kmeans",
+        "drop_time": false,
+        "log_amount": true,
+        "scaler": "standard",
+        "n_clusters": 3
+      },
+      {
+        "id": "km_no_time_log",
+        "family": "kmeans",
+        "drop_time": true,
+        "log_amount": true,
+        "scaler": "standard",
+        "n_clusters": 3
+      },
+      {
+        "id": "km_robust",
+        "family": "kmeans",
+        "drop_time": false,
+        "log_amount": false,
+        "scaler": "robust",
+        "n_clusters": 3
+      },
+      {
+        "id": "km_no_time_log_robust",
+        "family": "kmeans",
+        "drop_time": true,
+        "log_amount": true,
+        "scaler": "robust",
+        "n_clusters": 3
+      },
+      {
+        "id": "if_base",
+        "family": "isolation_forest",
+        "drop_time": false,
+        "log_amount": false,
+        "scaler": "standard",
+        "n_estimators": 100,
+        "max_samples": 256
+      },
+      {
+        "id": "if_no_time",
+        "family": "isolation_forest",
+        "drop_time": true,
+        "log_amount": false,
+        "scaler": "standard",
+        "n_estimators": 100,
+        "max_samples": 256
+      },
+      {
+        "id": "if_log_amount",
+        "family": "isolation_forest",
+        "drop_time": false,
+        "log_amount": true,
+        "scaler": "standard",
+        "n_estimators": 100,
+        "max_samples": 256
+      },
+      {
+        "id": "if_no_time_log",
+        "family": "isolation_forest",
+        "drop_time": true,
+        "log_amount": true,
+        "scaler": "standard",
+        "n_estimators": 100,
+        "max_samples": 256
+      },
+      {
+        "id": "if_sample1024",
+        "family": "isolation_forest",
+        "drop_time": false,
+        "log_amount": false,
+        "scaler": "standard",
+        "n_estimators": 100,
+        "max_samples": 1024
+      },
+      {
+        "id": "if_sample4096",
+        "family": "isolation_forest",
+        "drop_time": false,
+        "log_amount": false,
+        "scaler": "standard",
+        "n_estimators": 100,
+        "max_samples": 4096
+      },
+      {
+        "id": "if_trees300",
+        "family": "isolation_forest",
+        "drop_time": false,
+        "log_amount": false,
+        "scaler": "standard",
+        "n_estimators": 300,
+        "max_samples": 256
+      },
+      {
+        "id": "if_joint",
+        "family": "isolation_forest",
+        "drop_time": true,
+        "log_amount": true,
+        "scaler": "standard",
+        "n_estimators": 300,
+        "max_samples": 1024
+      }
+    ],
+    "inner_per_seed": [
+      {
+        "candidate": "km_base_raw",
+        "seed": 42,
+        "K": 341,
+        "TP": 63,
+        "AP": 0.3541829478009761,
+        "precision": 0.18475073313782991,
+        "recall": 0.75
+      },
+      {
+        "candidate": "km_base_relative",
+        "seed": 42,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.3612967867248817,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "km_no_time_raw",
+        "seed": 42,
+        "K": 341,
+        "TP": 40,
+        "AP": 0.11772768260584304,
+        "precision": 0.11730205278592376,
+        "recall": 0.47619047619047616
+      },
+      {
+        "candidate": "km_no_time_relative",
+        "seed": 42,
+        "K": 341,
+        "TP": 17,
+        "AP": 0.020388288426428362,
+        "precision": 0.04985337243401759,
+        "recall": 0.20238095238095238
+      },
+      {
+        "candidate": "km_log_amount_raw",
+        "seed": 42,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.36854915577983655,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "km_log_amount_relative",
+        "seed": 42,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.3702227647796314,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "km_no_time_log_raw",
+        "seed": 42,
+        "K": 341,
+        "TP": 42,
+        "AP": 0.12678802810578116,
+        "precision": 0.12316715542521994,
+        "recall": 0.5
+      },
+      {
+        "candidate": "km_no_time_log_relative",
+        "seed": 42,
+        "K": 341,
+        "TP": 17,
+        "AP": 0.02105839268894059,
+        "precision": 0.04985337243401759,
+        "recall": 0.20238095238095238
+      },
+      {
+        "candidate": "km_robust_raw",
+        "seed": 42,
+        "K": 341,
+        "TP": 52,
+        "AP": 0.14768896917125338,
+        "precision": 0.15249266862170088,
+        "recall": 0.6190476190476191
+      },
+      {
+        "candidate": "km_robust_relative",
+        "seed": 42,
+        "K": 341,
+        "TP": 43,
+        "AP": 0.11920011985740177,
+        "precision": 0.12609970674486803,
+        "recall": 0.5119047619047619
+      },
+      {
+        "candidate": "km_no_time_log_robust_raw",
+        "seed": 42,
+        "K": 341,
+        "TP": 51,
+        "AP": 0.16018357264957728,
+        "precision": 0.1495601173020528,
+        "recall": 0.6071428571428571
+      },
+      {
+        "candidate": "km_no_time_log_robust_relative",
+        "seed": 42,
+        "K": 341,
+        "TP": 34,
+        "AP": 0.10147081623634294,
+        "precision": 0.09970674486803519,
+        "recall": 0.40476190476190477
+      },
+      {
+        "candidate": "if_base",
+        "seed": 42,
+        "K": 341,
+        "TP": 62,
+        "AP": 0.2945469070786292,
+        "precision": 0.18181818181818182,
+        "recall": 0.7380952380952381
+      },
+      {
+        "candidate": "if_no_time",
+        "seed": 42,
+        "K": 341,
+        "TP": 58,
+        "AP": 0.359584973100463,
+        "precision": 0.17008797653958943,
+        "recall": 0.6904761904761905
+      },
+      {
+        "candidate": "if_log_amount",
+        "seed": 42,
+        "K": 341,
+        "TP": 62,
+        "AP": 0.3655271636221895,
+        "precision": 0.18181818181818182,
+        "recall": 0.7380952380952381
+      },
+      {
+        "candidate": "if_no_time_log",
+        "seed": 42,
+        "K": 341,
+        "TP": 59,
+        "AP": 0.3733884653891827,
+        "precision": 0.17302052785923755,
+        "recall": 0.7023809523809523
+      },
+      {
+        "candidate": "if_sample1024",
+        "seed": 42,
+        "K": 341,
+        "TP": 62,
+        "AP": 0.49704042454028124,
+        "precision": 0.18181818181818182,
+        "recall": 0.7380952380952381
+      },
+      {
+        "candidate": "if_sample4096",
+        "seed": 42,
+        "K": 341,
+        "TP": 63,
+        "AP": 0.5143930069786888,
+        "precision": 0.18475073313782991,
+        "recall": 0.75
+      },
+      {
+        "candidate": "if_trees300",
+        "seed": 42,
+        "K": 341,
+        "TP": 61,
+        "AP": 0.31717670810005644,
+        "precision": 0.17888563049853373,
+        "recall": 0.7261904761904762
+      },
+      {
+        "candidate": "if_joint",
+        "seed": 42,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.5052034642639179,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "km_base_raw",
+        "seed": 43,
+        "K": 341,
+        "TP": 63,
+        "AP": 0.3518172501127318,
+        "precision": 0.18475073313782991,
+        "recall": 0.75
+      },
+      {
+        "candidate": "km_base_relative",
+        "seed": 43,
+        "K": 341,
+        "TP": 61,
+        "AP": 0.3368674318556622,
+        "precision": 0.17888563049853373,
+        "recall": 0.7261904761904762
+      },
+      {
+        "candidate": "km_no_time_raw",
+        "seed": 43,
+        "K": 341,
+        "TP": 40,
+        "AP": 0.11809393161574165,
+        "precision": 0.11730205278592376,
+        "recall": 0.47619047619047616
+      },
+      {
+        "candidate": "km_no_time_relative",
+        "seed": 43,
+        "K": 341,
+        "TP": 17,
+        "AP": 0.020501177569528885,
+        "precision": 0.04985337243401759,
+        "recall": 0.20238095238095238
+      },
+      {
+        "candidate": "km_log_amount_raw",
+        "seed": 43,
+        "K": 341,
+        "TP": 42,
+        "AP": 0.12698488583980197,
+        "precision": 0.12316715542521994,
+        "recall": 0.5
+      },
+      {
+        "candidate": "km_log_amount_relative",
+        "seed": 43,
+        "K": 341,
+        "TP": 17,
+        "AP": 0.02093285066444276,
+        "precision": 0.04985337243401759,
+        "recall": 0.20238095238095238
+      },
+      {
+        "candidate": "km_no_time_log_raw",
+        "seed": 43,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.3689159317922652,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "km_no_time_log_relative",
+        "seed": 43,
+        "K": 341,
+        "TP": 63,
+        "AP": 0.3596482884932802,
+        "precision": 0.18475073313782991,
+        "recall": 0.75
+      },
+      {
+        "candidate": "km_robust_raw",
+        "seed": 43,
+        "K": 341,
+        "TP": 52,
+        "AP": 0.14768921696391923,
+        "precision": 0.15249266862170088,
+        "recall": 0.6190476190476191
+      },
+      {
+        "candidate": "km_robust_relative",
+        "seed": 43,
+        "K": 341,
+        "TP": 43,
+        "AP": 0.11925288224662817,
+        "precision": 0.12609970674486803,
+        "recall": 0.5119047619047619
+      },
+      {
+        "candidate": "km_no_time_log_robust_raw",
+        "seed": 43,
+        "K": 341,
+        "TP": 52,
+        "AP": 0.1597831848243264,
+        "precision": 0.15249266862170088,
+        "recall": 0.6190476190476191
+      },
+      {
+        "candidate": "km_no_time_log_robust_relative",
+        "seed": 43,
+        "K": 341,
+        "TP": 47,
+        "AP": 0.11332790081444195,
+        "precision": 0.1378299120234604,
+        "recall": 0.5595238095238095
+      },
+      {
+        "candidate": "if_base",
+        "seed": 43,
+        "K": 341,
+        "TP": 59,
+        "AP": 0.30806540822305595,
+        "precision": 0.17302052785923755,
+        "recall": 0.7023809523809523
+      },
+      {
+        "candidate": "if_no_time",
+        "seed": 43,
+        "K": 341,
+        "TP": 60,
+        "AP": 0.39334371444669186,
+        "precision": 0.17595307917888564,
+        "recall": 0.7142857142857143
+      },
+      {
+        "candidate": "if_log_amount",
+        "seed": 43,
+        "K": 341,
+        "TP": 59,
+        "AP": 0.34024708694326466,
+        "precision": 0.17302052785923755,
+        "recall": 0.7023809523809523
+      },
+      {
+        "candidate": "if_no_time_log",
+        "seed": 43,
+        "K": 341,
+        "TP": 60,
+        "AP": 0.41428257858815043,
+        "precision": 0.17595307917888564,
+        "recall": 0.7142857142857143
+      },
+      {
+        "candidate": "if_sample1024",
+        "seed": 43,
+        "K": 341,
+        "TP": 62,
+        "AP": 0.3897527584163218,
+        "precision": 0.18181818181818182,
+        "recall": 0.7380952380952381
+      },
+      {
+        "candidate": "if_sample4096",
+        "seed": 43,
+        "K": 341,
+        "TP": 63,
+        "AP": 0.4710947091943234,
+        "precision": 0.18475073313782991,
+        "recall": 0.75
+      },
+      {
+        "candidate": "if_trees300",
+        "seed": 43,
+        "K": 341,
+        "TP": 59,
+        "AP": 0.3192968852690367,
+        "precision": 0.17302052785923755,
+        "recall": 0.7023809523809523
+      },
+      {
+        "candidate": "if_joint",
+        "seed": 43,
+        "K": 341,
+        "TP": 62,
+        "AP": 0.4965308114318611,
+        "precision": 0.18181818181818182,
+        "recall": 0.7380952380952381
+      },
+      {
+        "candidate": "km_base_raw",
+        "seed": 44,
+        "K": 341,
+        "TP": 63,
+        "AP": 0.3541842976333172,
+        "precision": 0.18475073313782991,
+        "recall": 0.75
+      },
+      {
+        "candidate": "km_base_relative",
+        "seed": 44,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.3608053888023328,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "km_no_time_raw",
+        "seed": 44,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.3546318883645272,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "km_no_time_relative",
+        "seed": 44,
+        "K": 341,
+        "TP": 39,
+        "AP": 0.07051962862376532,
+        "precision": 0.11436950146627566,
+        "recall": 0.4642857142857143
+      },
+      {
+        "candidate": "km_log_amount_raw",
+        "seed": 44,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.36869950079603564,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "km_log_amount_relative",
+        "seed": 44,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.3743017316472444,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "km_no_time_log_raw",
+        "seed": 44,
+        "K": 341,
+        "TP": 42,
+        "AP": 0.1264946298942544,
+        "precision": 0.12316715542521994,
+        "recall": 0.5
+      },
+      {
+        "candidate": "km_no_time_log_relative",
+        "seed": 44,
+        "K": 341,
+        "TP": 17,
+        "AP": 0.021256725366676034,
+        "precision": 0.04985337243401759,
+        "recall": 0.20238095238095238
+      },
+      {
+        "candidate": "km_robust_raw",
+        "seed": 44,
+        "K": 341,
+        "TP": 52,
+        "AP": 0.14768921696391923,
+        "precision": 0.15249266862170088,
+        "recall": 0.6190476190476191
+      },
+      {
+        "candidate": "km_robust_relative",
+        "seed": 44,
+        "K": 341,
+        "TP": 43,
+        "AP": 0.11925288224662817,
+        "precision": 0.12609970674486803,
+        "recall": 0.5119047619047619
+      },
+      {
+        "candidate": "km_no_time_log_robust_raw",
+        "seed": 44,
+        "K": 341,
+        "TP": 53,
+        "AP": 0.17159560242398142,
+        "precision": 0.15542521994134897,
+        "recall": 0.6309523809523809
+      },
+      {
+        "candidate": "km_no_time_log_robust_relative",
+        "seed": 44,
+        "K": 341,
+        "TP": 43,
+        "AP": 0.12039764602216393,
+        "precision": 0.12609970674486803,
+        "recall": 0.5119047619047619
+      },
+      {
+        "candidate": "if_base",
+        "seed": 44,
+        "K": 341,
+        "TP": 60,
+        "AP": 0.2679984281497208,
+        "precision": 0.17595307917888564,
+        "recall": 0.7142857142857143
+      },
+      {
+        "candidate": "if_no_time",
+        "seed": 44,
+        "K": 341,
+        "TP": 63,
+        "AP": 0.45712886206812153,
+        "precision": 0.18475073313782991,
+        "recall": 0.75
+      },
+      {
+        "candidate": "if_log_amount",
+        "seed": 44,
+        "K": 341,
+        "TP": 61,
+        "AP": 0.29674435168776525,
+        "precision": 0.17888563049853373,
+        "recall": 0.7261904761904762
+      },
+      {
+        "candidate": "if_no_time_log",
+        "seed": 44,
+        "K": 341,
+        "TP": 64,
+        "AP": 0.504974254856135,
+        "precision": 0.187683284457478,
+        "recall": 0.7619047619047619
+      },
+      {
+        "candidate": "if_sample1024",
+        "seed": 44,
+        "K": 341,
+        "TP": 63,
+        "AP": 0.42552201044950577,
+        "precision": 0.18475073313782991,
+        "recall": 0.75
+      },
+      {
+        "candidate": "if_sample4096",
+        "seed": 44,
+        "K": 341,
+        "TP": 68,
+        "AP": 0.5041617640370305,
+        "precision": 0.19941348973607037,
+        "recall": 0.8095238095238095
+      },
+      {
+        "candidate": "if_trees300",
+        "seed": 44,
+        "K": 341,
+        "TP": 62,
+        "AP": 0.3525500389582381,
+        "precision": 0.18181818181818182,
+        "recall": 0.7380952380952381
+      },
+      {
+        "candidate": "if_joint",
+        "seed": 44,
+        "K": 341,
+        "TP": 62,
+        "AP": 0.4520211135240327,
+        "precision": 0.18181818181818182,
+        "recall": 0.7380952380952381
+      }
+    ],
+    "inner_pair_comparisons": [
+      {
+        "K": 341,
+        "classifier_share": 0.0,
+        "classifier_quota": 0,
+        "anomaly_quota": 341,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 282,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 42
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.25,
+        "classifier_quota": 85,
+        "anomaly_quota": 256,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 282,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 42
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.5,
+        "classifier_quota": 170,
+        "anomaly_quota": 171,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 282,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 42
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.75,
+        "classifier_quota": 255,
+        "anomaly_quota": 86,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 282,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 42
+      },
+      {
+        "K": 341,
+        "classifier_share": 1.0,
+        "classifier_quota": 341,
+        "anomaly_quota": 0,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 282,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 42
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.0,
+        "classifier_quota": 0,
+        "anomaly_quota": 341,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 286,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 43
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.25,
+        "classifier_quota": 85,
+        "anomaly_quota": 256,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 286,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 43
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.5,
+        "classifier_quota": 170,
+        "anomaly_quota": 171,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 286,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 43
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.75,
+        "classifier_quota": 255,
+        "anomaly_quota": 86,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 286,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 43
+      },
+      {
+        "K": 341,
+        "classifier_share": 1.0,
+        "classifier_quota": 341,
+        "anomaly_quota": 0,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 286,
+        "shared_frauds": 62,
+        "classifier_only_frauds": 1,
+        "anomaly_only_frauds": 1,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 43
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.0,
+        "classifier_quota": 0,
+        "anomaly_quota": 341,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 291,
+        "shared_frauds": 63,
+        "classifier_only_frauds": 0,
+        "anomaly_only_frauds": 5,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 68,
+          "FP": 273,
+          "FN": 16,
+          "TN": 33692,
+          "precision_at_k": 0.19941348973607037,
+          "recall_at_k": 0.8095238095238095
+        },
+        "combined": {
+          "K": 341,
+          "TP": 68,
+          "FP": 273,
+          "FN": 16,
+          "TN": 33692,
+          "precision_at_k": 0.19941348973607037,
+          "recall_at_k": 0.8095238095238095
+        },
+        "review_fraction": 0.01,
+        "seed": 44
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.25,
+        "classifier_quota": 85,
+        "anomaly_quota": 256,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 291,
+        "shared_frauds": 63,
+        "classifier_only_frauds": 0,
+        "anomaly_only_frauds": 5,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 68,
+          "FP": 273,
+          "FN": 16,
+          "TN": 33692,
+          "precision_at_k": 0.19941348973607037,
+          "recall_at_k": 0.8095238095238095
+        },
+        "combined": {
+          "K": 341,
+          "TP": 68,
+          "FP": 273,
+          "FN": 16,
+          "TN": 33692,
+          "precision_at_k": 0.19941348973607037,
+          "recall_at_k": 0.8095238095238095
+        },
+        "review_fraction": 0.01,
+        "seed": 44
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.5,
+        "classifier_quota": 170,
+        "anomaly_quota": 171,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 291,
+        "shared_frauds": 63,
+        "classifier_only_frauds": 0,
+        "anomaly_only_frauds": 5,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 68,
+          "FP": 273,
+          "FN": 16,
+          "TN": 33692,
+          "precision_at_k": 0.19941348973607037,
+          "recall_at_k": 0.8095238095238095
+        },
+        "combined": {
+          "K": 341,
+          "TP": 67,
+          "FP": 274,
+          "FN": 17,
+          "TN": 33691,
+          "precision_at_k": 0.19648093841642228,
+          "recall_at_k": 0.7976190476190477
+        },
+        "review_fraction": 0.01,
+        "seed": 44
+      },
+      {
+        "K": 341,
+        "classifier_share": 0.75,
+        "classifier_quota": 255,
+        "anomaly_quota": 86,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 291,
+        "shared_frauds": 63,
+        "classifier_only_frauds": 0,
+        "anomaly_only_frauds": 5,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 68,
+          "FP": 273,
+          "FN": 16,
+          "TN": 33692,
+          "precision_at_k": 0.19941348973607037,
+          "recall_at_k": 0.8095238095238095
+        },
+        "combined": {
+          "K": 341,
+          "TP": 66,
+          "FP": 275,
+          "FN": 18,
+          "TN": 33690,
+          "precision_at_k": 0.1935483870967742,
+          "recall_at_k": 0.7857142857142857
+        },
+        "review_fraction": 0.01,
+        "seed": 44
+      },
+      {
+        "K": 341,
+        "classifier_share": 1.0,
+        "classifier_quota": 341,
+        "anomaly_quota": 0,
+        "refill_rule": "classifier first; anomaly scan skipping duplicates",
+        "overlap_count": 291,
+        "shared_frauds": 63,
+        "classifier_only_frauds": 0,
+        "anomaly_only_frauds": 5,
+        "classifier": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "anomaly": {
+          "K": 341,
+          "TP": 68,
+          "FP": 273,
+          "FN": 16,
+          "TN": 33692,
+          "precision_at_k": 0.19941348973607037,
+          "recall_at_k": 0.8095238095238095
+        },
+        "combined": {
+          "K": 341,
+          "TP": 63,
+          "FP": 278,
+          "FN": 21,
+          "TN": 33687,
+          "precision_at_k": 0.18475073313782991,
+          "recall_at_k": 0.75
+        },
+        "review_fraction": 0.01,
+        "seed": 44
+      }
+    ]
+  },
+  "locked_choices": {
+    "selected_candidates": {
+      "kmeans": "km_base_raw",
+      "isolation_forest": "if_sample4096"
+    },
+    "selected_anomaly": "if_sample4096",
+    "distance_share": 0.0,
+    "selection_locked_at_UTC": "2026-11-11T04:49:12.039516+00:00"
+  },
+  "training_distance_calibration": {
+    "km_base": [
+      {
+        "cluster_id": 0,
+        "n_train": 23559,
+        "median": 4.09075586674704,
+        "iqr": 1.7708340932113584,
+        "denominator": 1.7708340932113584
+      },
+      {
+        "cluster_id": 1,
+        "n_train": 126540,
+        "median": 3.854618844404282,
+        "iqr": 1.5992894473815111,
+        "denominator": 1.5992894473815111
+      },
+      {
+        "cluster_id": 2,
+        "n_train": 20136,
+        "median": 4.240086853231207,
+        "iqr": 1.5171672805001282,
+        "denominator": 1.5171672805001282
+      }
+    ],
+    "km_no_time": [
+      {
+        "cluster_id": 0,
+        "n_train": 3060,
+        "median": 6.158785484868159,
+        "iqr": 3.5744832488653593,
+        "denominator": 3.5744832488653593
+      },
+      {
+        "cluster_id": 1,
+        "n_train": 147137,
+        "median": 3.911369780532003,
+        "iqr": 1.5809053694402784,
+        "denominator": 1.5809053694402784
+      },
+      {
+        "cluster_id": 2,
+        "n_train": 20038,
+        "median": 3.9362780793586483,
+        "iqr": 1.6247787656233488,
+        "denominator": 1.6247787656233488
+      }
+    ],
+    "km_log_amount": [
+      {
+        "cluster_id": 0,
+        "n_train": 64760,
+        "median": 4.3242603444769045,
+        "iqr": 1.4332856917942234,
+        "denominator": 1.4332856917942234
+      },
+      {
+        "cluster_id": 1,
+        "n_train": 85290,
+        "median": 3.7455084789613995,
+        "iqr": 1.5746303103500487,
+        "denominator": 1.5746303103500487
+      },
+      {
+        "cluster_id": 2,
+        "n_train": 20185,
+        "median": 4.320065585265981,
+        "iqr": 1.5130998224953816,
+        "denominator": 1.5130998224953816
+      }
+    ],
+    "km_no_time_log": [
+      {
+        "cluster_id": 0,
+        "n_train": 21341,
+        "median": 3.7636428235822126,
+        "iqr": 1.478090725464941,
+        "denominator": 1.478090725464941
+      },
+      {
+        "cluster_id": 1,
+        "n_train": 128700,
+        "median": 3.8651632383837855,
+        "iqr": 1.6034328737852857,
+        "denominator": 1.6034328737852857
+      },
+      {
+        "cluster_id": 2,
+        "n_train": 20194,
+        "median": 4.016889488947976,
+        "iqr": 1.6192794354741489,
+        "denominator": 1.6192794354741489
+      }
+    ],
+    "km_robust": [
+      {
+        "cluster_id": 0,
+        "n_train": 157978,
+        "median": 4.2307271685166565,
+        "iqr": 1.9653020948377704,
+        "denominator": 1.9653020948377704
+      },
+      {
+        "cluster_id": 1,
+        "n_train": 9317,
+        "median": 7.123942199158355,
+        "iqr": 5.67290157503149,
+        "denominator": 5.67290157503149
+      },
+      {
+        "cluster_id": 2,
+        "n_train": 2940,
+        "median": 10.716964898708646,
+        "iqr": 6.911533116359461,
+        "denominator": 6.911533116359461
+      }
+    ],
+    "km_no_time_log_robust": [
+      {
+        "cluster_id": 0,
+        "n_train": 9472,
+        "median": 6.776971150284854,
+        "iqr": 4.800981219003248,
+        "denominator": 4.800981219003248
+      },
+      {
+        "cluster_id": 1,
+        "n_train": 159481,
+        "median": 4.095392666571812,
+        "iqr": 1.875163018823006,
+        "denominator": 1.875163018823006
+      },
+      {
+        "cluster_id": 2,
+        "n_train": 1282,
+        "median": 17.3527035937164,
+        "iqr": 10.96686161900787,
+        "denominator": 10.96686161900787
+      }
+    ]
+  },
+  "fit_timings": [
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "km_base",
+      "seconds": 1.405219083011616
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "km_no_time",
+      "seconds": 1.0036440410185605
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "km_log_amount",
+      "seconds": 1.3087931660120375
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "km_no_time_log",
+      "seconds": 1.8245661660039332
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "km_robust",
+      "seconds": 1.4423656250000931
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "km_no_time_log_robust",
+      "seconds": 2.3328653750068042
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "if_base",
+      "seconds": 0.22822570899734274
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "if_no_time",
+      "seconds": 0.20409049998852424
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "if_log_amount",
+      "seconds": 0.20908349999808706
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "if_no_time_log",
+      "seconds": 0.20766462499159388
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "if_sample1024",
+      "seconds": 0.33974858399596997
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "if_sample4096",
+      "seconds": 0.3869127919897437
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "if_trees300",
+      "seconds": 0.5977819590189029
+    },
+    {
+      "stage": "inner",
+      "seed": 42,
+      "configuration": "if_joint",
+      "seconds": 0.9446952500147745
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "km_base",
+      "seconds": 1.4439413329819217
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "km_no_time",
+      "seconds": 1.3568082500132732
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "km_log_amount",
+      "seconds": 1.5649245000095107
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "km_no_time_log",
+      "seconds": 1.305485958000645
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "km_robust",
+      "seconds": 1.6333841249870602
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "km_no_time_log_robust",
+      "seconds": 1.9876414159953129
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "if_base",
+      "seconds": 0.24692391700227745
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "if_no_time",
+      "seconds": 0.2114720829995349
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "if_log_amount",
+      "seconds": 0.21207612499711104
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "if_no_time_log",
+      "seconds": 0.20784608300891705
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "if_sample1024",
+      "seconds": 0.31926254197605886
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "if_sample4096",
+      "seconds": 0.44556304201250896
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "if_trees300",
+      "seconds": 0.6028195840190165
+    },
+    {
+      "stage": "inner",
+      "seed": 43,
+      "configuration": "if_joint",
+      "seconds": 1.0609735829930287
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "km_base",
+      "seconds": 1.414086667005904
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "km_no_time",
+      "seconds": 1.182379709003726
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "km_log_amount",
+      "seconds": 1.3559492920176126
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "km_no_time_log",
+      "seconds": 1.236170916003175
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "km_robust",
+      "seconds": 1.4525420410209335
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "km_no_time_log_robust",
+      "seconds": 1.739577583008213
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "if_base",
+      "seconds": 0.21466354100266472
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "if_no_time",
+      "seconds": 0.22708874999079853
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "if_log_amount",
+      "seconds": 0.49310012502246536
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "if_no_time_log",
+      "seconds": 0.44007970902021043
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "if_sample1024",
+      "seconds": 0.5908918749773875
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "if_sample4096",
+      "seconds": 0.9492476249870379
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "if_trees300",
+      "seconds": 0.7874548329855315
+    },
+    {
+      "stage": "inner",
+      "seed": 44,
+      "configuration": "if_joint",
+      "seconds": 1.5470387499954086
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "km_base",
+      "seconds": 2.256418625009246
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "km_no_time",
+      "seconds": 1.4699314160097856
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "km_log_amount",
+      "seconds": 2.055349957983708
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "km_no_time_log",
+      "seconds": 1.7438184159982484
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "km_robust",
+      "seconds": 2.7024697919841856
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "km_no_time_log_robust",
+      "seconds": 4.10431675001746
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "if_base",
+      "seconds": 0.33282337500713766
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "if_no_time",
+      "seconds": 0.301500749978004
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "if_log_amount",
+      "seconds": 0.3588742919964716
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "if_no_time_log",
+      "seconds": 0.314777708001202
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "if_sample1024",
+      "seconds": 0.7313024580071215
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "if_sample4096",
+      "seconds": 1.1595752499997616
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "if_trees300",
+      "seconds": 0.8953759580035694
+    },
+    {
+      "stage": "full_train",
+      "seed": 42,
+      "configuration": "if_joint",
+      "seconds": 1.2265089169959538
+    }
+  ],
+  "verification": {
+    "persisted_selected_scores_match": true,
+    "test_evaluated": false,
+    "baseline_reproduced": true,
+    "A_C_tests_passed": 43,
+    "inner_scoring_rows": 60,
+    "validation_scoring_candidates": 20,
+    "fitted_pipelines": 56,
+    "selected_choices_match_prevalidation_lock": true,
+    "full_validation_frozen_replay_matches": true,
+    "group_global_counts_reconcile": true,
+    "exact_K_frozen_combinations": true,
+    "reporting_fix_leaves_all_choices_and_metrics_unchanged": true,
+    "source_hashes_match": true,
+    "source_worktree_clean": true,
+    "aggregate_export_checked": true,
+    "visually_checked_figures": [
+      "ablation.png",
+      "cluster_prevalence.png",
+      "complementarity.png",
+      "pr_curve.png",
+      "review_precision.png",
+      "review_recall.png"
+    ],
+    "temporary_A_C_D_tests": {
+      "passed": 50,
+      "skipped": 0,
+      "D_commit": "d638da1",
+      "merge_conflicts": false,
+      "D_actually_merged": false
+    },
+    "final_figures_identical_to_visually_checked_first_export": true
+  },
+  "layout_verification": {
+    "prior_snapshot_commit": "997cdb7",
+    "A_C_tests_passed": 44,
+    "original_metrics_and_choices_unchanged": true,
+    "original_plot_bytes_preserved": true,
+    "saved_model_module_migration_verified": true,
+    "test_partition_scored": false,
+    "entry_point": "code/main.py",
+    "C_modules": [
+      "code/unsupervised.py",
+      "code/evaluation.py"
+    ],
+    "runtime_file_sha256": {
+      "code/unsupervised.py": "8b1b9f012b135dd64343d11262b5da9e2f33122231a90835e2e1b052ec8cfe93",
+      "code/evaluation.py": "e007fa022c6ba4d62373b14b0d6b00f17d559288f831563a41ae8102789fd0b8",
+      "code/main.py": "fed6dc9d7819ce79837da01901971af252b607e0030749d4b1b6109cfe71743e"
+    }
+  }
 }

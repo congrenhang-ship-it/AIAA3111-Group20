@@ -54,8 +54,6 @@ code/preprocessing.py    数据检查、划分与预处理
 code/classification.py   分类模型与类别不平衡处理
 code/unsupervised.py     C：K-means、Isolation Forest 与簇距离
 code/evaluation.py       C：公共评价、等预算组合、群体分析与绘图
-code/run_c_validation.py C：独立验证入口（直接调用 A 的固定划分）
-code/c_reporting.py     C：聚合交付、配置记录与冻结后的测试评价
 tests/test_c_modules.py  C：公共评价与无监督模块检查
 code/temporal.py         A：相对时间窗口评价
 code/pattern_mining.py   特征组合与关联规则挖掘
@@ -64,7 +62,7 @@ results/figures/         正式实验图表
 results/tables/          正式实验汇总表
 ```
 
-`report/C_HANDOFF.md` 提供 C 的运行和交接说明，`results/c_validation/` 已有真实验证证据；最终报告、海报和最终测试尚未完成。
+C 的说明集中在 [report/C_IMPROVEMENTS.md](report/C_IMPROVEMENTS.md)。图在 `results/figures/`，汇总在 `results/tables/`；最终报告、海报和最终测试尚未完成。
 
 ## 环境安装
 
@@ -100,15 +98,19 @@ Task A 交接与文件索引 · [中文](docs/TASK_A.zh-CN.md) · [English](docs
 
 每位组员在仓库根目录运行 `python code/download_data.py` 获取并验证同一份原始数据。文件保存在被 Git 忽略的 `data/creditcard.csv`。手动下载、校验值和预期结果见 [数据说明](data/README.md)。
 
-## C 的改进版本
+## C 的实现与结果
 
-C 已完成训练内三种子、20 个评分候选的有界改进实验；内层选择的 IF 在正式验证 1% 预算下检出 24/57，原 IF 为 10/57、原距离为 14/57。完整方法、未改善的候选、局限与 A8 接法见 [C 改进说明](report/C_IMPROVEMENTS.md)。公开聚合/图表在 `results/c_improvements/`，第一轮基线在 `results/c_validation/`。两者均为验证证据，最终测试尚未执行。
+C 的算法与实验流程放在 `code/unsupervised.py`，共同评价、绘图和结果导出放在 `code/evaluation.py`，统一由 `main.py` 调用。运行与分析见 [C 说明](report/C_IMPROVEMENTS.md)。当前改进 IF 在验证 1% 预算下检出 24/57，原 IF 为 10/57、原距离为 14/57；最终测试尚未执行。
+
+共享文件保持原目录：`results/tables/c_baseline.json`、`c_improved.json`、`c_ablation.csv`；图均为 `results/figures/c_*.png`。原始数据、模型和详细中间记录留在本地 `data/`。
+
+复现时使用新的本地输出目录，避免覆盖已有证据：
 
 ```bash
-python code/run_c_improvements.py --output data/c_improvements_new --publish results/c_improvements_new
+python code/main.py --run-c --output data/c_reproduction/run --results data/c_reproduction/shared
 ```
 
-`code/c_improvements.py` 与 `code/run_c_improvements.py` 由 C 负责。B 的实际预测到位后追加 `--classification-predictions`；模型和完整预测保留本地。当前 A/C 集合 43 项检查通过。
+`--run-c-baseline` 重现第一轮，`--demo` 仅检查程序。B 的标准预测到位后追加 `--classification-predictions`。C 的检查集中在 `tests/test_c_modules.py`。
 
 ## 当前可运行的命令
 
@@ -131,15 +133,7 @@ python -m unittest discover -s tests -v
 python code/main.py --check-data --data /path/to/creditcard.csv
 ```
 
-**A 的数据下载、审计、统一时间划分和时间窗口模块已接入；C 的公共评价、K-means、Isolation Forest、等预算组合、群体评价和绘图已实现。**
-
-```bash
-python -m unittest discover -s tests -v
-python code/run_c_validation.py --demo --output data/c_demo_new
-python code/run_c_validation.py --data data/creditcard.csv --output data/c_validation_new --publish results/c_validation_new
-```
-
-合成演示输出到本地 `data/c_demo/`，仅验证程序。C 已完成真实训练/验证运行，汇总与 7 张图保存在 `results/c_validation/`，分析见 [C 验证结果](report/C_VALIDATION_RESULTS.md)。运行和后续交接见 [C 模块交付说明](report/C_HANDOFF.md)。G1 入口为 `python code/main.py --run-validation`，调用 B 的分类和 C 的评价；B2 尚未实现时明确报告依赖。正式测试安排在 G2 冻结后；不要把合成演示当作真实实验结果。
+A 的准备与时间窗口、C 的模型与评价均已接入。G1 入口 `python code/main.py --run-validation` 仍需 B2 的真实分类实现。正式测试安排在全组 G2 冻结后。
 
 ## 实施顺序与时间安排
 

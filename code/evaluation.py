@@ -1,17 +1,22 @@
-"""负责人 C：统一预测表、公共评价、等预算组合、群体分析和图表。
+"""负责人 C：公共评价、名单组合、图表与结果导出；A/B/D 复用本模块。
 
-已实现；高分表示更可疑。K=ceil(N*q)，按 score 降序、row_id 升序处理并列。
-零正类的 AP/Recall 返回 None；空组明确标记。所有阈值/配额须在验证阶段确定。
+仅整理模块与输出路径；所有训练、预算、并列和无正类处理口径保持不变。
+冻结评价不会选择参数；最终测试由 A 在全组冻结后调用。
 """
 
-from pathlib import Path
 import math
 import numpy as np
 import pandas as pd
+import copy
+import hashlib
+import json
+from pathlib import Path
 from sklearn.metrics import average_precision_score, precision_recall_curve
 
 PREDICTION_COLUMNS = ("row_id", "Class", "Time", "method", "score")
 DEFAULT_BUDGETS = (0.001, 0.005, 0.01, 0.02)
+PRIMARY_REVIEW_FRACTION = 0.01
+COMBINATION_SHARES = (0.0, 0.25, 0.5, 0.75, 1.0)
 
 
 def _vector(values, name, n=None):
@@ -513,3 +518,588 @@ def save_comparison_figures(
     fig.savefig(path, dpi=160)
     plt.close(fig)
     return [str(path)]
+
+
+def row_fingerprint(frame):
+    """A's ordered row identity fingerprint, without publishing individual IDs."""
+    digest = hashlib.sha256()
+    for value in frame.row_id:
+        digest.update(f"{int(value)}\n".encode("ascii"))
+    return digest.hexdigest()
+
+
+def partition_description(frame):
+    return {
+        "rows": len(frame),
+        "frauds": int(frame.Class.sum()),
+        "time_min": float(frame.Time.min()),
+        "time_max": float(frame.Time.max()),
+        "row_ids_sha256": row_fingerprint(frame),
+    }
+
+
+def choose_anomaly(metrics, primary_fraction=PRIMARY_REVIEW_FRACTION):
+    """Validation TP at common primary budget, then AP, then stable method name."""
+    names = ["isolation_forest", "kmeans_distance"]
+
+    def key(name):
+        metric = metrics[name]
+        row = next(
+            r for r in metric["budgets"] if r["review_fraction"] == primary_fraction
+        )
+        return (-row["TP"], -(metric["AP"] if metric["AP"] is not None else -1), name)
+
+    return min(names, key=key)
+
+
+def select_combination(comparisons, primary_fraction=PRIMARY_REVIEW_FRACTION):
+    """Max validation TP; ties keep more classifier capacity (pure baseline allowed)."""
+    rows = [r for r in comparisons if r["review_fraction"] == primary_fraction]
+    if not rows:
+        return None
+    return min(rows, key=lambda r: (-r["combined"]["TP"], -r["classifier_share"]))
+
+
+def build_freeze(report):
+    """Freeze C's settings only; this document never asserts whole-group G2."""
+    metadata = report["metadata"]
+    if metadata["mode"] == "synthetic_demo":
+        status = "synthetic_only_not_for_test"
+    elif not metadata.get("verified_ulb_split"):
+        status = "unverified_partitions_not_for_official_test"
+    else:
+        status = "unsupervised_frozen"
+    chosen = choose_anomaly(report["metrics"])
+    combo = select_combination(report["comparisons"])
+    combination = {
+        "status": "waiting_for_B5",
+        "classifier_method": None,
+        "anomaly_method": chosen,
+        "classifier_share": None,
+    }
+    if combo is not None:
+        combination.update(
+            status="validation_selected_requires_B5_provenance",
+            classifier_method=metadata["classifier_method"],
+            classifier_share=combo["classifier_share"],
+            validation_TP=combo["combined"]["TP"],
+            K=combo["K"],
+        )
+    return {
+        "schema_version": 1,
+        "owner": "C",
+        "status": status,
+        "group_G2_complete": False,
+        "dataset_sha256": metadata.get("dataset_sha256"),
+        "partitions": metadata["partitions"],
+        "feature_columns": metadata["feature_columns"],
+        "seed": metadata["seed"],
+        "scaler": metadata["scaler"],
+        "n_clusters": metadata["selected_k"],
+        "kmeans_n_init": metadata["kmeans_n_init"],
+        "k_selection": metadata["k_selection"],
+        "forest_params": metadata["forest_params"],
+        "forest_score": metadata["forest_score"],
+        "primary_review_fraction": PRIMARY_REVIEW_FRACTION,
+        "review_fractions": metadata["review_fractions"],
+        "selected_anomaly_method": chosen,
+        "anomaly_selection": "validation TP at 1%; then AP; then method name",
+        "combination": combination,
+        "combination_selection": "validation TP at 1%; ties prefer larger classifier share",
+        "combination_candidates": list(COMBINATION_SHARES),
+        "ranking": "score descending; row_id ascending; K=ceil(N*q)",
+        "refill": "floor(K*classifier_share) classifier first; scan anomaly skipping duplicates to K",
+        "refit_policy": "retain training-only fitted pipelines; no train+validation refit",
+        "time_window_diagnostic": {
+            "window_seconds": 3600,
+            "origin": 0,
+            "note": "validation diagnostic using A interface; final windows owned by A",
+        },
+        "source_commit": metadata["source_commit"],
+        "code_sha256": metadata["code_sha256"],
+        "versions": metadata["versions"],
+        "test_evaluated": False,
+    }
+
+
+def compact_report(report):
+    """Strip per-transaction lists and long PR point arrays from public summaries."""
+    public = copy.deepcopy(report)
+    for metric in public["metrics"].values():
+        metric.pop("pr_curve", None)
+    for rows in [public.get("comparisons", []), public.get("anomaly_comparisons", [])]:
+        for row in rows:
+            for key in ["classifier_ids", "anomaly_ids", "combined_ids"]:
+                row.pop(key, None)
+    public["metadata"]["input_sha256"] = {
+        Path(path).name: value
+        for path, value in public["metadata"].get("input_sha256", {}).items()
+    }
+    return public
+
+
+def write_summary(report, output):
+    """Publish aggregate results; fail instead of overwriting earlier evidence."""
+    output = Path(output)
+    if output.exists() and any(output.iterdir()):
+        raise ValueError("Public summary folder must be new or empty")
+    output.mkdir(parents=True, exist_ok=True)
+    public = compact_report(report)
+    (output / "summary.json").write_text(
+        json.dumps(public, indent=2, allow_nan=False) + "\n"
+    )
+    (output / "c_freeze.json").write_text(
+        json.dumps(build_freeze(report), indent=2, allow_nan=False) + "\n"
+    )
+    budgets = [
+        {"method": name, **row}
+        for name, m in public["metrics"].items()
+        for row in m["budgets"]
+    ]
+    pd.DataFrame(budgets).to_csv(output / "budgets.csv", index=False)
+    groups = []
+    for name, data in public["groups"].items():
+        for group in data["groups"]:
+            base = {
+                "method": name,
+                "cluster_id": group["cluster_id"],
+                "n_samples": group["within_group"]["n_samples"],
+                "n_positive": group["within_group"]["n_positive"],
+                "prevalence": group["within_group"]["prevalence"],
+                "fraud_coverage": group["fraud_coverage"],
+                "AP": group["within_group"]["AP"],
+            }
+            for local, global_ in zip(
+                group["within_group"]["budgets"],
+                group["global_budget_allocation"],
+                strict=True,
+            ):
+                groups.append(
+                    {
+                        **base,
+                        "review_fraction": local["review_fraction"],
+                        "within_group_K": local["K"],
+                        "within_group_TP": local["TP"],
+                        "within_group_recall": local["recall_at_k"],
+                        "global_reviews_in_group": global_["reviewed_in_group"],
+                        "global_TP_in_group": global_["frauds_detected_in_group"],
+                        "global_recall_in_group": global_["recall_within_group"],
+                    }
+                )
+    pd.DataFrame(groups).to_csv(output / "groups.csv", index=False)
+    for field in ["comparisons", "anomaly_comparisons"]:
+        rows = []
+        for item in public.get(field, []):
+            row = {
+                key: item[key]
+                for key in [
+                    "review_fraction",
+                    "K",
+                    "classifier_share",
+                    "shared_frauds",
+                    "classifier_only_frauds",
+                    "anomaly_only_frauds",
+                    "overlap_count",
+                ]
+            }
+            row.update(
+                {
+                    f"{name}_TP": item[name]["TP"]
+                    for name in ["classifier", "anomaly", "combined"]
+                }
+            )
+            rows.append(row)
+        if rows:
+            pd.DataFrame(rows).to_csv(output / f"{field}.csv", index=False)
+    return public
+
+
+def save_diagnostic_figures(candidates, groups, output, label):
+    """Structural quality/stability and cross-method global-budget group recall."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    table = pd.DataFrame(candidates)
+    table.to_csv(output.parent / "kmeans_training_structure.csv", index=False)
+    means = table.groupby("k").sample_silhouette.agg(["mean", "min", "max"])
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+    axes[0].errorbar(
+        means.index,
+        means["mean"],
+        yerr=[means["mean"] - means["min"], means["max"] - means["mean"]],
+        marker="o",
+        capsize=4,
+    )
+    axes[0].set(xlabel="Training cluster count k", ylabel="Training sample silhouette")
+    ari = table.groupby("k").seed_stability_ARI.first()
+    axes[1].bar([str(x) for x in ari.index], ari.values)
+    axes[1].set(
+        xlabel="Training cluster count k", ylabel="Between-seed ARI", ylim=(-0.05, 1.05)
+    )
+    fig.suptitle(label)
+    fig.tight_layout()
+    fig.savefig(output / "cluster_structure.png", dpi=160)
+    plt.close(fig)
+    names = list(groups)
+    first = groups[names[0]]["groups"]
+    matrix = []
+    for name in names:
+        values = []
+        for g in groups[name]["groups"]:
+            value = next(
+                row["recall_within_group"]
+                for row in g["global_budget_allocation"]
+                if row["review_fraction"] == PRIMARY_REVIEW_FRACTION
+            )
+            values.append(np.nan if value is None else value)
+        matrix.append(values)
+    fig, ax = plt.subplots(figsize=(max(6, len(first) * 1.1), max(3, len(names) * 0.7)))
+    ax.imshow(np.asarray(matrix), vmin=0, vmax=1, cmap="Blues", aspect="auto")
+    ax.set_xticks(
+        range(len(first)),
+        [
+            f"{g['cluster_id']}\nn={g['within_group']['n_samples']}, fraud={g['within_group']['n_positive']}"
+            for g in first
+        ],
+        fontsize=8,
+    )
+    ax.set_yticks(range(len(names)), names, fontsize=8)
+    for i, row in enumerate(matrix):
+        for j, value in enumerate(row):
+            ax.text(
+                j,
+                i,
+                "N/A" if np.isnan(value) else f"{value:.2f}",
+                ha="center",
+                va="center",
+                color="white" if value > 0.55 else "black",
+            )
+    ax.set(
+        xlabel="Cluster (no fraud: N/A)",
+        title=label + "\nGroup recall under global 1% review",
+    )
+    fig.tight_layout()
+    fig.savefig(output / "group_performance.png", dpi=160)
+    plt.close(fig)
+    return [
+        str(output / "cluster_structure.png"),
+        str(output / "group_performance.png"),
+    ]
+
+
+def evaluate_frozen_c(bundle, data, output, classifier=None, phase="test"):
+    """A8 hook: score existing models and apply existing quotas, without selecting.
+
+    A calls this after whole-group G2. It neither approves G2 nor refits models.
+    Output is a private run folder (predictions contain row IDs). If a classifier
+    is supplied, its name and quota must already be present in bundle['config'].
+    Use phase='validation_replay' to check persistence before any final test.
+    """
+    from evaluation import (
+        make_prediction_frame,
+        evaluate_scores,
+        evaluate_groups,
+        compare_review_lists,
+        save_figures,
+        save_group_figures,
+        save_comparison_figures,
+    )
+    from unsupervised import score_frozen_unsupervised
+
+    if phase not in {"test", "validation_replay"}:
+        raise ValueError("phase must identify test or validation_replay")
+    output = Path(output)
+    if output.exists() and any(output.iterdir()):
+        raise ValueError("Frozen evaluation output must be new or empty")
+    config = copy.deepcopy(bundle["config"])
+    combination = config["combination"]
+    if classifier is not None and (
+        combination["classifier_share"] is None
+        or combination["classifier_method"] is None
+    ):
+        raise ValueError("Classifier combination must be frozen on validation first")
+    scored = score_frozen_unsupervised(bundle, data[config["feature_columns"]])
+    groups = scored.pop("cluster_ids")
+    predictions = {
+        name: make_prediction_frame(data, score, name, groups)
+        for name, score in scored.items()
+    }
+    comparisons = []
+    if classifier is not None:
+        name = combination["classifier_method"]
+        if not classifier["method"].eq(name).all() or classifier.empty:
+            raise ValueError("Classifier method does not match frozen combination")
+        classifier = make_prediction_frame(classifier, classifier.score, name)
+        compare_review_lists(classifier, predictions[combination["anomaly_method"]], 1)
+        classifier = classifier.set_index("row_id").loc[data.row_id].reset_index()
+        predictions[name] = classifier
+        for q in config["review_fractions"]:
+            row = compare_review_lists(
+                classifier,
+                predictions[combination["anomaly_method"]],
+                math.ceil(len(data) * q),
+                combination["classifier_share"],
+            )
+            row["review_fraction"] = q
+            comparisons.append(row)
+    metrics = {
+        name: evaluate_scores(
+            frame.Class, frame.score, config["review_fractions"], row_ids=frame.row_id
+        )
+        for name, frame in predictions.items()
+    }
+    group_metrics = {
+        name: evaluate_groups(
+            frame,
+            groups,
+            config["review_fractions"],
+            group_values=range(config["n_clusters"]),
+        )
+        for name, frame in predictions.items()
+    }
+    output.mkdir(parents=True, exist_ok=True)
+    label = (
+        "Final test - frozen C configuration"
+        if phase == "test"
+        else "Validation replay - frozen C configuration"
+    )
+    save_figures({"methods": metrics, "label": label}, output / "figures")
+    save_group_figures(
+        group_metrics[config["selected_anomaly_method"]], output / "figures", label
+    )
+    if comparisons:
+        save_comparison_figures(
+            comparisons,
+            output / "figures",
+            label,
+            method_labels={
+                "classifier": combination["classifier_method"],
+                "anomaly": combination["anomaly_method"],
+                "combined": "Frozen combination",
+            },
+        )
+    for name, frame in predictions.items():
+        frame.to_csv(output / f"{name}_predictions.csv", index=False)
+    result = {
+        "phase": phase,
+        "config": config,
+        "metrics": metrics,
+        "groups": group_metrics,
+        "comparisons": comparisons,
+        "configuration_reselected": False,
+        "partition": partition_description(data),
+    }
+    (output / "frozen_evaluation.json").write_text(
+        json.dumps(result, indent=2, allow_nan=False) + "\n"
+    )
+    return result
+
+
+def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="test"):
+    """A8 evaluation: no candidate/weight selection or model fitting occurs here."""
+    import json
+    from unsupervised import score_improved_bundle, pair_comparisons
+    from temporal import evaluate_time_windows
+
+    if phase not in {"test", "validation_replay"}:
+        raise ValueError("Invalid evaluation phase")
+    output = Path(output)
+    if output.exists() and any(output.iterdir()):
+        raise ValueError("Output must be new or empty")
+    config = copy.deepcopy(bundle["config"])
+    b = config["B_combination"]
+    if classifier is not None and b["share"] is None:
+        raise ValueError("B combination must be selected and frozen before test")
+    predictions, groups = score_improved_bundle(bundle, data)
+    comparisons = pair_comparisons(
+        predictions, config["selected_candidates"], config["distance_share"]
+    )
+    b_rows = []
+    if classifier is not None:
+        if classifier.empty or not classifier.method.eq(b["method"]).all():
+            raise ValueError("Classifier does not match frozen method")
+        c = make_prediction_frame(classifier, classifier.score, b["method"])
+        anomaly = predictions[config["selected_anomaly"]]
+        compare_review_lists(c, anomaly, 1)
+        c = c.set_index("row_id").loc[data.row_id].reset_index()
+        predictions[b["method"]] = c
+        for q in DEFAULT_BUDGETS:
+            row = compare_review_lists(c, anomaly, math.ceil(len(data) * q), b["share"])
+            row["review_fraction"] = q
+            b_rows.append(row)
+    metrics = {
+        n: evaluate_scores(p.Class, p.score, row_ids=p.row_id)
+        for n, p in predictions.items()
+    }
+    group_metrics = {
+        n: evaluate_groups(p, groups, DEFAULT_BUDGETS, group_values=range(3))
+        for n, p in predictions.items()
+    }
+    windows = evaluate_time_windows(pd.concat(predictions.values(), ignore_index=True))
+    for w in windows:
+        if w["evaluation"] is not None:
+            w["evaluation"].pop("pr_curve", None)
+    output.mkdir(parents=True, exist_ok=True)
+    label = (
+        "Final test - frozen improved C"
+        if phase == "test"
+        else "Validation replay - frozen improved C"
+    )
+    save_figures({"methods": metrics, "label": label}, output / "figures")
+    save_group_figures(
+        group_metrics[config["selected_anomaly"]],
+        output / "figures",
+        label + "\n" + config["selected_anomaly"],
+    )
+    save_comparison_figures(
+        comparisons,
+        output / "figures",
+        label + "\nFrozen anomaly pair",
+        method_labels={
+            "classifier": config["selected_candidates"]["kmeans"],
+            "anomaly": config["selected_candidates"]["isolation_forest"],
+            "combined": "Frozen pair",
+        },
+    )
+    if b_rows:
+        save_comparison_figures(
+            b_rows, output / "B_figures", label + "\nFrozen B combination"
+        )
+    for name, p in predictions.items():
+        p.to_csv(output / f"{name}_predictions.csv", index=False)
+    result = {
+        "phase": phase,
+        "config": config,
+        "configuration_reselected": False,
+        "partition": partition_description(data),
+        "metrics": metrics,
+        "groups": group_metrics,
+        "time_windows": windows,
+        "comparisons": comparisons,
+        "B_comparisons": b_rows,
+    }
+    (output / "evaluation.json").write_text(
+        json.dumps(result, indent=2, allow_nan=False) + "\n"
+    )
+    return result
+
+
+def save_ablation_figure(rows, selected, path):
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    frame = pd.DataFrame(rows)
+    fig, axes = plt.subplots(
+        1, 2, figsize=(13, 7), gridspec_kw={"width_ratios": [1.15, 1]}
+    )
+    for ax, prefix in zip(axes, ["km_", "if_"], strict=True):
+        subset = frame[frame.candidate.str.startswith(prefix)]
+        y = np.arange(len(subset))
+        ax.barh(
+            y,
+            subset.TP,
+            color=[
+                "tab:orange" if n in selected.values() else "tab:blue"
+                for n in subset.candidate
+            ],
+        )
+        ax.set_yticks(y, subset.candidate, fontsize=8)
+        ax.invert_yaxis()
+        ax.set(
+            xlabel="Fraud detected at 1% review",
+            title="K-means scores" if prefix == "km_" else "Isolation Forest",
+        )
+        for i, tp in enumerate(subset.TP):
+            ax.text(tp + 0.15, i, str(tp), va="center", fontsize=8)
+        ax.set_xlim(0, max(1, int(subset.TP.max()) + 3))
+        ax.grid(axis="x", alpha=0.2)
+    fig.suptitle("Validation ablations (orange: selected on training-inner data)")
+    fig.tight_layout()
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+
+
+def publish_c_results(staging, destination, mode):
+    """Collect C's shareable evidence in the original results/{figures,tables}.
+
+    Intermediate per-file exports stay with the local run. Existing files from
+    A/B/D are untouched; C outputs must not overwrite an earlier run silently.
+    """
+    import shutil
+
+    staging, destination = Path(staging), Path(destination)
+    if mode not in {"baseline", "improved"}:
+        raise ValueError("Unknown C result mode")
+    result = json.loads((staging / "summary.json").read_text())
+    if mode == "baseline":
+        result["frozen_config"] = json.loads((staging / "c_freeze.json").read_text())
+        for filename, key in [
+            ("kmeans_training_structure.csv", "training_structure"),
+            ("train_cluster_profile.csv", "training_cluster_profile"),
+            (
+                "validation_cluster_feature_means.csv",
+                "validation_cluster_feature_means",
+            ),
+        ]:
+            path = staging / filename
+            if path.exists():
+                result[key] = pd.read_csv(path).to_dict(orient="records")
+        figures = {"cluster_structure.png": "c_cluster_structure.png"}
+        table_name = "c_baseline.json"
+    else:
+        lock = json.loads(
+            (staging / "selection_locked_before_validation.json").read_text()
+        )
+        result["selection_record"] = {
+            k: v for k, v in lock.items() if k not in {"config", "inner_summary"}
+        }
+        result["locked_choices"] = {
+            k: lock["config"][k]
+            for k in [
+                "selected_candidates",
+                "selected_anomaly",
+                "distance_share",
+                "selection_locked_at_UTC",
+            ]
+        }
+        result["training_distance_calibration"] = json.loads(
+            (staging / "training_distance_calibration.json").read_text()
+        )
+        result["fit_timings"] = pd.read_csv(staging / "timings.csv").to_dict(
+            orient="records"
+        )
+        figures = {p.name: "c_" + p.name for p in (staging / "figures").glob("*.png")}
+        table_name = "c_improved.json"
+    if (staging / "verification.json").exists():
+        result["verification"] = json.loads((staging / "verification.json").read_text())
+    targets = [destination / "tables" / table_name]
+    targets += [
+        destination / "figures" / name
+        for source, name in figures.items()
+        if (staging / "figures" / source).exists()
+    ]
+    if mode == "improved":
+        targets.append(destination / "tables/c_ablation.csv")
+    if any(path.exists() for path in targets):
+        raise ValueError(
+            "C result files already exist; choose another --results directory"
+        )
+    for path in targets:
+        path.parent.mkdir(parents=True, exist_ok=True)
+    (destination / "tables" / table_name).write_text(
+        json.dumps(result, indent=2, allow_nan=False) + "\n"
+    )
+    for source, name in figures.items():
+        if (staging / "figures" / source).exists():
+            shutil.copy2(staging / "figures" / source, destination / "figures" / name)
+    if mode == "improved":
+        shutil.copy2(
+            staging / "validation_ablation.csv", destination / "tables/c_ablation.csv"
+        )
+    return [str(path) for path in targets]

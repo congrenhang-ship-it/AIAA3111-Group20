@@ -1,152 +1,120 @@
-# C 第二轮改进：方法、真实结果与交接
+# C：方法、验证结果与运行说明
 
-负责人 C，2026-11-11。本轮已完成预定实验、代码、恢复核对和图表，原始基线 `results/c_validation/` 保留不动。**当前交给 A 的改进候选是 IF：100 棵树、max_samples=4096、其余原始输入与 StandardScaler 不变。** 这是训练内选定并在正式验证段确认的结果，尚不是最终测试成绩。
+负责人 C。说明统一保存在本文件；代码在 `unsupervised.py` 和 `evaluation.py`，由 `main.py` 运行。
 
-## 核心效果
+## 结果与当前配置
 
-同一正式验证段共 56,745 笔、57 笔欺诈；1% 预算实际审核 K=568：
+A 的原始数据校验、去重和正式时间划分保持不变：训练 170,235 笔/342 笔欺诈，验证 56,745 笔/57 笔欺诈。原始文件 SHA-256 与分段指纹见 `data/README.md` 和结果 JSON。
 
-| 方法 | TP | FP | Recall | Precision | AP |
+同样审核 K=568（1% 预算）：
+
+| 方法 | 检出 TP | 误报 FP | Recall | Precision | AP |
 |---|---:|---:|---:|---:|---:|
 | 原簇中心距离 | 14 | 554 | 24.56% | 2.46% | 0.022831 |
-| 原 IF（抽样 256） | 10 | 558 | 17.54% | 1.76% | 0.016546 |
-| 内层选定改进 IF（抽样 4096） | 24 | 544 | 42.11% | 4.23% | 0.030021 |
+| 原 IF：100 棵、抽样 256 | 10 | 558 | 17.54% | 1.76% | 0.016546 |
+| 改进 IF：100 棵、抽样 4096 | 24 | 544 | 42.11% | 4.23% | 0.030021 |
 
-相对原 IF，多检出 14 笔；相对原来最好的距离方法，多检出 10 笔，Recall 增加 17.54 个百分点。仍有 33 笔欺诈漏检，审核名单多数仍是正常交易，不能把改进描述为已经达到高精度。
+当前交给 A 的候选是改进 IF：原始 30 个输入、训练段 StandardScaler、100 棵树、max_samples=4096、contamination=auto、seed=42、n_jobs=1。其余候选和失败结果保留，不再追加调参。
 
-| 预算 | K | 原距离 TP | 原 IF TP | 改进 IF TP |
+| 审核预算 | K | 原距离 TP | 原 IF TP | 改进 IF TP |
 |---|---:|---:|---:|---:|
 | 0.1% | 57 | 0 | 0 | 0 |
 | 0.5% | 284 | 1 | 3 | 8 |
 | 1%（主预算） | 568 | 14 | 10 | 24 |
 | 2% | 1,135 | 36 | 23 | 35 |
 
-提升集中在本轮预定的中间预算。最小预算仍为零，2% 时原距离略好于改进 IF；不能宣称所有容量下都更好。
+相对原先最好的距离，1% 下多找到 10 笔，但仍漏掉 33 笔、误报 544 笔。0.1% 未改善，2% 时原距离略好。以上均为验证结果，最终测试没有执行。
 
-![改进前后的预算表现](../results/c_improvements/figures/review_recall.png)
+![审核预算表现](../results/figures/c_review_recall.png)
 
-## 如何控制本轮开发
+## 方法与选择规则
 
-本轮协议在拟合前提交，见 [C_IMPROVEMENT_PROTOCOL.md](C_IMPROVEMENT_PROTOCOL.md)，提交 `199ad5e`。原始第一轮验证结果已经被查看过，这一点明确保留在机器记录中；正式验证段不应被描述为全新、从未查看的外部数据。
+第一轮 K-means 在训练特征上比较 k=3/5/8、种子 42/43，固定同一 1,000 笔子样本计算 silhouette/ARI。k=3 的平均 silhouette=0.1537、ARI=0.5558，因此选 k=3、n_init=10；稳定性仍有局限，群体不能等同于欺诈类别。
 
-A 的唯一正式三段划分不变。在 A 训练段内部增加一次时间开发划分：
+第二轮协议在运行前提交（Git `199ad5e`）。正式验证此前已被查看过，本轮不能称作全新的独立验证。为减少围绕 57 笔验证欺诈选参，在 A 的训练段内按时间再做一次 80/20 开发划分，同时间进入后段：
 
-| 内层用途 | 笔数 | 欺诈 | Time 范围 |
+| 用途 | 笔数 | 欺诈 | Time 范围 |
 |---|---:|---:|---|
 | 内层拟合 | 136,186 | 258 | 0–81,825 |
 | 内层选择 | 34,049 | 84 | 81,826–120,392 |
 
-同一时间不跨边界。模型和缩放、簇内距离标定都只 fit 内层前段。种子 42/43/44 只在内层比较；以 1% 预算平均 TP 最大选择，并列比较平均 AP，再按预定候选顺序。**选定配置和配额先落盘，随后才在完整 A 训练段重拟合并给正式验证段打分。** 最终固定 seed=42。
+三种子 42/43/44 比较 20 个评分候选。按内层 1% 平均 TP 最大选择，并列比较平均 AP，再按预定候选顺序；距离家族保留原距离，IF 家族选择抽样 4096，整体选 IF。选择先落盘，再用完整 A 训练段、seed=42 重拟合并报告全部正式验证对照。模型拟合不读取标签，内层选择明确使用标签。
 
-模型拟合本身没有使用标签；内层选择明确使用标签，不能把整个流程称为完全不使用标签。测试段没有模型评分。本轮 14 种拟合配置产生 20 种评分，内层三种子共 42 次拟合、60 行评分；加上全训练重拟合共 56 次拟合。
+K-means 固定 k=3，六种配置各输出原始距离与簇内相对距离，共 12 个候选。相对距离为 `(d−所属簇训练距离中位数)/训练 IQR`，零 IQR 使用预定正下界；不在验证时重新标定。IF 八种配置见下表，无额外笛卡尔积搜索。共 42 次内层拟合、14 次全训练拟合，60 行内层评分。
 
-## 完成的消融对照
-
-K-means 固定 k=3、n_init=10，用来隔离本轮改动；它仍沿用第一轮的训练结构选择，不为每种新特征另搜一遍 k。
-
-| K-means 配置 | 原始距离 TP@1% | 簇内相对距离 TP@1% |
+| K-means 配置 | 原始距离 TP@1% | 相对距离 TP@1% |
 |---|---:|---:|
-| 原始输入 + StandardScaler | 14 | 11 |
-| 去掉 Time | 19 | 26 |
-| Amount 取 log1p | 18 | 17 |
+| 原始标准化 | 14 | 11 |
+| 去 Time | 19 | 26 |
+| log1p 金额 | 18 | 17 |
 | 去 Time + log 金额 | 17 | 14 |
-| 原始输入 + RobustScaler | 1 | 7 |
+| 原始 RobustScaler | 1 | 7 |
 | 去 Time + log 金额 + RobustScaler | 1 | 7 |
 
-相对距离使用 `(d − 当前簇训练距离中位数) / 当前簇训练距离 IQR`。零 IQR 使用预定正下界；验证数据不会重新估计这些统计量。保留所有输入交易，未按极端金额或标签删行。
-
-| IF 配置（未列参数沿用原始设置） | TP@1% |
+| IF 配置 | TP@1% |
 |---|---:|
-| 原始 100 棵 / 抽样 256 | 10 |
+| 原始 | 10 |
 | 去 Time | 15 |
 | log 金额 | 14 |
 | 去 Time + log 金额 | 16 |
 | 抽样 1024 | 19 |
 | 抽样 4096 | 24 |
 | 树数 300 | 13 |
-| 预定联合：去 Time + log 金额、300 棵、抽样 1024 | 17 |
+| 去 Time + log 金额、300 棵、抽样 1024 | 17 |
 
-去 Time 或取对数在部分对照中改善了正式验证指标，但叠加不保证继续提高。RobustScaler 在本组配置中明显变差，记录这一负面结果，不追加参数网格追高分。IF 抽样规模的改动在本轮效果更好；这是实验发现，不是“抽样越大一定越好”的结论。
+验证 TP=26 的距离候选未被采用：其内层平均 TP 仅 24.33、范围 17–39，原距离则平均 63、三个种子均为 63。IF 抽样 4096 内层平均 64.67、范围 63–68；原 IF 平均 60.33。按预定规则保留选择，没有看到验证表格后换配置。更大的抽样在本次有效，不保证普遍有效；RobustScaler 和叠加改动也不保证改善。
 
-![全部预定候选与内层选择](../results/c_improvements/figures/ablation.png)
+![完整消融对照](../results/figures/c_ablation.png)
 
-## 为什么没有选择验证 TP=26 的那个候选
+## 组合、群体与时间
 
-`km_no_time_relative` 的正式验证 TP 为 26，是本轮表格最高值，但其内层三种子 TP 平均仅 24.33，范围 17–39；原始距离平均为 63，三个种子都是 63。因此，按照事先确定的内层规则，距离家族保留原始距离，而不是看到正式验证 26 笔后再换过去。
+距离配额候选为 0/25/50/75/100%。按内层平均 TP 选，并列优先纯方法，再优先更大的距离配额；最终选 0% 距离、100% 改进 IF。验证 K=568 时，距离检出的 14 笔均被 IF 覆盖，IF 另有 10 笔独有欺诈；五种配额的验证 TP 为 24/24/24/22/14，混合没有额外收益。
 
-IF 家族内层平均 TP 从原配置的 60.33 上升到抽样 4096 的 64.67，后者范围 63–68，平均 AP 为 0.49655；其内层结果也使它成为总体异常候选。选定结果、三个种子明细和锁定时间见 `selection_locked_before_validation.json`、`inner_summary.csv`、`inner_per_seed.csv`。
+群体统一由保留的 K-means 定义：验证簇 0 有 9,596 笔/14 欺诈，簇 1 有 47,149 笔/43 欺诈，簇 2 为空。空簇保留 N/A；组内预算与一个全局 top-K 的组间分配分别记录，不能混为同预算。匿名 V 特征不赋予未知业务含义，异常分也不是欺诈概率。
 
-内层欺诈比例和正式验证比例不同，AP 也随数据构成变化；内层较好的结果不能直接当作后续时间段的效果保证。正式验证已经展示出明显的时间外推落差，未来最终测试仍须单独确认。
+复用 A 的一小时窗口作验证诊断；首尾为不完整窗口，每窗正类仅 1–12 笔。短期波动、内层和验证结果落差不能直接证明长期漂移。最终窗口由 A 在 G2 冻结。
 
-## 组合、群体与时间分析
+## 文件与运行
 
-内层在 0/25/50/75/100% 的距离配额中选定 **0% 距离、100% 改进 IF**。它是允许的纯方法端点，避免为了展示“组合”而强行混合。
+- `code/unsupervised.py`：C 的基线、改进模型及实验流程。
+- `code/evaluation.py`：C 的共同评价、图、汇总导出和冻结评价；A/B/D 复用。
+- `code/main.py`：保留 A 原入口，增加 `--run-c`、`--run-c-baseline`。
+- `tests/test_c_modules.py`：合并 C 的全部检查。
+- `results/tables/c_baseline.json`：基线指标、配置、训练结构与画像。
+- `results/tables/c_improved.json`：改进指标、锁定选择、候选、分群、窗口及审计记录。
+- `results/tables/c_ablation.csv`：便于报告/海报使用的 20 候选对照。
+- `results/figures/c_*.png`：当前六张结果图及训练结构图。
 
-正式验证 K=568 时，原距离检出的 14 笔全部已被改进 IF 覆盖；IF 另有 10 笔独有欺诈。距离配额 0/25/50/75/100% 的诊断 TP 依次为 24/24/24/22/14。保留内层选定的纯 IF，没有按验证结果重选；混合没有获得额外收益。
-
-异常对照复用公共名单函数：其中 classifier 字段代表第一个排序（距离），anomaly 字段代表第二个排序（IF）；B_comparisons 才表示真实分类对照。
-
-群体统一由内层保留、全训练重拟合的 K-means 定义，与第一轮原始距离模型一致。所有显示方法在同一组上评价，明确区分组内容量和一个全局 top-K 在组间的分配。群体结果和一小时验证窗口见 summary.json；空簇保留为 N/A。窗口仅是 A 接口的验证诊断，不替 A 确定最终测试窗口。
-
-当前没有 B5 真实结果，因此没有编造分类收益。B 的标准预测 CSV 到位后，可直接接入现有参数，按预定五种分类配额完成真实分类互补与配额选择。
-
-## 复现与文件
-
-固定环境仍用 A 的 requirements.txt，无新增运行依赖。在仓库根目录：
+激活环境、准备数据与检查：
 
 ```bash
 source .venv/bin/activate
+python code/download_data.py
 python -m unittest discover -s tests -v
-python code/run_c_improvements.py \
-  --output data/c_improvements_reproduction \
-  --publish results/c_improvements_reproduction
 ```
 
-原始 ULB 必须匹配 A 的 SHA-256。输出路径须新建或为空；现有第一轮和第二轮证据都保留。`--publish` 指导出聚合文件，不会推送 GitHub。
-
-- `code/c_improvements.py`：C 的特征处理、距离标定、内层选择、保存模型评分和最终冻结评价。
-- `code/run_c_improvements.py`：C 的整轮运行入口、消融表/图、共享聚合和可追溯记录。
-- `tests/test_c_improvements.py`：C 的八项新增检查；整个 A/C 集合 43 项通过。
-- `results/c_improvements/`：当前 20 候选对照、60 行内层记录、冻结配置、完整选定模型参数、群体/窗口汇总及 6 张图。
-- `data/c_improvements_20261111_final/`：本机完整评分矩阵、标准预测、模型与错误样例，Git 忽略。
-
-结果文件 source_commit 指向实际拟合版本；source_dirty=false，包含代码/协议哈希、A 的原始文件哈希和正式/内层 row_id 指纹。首轮改进输出也保存在本地；随后仅补齐未来 B 接入的 AP/图表导出并重跑，候选、选择规则和无 B 时的结果未变。
-
-B 到位后运行同一命令，并追加：
+复现使用新的本地目录，防止覆盖仓库已有证据；新结果仍分为 figures/ 和 tables/：
 
 ```bash
---classification-predictions data/classifier_validation.csv
+python code/main.py --run-c --output data/c_reproduction/run --results data/c_reproduction/shared
 ```
 
-它输出 B 的 AP/预算、共同分群与窗口、名单互补和选定配额图。B 的 CSV 需要同一验证段的 row_id/Class/Time/method/score；method 只能一个。程序核对元数据并按 row_id 对齐。模型/策略来源还需 B 提供给 A，不会因为传入一个 CSV 就自动宣称 B5/G2 完成。
+`--run-c-baseline` 重现第一轮，`--demo` 只运行合成检查。B 的真实标准预测到位后追加 `--classification-predictions data/classifier_validation.csv`，列为 row_id/Class/Time/method/score。分类配额按预定规则在验证阶段选择，B5 来源与全组 G2 继续由相应成员确认。
 
-## A8 的冻结模型入口
+模型、完整评分矩阵、错误样例和详细中间导出保留在私有运行目录。历史共享文件与旧结构快照保存在被 Git 忽略的 `data/_layout_archive/`，也可从 Git 历史恢复。汇总里的 source_commit/代码哈希继续指向真实拟合版本；本次整理不重训、不改变模型选择或验证数值。
 
-A 在自己电脑复现后，加载自己可信的本地 artifact；全组 G2 后才使用测试段：
+全组 G2 后，A 从自己复现的模型调用冻结评价：
 
 ```python
 import sys
 sys.path.insert(0, "code")
 import joblib
-from c_improvements import evaluate_improved_frozen
-
-bundle = joblib.load("data/c_improvements_reproduction/improved_models.joblib")
-# test 来自 A 的唯一划分；本轮没有执行下面的测试评分。
-result = evaluate_improved_frozen(bundle, test, "data/c_improved_final_test", phase="test")
+from evaluation import evaluate_improved_frozen
+bundle = joblib.load("data/c_reproduction/run/improved_models.joblib")
+# test 由 A 的唯一划分提供；冻结后才执行。
+result = evaluate_improved_frozen(bundle, test, "data/c_final_test", phase="test")
 ```
 
-该入口不重拟合、不重选配置/配额。B 配额冻结后可传 `classifier=classifier_test_predictions`；没有冻结配额时拒绝做分类组合。恢复检查用 `phase="validation_replay"`，本轮已在完整验证段核对分数与指标一致。
+它不重新拟合或选择配置，B 配额冻结后可传 classifier；未冻结时拒绝分类组合。第一轮 bundle 的对应接口为 `evaluation.evaluate_frozen_c`。恢复检查使用 phase="validation_replay"。旧自定义变换器已迁移到 unsupervised 模块路径，原模型备份保留，预测需保持一致。
 
-v1 的 bundle 继续用 `c_reporting.evaluate_frozen_c`；v2 的 bundle 用上面的 `evaluate_improved_frozen`。A 应按选定版本记录统一最终配置，避免混用旧评分接口与新模型。
-
-## 质量核对与写作素材
-
-已检查：原基线精确复现；选择记录先于正式验证评分；正式验证标签变化不会改变内层选定模型；原始输入不被修改；缩放和距离统计仅 fit 训练；模型保存恢复一致；冻结评价不调用选择函数；每个组合恰好 K 个不重复 ID；群体/global 计数一致；公开文件没有完整交易列表或模型；六张图逐张查看。当前 A/C 的 43 项检查通过，临时接入 D 分支后 50 项检查通过且无冲突；D 未实际合并。最终导出的图片与已查看版本逐字节一致，所有模型选择和指标也一致。审计记录见 `results/c_improvements/verification.json`。
-
-可供组员审核、改写的英文分析素材：
-
-A bounded second-round ablation study was selected using a chronological holdout within the original training partition and three fixed random seeds. The selected Isolation Forest retained the original feature representation and 100 trees, while increasing the per-tree sample size from 256 to 4,096. At the predeclared 1% validation review budget, it detected 24 of 57 fraud cases, compared with 10 for the original forest and 14 for the original cluster-distance baseline. Recall increased to 42.11%, although precision remained 4.23% and 33 fraud cases were still missed.
-
-The improvements were budget dependent. Neither forest detected fraud at 0.1%, and the original distance method retained a slight advantage at 2%. A different distance variant detected 26 validation fraud cases but was not adopted because it had not been selected by the training-inner protocol. The frozen anomaly-pair policy chose the pure improved forest, and the validation diagnostics provided no additional detection gain from mixing the two rankings. These remain development and validation findings; the original validation partition had already been inspected, and final generalization must be assessed after the group configuration is frozen.
-
-AIGC 记录：Codex 辅助第二轮协议、代码、运行、检查和分析材料。组员需要理解并审核后用于最终报告，结合实际使用完善 Disclosures。
+AIGC 记录：Codex 辅助协议、代码、训练验证、检查、结构整理与分析；组员须理解并审核，再据实际使用完善最终 Disclosures。当前没有 B5 真实分类结论或 A8 最终测试结果。
