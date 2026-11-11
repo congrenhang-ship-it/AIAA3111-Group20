@@ -74,6 +74,30 @@ class ClassificationInterfaceTests(unittest.TestCase):
         model = train_model(train, self.labels, "logistic_regression")
         self.assertEqual(score_model(model, validation).shape, (40,))
 
+    def test_imbalance_strategies_are_training_only_and_reproducible(self):
+        model = train_model(self.train, self.labels, "logistic_regression", "class_weight")
+        self.assertEqual(model.named_steps["classifier"].class_weight, "balanced")
+        self.assertEqual(len(model.training_positions_), len(self.train))
+        first = train_model(self.train, self.labels, "logistic_regression", "random_undersample")
+        second = train_model(self.train, self.labels, "logistic_regression", "random_undersample")
+        np.testing.assert_array_equal(first.training_positions_, second.training_positions_)
+        self.assertEqual(first.training_class_counts_[0], first.training_class_counts_[1])
+        self.assertEqual(len(np.unique(first.training_positions_)), len(first.training_positions_))
+        self.assertTrue(set(np.flatnonzero(self.labels == 1)) <= set(first.training_positions_))
+        expected = self.train.iloc[first.training_positions_].drop(columns=["Class", "row_id"]).mean()
+        scaler = first.named_steps["preprocessing"].named_transformers_["features"]
+        np.testing.assert_allclose(scaler.mean_, expected.to_numpy())
+        np.testing.assert_allclose(score_model(first, self.validation), score_model(second, self.validation))
+        self.assertEqual(score_model(first, self.validation).shape, (len(self.validation),))
+
+    def test_selection_uses_primary_budget_then_ap(self):
+        from run_b_validation import select_method
+        def record(name, tp, ap):
+            return dict(method=name, metrics=dict(AP=ap, budgets=[dict(review_fraction=0.01, TP=tp)]))
+        records = [record("a", 2, 0.99), record("b", 3, 0.2), record("c", 3, 0.3)]
+        self.assertEqual(select_method(records)["method"], "c")
+        self.assertEqual(select_method([record("b", 3, 0.3), record("a", 3, 0.3)])["method"], "a")
+
     def test_positive_class_column_is_located_by_label(self):
         model = SimpleNamespace(
             classes_=np.array([1, 0]),

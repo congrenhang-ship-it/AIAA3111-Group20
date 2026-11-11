@@ -3,7 +3,7 @@
 任务：四种基础模型、有限调参、代表模型的类别权重/训练集重采样。
 输入：A 提供的训练特征和标签；输出：拟合流程及对原始行序的风险分数。
 公共评价交给 C。不得以测试表现调参；GaussianNB 不支持 class_weight。
-状态：B1 基础训练与打分接口已实现；真实数据基线和不平衡实验尚未完成。
+状态：训练、打分、类别权重与训练集随机欠采样可用；实验见 run_b_validation.py。
 """
 
 import numpy as np
@@ -18,6 +18,7 @@ from sklearn.utils.validation import check_consistent_length
 
 
 MODEL_NAMES = ("logistic_regression", "decision_tree", "gaussian_nb", "random_forest")
+STRATEGIES = ("original", "class_weight", "random_undersample")
 
 
 def _feature_columns(X):
@@ -47,14 +48,17 @@ def train_model(X_train, y_train, model_name, strategy="original", seed=42):
     by position and contain both numeric labels 0 and 1.
 
     Logistic regression and GaussianNB use training-fitted StandardScaler;
-    trees use the selected features without scaling. Only the original
-    strategy is implemented for B1; weighting/resampling belong to B4.
+    trees use the selected features without scaling. Random undersampling
+    keeps every minority row and draws an equal number of majority rows
+    without replacement, using seed; it never touches validation/test rows.
     Defaults are starting settings, not parameters selected on real data.
     """
     if model_name not in MODEL_NAMES:
         raise ValueError(f"Unknown model_name {model_name!r}; choose from {MODEL_NAMES}.")
-    if strategy != "original":
-        raise ValueError("B1 supports strategy='original' only; imbalance strategies are pending B4.")
+    if strategy not in STRATEGIES:
+        raise ValueError(f"Unknown strategy {strategy!r}; choose from {STRATEGIES}.")
+    if strategy == "class_weight" and model_name == "gaussian_nb":
+        raise ValueError("GaussianNB does not support class_weight.")
     labels = np.asarray(y_train)
     if labels.ndim != 1 or not np.isin(labels, [0, 1]).all():
         raise ValueError("y_train must be a 1-D array containing only numeric labels 0 and 1.")
@@ -71,12 +75,32 @@ def train_model(X_train, y_train, model_name, strategy="original", seed=42):
     else:
         classifier = RandomForestClassifier(n_estimators=100, random_state=seed, n_jobs=1)
 
+    if strategy == "class_weight":
+        classifier.set_params(class_weight="balanced")
+
+    fit_X, fit_y = X_train, labels
+    positions = np.arange(len(labels))
+    if strategy == "random_undersample":
+        rng = np.random.default_rng(seed)
+        groups = [np.flatnonzero(labels == label) for label in (0, 1)]
+        count = min(map(len, groups))
+        positions = np.sort(np.concatenate([
+            rng.choice(group, count, replace=False) if len(group) > count else group
+            for group in groups
+        ]))
+        fit_X = X_train.iloc[positions] if hasattr(X_train, "iloc") else np.asarray(X_train)[positions]
+        fit_y = labels[positions]
+
     transformer = StandardScaler() if model_name in ("logistic_regression", "gaussian_nb") else "passthrough"
     preprocessing = ColumnTransformer(
         [("features", transformer, _feature_columns)], remainder="drop"
     )
     model = Pipeline([("preprocessing", preprocessing), ("classifier", classifier)])
-    return model.fit(X_train, labels)
+    model.fit(fit_X, fit_y)
+    # Positional indices refer only to the supplied training partition.
+    model.training_positions_ = positions
+    model.training_class_counts_ = {int(label): int((fit_y == label).sum()) for label in (0, 1)}
+    return model
 
 
 def score_model(model, X):
