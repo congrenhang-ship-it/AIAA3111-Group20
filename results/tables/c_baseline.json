@@ -4139,6 +4139,8 @@
       "code/unsupervised.py": "8b1b9f012b135dd64343d11262b5da9e2f33122231a90835e2e1b052ec8cfe93",
       "code/evaluation.py": "e007fa022c6ba4d62373b14b0d6b00f17d559288f831563a41ae8102789fd0b8",
       "code/main.py": "fed6dc9d7819ce79837da01901971af252b607e0030749d4b1b6109cfe71743e"
-    }
+    },
+    "temporary_A_C_D_tests_passed": 51,
+    "D_actually_merged": false
   }
 }

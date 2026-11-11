@@ -117,4 +117,6 @@ result = evaluate_improved_frozen(bundle, test, "data/c_final_test", phase="test
 
 它不重新拟合或选择配置，B 配额冻结后可传 classifier；未冻结时拒绝分类组合。第一轮 bundle 的对应接口为 `evaluation.evaluate_frozen_c`。恢复检查使用 phase="validation_replay"。旧自定义变换器已迁移到 unsupervised 模块路径，原模型备份保留，预测需保持一致。
 
+整理核对：44 项 A/C 检查通过；临时接入 D 后 51 项检查通过且无合并冲突，D 未实际合入。原指标、选择和保留图片均已核对，两份旧模型在新模块路径下恢复后分数一致。
+
 AIGC 记录：Codex 辅助协议、代码、训练验证、检查、结构整理与分析；组员须理解并审核，再据实际使用完善最终 Disclosures。当前没有 B5 真实分类结论或 A8 最终测试结果。
