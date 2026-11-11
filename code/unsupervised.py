@@ -24,7 +24,7 @@ from sklearn.preprocessing import StandardScaler, RobustScaler
 from pathlib import Path
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils.validation import check_is_fitted
-from preprocessing import FEATURE_COLUMNS
+from preprocessing import FEATURE_COLUMNS, data_sha256
 from evaluation import (
     make_prediction_frame,
     evaluate_scores,
@@ -1270,3 +1270,153 @@ def run_experiment(
         verification["baseline_reproduced"] = True
     _dump(verification, public / "verification.json")
     return result, bundle
+
+
+def reproduce_b_for_c(train, validation, freeze_path, output, dataset_digest):
+    """C: reproduce B's declared six candidates in the shared pinned environment.
+
+    B's source and published artifacts are read-only. The supplied B proposal
+    remains the classifier under analysis; a changed winner is reported for
+    group review, never silently substituted. No test features are accepted.
+    """
+    import warnings
+    from sklearn.exceptions import ConvergenceWarning
+    from classification import train_model, score_model
+    from run_b_validation import EXPERIMENTS, select_method
+
+    freeze_path, output = Path(freeze_path), Path(output)
+    frozen = json.loads(freeze_path.read_text(encoding="utf-8"))
+    if frozen.get("owner") != "B" or frozen.get("test_evaluated"):
+        raise ValueError("Expected B's validation-only classifier manifest")
+    if not dataset_digest or frozen.get("dataset_sha256") != dataset_digest:
+        raise ValueError("B manifest does not match the verified dataset")
+    for name, frame in [("train", train), ("validation", validation)]:
+        expected = frozen["partitions"][name]
+        actual = partition_description(frame)
+        if any(
+            expected[key] != actual[key] for key in ["rows", "frauds", "row_ids_sha256"]
+        ):
+            raise ValueError("B manifest split does not match A: " + name)
+    if frozen.get("feature_columns") != FEATURE_COLUMNS or frozen.get("seed") != 42:
+        raise ValueError("B feature order or seed differs from the common protocol")
+    actual_versions = {
+        p: importlib.metadata.version(p)
+        for p in ["numpy", "pandas", "scikit-learn", "scipy"]
+    }
+    lock = dict(
+        line.split("==", 1)
+        for line in (ROOT / "requirements.txt").read_text().splitlines()
+        if "==" in line and not line.startswith("#")
+    )
+    mismatches = {
+        p: {"actual": v, "required": lock.get(p)}
+        for p, v in actual_versions.items()
+        if lock.get(p) != v
+    }
+    if mismatches:
+        raise ValueError(
+            "B reproduction requires the pinned shared environment: "
+            + json.dumps(mismatches)
+        )
+    proposed = frozen["method"]
+    if proposed != f"{frozen['model_name']}_{frozen['strategy']}":
+        raise ValueError("B method name is inconsistent with model/strategy")
+    if output.exists() and any(output.iterdir()):
+        raise ValueError("B reproduction output must be new or empty")
+    records = []
+    selected_model = None
+    selected_frame = None
+    X_train, X_validation = train[FEATURE_COLUMNS], validation[FEATURE_COLUMNS]
+    for name, strategy in EXPERIMENTS:
+        method = f"{name}_{strategy}"
+        clock = perf_counter()
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", ConvergenceWarning)
+            model = train_model(X_train, train.Class, name, strategy=strategy, seed=42)
+            scores = score_model(model, X_validation)
+        metric = evaluate_scores(validation.Class, scores, row_ids=validation.row_id)
+        metric.pop("pr_curve", None)
+        records.append(
+            {
+                "method": method,
+                "model_name": name,
+                "strategy": strategy,
+                "train_seconds": perf_counter() - clock,
+                "metrics": metric,
+                "classifier_parameters": model.named_steps["classifier"].get_params(),
+            }
+        )
+        print(
+            f"B common-environment reproduction: {method}, AP={metric['AP']:.6f}",
+            flush=True,
+        )
+        if method == proposed:
+            selected_model = model
+            selected_frame = make_prediction_frame(validation, scores, method)
+    if selected_model is None:
+        raise ValueError("B proposed method is not among its declared candidates")
+    actual_params = selected_model.named_steps["classifier"].get_params()
+    differences = {
+        key: {"published": value, "actual": actual_params.get(key)}
+        for key, value in frozen["classifier_parameters"].items()
+        if actual_params.get(key) != value
+    }
+    if differences:
+        raise ValueError(
+            "B declared classifier parameters changed: " + json.dumps(differences)
+        )
+    winner = select_method(records)["method"]
+    output.mkdir(parents=True, exist_ok=True)
+    joblib.dump(selected_model, output / "selected_model.joblib")
+    replay = score_model(joblib.load(output / "selected_model.joblib"), X_validation)
+    np.testing.assert_allclose(replay, selected_frame.score, rtol=1e-12, atol=1e-15)
+    ids = validation.row_id.to_numpy()
+    np.testing.assert_array_equal(
+        np.lexsort((ids, -replay)), np.lexsort((ids, -selected_frame.score.to_numpy()))
+    )
+    selected_frame.to_csv(
+        output / "selected_validation_predictions.csv",
+        index=False,
+        float_format="%.17g",
+    )
+    record = {
+        "owner": "C",
+        "purpose": "B handoff reproduction, not a new classifier search",
+        "B_manifest_sha256": data_sha256(freeze_path),
+        "B_manifest_source_commit": frozen["provenance"]["source_commit"],
+        "B_branch_commit": subprocess.run(
+            ["git", "rev-parse", "origin/b/classification-interface"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        ).stdout.strip(),
+        "B_published_versions": frozen["provenance"]["versions"],
+        "actual_versions": actual_versions,
+        "dependency_lock_mismatches": {},
+        "code_sha256": {
+            name: data_sha256(ROOT / name)
+            for name in [
+                "code/classification.py",
+                "code/run_b_validation.py",
+                "requirements.txt",
+            ]
+        },
+        "dataset_sha256": dataset_digest,
+        "partitions": {
+            n: partition_description(f)
+            for n, f in [("train", train), ("validation", validation)]
+        },
+        "experiments": records,
+        "proposed_method": proposed,
+        "selected_under_common_environment": winner,
+        "selection_matches_published": winner == proposed,
+        "parameters_match_published": True,
+        "model_replay_scores_and_full_ranking_match": True,
+        "test_evaluated": False,
+        "prediction_sha256": data_sha256(
+            output / "selected_validation_predictions.csv"
+        ),
+        "published_prediction_sha256": frozen["predictions_sha256"],
+    }
+    _dump(record, output / "reproduction.json")
+    return selected_frame, selected_model, record

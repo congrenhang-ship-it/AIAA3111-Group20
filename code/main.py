@@ -142,13 +142,23 @@ def run_c_workflow(args):
         _read_partition,
         run_validation as run_c_baseline,
         run_experiment,
+        reproduce_b_for_c,
     )
     from threadpoolctl import threadpool_limits
 
-    if args.demo and (args.train or args.validation or args.classification_predictions):
+    if args.demo and (
+        args.train
+        or args.validation
+        or args.classification_predictions
+        or args.classification_freeze
+    ):
         raise ValueError(
             "--demo cannot be combined with real partition/classifier inputs"
         )
+    if args.classification_freeze and args.classification_predictions:
+        raise ValueError("Choose classifier predictions OR a B freeze manifest")
+    if args.classification_freeze and args.run_c_baseline:
+        raise ValueError("B freeze integration uses --run-c")
     source_info = {}
     if args.demo:
         train, validation = _demo()
@@ -205,6 +215,16 @@ def run_c_workflow(args):
     with TemporaryDirectory(prefix="c_export_", dir=output.parent) as temporary:
         staging = Path(temporary) / "export"
         with threadpool_limits(limits=1):
+            b_reproduction = None
+            b_model = None
+            if args.classification_freeze:
+                classifier, b_model, b_reproduction = reproduce_b_for_c(
+                    train,
+                    validation,
+                    args.classification_freeze,
+                    Path(temporary) / "b_reproduction",
+                    source_info.get("dataset_sha256"),
+                )
             if mode == "baseline":
                 run_c_baseline(
                     train,
@@ -217,7 +237,7 @@ def run_c_workflow(args):
                     public_output=staging,
                 )
             else:
-                run_experiment(
+                result, bundle = run_experiment(
                     train,
                     validation,
                     output,
@@ -225,6 +245,33 @@ def run_c_workflow(args):
                     source_info=source_info,
                     classifier=classifier,
                 )
+        if b_reproduction is not None:
+            import joblib
+
+            result["B_reproduction"] = b_reproduction
+            status = (
+                "C_quota_frozen_B_reproduced_in_common_environment"
+                if b_reproduction["selection_matches_published"]
+                else "C_quota_selected_B_choice_needs_environment_review"
+            )
+            bundle["config"]["B_combination"].update(
+                status=status,
+                manifest_sha256=b_reproduction["B_manifest_sha256"],
+                prediction_sha256=b_reproduction["prediction_sha256"],
+                source_branch_commit=b_reproduction["B_branch_commit"],
+            )
+            bundle["B_model"] = b_model
+            result["config"] = bundle["config"]
+            joblib.dump(bundle, output / "improved_models.joblib")
+            (staging / "summary.json").write_text(
+                json.dumps(result, indent=2, allow_nan=False) + "\n"
+            )
+            (staging / "c_improved_freeze.json").write_text(
+                json.dumps(bundle["config"], indent=2, allow_nan=False) + "\n"
+            )
+            shutil.copytree(
+                Path(temporary) / "b_reproduction", output / "b_reproduction"
+            )
         paths = publish_c_results(staging, args.results, mode)
         shutil.copytree(staging, output / "aggregate")
     return {"mode": mode, "private_output": str(output), "shared_files": paths}
@@ -280,6 +327,11 @@ def main():
     parser.add_argument("--validation", type=Path)
     parser.add_argument("--classification-predictions", type=Path)
     parser.add_argument(
+        "--classification-freeze",
+        type=Path,
+        help="Reproduce B manifest in shared environment and complete C combination.",
+    )
+    parser.add_argument(
         "--tasks", action="store_true", help="Show agreed module ownership."
     )
     args = parser.parse_args()
@@ -308,6 +360,7 @@ def main():
         or args.validation
         or args.output
         or args.classification_predictions
+        or args.classification_freeze
     ):
         parser.error("C run options require --run-c or --run-c-baseline")
     if not args.data.is_file():

@@ -912,6 +912,15 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
         raise ValueError("Output must be new or empty")
     config = copy.deepcopy(bundle["config"])
     b = config["B_combination"]
+    if classifier is None and bundle.get("B_model") is not None:
+        if b["share"] is None:
+            raise ValueError("Persisted B model requires an already frozen quota")
+        from classification import score_model
+        from preprocessing import FEATURE_COLUMNS
+
+        classifier = make_prediction_frame(
+            data, score_model(bundle["B_model"], data[FEATURE_COLUMNS]), b["method"]
+        )
     if classifier is not None and b["share"] is None:
         raise ValueError("B combination must be selected and frozen before test")
     predictions, groups = score_improved_bundle(bundle, data)

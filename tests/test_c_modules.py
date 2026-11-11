@@ -909,5 +909,131 @@ class ImprovementTests(unittest.TestCase):
                 fit.assert_not_called()
 
 
+class BCompletionTests(unittest.TestCase):
+    def test_B_reproduction_checks_identity_parameters_and_persistence(self):
+        from classification import train_model, score_model
+        from evaluation import partition_description
+        from unsupervised import reproduce_b_for_c
+
+        train, val = _demo()
+        model = train_model(
+            train[FEATURE_COLUMNS],
+            train.Class,
+            "logistic_regression",
+            strategy="class_weight",
+        )
+        manifest = {
+            "owner": "B",
+            "test_evaluated": False,
+            "dataset_sha256": "unit_digest",
+            "partitions": {
+                "train": partition_description(train),
+                "validation": partition_description(val),
+            },
+            "feature_columns": FEATURE_COLUMNS,
+            "seed": 42,
+            "method": "logistic_regression_class_weight",
+            "model_name": "logistic_regression",
+            "strategy": "class_weight",
+            "classifier_parameters": model.named_steps["classifier"].get_params(),
+            "provenance": {"source_commit": "fixture", "versions": {}},
+            "predictions_sha256": "fixture",
+        }
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            freeze = root / "b_freeze.json"
+            freeze.write_text(json.dumps(manifest))
+            with patch(
+                "run_b_validation.EXPERIMENTS",
+                [
+                    ("logistic_regression", "original"),
+                    ("logistic_regression", "class_weight"),
+                ],
+            ):
+                prediction, fitted, record = reproduce_b_for_c(
+                    train, val, freeze, root / "out", "unit_digest"
+                )
+            self.assertTrue(record["parameters_match_published"])
+            self.assertTrue(record["model_replay_scores_and_full_ranking_match"])
+            self.assertEqual(len(record["experiments"]), 2)
+            assert_allclose(prediction.score, score_model(fitted, val[FEATURE_COLUMNS]))
+            self.assertEqual(json.loads(freeze.read_text()), manifest)
+            with patch("unsupervised.importlib.metadata.version", return_value="wrong"):
+                with self.assertRaisesRegex(ValueError, "pinned shared environment"):
+                    reproduce_b_for_c(
+                        train, val, freeze, root / "wrong_environment", "unit_digest"
+                    )
+            with patch(
+                "classification.train_model",
+                side_effect=AssertionError("identity must be checked before fit"),
+            ):
+                with self.assertRaises(ValueError):
+                    reproduce_b_for_c(train, val, freeze, root / "bad", "wrong_digest")
+                changed = val.copy()
+                changed.row_id += 10000
+                with self.assertRaises(ValueError):
+                    reproduce_b_for_c(
+                        train, changed, freeze, root / "bad", "unit_digest"
+                    )
+
+    def test_frozen_C_bundle_scores_its_persisted_B_without_refitting(self):
+        from classification import train_model, score_model
+        from unsupervised import configurations, fit_configuration
+        from evaluation import evaluate_improved_frozen
+
+        train, val = _demo()
+        selected = {"kmeans": "km_base_raw", "isolation_forest": "if_base"}
+        B = train_model(
+            train[FEATURE_COLUMNS],
+            train.Class,
+            "logistic_regression",
+            strategy="class_weight",
+        )
+        bundle = {
+            "models": {
+                "kmeans": fit_configuration(
+                    train[FEATURE_COLUMNS], configurations()[0]
+                ),
+                "isolation_forest": fit_configuration(
+                    train[FEATURE_COLUMNS], configurations()[6]
+                ),
+            },
+            "B_model": B,
+            "config": {
+                "selected_candidates": selected,
+                "selected_anomaly": "if_base",
+                "distance_share": 0.0,
+                "B_combination": {"method": "B_actual", "share": 0.75},
+            },
+        }
+        with tempfile.TemporaryDirectory() as folder:
+            with (
+                patch(
+                    "classification.train_model", side_effect=AssertionError("no refit")
+                ),
+                patch(
+                    "unsupervised.select_pair",
+                    side_effect=AssertionError("no reselection"),
+                ),
+            ):
+                replay = evaluate_improved_frozen(
+                    bundle, val, folder, phase="validation_replay"
+                )
+            self.assertIn("B_actual", replay["metrics"])
+            self.assertEqual(len(replay["B_comparisons"]), 4)
+            self.assertTrue(
+                all(
+                    len(set(r["combined_ids"])) == r["K"]
+                    and r["classifier_share"] == 0.75
+                    for r in replay["B_comparisons"]
+                )
+            )
+            written = pd.read_csv(Path(folder) / "B_actual_predictions.csv")
+            assert_allclose(written.score, score_model(B, val[FEATURE_COLUMNS]))
+            bundle["config"]["B_combination"]["share"] = None
+            with self.assertRaises(ValueError):
+                evaluate_improved_frozen(bundle, val, Path(folder) / "blocked")
+
+
 if __name__ == "__main__":
     unittest.main()
