@@ -376,6 +376,8 @@ def run_experiment(
             c.to_csv(index=False).encode()
         ).hexdigest()
         display[name] = c
+        metrics[name] = evaluate_scores(c.Class, c.score, row_ids=c.row_id)
+        metrics[name].pop("pr_curve", None)
     display_metrics = {
         name: evaluate_scores(p.Class, p.score, row_ids=p.row_id)
         for name, p in display.items()
@@ -428,6 +430,22 @@ def run_experiment(
         )
     pd.DataFrame(summary_rows).to_csv(public / "validation_ablation.csv", index=False)
     _ablation_figure(summary_rows, selected, figures / "ablation.png")
+    if B_comparisons:
+        save_comparison_figures(
+            [
+                row
+                for row in B_comparisons
+                if row["classifier_share"] == config["B_combination"]["share"]
+            ],
+            figures,
+            "Validation - frozen B quota",
+            method_labels={
+                "classifier": config["B_combination"]["method"],
+                "anomaly": overall,
+                "combined": "B + anomaly",
+            },
+            filename="B_complementarity.png",
+        )
     budget_rows = [
         {"candidate": name, **row}
         for name, m in metrics.items()

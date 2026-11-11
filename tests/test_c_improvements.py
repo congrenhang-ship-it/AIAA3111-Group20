@@ -176,6 +176,8 @@ class ImprovementTests(unittest.TestCase):
             for key in ["selected_candidates", "selected_anomaly", "distance_share"]:
                 self.assertEqual(first["config"][key], second["config"][key])
             self.assertIsNotNone(bundle["config"]["B_combination"]["share"])
+            self.assertIn("future_B", first["validation_metrics"])
+            self.assertTrue((root / "pub_one/figures/B_complementarity.png").is_file())
             with patch(
                 "c_improvements.select_pair",
                 side_effect=AssertionError("must keep frozen weights"),
