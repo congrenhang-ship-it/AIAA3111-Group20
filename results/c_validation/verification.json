@@ -1,0 +1,41 @@
+{
+  "verified_on": "2026-11-11",
+  "owner": "C",
+  "data_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+  "experiment_source_commit": "bce1c5e40d33522fa266bb5719b3254c30ed32f2",
+  "experiment_worktree_clean": true,
+  "A_C_unittest": {
+    "passed": 35,
+    "skipped": 0,
+    "command": "python -m unittest discover -s tests -v"
+  },
+  "temporary_A_C_D_combined_unittest": {
+    "passed": 42,
+    "skipped": 0,
+    "D_commit": "d638da1",
+    "merge_conflicts": false,
+    "D_actually_merged": false
+  },
+  "pip_check": "No broken requirements found",
+  "real_validation_audit": {
+    "restored_model_scores_match": true,
+    "restored_model_metrics_match": true,
+    "reporting_revisions_leave_metrics_unchanged": true,
+    "code_sha256_match": true,
+    "group_global_counts_reconcile": true,
+    "exact_K_unique_combination_ids": true,
+    "empty_trained_cluster_reported": true,
+    "public_export_no_transaction_lists_or_models": true
+  },
+  "visually_checked_figures": [
+    "anomaly_complementarity.png",
+    "cluster_prevalence.png",
+    "cluster_structure.png",
+    "group_performance.png",
+    "pr_curve.png",
+    "review_precision.png",
+    "review_recall.png"
+  ],
+  "official_classifier_evaluated": false,
+  "final_test_evaluated": false
+}

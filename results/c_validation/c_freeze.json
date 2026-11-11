@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "owner": "C",
+  "status": "unsupervised_frozen",
+  "group_G2_complete": false,
+  "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+  "partitions": {
+    "train": {
+      "rows": 170235,
+      "frauds": 342,
+      "time_min": 0.0,
+      "time_max": 120392.0,
+      "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+    },
+    "validation": {
+      "rows": 56745,
+      "frauds": 57,
+      "time_min": 120393.0,
+      "time_max": 145233.0,
+      "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+    }
+  },
+  "feature_columns": [
+    "Time",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
+    "V16",
+    "V17",
+    "V18",
+    "V19",
+    "V20",
+    "V21",
+    "V22",
+    "V23",
+    "V24",
+    "V25",
+    "V26",
+    "V27",
+    "V28",
+    "Amount"
+  ],
+  "seed": 42,
+  "scaler": "StandardScaler fitted on training only",
+  "n_clusters": 3,
+  "kmeans_n_init": 10,
+  "k_selection": "highest mean training sample silhouette; smaller k on ties",
+  "forest_params": {
+    "bootstrap": false,
+    "contamination": "auto",
+    "max_features": 1.0,
+    "max_samples": 256,
+    "n_estimators": 100,
+    "n_jobs": 1,
+    "random_state": 42,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "forest_score": "negative score_samples",
+  "primary_review_fraction": 0.01,
+  "review_fractions": [
+    0.001,
+    0.005,
+    0.01,
+    0.02
+  ],
+  "selected_anomaly_method": "kmeans_distance",
+  "anomaly_selection": "validation TP at 1%; then AP; then method name",
+  "combination": {
+    "status": "waiting_for_B5",
+    "classifier_method": null,
+    "anomaly_method": "kmeans_distance",
+    "classifier_share": null
+  },
+  "combination_selection": "validation TP at 1%; ties prefer larger classifier share",
+  "combination_candidates": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "ranking": "score descending; row_id ascending; K=ceil(N*q)",
+  "refill": "floor(K*classifier_share) classifier first; scan anomaly skipping duplicates to K",
+  "refit_policy": "retain training-only fitted pipelines; no train+validation refit",
+  "time_window_diagnostic": {
+    "window_seconds": 3600,
+    "origin": 0,
+    "note": "validation diagnostic using A interface; final windows owned by A"
+  },
+  "source_commit": "bce1c5e40d33522fa266bb5719b3254c30ed32f2",
+  "code_sha256": {
+    "run_c_validation.py": "0faef0f48a994714a2c4652568dd05ac1e9376b362cafd6b3ae2bccb335b2ee2",
+    "evaluation.py": "abe7be056d0eb1ade504807921c4e822c8aa2d910ae67d683536d438259222d0",
+    "unsupervised.py": "06b5c6a380ed83187019c9432f4ff585f1509941a6760cf26cffce3feb5d8af2",
+    "c_reporting.py": "fc82fee6026ee3d5baaf0d4d482924871c83f27afbd988751d981211e14a2d6b",
+    "preprocessing.py": "8d1eaa9e986b2f29a0beca26f9de29a565c0280a7db23411bf7af8799f1c4baa",
+    "temporal.py": "f45b13e63e78f3d7d202906d85d0088eea3e40930ca3bcb91074abf8f0e74ae0"
+  },
+  "versions": {
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.2"
+  },
+  "test_evaluated": false
+}
