@@ -91,12 +91,13 @@ Windows PowerShell 激活环境：
 python -m pip install -r requirements.txt
 ```
 
-当前依赖清单未固定版本。首位成员验证环境后，请记录并统一实际使用的版本。
+依赖版本已固定，组员使用 Python 3.12 和同一份 `requirements.txt`。
 
 ## 数据准备
 
-按 [data/README.md](data/README.md) 下载原始数据，并放到 `data/creditcard.csv`。
-原始数据不上传 GitHub，每位成员按相同说明获取。
+Task A 交接与文件索引 · [中文](docs/TASK_A.zh-CN.md) · [English](docs/TASK_A.en.md)
+
+每位组员在仓库根目录运行 `python code/download_data.py` 获取并验证同一份原始数据。文件保存在被 Git 忽略的 `data/creditcard.csv`。手动下载、校验值和预期结果见 [数据说明](data/README.md)。
 
 ## 当前可运行的命令
 
@@ -106,25 +107,27 @@ python -m pip install -r requirements.txt
 python code/main.py --help
 python code/main.py --tasks
 python code/main.py --check-data
+python code/main.py --prepare-data
+python -m unittest discover -s tests -v
 ```
 
 `--tasks` 显示四人模块分工，不需要数据文件。
 
-`--check-data` 检查列名、数值、标签、缺失值、重复记录和时间范围，不修改数据。
+`--check-data` 输出 SHA-256、字段、标签、缺失、重复和时间/金额范围。`--prepare-data` 先验证文件 SHA-256，再报告去重后的三段样本、欺诈数、时间范围和有序行号指纹。测试用小样例检查接口，并在 CSV 存在时校对全量数据指纹。
 也可以指定其他 CSV 路径：
 
 ```bash
 python code/main.py --check-data --data /path/to/creditcard.csv
 ```
 
-**C 的公共评价、K-means、Isolation Forest、等预算组合、群体评价和绘图已实现。** 检查和独立验证入口如下：
+**A 的数据下载、审计、统一时间划分和时间窗口模块已接入；C 的公共评价、K-means、Isolation Forest、等预算组合、群体评价和绘图已实现。**
 
 ```bash
 python -m unittest discover -s tests -v
 python code/run_c_validation.py --demo
 ```
 
-合成演示输出到本地 `data/c_demo/`，仅验证程序。正式运行方式、参数口径和英文方法稿见 [C 模块交付说明](report/C_HANDOFF.md)。C1/C2 已完成；其余 C 任务的独立实现已准备，真实实验仍依赖 A 的划分和 B 的分类预测。数据划分、分类、规则和时间分析目前仍待相应成员实现；主入口还未接入完整实验。不要把合成演示或接口数量当作真实实验结果。
+合成演示输出到本地 `data/c_demo/`，仅验证程序。C 的正式运行方式和方法稿见 [C 模块交付说明](report/C_HANDOFF.md)。G1 入口为 `python code/main.py --run-validation`，调用 B 的分类和 C 的评价；B2 尚未实现时明确报告依赖。正式测试安排在 G2 冻结后；不要把合成演示当作真实实验结果。
 
 ## 实施顺序与时间安排
 
@@ -158,11 +161,21 @@ C 的范围限于既定 K-means、Isolation Forest、簇距离与公共评价，
 
 ### 共同接口
 
-- A 提供唯一的数据划分；其他成员不自行重划数据。`split_data` 返回训练、验证、测试数据表，标签与输入特征明确分离。
+- A 提供唯一的数据划分。组员先运行 `--prepare-data` 确认数据一致，再从各自位于 `code/` 的 Python 脚本调用以下函数。
 - B 的 `train_model` 返回含预处理的模型流程。B 与 C 均输出同一行序、同一交易编号对应的连续分数，统一为越大越可疑。聚类编号单独保留，不能直接作为欺诈预测标签。
 - C 的 `evaluate_scores` 统一负责所有分类、异常与组合方法的指标。提前约定 K 的取整、并列排序、无正类窗口及零分母处理。A 的时间分析直接复用这一接口。
 - D 只在训练阶段拟合分箱并发现规则，在验证集检查稳定性，冻结选择后再进行测试评价。
 - 标准化、特征选择、重采样和规则发现均遵守训练边界。参数、阈值和规则筛选在验证阶段确定。
+
+```python
+from preprocessing import DEFAULT_DATA_PATH, get_features, load_data, split_data
+
+train, validation, test = split_data(load_data(DEFAULT_DATA_PATH))
+X_train, y_train = get_features(train), train["Class"]
+X_validation = get_features(validation)
+```
+
+`load_data` 返回附有原始 `row_id` 的数据表。`split_data` 负责去重和唯一时间划分，三段都保留标签、时间和原始行号。`get_features` 返回 Group 20 声明的 Time、V1–V28、Amount，不包含 `Class` 或 `row_id`，也不进行缩放。若要比较是否纳入 Time，先在验证阶段决定并记录。D 的规则挖掘从训练表读取特征和后件标签，并复用验证表的原始行号。
 
 ### 公共预测表
 
@@ -178,6 +191,8 @@ C 的范围限于既定 K-means、Isolation Forest、簇距离与公共评价，
 | `cluster_id`（可选） | 群体编号，不等同于欺诈标签 |
 
 B/C 的打分数组与输入行顺序一致，C 的 `make_prediction_frame` 负责统一组表。`evaluate_scores` 必须接收 `row_ids`，用于确定并列排序；A 的 `evaluate_time_windows` 复用该函数。按群体或窗口单独分配预算与全局 top-K 的分布是不同分析，结果必须注明口径。无正类时 AP/Recall 为不适用；空窗口另行标记。D 的规则结果保留覆盖的 row_id，便于交叉分析。
+
+`evaluate_time_windows` 按共用起点划分左闭右开的窗口，并检查各方法使用同一批交易。返回各方法从首个到末个观测窗口的编号、边界、交易数、欺诈数、状态和 C 的评价结果。空窗口的评价为 `None`。在 C 的评价就绪前，`summarize_time_windows` 可独立生成同样的窗口计数。当前验证入口用 3,600 秒窗口和起点 0，正式方案在验证阶段确定。
 
 每个 Python 文件开头均写明负责人、输入输出和实现状态。`NotImplementedError` 表示待实现，不能将接口数量当成完成实验的数量。
 
