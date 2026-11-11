@@ -179,3 +179,5 @@ C5、C6、C8 的方法/验证写作与问答已交付。C7 的最终测试图和
 Under the same 1% review budget, the reproduced class-weighted logistic regression detected 49 of 57 validation fraud cases, whereas the improved Isolation Forest detected 24. All 24 anomaly detections were covered by the classifier's top-K list. The predeclared quota search therefore selected the pure-classifier endpoint: a 75% classifier quota tied its detected-fraud count, and the tie rule preferred more classifier capacity. At 2%, one anomaly-exclusive fraud case existed, but a capacity-preserving policy traded away one classifier-exclusive fraud and produced no net gain. These findings support the value of evaluating complementarity under an identical capacity constraint, rather than using the larger union of two review lists.
 
 答辩要点：异常更稀有不代表更像已知欺诈；有独有案例不等于净收益；相同 K、去重补齐和事先固定的并列规则是比较基础；选择纯分类不是失败，而是保留有证据支持的策略。当前结论为验证结论，最终泛化仍由 A8 检查。
+
+最终核对：46 项 A/C 检查、8 项 B 检查通过；临时加入 D 的 7 项检查后共 61 项通过且无冲突，D 未实际合入。真实 G1、完整验证的冻结重放、行身份/容量/分群计数均已核对。B 的原算法、测试及发布结果文件未改动；测试集没有评分。
