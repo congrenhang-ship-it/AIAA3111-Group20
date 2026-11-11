@@ -54,6 +54,7 @@ code/preprocessing.py    数据检查、划分与预处理
 code/classification.py   分类模型与类别不平衡处理
 code/unsupervised.py     C：K-means、Isolation Forest 与簇距离
 code/evaluation.py       C：公共评价、等预算组合、群体分析与绘图
+tests/test_c_modules.py  C：公共评价与无监督模块检查
 code/temporal.py         A：相对时间窗口评价
 code/pattern_mining.py   特征组合与关联规则挖掘
 data/                    本地原始数据及下载说明
@@ -61,7 +62,7 @@ results/figures/         正式实验图表
 results/tables/          正式实验汇总表
 ```
 
-`report/`、`poster/` 和结果目录目前使用 `.gitkeep` 保留空目录；尚未创建报告、海报或实验结果。
+C 的说明集中在 [report/C_IMPROVEMENTS.md](report/C_IMPROVEMENTS.md)。图在 `results/figures/`，汇总在 `results/tables/`；最终报告、海报和最终测试尚未完成。
 
 ## 环境安装
 
@@ -97,6 +98,20 @@ Task A 交接与文件索引 · [中文](docs/TASK_A.zh-CN.md) · [English](docs
 
 每位组员在仓库根目录运行 `python code/download_data.py` 获取并验证同一份原始数据。文件保存在被 Git 忽略的 `data/creditcard.csv`。手动下载、校验值和预期结果见 [数据说明](data/README.md)。
 
+## C 的实现与结果
+
+C 的算法与实验流程放在 `code/unsupervised.py`，共同评价、绘图和结果导出放在 `code/evaluation.py`，统一由 `main.py` 调用。运行与分析见 [C 说明](report/C_IMPROVEMENTS.md)。当前改进 IF 在验证 1% 预算下检出 24/57，原 IF 为 10/57、原距离为 14/57；最终测试尚未执行。
+
+共享文件保持原目录：`results/tables/c_baseline.json`、`c_improved.json`、`c_ablation.csv`；图均为 `results/figures/c_*.png`。原始数据、模型和详细中间记录留在本地 `data/`。
+
+复现时使用新的本地输出目录，避免覆盖已有证据：
+
+```bash
+python code/main.py --run-c --output data/c_reproduction/run --results data/c_reproduction/shared
+```
+
+`--run-c-baseline` 重现第一轮，`--demo` 仅检查程序。B 的标准预测到位后追加 `--classification-predictions`。C 的检查集中在 `tests/test_c_modules.py`。
+
 ## 当前可运行的命令
 
 在仓库根目录执行：
@@ -118,7 +133,7 @@ python -m unittest discover -s tests -v
 python code/main.py --check-data --data /path/to/creditcard.csv
 ```
 
-G1 的验证入口是 `python code/main.py --run-validation`。它用训练段拟合未重加权的逻辑回归，调用 B 的模型和 C 的评价，输出验证段总体与逐窗结果。B2 或 C2 尚未实现时，命令会指出当前缺少哪一项并退出。分类、公共评价、聚类、异常检测和规则模块仍待各负责人实现。统一正式测试安排在 G2 冻结后。
+A 的准备与时间窗口、C 的模型与评价均已接入。G1 入口 `python code/main.py --run-validation` 仍需 B2 的真实分类实现。正式测试安排在全组 G2 冻结后。
 
 ## 实施顺序与时间安排
 
@@ -148,7 +163,7 @@ G1 的验证入口是 `python code/main.py --run-validation`。它用训练段�
 | C：聚类、异常检测与统一评价 | K-means、Isolation Forest、簇距离、统一预算评价及互补分析 | `code/unsupervised.py`、`code/evaluation.py`、`results/` | 聚类画像、异常排序、共同评价和等预算组合结果 |
 | D：模式挖掘与文档协调 | 分箱、Apriori、规则验证，协助跨方法案例分析和文档整合 | `code/pattern_mining.py`、`report/`、`poster/` | 规则结果、代表案例、统一排版的报告和海报 |
 
-C 的范围限于上述两个基础算法与公共评价，不额外增加算法。A、B、D 各自整理本模块图表和分析，避免将全部结果分析集中给 C 或全部写作集中给 D。
+C 的范围限于既定 K-means、Isolation Forest、簇距离与公共评价，不额外增加算法。A、B、D 各自整理本模块图表和分析，避免将全部结果分析集中给 C 或全部写作集中给 D。
 
 ### 共同接口
 
