@@ -95,7 +95,9 @@ def score_isolation_forest(model, X):
     return -model.score_samples(X)
 
 
-def compare_kmeans_candidates(X_train, ks=(3, 5, 8), seeds=(42, 43), sample_size=1000):
+def compare_kmeans_candidates(
+    X_train, ks=(3, 5, 8), seeds=(42, 43), sample_size=1000, progress=None
+):
     """Return structural metrics and seed stability on ONE fixed training subset.
 
     Candidate selection can use mean defined silhouette with smaller k as tie
@@ -132,6 +134,8 @@ def compare_kmeans_candidates(X_train, ks=(3, 5, 8), seeds=(42, 43), sample_size
     for k in ks:
         assignments = []
         for seed in seeds:
+            if progress is not None:
+                progress(f"K-means training: k={k}, seed={seed}")
             pipeline = fit_kmeans(X_train, k, seed)
             labels, _ = score_kmeans(pipeline, sample)
             transformed = pipeline.named_steps["scaler"].transform(sample)
@@ -162,3 +166,24 @@ def compare_kmeans_candidates(X_train, ks=(3, 5, 8), seeds=(42, 43), sample_size
         for row in records[-len(seeds) :]:
             row["seed_stability_ARI"] = stability
     return records
+
+
+def score_frozen_unsupervised(bundle, X):
+    """A's final scoring hook: reuse persisted training pipelines, never select/refit.
+
+    bundle is the local joblib artifact written by run_c_validation. Load only
+    your own trusted artifact. Caller supplies features only; labels are unused.
+    Whole-group G2 and permission to evaluate the test partition belong to A.
+    """
+    _features(X, allow_empty=True)
+    config = bundle["config"]
+    if hasattr(X, "columns") and list(X.columns) != config["feature_columns"]:
+        raise ValueError("Frozen feature order does not match scoring input")
+    if bundle["kmeans"].named_steps["model"].n_clusters != config["n_clusters"]:
+        raise ValueError("Frozen K-means configuration disagrees with fitted model")
+    groups, distance = score_kmeans(bundle["kmeans"], X)
+    return {
+        "cluster_ids": groups,
+        "kmeans_distance": distance,
+        "isolation_forest": score_isolation_forest(bundle["isolation_forest"], X),
+    }

@@ -91,11 +91,16 @@ def make_prediction_frame(data, scores, method, cluster_ids=None):
     if not isinstance(method, str) or not method.strip():
         raise ValueError("method must be a nonempty string")
     n = len(data)
+    _vector(data["Time"], "Time", n)
     frame = pd.DataFrame(
         {
             "row_id": _row_ids(data["row_id"], n),
             "Class": _labels(data["Class"], n),
-            "Time": _vector(data["Time"], "Time", n),
+            "Time": (
+                _vector(data["Time"], "Time", n)
+                if data["Time"].dtype.kind not in "iuf"
+                else data["Time"].to_numpy()
+            ),
             "method": method,
             "score": _vector(scores, "scores", n),
         }
@@ -429,7 +434,14 @@ def save_group_figures(group_results, output_dir, label="Group evaluation"):
     return [str(path)]
 
 
-def save_comparison_figures(comparisons, output_dir, label="Equal-budget comparison"):
+def save_comparison_figures(
+    comparisons,
+    output_dir,
+    label="Equal-budget comparison",
+    *,
+    method_labels=None,
+    filename="complementarity.png",
+):
     """Plot detected fraud counts; all three bars in a row share the same K."""
     import matplotlib
 
@@ -445,14 +457,14 @@ def save_comparison_figures(comparisons, output_dir, label="Equal-budget compari
             x + (offset - 1) * 0.25,
             [c[key]["TP"] for c in comparisons],
             width=0.25,
-            label=key,
+            label=(method_labels or {}).get(key, key),
         )
     ax.set_xticks(x, [str(c["K"]) for c in comparisons])
     ax.set(xlabel="Review count K", ylabel="Fraud detected", title=label)
     if comparisons:
         ax.legend()
     fig.tight_layout()
-    path = output / "complementarity.png"
+    path = output / filename
     fig.savefig(path, dpi=160)
     plt.close(fig)
     return [str(path)]
