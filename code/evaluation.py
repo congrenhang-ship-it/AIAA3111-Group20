@@ -382,6 +382,28 @@ def save_figures(results, output_dir):
         ax.set_ylabel(ylabel)
         ax.set_title(label)
         ax.set_ylim(-0.02, 1.02)
+        defined_ap = [m["AP"] for m in methods.values() if m.get("AP") is not None]
+        if mode == "pr" and defined_ap and max(defined_ap) < 0.1:
+            zoom = ax.inset_axes([0.28, 0.28, 0.68, 0.40])
+            for metrics in methods.values():
+                curve = metrics.get("pr_curve")
+                if curve:
+                    zoom.step(curve["recall"], curve["precision"], where="post")
+            if len(prev) == 1:
+                zoom.axhline(next(iter(prev)), color="gray", linestyle="--")
+            zoom.set(xlim=(0, 1), ylim=(0, max(0.02, 3 * max(defined_ap))))
+            zoom.set_title("Detail of the same PR curves", fontsize=8)
+            zoom.tick_params(labelsize=8)
+            zoom.grid(alpha=0.2)
+        if mode == "precision_at_k":
+            values = [
+                row[mode]
+                for metrics in methods.values()
+                for row in metrics["budgets"]
+                if row[mode] is not None
+            ]
+            if values and max(values) < 0.1:
+                ax.set_ylim(0, max(0.05, 1.2 * max(values)))
         ax.grid(alpha=0.2)
         fig.tight_layout()
         path = output / f"{filename}.png"
@@ -423,6 +445,9 @@ def save_group_figures(group_results, output_dir, label="Group evaluation"):
             fontsize=8,
         )
     axes[0].set(xlabel="Cluster", ylabel="Fraud proportion")
+    axes[0].set_xticks(np.arange(len(names)), names)
+    if rows:
+        axes[0].set_xlim(-0.5, len(rows) - 0.5)
     if rows:
         for i, budget in enumerate(rows[0]["global_budget_allocation"]):
             values = [

@@ -54,7 +54,8 @@ code/preprocessing.py    数据检查、划分与预处理
 code/classification.py   分类模型与类别不平衡处理
 code/unsupervised.py     C：K-means、Isolation Forest 与簇距离
 code/evaluation.py       C：公共评价、等预算组合、群体分析与绘图
-code/run_c_validation.py C：独立验证入口（合成检查或 A 提供的划分）
+code/run_c_validation.py C：独立验证入口（直接调用 A 的固定划分）
+code/c_reporting.py     C：聚合交付、配置记录与冻结后的测试评价
 tests/test_c_modules.py  C：公共评价与无监督模块检查
 code/temporal.py         A：相对时间窗口评价
 code/pattern_mining.py   特征组合与关联规则挖掘
@@ -63,7 +64,7 @@ results/figures/         正式实验图表
 results/tables/          正式实验汇总表
 ```
 
-`report/C_HANDOFF.md` 提供 C 的运行说明和方法素材；最终报告、海报和真实实验结果尚未完成。
+`report/C_HANDOFF.md` 提供 C 的运行和交接说明，`results/c_validation/` 已有真实验证证据；最终报告、海报和最终测试尚未完成。
 
 ## 环境安装
 
@@ -124,10 +125,11 @@ python code/main.py --check-data --data /path/to/creditcard.csv
 
 ```bash
 python -m unittest discover -s tests -v
-python code/run_c_validation.py --demo
+python code/run_c_validation.py --demo --output data/c_demo_new
+python code/run_c_validation.py --data data/creditcard.csv --output data/c_validation_new --publish results/c_validation_new
 ```
 
-合成演示输出到本地 `data/c_demo/`，仅验证程序。C 的正式运行方式和方法稿见 [C 模块交付说明](report/C_HANDOFF.md)。G1 入口为 `python code/main.py --run-validation`，调用 B 的分类和 C 的评价；B2 尚未实现时明确报告依赖。正式测试安排在 G2 冻结后；不要把合成演示当作真实实验结果。
+合成演示输出到本地 `data/c_demo/`，仅验证程序。C 已完成真实训练/验证运行，汇总与 7 张图保存在 `results/c_validation/`，分析见 [C 验证结果](report/C_VALIDATION_RESULTS.md)。运行和后续交接见 [C 模块交付说明](report/C_HANDOFF.md)。G1 入口为 `python code/main.py --run-validation`，调用 B 的分类和 C 的评价；B2 尚未实现时明确报告依赖。正式测试安排在 G2 冻结后；不要把合成演示当作真实实验结果。
 
 ## 实施顺序与时间安排
 

@@ -251,7 +251,9 @@ def run_validation(
         else "Validation - not final test"
     )
     save_figures({"methods": metrics, "label": label}, output / "figures")
-    save_group_figures(groups["isolation_forest"], output / "figures", label)
+    save_group_figures(
+        groups[selected_anomaly], output / "figures", label + "\n" + selected_anomaly
+    )
     if combos:
         save_comparison_figures(
             [c for c in combos if c["classifier_share"] == 0.5],

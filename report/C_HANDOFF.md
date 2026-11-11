@@ -1,144 +1,122 @@
-# C 模块：实现、运行和报告素材
+# C 模块交付与运行说明
 
-负责人：C。本文记录可以独立完成的工作，并供 A 接入、B 使用评价、D 整理报告。合成检查不是课程实验结果。
+负责人 C。更新：2026-11-11。已把 A 的 `Task_A`（`26c1c32`）合并到 C 分支，并处理 README/TASKS 的文字冲突；A 的数据/时间代码与 B 的分类代码没有被重写。
 
-## 1. 完成情况
+## 当前交付
 
-| 任务 | 当前交付 | 正式完成还需要什么 |
+| 任务 | 已完成 | 尚需的外部条件 |
 |---|---|---|
-| C1 | 统一预测表、输入检查、确定性排名规则已完成 | 无 |
-| C2 | AP、PR、预算指标、阈值计数、随机期望基线已完成，并通过人工例子检查 | 无；G1 仍需要 A/B 连通和第二台电脑复现 |
-| C3 | K-means、训练结构比较、固定子样本轮廓系数、种子稳定性、验证簇分配和距离已实现 | A3 的正式划分，真实数据运行与分析 |
-| C4 | Isolation Forest 管线、统一分数方向、同预算比较入口已实现 | A3 的正式划分，真实异常排序实验 |
-| C5 | 所有方法的分群评价、名单交集、固定容量组合与补齐已实现 | A3 和 B5 的分类预测；正式互补性分析 |
-| C6 | 参数与规则候选、运行溯源记录已准备 | 验证结果、共同主预算和 B5；不能提前宣称冻结 |
-| C7 | PR、预算 Precision/Recall、群体比例与检出表现、等预算检出量五类图已实现 | A8 的最终测试预测和方案冻结记录 |
-| C8 | 下方英文方法稿、结果写作提纲、问答准备已完成 | 真实结果及其解释、D 的报告整合 |
+| C1/C2 | 统一预测表、排名与预算口径、AP/PR、阈值计数、随机期望基线；人工例子与边界检查 | 无 |
+| C3 | 真实训练段 K-means、k 对照、silhouette/ARI、训练与验证群体画像，含空簇 | 无 |
+| C4 | 真实训练段 Isolation Forest、距离异常排序及相同验证预算比较 | 无 |
+| C5 | 所有公共接口、真实分群评价、两种异常名单互补诊断、分类 CSV 接入与配额选择代码 | 分类与异常的正式互补结论需要 B5 |
+| C6 | 无监督配置与管线已冻结保存；组合选择规则已固定 | B5 到位后选择分类组合；全组 G2 由 A 汇总 |
+| C7 | 真实验证图表已生成；最终测试绘图和冻结评价入口已实现 | 最终测试图必须来自 G2 后的 A8 |
+| C8 | 方法说明、真实验证分析、局限、讲解问答已整理 | B 的真实比较与 A8 最终测试解释需后续补入 |
 
-当前没有正式数据划分或分类结果，本次没有替 A/B 完成相应任务，也没有读取或评价最终测试集。
+真实结果见 [C_VALIDATION_RESULTS.md](C_VALIDATION_RESULTS.md)，预先记录的实验口径见 [C_PROTOCOL.md](C_PROTOCOL.md)，机器可读汇总与冻结配置见 `results/c_validation/`。没有把待 B5/A8 的实验勾成已完成。
 
-## 2. 可以直接运行
+## 文件分工
 
-在仓库根目录激活环境。C 模块需要 numpy、pandas、scikit-learn、matplotlib；全组依赖仍以根目录 requirements.txt 为准。
+- `code/evaluation.py`：C 的公共指标、预测表、分群、名单组合及基础绘图。
+- `code/unsupervised.py`：C 的 K-means、Isolation Forest、结构比较和冻结模型打分。
+- `code/run_c_validation.py`：C 的独立验证入口，调用 A 的唯一划分。
+- `code/c_reporting.py`：C 的聚合导出、结构/群体图、配置记录和 A8 冻结评价入口。
+- `tests/test_c_modules.py`、`tests/test_c_workflow.py`：C 的指标、模型、A/C 联通和保存/恢复检查。
+- `results/c_validation/`：C 的真实验证汇总和图表，允许随代码共享。
+- `data/c_ulb_validation_20261111_final/`：本机完整预测、PR 点、模型及误报/漏报样例；Git 忽略，不共享原始数据或模型。
+
+A/B/D 各自文件职责继续以 README 为准。
+
+## 安装、验证、复现
+
+在仓库根目录运行：
 
 ```bash
 source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pip check
+python code/download_data.py
+python code/main.py --prepare-data
 python -m unittest discover -s tests -v
-python code/run_c_validation.py --demo
 ```
 
-合成演示默认保存在 `data/c_demo/`，标题明确标出 SYNTHETIC DEMO，不上传 GitHub，不放进正式结果。重复运行时使用新的输出目录，以保留旧记录：
+本机为 CPython 3.12.14，已安装并通过 A 的完整固定依赖校验。核心版本 numpy 2.5.4、pandas 3.1.1、scikit-learn 1.9.1、matplotlib 3.11.2。35 项 A/C 检查通过，包括原始 ULB 文件、划分指纹、实际 C 评价与 A 的 G1/窗口接口联通。G1 联通测试使用模拟的 B 分数，并不等于 B2 的真实逻辑回归已完成。
 
-```bash
-python code/run_c_validation.py --demo --output data/c_demo_run2
-```
-
-本机已检查 Python 3.12.14 环境，核心包为 numpy 2.5.4、pandas 3.1.1、scikit-learn 1.9.1、matplotlib 3.11.2。各次运行的实际版本、代码 SHA-256、commit 和工作区是否有未提交修改，均写入 JSON；这些版本是本机检查记录，尚未代替 A1 的共同环境冻结。
-
-### 收到 A3 后
-
-A 从唯一划分导出 `data/train.csv`、`data/validation.csv`。每份保留 `row_id, Class, Time, V1,...,V28, Amount`，原始数值不提前全局缩放；row_id 为原始 CSV 行编号且唯一。两部分 ID 无交集，最大训练 Time 严格小于最小验证 Time，同一时间不跨边界。CSV 文件名仅为接口建议，A 可以指定其他路径。
+正式 C 验证入口：
 
 ```bash
 python code/run_c_validation.py \
-  --train data/train.csv \
-  --validation data/validation.csv \
-  --output data/c_validation_run1
+  --data data/creditcard.csv \
+  --output data/c_validation_reproduction \
+  --publish results/c_validation_reproduction
 ```
 
-无需等 B 完成，先运行异常与聚类验证。收到 B5 后，用同一验证集的标准预测表运行：
+输出目录必须新建或为空。`--data` 强制检查 A 的原始 SHA-256，直接调用 A 的 `split_data`，只给训练/验证段打分。已有 `results/c_validation/` 是此次真实验证证据，重现时使用上面的新目录，不覆盖旧记录。
+
+`--publish` 只把聚合 JSON/CSV 与图导出到指定目录，和 GitHub 发布无关。完整预测、交易 ID、模型与错误案例保留在 `--output` 目录。汇总保留原始文件哈希、训练/验证有序 row_id 指纹、参数、代码 SHA-256、源 commit 和软件版本。
+
+只做程序检查时：
+
+```bash
+python code/run_c_validation.py --demo --output data/c_demo_new
+```
+
+该输出明确标为合成数据，不能放入真实实验结果。
+
+## B5 到位后，只需追加分类 CSV
+
+B 对 A 的同一验证段生成 `row_id, Class, Time, method, score`。method 只有一个，名称使用英文字母、数字、下划线或连字符；连续 score 越大越可疑，不要传硬标签。B 的实际模型/训练设置、选优记录和 B5 来源也须交给 A。
 
 ```bash
 python code/run_c_validation.py \
-  --train data/train.csv \
-  --validation data/validation.csv \
+  --data data/creditcard.csv \
   --classification-predictions data/classifier_validation.csv \
-  --output data/c_validation_with_classifier
+  --output data/c_validation_with_B \
+  --publish results/c_validation_with_B
 ```
 
-分类 CSV 必须只有一种 method；名称使用英文字母、数字、下划线或连字符。预测行可以乱序，程序按 row_id 对齐并核查标签和 Time。输入的划分身份由 A 保证：程序能够检查时间和 ID，但不能仅凭文件内容判断某个文件是否实际上是测试集。
+行序可以不同，程序按 row_id 对齐，检查标签和 Time 一致，分群评价也保持同一组对应关系。先按 1% 预算下 TP、再按 AP 选择异常方法；本次无 B 时已选簇距离。分类配额候选 0/25/50/75/100%，在主要预算 TP 相同时保留更多分类容量。组合只挑一次，其他预算用于报告。保留纯分类基线，不强行认为混合更好。
 
-每次运行产出：完整预测 CSV、训练结构比较 CSV、验证预算表、群体统计表、各簇特征均值表、五类图（无分类输入时四类），以及含配置、版本、输入文件 SHA-256 和指标的 `validation_results.json`。结果写在 Git 忽略的 data/ 内；正式验证后选择小型汇总放入 results/，完整预测保留本地。
+CSV 也可由 A 导出后，用原先的 `--train ... --validation ...` 方式运行；它能校验时间顺序和行 ID，却不能单靠文件内容核实源数据身份，因此只有 `--data` 核验通过的记录自动标为固定 ULB 划分。
 
-### 给 A/B 的最小调用方式
+## A8 的最终测试接法（本次没有执行）
+
+本机训练管线已保存为 `data/c_ulb_validation_20261111_final/c_models.joblib`。A 在自己的电脑重现上面的验证命令，就能得到自己的同配置模型，不需要传模型文件。仅加载自己可信的本地 artifact。
+
+全组 G2 完成后，由 A 取得测试段并调用：
 
 ```python
-from preprocessing import get_features
-from unsupervised import fit_kmeans, score_kmeans, fit_isolation_forest, score_isolation_forest
-from evaluation import make_prediction_frame, evaluate_scores, evaluate_groups, compare_review_lists
+import joblib
+from c_reporting import evaluate_frozen_c
 
-X_train, X_val = get_features(train), get_features(validation)
-km = fit_kmeans(X_train, n_clusters=5, seed=42)  # 5 只是调用示例，不是冻结结论
-cluster_ids, distances = score_kmeans(km, X_val)
-forest = fit_isolation_forest(X_train, seed=42)
-scores = score_isolation_forest(forest, X_val)
-pred = make_prediction_frame(validation, scores, 'isolation_forest', cluster_ids)
-metrics = evaluate_scores(pred.Class, pred.score, row_ids=pred.row_id)
-groups = evaluate_groups(pred, cluster_ids, [0.001, 0.005, 0.01, 0.02])
-# classifier_pred 是 B 对同一 validation 的标准预测表；k 是共同审核容量
-# comparison = compare_review_lists(classifier_pred, pred, k, classifier_share=0.5)
+bundle = joblib.load("data/c_validation_reproduction/c_models.joblib")
+# test 为 A 的唯一测试段；A 确认全组冻结后才执行。
+result = evaluate_frozen_c(bundle, test, "data/c_final_test", phase="test")
 ```
 
-B 输出连续分数后直接调用 make_prediction_frame 和 evaluate_scores，不需要另写评价。A 的时间窗口调用同一个 evaluate_scores；无正类/空窗口的 None 在报告显示为 N/A，不改成 0。
+此函数仅复用训练段拟合的管线和既定配额，不重新挑 k、异常方法或组合权重，不在 train+validation 上重新拟合。会生成完整预测、指标和正式图。B5 配额冻结后，A 可传 `classifier=classifier_test_predictions`；未冻结分类配额时拒绝做分类组合。无 B 输入时只输出 C 方法结果，不冒充完整小组最终比较。
 
-## 3. 已固定的接口与候选设置
+保存/恢复检查可用 `phase="validation_replay"`；本次已在真实验证段做恢复核对。窗口分析由 A 的 `evaluate_time_windows` 对标准预测表继续处理。C 目前提供的一小时验证窗口仅作诊断，不替 A 选定最终时间窗口。
 
-- **预测表**：row_id、Class、Time、method、score，可额外保存 cluster_id。分数数组按位置对应输入，避免 pandas 索引重排。非法标签、重复/非整数 ID、非有限分数和长度不符直接报错。
-- **排序与预算**：score 降序、row_id 升序；`K = ceil(N × q)`，q 默认 0.1%、0.5%、1%、2%。图按实际 K/N 展示，尤其小组取整后不应继续声称容量恰为 q%。主预算和选优规则仍须全组在验证阶段确定。
-- **AP**：使用 sklearn 的 average_precision_score，不是梯形积分 PR-AUC。AP 对同分按同一阈值组处理；top-K 在容量边界用 row_id 打破并列，两者不应混淆。无正类时 AP/Recall 为 None，空集 Precision 也为 None。
-- **随机基线**：公共表给出 E[TP]=K×欺诈比例、E[Precision]=欺诈比例、E[Recall]=K/N；它们是期望，不取整为实测次数。另保存 seed=42 的一次随机排序作辅助展示，不把单次随机结果当理论期望。
-- **缩放与聚类**：每个管线只在混合训练特征上拟合 StandardScaler，排除 Class/row_id 等元数据；目前使用全部既定 30 个特征，包括相对 Time 和 Amount。Time 可能影响簇结构，需在真实结果中讨论，不能给匿名 V 特征虚构业务含义。验证/测试只 transform/predict。
-- **k 候选**：3、5、8，种子 42/43，n_init=10；所有候选用同一训练子样本（最多 1,000 笔）计算轮廓系数，用 ARI 比较两种种子的分群一致性。默认选择平均有效训练轮廓系数最高的 k，并列选小 k；最终拟合种子 42。ARI 是结构稳定性诊断，不是欺诈准确率。退化结构不能计算轮廓系数时记空；全部无效则中止调查数据。
-- **距离异常分数**：标准化空间中到最近已训练簇中心的欧氏距离，越大越可疑；不把簇编号当风险大小。
-- **Isolation Forest 候选**：100 棵树，max_samples=256，contamination=auto，seed=42，n_jobs=1。使用 `-score_samples`，不以 predict 的硬标签替代排序，不把分数解释成欺诈概率。训练不使用标签，也不先筛出正常样本。上述是可复现的起始配置，并非已用真实验证证实最优。
-- **互补性**：两张纯方法 top-K 名单报告重合/各自独有的欺诈。组合先取 `floor(K×分类配额)` 笔分类排序，再沿异常排序去重补齐至 K；候选分类配额 0、25%、50%、75%、100%。取整可能让小 K 的配额重复，应按实际名单解释。组合选择不用标签；配额的验证选优会用标签，报告须披露。候选遍历不是冻结；50/50 图仅为展示，不自动认定最佳。
-- **群体分析**：相同 K-means 簇用于所有方法，分别保存组内预算和全局 top-K 在各组的分布。组内 ceil 配额相加可能超过一个全局 K，二者不可直接当同预算比较。
-- **冻结后测试**：A 使用冻结的训练管线对测试特征打分，复用评价与绘图；当前独立入口只处理训练/验证，避免替 A 开始最终测试。若决定 train+validation 重拟合，必须事先统一协议，不能静默改变中心或缩放器。
+## 评价口径与解释边界
 
-## 4. 可供 D 整合的英文方法稿
+- K=ceil(Nq)，score 降序、row_id 升序处理并列；实际审核比例以 K/N 为准。AP 使用 sklearn 的非插值 average precision，同分按阈值组处理，不是梯形 PR-AUC。
+- 无正类时 AP/Recall 为 N/A；空簇的样本数/K 为 0，比例、AP、Recall 不定义。训练有三个簇，本次验证簇 2 为空，图表与结果显式保留。
+- 随机基线给 E[TP]=K×欺诈比例、E[Precision]=欺诈比例、E[Recall]=K/N；seed=42 的一次随机排序只是辅助，不把它当期望值。
+- StandardScaler 只拟合训练段。无监督拟合不读取标签，也不先筛出正常交易。画像和性能评价使用事后标签；选异常方法/分类配额会用验证标签，必须披露。
+- 群体编号不等于欺诈类别，异常分不等于欺诈概率，匿名 V 特征不赋予未知业务含义。
+- 组内预算与一个全局 top-K 在各组的分配分别保存，不能把取整后组内容量之和当作同一个全局预算。
+- `anomaly_comparisons` 复用公共名单函数：其中 classifier 字段表示第一个排序（Isolation Forest），anomaly 表示第二个（簇距离），实际没有分类模型参与。50/50 图只作诊断，不作为正式分类组合配置。
+- 误报/漏报样例在本地 `private_error_examples.csv`，各方法最多各取五个高分误报和漏报。它们是代表性检查材料，不能用几个匿名样例证明因果或整体效果。
 
-以下只写已实现的方法。正式报告应在 G2 后核对实际采用的配置，并引用对应软件/算法来源；不将本节当作已经完成真实实验的证明。
+## 讲解准备
 
-### Clustering and unsupervised anomaly scores
+1. 为什么不是两个簇？正常交易也可能有多种结构，欺诈不一定集中在一个簇；k 来自训练结构比较。
+2. 为什么 silhouette 与欺诈检出率可能不一致？前者评估特征空间紧致/分离，后者评估标签排序目标，不能互相代替。
+3. 为什么保留表现较弱的 IF？这是既定方法对照；真实负面结果也是证据，不能验证后静默加算法换结论。
+4. 为什么不直接比较两张 top-K 的并集？它的容量可能接近 2K；必须去重补齐后仍恰好 K 才公平。
+5. 为什么组合不一定更好？异常独有欺诈可能伴随大量误报，并占掉另一个排序的容量；本次两种异常的 50/50 诊断并未优于纯距离。
+6. 为什么不把这次结果当最终结论？它用于开发和选择，最终泛化要看全组冻结后的测试结果，且不能回头继续挑方案。
 
-We implement K-means to describe transaction groups without using fraud labels during fitting. StandardScaler is fitted on the mixed training partition and reused for subsequent scoring. The candidate cluster counts are 3, 5, and 8, with two random seeds and ten initializations per fit. Structural quality is assessed using silhouette scores on one fixed training subsample of up to 1,000 transactions. Adjusted Rand index is used to examine agreement between seeds. The validation runner selects the cluster count with the highest mean defined training silhouette score, breaking ties in favour of the smaller count. Fraud labels are used only after fitting to describe group sizes, prevalence, coverage, and detection performance. Cluster identifiers are not treated as fraud predictions.
-
-We also implement two continuous anomaly scores: Euclidean distance to the nearest trained cluster centre in standardized feature space, and the negative of Isolation Forest's score_samples output. The initial Isolation Forest configuration uses 100 trees, max_samples of 256, and random seed 42. Both models are trained on the mixed training features without label-based filtering. Larger scores indicate greater anomaly, rather than calibrated fraud probabilities.
-
-### Evaluation under a review budget
-
-All methods share transaction identifiers and one evaluation implementation. For a review fraction q and N transactions, the review count is K = ceil(Nq). Transactions are ranked by decreasing risk score, with increasing original row identifier breaking ties. We report average precision, precision–recall curves, detected fraud counts, Precision@K, and Recall@K. The expected performance of uniformly random review is reported separately from a seeded random ranking. AP and Recall are marked as not applicable when a partition contains no fraudulent transactions.
-
-To assess complementarity, we compare the fraud cases shared by the two pure top-K lists and those unique to either list. A capacity-preserving combined policy first selects floor(Kα) transactions from the classifier ranking, then scans the anomaly ranking, skipping duplicates until exactly K distinct transactions are selected. Candidate values of α are 0, 0.25, 0.5, 0.75, and 1. Selection of a policy using validation labels must be disclosed. Within-group budgets are reported separately from the distribution of a single global top-K list across groups. Final test evaluation requires all configuration choices to be frozen first.
-
-## 5. 真实结果到位后的写作顺序
-
-1. 列训练/验证样本量、欺诈数、实际 k 和结构稳定性；说明这些群体是否有可描述的差异。
-2. 比较同预算下分类、Isolation Forest、簇距离及随机期望，不用总体准确率掩盖稀有正类。
-3. 先看纯名单的独有欺诈，再看容量固定组合是否真的多检出；独有样本存在并不保证组合改善。
-4. 分组报告样本量/正类数和表现，指出小簇的不稳定性。联系 A 的时间结果，但不自行换时间窗口。
-5. 报告未发生的改善、误报代价和匿名特征的解释边界。所有数字引用具体结果文件、划分和 commit。
-
-本次不填写任何真实 AP、检出量、最佳方法、最佳配额或漂移结论。
-
-本机验证记录：21 项 unittest 全部通过；合成训练/验证入口成功生成五类图，并逐张检查标题、坐标与图例。检查覆盖人工 AP/阈值计数、并列排序、零正类/空集、行身份对齐、重叠名单补齐、不依赖标签选名单、训练边界、距离公式、异常方向、结构稳定性和 CLI 输出保护。此记录不代表第二台电脑复现或真实 ULB 实验通过。
-
-## 6. 讲解与答辩准备
-
-- **为什么不是两个簇？** 正常交易也可能形成多个结构，欺诈也不一定集中在一个簇；k 用训练结构比较，不能预设与标签一一对应。
-- **为什么异常分不等于欺诈概率？** 它衡量与训练结构的偏离，少见的正常交易也可能很异常；最终必须用留出标签评价。
-- **为什么只比较 top-K？** 审核人员容量固定，多查一倍自然可能多找出欺诈，不能证明方法更有效。
-- **为什么同时给 AP 和预算指标？** AP描述整体排序；预算指标回答实际只能审核少量交易时能找到多少，两者可能给出不同排序。
-- **为何组合不直接求并集？** 两张 top-K 的并集容量可能接近 2K；固定配额去重补齐才能在相同容量下比较。
-- **为什么不保证组合更好？** 异常独有欺诈可能伴随更多误报，还会占用分类的容量；必须看同 K 的真实结果。
-- **是否完全没有用标签？** 无监督模型拟合和 k 的结构比较不使用标签；评价、画像以及若采用验证选配额则使用留出标签，应明确区分。
-- **程序检查能证明实验效果吗？** 不能。人工例子/合成数据检查计算和管线，真实有效性来自 A 的固定划分及最终留出评价。
-
-## 7. 参考实现依据
-
-- [sklearn: average_precision_score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html)
-- [sklearn: IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html)
-- [sklearn: silhouette_score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html)
-- [sklearn: adjusted_rand_score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.adjusted_rand_score.html)
-
-代码与方法稿由 C 使用 AIGC 辅助编写；本次检查在单台电脑上完成。最终 Disclosures 由全组据实际使用情况核对，第二台电脑复现尚未完成。
+AIGC 记录：本次 Codex 辅助完成 A 分支合并、C 代码/检查、真实训练与验证运行、聚合导出和分析材料。组员应审核代码、数字和解释，并据实际使用纳入最终 Disclosures；本材料不是未经核对即可提交的最终报告。
