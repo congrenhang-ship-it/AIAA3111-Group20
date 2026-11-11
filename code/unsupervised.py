@@ -1142,7 +1142,17 @@ def run_experiment(
         figures,
     )
     save_group_figures(
-        group_metrics[overall], figures, "Validation - selected improved C\n" + overall
+        group_metrics[overall],
+        figures,
+        "Validation - selected improved C\n" + overall,
+        comparison_groups=(
+            {
+                "B classifier": group_metrics[config["B_combination"]["method"]],
+                "C anomaly": group_metrics[overall],
+            }
+            if classifier is not None
+            else None
+        ),
     )
     save_comparison_figures(
         comparisons,

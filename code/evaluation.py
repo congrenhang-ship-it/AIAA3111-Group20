@@ -418,7 +418,9 @@ def save_figures(results, output_dir):
     return paths
 
 
-def save_group_figures(group_results, output_dir, label="Group evaluation"):
+def save_group_figures(
+    group_results, output_dir, label="Group evaluation", *, comparison_groups=None
+):
     """Plot group prevalence and recall under each global budget; undefined recall is a gap."""
     import matplotlib
 
@@ -453,18 +455,45 @@ def save_group_figures(group_results, output_dir, label="Group evaluation"):
     axes[0].set_xticks(np.arange(len(names)), names)
     if rows:
         axes[0].set_xlim(-0.5, len(rows) - 0.5)
-    if rows:
-        for i, budget in enumerate(rows[0]["global_budget_allocation"]):
-            values = [
-                r["global_budget_allocation"][i]["recall_within_group"] for r in rows
-            ]
-            axes[1].plot(
-                names,
-                [np.nan if v is None else v for v in values],
-                marker="o",
-                label=f"Global budget {100 * budget['review_fraction']:g}%",
+    if comparison_groups:
+        width = 0.8 / len(comparison_groups)
+        x = np.arange(len(rows))
+        for index, (method, result) in enumerate(comparison_groups.items()):
+            by_id = {str(g["cluster_id"]): g for g in result["groups"]}
+            values = []
+            for name in names:
+                row = next(
+                    r
+                    for r in by_id[name]["global_budget_allocation"]
+                    if r["review_fraction"] == 0.01
+                )
+                values.append(
+                    np.nan
+                    if row["recall_within_group"] is None
+                    else row["recall_within_group"]
+                )
+            axes[1].bar(
+                x + (index - (len(comparison_groups) - 1) / 2) * width,
+                values,
+                width=width,
+                label=method,
             )
-        axes[1].legend(fontsize=8)
+        axes[1].set_title("Global 1% review", fontsize=10)
+        axes[1].legend(fontsize=7)
+    else:
+        if rows:
+            for i, budget in enumerate(rows[0]["global_budget_allocation"]):
+                values = [
+                    r["global_budget_allocation"][i]["recall_within_group"]
+                    for r in rows
+                ]
+                axes[1].plot(
+                    names,
+                    [np.nan if v is None else v for v in values],
+                    marker="o",
+                    label=f"Global budget {100 * budget['review_fraction']:g}%",
+                )
+            axes[1].legend(fontsize=8)
     axes[1].set_xticks(np.arange(len(names)), names)
     if rows:
         axes[1].set_xlim(-0.5, len(rows) - 0.5)
@@ -963,6 +992,14 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
         group_metrics[config["selected_anomaly"]],
         output / "figures",
         label + "\n" + config["selected_anomaly"],
+        comparison_groups=(
+            {
+                "B classifier": group_metrics[b["method"]],
+                "C anomaly": group_metrics[config["selected_anomaly"]],
+            }
+            if classifier is not None
+            else None
+        ),
     )
     save_comparison_figures(
         comparisons,
