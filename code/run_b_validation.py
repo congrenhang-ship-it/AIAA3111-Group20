@@ -21,7 +21,7 @@ from sklearn.exceptions import ConvergenceWarning
 from threadpoolctl import threadpool_limits
 
 from classification import MODEL_NAMES, score_model, train_model
-from evaluation import DEFAULT_BUDGETS, PRIMARY_REVIEW_FRACTION, evaluate_scores, make_prediction_frame
+from evaluation import DEFAULT_BUDGETS, PRIMARY_REVIEW_FRACTION, evaluate_scores, make_prediction_frame, save_figures
 from main import split_summary
 from preprocessing import DEFAULT_DATA_PATH, FEATURE_COLUMNS, ULB_SHA256, data_sha256, get_features, load_data, split_data
 
@@ -88,6 +88,12 @@ def run(data_path=DEFAULT_DATA_PATH):
         print(f"{method}: AP={metric['AP']:.6f}, train={train_seconds:.2f}s", flush=True)
 
     selected = select_method(records)
+    metrics = {record["method"]: json.loads((local / f"{record['method']}_metrics.json").read_text(encoding="utf-8")) for record in records}
+    for figure in save_figures({"methods": metrics, "label": "B classification - validation only"}, local / "figures"):
+        path = Path(figure)
+        target = ROOT / "results" / "figures" / ("b_" + path.name)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(path.read_bytes())
     selected_frame = predictions[selected["method"]]
     selected_path = local / "selected_validation_predictions.csv"
     selected_frame.to_csv(selected_path, index=False, float_format="%.17g")
@@ -97,10 +103,13 @@ def run(data_path=DEFAULT_DATA_PATH):
         score_model(joblib.load(model_path), X_validation), selected_frame.score.to_numpy()
     )
     versions = {name: importlib.metadata.version(name) for name in ("numpy", "pandas", "scikit-learn", "scipy")}
+    locked = dict(line.split("==", 1) for line in (ROOT / "requirements.txt").read_text(encoding="utf-8").splitlines() if "==" in line and not line.startswith("#"))
+    mismatches = {name: dict(actual=version, required=locked.get(name)) for name, version in versions.items() if locked.get(name) != version}
     code_files = ["code/classification.py", "code/run_b_validation.py", "code/preprocessing.py", "code/evaluation.py"]
     metadata = dict(
         owner="B", phase="validation", dataset_sha256=digest, partitions=partitions,
         python=platform.python_version(), versions=versions,
+        dependency_lock_mismatches=mismatches,
         source_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         source_dirty=bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip()),
         code_sha256={name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in code_files},
