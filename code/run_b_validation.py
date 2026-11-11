@@ -99,8 +99,12 @@ def run(data_path=DEFAULT_DATA_PATH):
     selected_frame.to_csv(selected_path, index=False, float_format="%.17g")
     model_path = local / "selected_model.joblib"
     joblib.dump(models[selected["method"]], model_path)
+    with threadpool_limits(limits=1):
+        replay_scores = score_model(joblib.load(model_path), X_validation)
+    np.testing.assert_allclose(replay_scores, selected_frame.score.to_numpy(), rtol=1e-12, atol=1e-15)
     np.testing.assert_array_equal(
-        score_model(joblib.load(model_path), X_validation), selected_frame.score.to_numpy()
+        np.lexsort((validation.row_id.to_numpy(), -replay_scores)),
+        np.lexsort((validation.row_id.to_numpy(), -selected_frame.score.to_numpy())),
     )
     versions = {name: importlib.metadata.version(name) for name in ("numpy", "pandas", "scikit-learn", "scipy")}
     locked = dict(line.split("==", 1) for line in (ROOT / "requirements.txt").read_text(encoding="utf-8").splitlines() if "==" in line and not line.startswith("#"))

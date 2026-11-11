@@ -34,7 +34,7 @@ py -3.12 -m unittest discover -s tests -v
 - `results/tables/b_freeze.json`：B 的选择配置，待全组审核后纳入 G2；不代表全组 G2 已通过。
 - `data/b_validation/`：本地完整验证预测、公共评价详情、选中模型和选中验证预测。不提交到 Git。
 - `data/b_validation/selected_validation_predictions.csv`：交给 C 的 `--classification-predictions`，列名为 row_id/Class/Time/method/score。
-- `data/b_validation/selected_model.joblib`：本地保留训练好的流程供 A 在 G2 后评分。脚本已检查保存后重新加载的验证分数逐项一致。
+- `data/b_validation/selected_model.joblib`：本地保留训练好的流程供 A 在 G2 后评分。脚本检查保存后重新加载的分数在数值容差内一致，且全部审核排序完全一致。
 
 A 可按冻结 JSON 中的 model_name/strategy/seed，调用原来的 train_model 接口从同一训练段重建模型。C 的验证互补分析可用 `py -3.12 code/main.py --run-c --classification-predictions data/b_validation/selected_validation_predictions.csv`，须遵守 C 的已有验证流程。
 
