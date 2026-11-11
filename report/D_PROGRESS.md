@@ -1,5 +1,33 @@
 # D local work record — 2026-11-09
 
+## Latest update — 2026-11-11
+
+A3 is now implemented in A's `Task_A` commit `26c1c32`, but has not been merged
+into main. D used that unmodified commit from a detached worktree, downloaded
+the pinned CSV independently and matched the raw SHA-256 and all three ordered
+split fingerprints. A's five tests and D's seven tests passed, including A's
+full-data check. The run used Python 3.13.5/numpy 2.1.3/pandas 2.2.3, not the
+Python 3.12 pinned environment; that environment check is still outstanding.
+
+D2/D3 real training and validation are now locally completed against this
+explicit dependency branch. The predeclared protocol commit is `8b6e689`.
+Equal-width produced 38 candidates / 15 validation passes; equal-frequency
+produced 25 / 21. D4's candidate manifest freezes all 21 passing equal-frequency
+rules. It awaits A's G2 confirmation and main-branch integration. There has been
+no rule evaluation on test. See D_VALIDATION_RESULTS.md and d_validation/.
+
+D5 now has independent evidence for A's data preparation, but G3 reproduction,
+classification/anomaly error linkage and D6/D7 remain incomplete. Do not tick
+other members' tasks or group milestones on the basis of this run.
+
+Codex assisted with dependency inspection, download, protocol/runner preparation,
+test execution and this validation analysis on 2026-11-11; retain this actual
+assistance in D's disclosures. No main-branch edits were made.
+
+## Historical snapshot — 2026-11-09
+
+The statuses below are the earlier snapshot, superseded by the update above.
+
 ## Scope and status
 
 Repository: https://github.com/congrenhang-ship-it/AIAA3111-Group20

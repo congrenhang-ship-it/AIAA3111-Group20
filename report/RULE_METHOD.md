@@ -1,5 +1,12 @@
 # D rule module: methods and handoff (development draft)
 
+Update 2026-11-11: the dependency-branch training/validation run is complete using
+A's commit `26c1c32`. See D_VALIDATION_PROTOCOL.md for the predeclared selector
+and D_VALIDATION_RESULTS.md for actual evidence. The selected features are Amount,
+V17, V14, V12 and V3; the candidate freeze contains 21 equal-frequency rules.
+This is pending A3 integration and group G2 confirmation; no test rules were scored.
+The following original preparation notes describe the baseline before that run.
+
 This is a methods draft, not a results section. A3 is not implemented in baseline
 commit `5bde9fc`. No real feature set, validation choice or G2 rule set is frozen.
 
