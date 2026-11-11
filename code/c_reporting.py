@@ -8,6 +8,7 @@ from pathlib import Path
 import copy
 import hashlib
 import json
+import math
 import numpy as np
 import pandas as pd
 
@@ -284,3 +285,111 @@ def save_diagnostic_figures(candidates, groups, output, label):
         str(output / "cluster_structure.png"),
         str(output / "group_performance.png"),
     ]
+
+
+def evaluate_frozen_c(bundle, data, output, classifier=None, phase="test"):
+    """A8 hook: score existing models and apply existing quotas, without selecting.
+
+    A calls this after whole-group G2. It neither approves G2 nor refits models.
+    Output is a private run folder (predictions contain row IDs). If a classifier
+    is supplied, its name and quota must already be present in bundle['config'].
+    Use phase='validation_replay' to check persistence before any final test.
+    """
+    from evaluation import (
+        make_prediction_frame,
+        evaluate_scores,
+        evaluate_groups,
+        compare_review_lists,
+        save_figures,
+        save_group_figures,
+        save_comparison_figures,
+    )
+    from unsupervised import score_frozen_unsupervised
+
+    if phase not in {"test", "validation_replay"}:
+        raise ValueError("phase must identify test or validation_replay")
+    output = Path(output)
+    if output.exists() and any(output.iterdir()):
+        raise ValueError("Frozen evaluation output must be new or empty")
+    config = copy.deepcopy(bundle["config"])
+    combination = config["combination"]
+    if classifier is not None and (
+        combination["classifier_share"] is None
+        or combination["classifier_method"] is None
+    ):
+        raise ValueError("Classifier combination must be frozen on validation first")
+    scored = score_frozen_unsupervised(bundle, data[config["feature_columns"]])
+    groups = scored.pop("cluster_ids")
+    predictions = {
+        name: make_prediction_frame(data, score, name, groups)
+        for name, score in scored.items()
+    }
+    comparisons = []
+    if classifier is not None:
+        name = combination["classifier_method"]
+        if not classifier["method"].eq(name).all() or classifier.empty:
+            raise ValueError("Classifier method does not match frozen combination")
+        classifier = make_prediction_frame(classifier, classifier.score, name)
+        compare_review_lists(classifier, predictions[combination["anomaly_method"]], 1)
+        classifier = classifier.set_index("row_id").loc[data.row_id].reset_index()
+        predictions[name] = classifier
+        for q in config["review_fractions"]:
+            row = compare_review_lists(
+                classifier,
+                predictions[combination["anomaly_method"]],
+                math.ceil(len(data) * q),
+                combination["classifier_share"],
+            )
+            row["review_fraction"] = q
+            comparisons.append(row)
+    metrics = {
+        name: evaluate_scores(
+            frame.Class, frame.score, config["review_fractions"], row_ids=frame.row_id
+        )
+        for name, frame in predictions.items()
+    }
+    group_metrics = {
+        name: evaluate_groups(
+            frame,
+            groups,
+            config["review_fractions"],
+            group_values=range(config["n_clusters"]),
+        )
+        for name, frame in predictions.items()
+    }
+    output.mkdir(parents=True, exist_ok=True)
+    label = (
+        "Final test - frozen C configuration"
+        if phase == "test"
+        else "Validation replay - frozen C configuration"
+    )
+    save_figures({"methods": metrics, "label": label}, output / "figures")
+    save_group_figures(
+        group_metrics[config["selected_anomaly_method"]], output / "figures", label
+    )
+    if comparisons:
+        save_comparison_figures(
+            comparisons,
+            output / "figures",
+            label,
+            method_labels={
+                "classifier": combination["classifier_method"],
+                "anomaly": combination["anomaly_method"],
+                "combined": "Frozen combination",
+            },
+        )
+    for name, frame in predictions.items():
+        frame.to_csv(output / f"{name}_predictions.csv", index=False)
+    result = {
+        "phase": phase,
+        "config": config,
+        "metrics": metrics,
+        "groups": group_metrics,
+        "comparisons": comparisons,
+        "configuration_reselected": False,
+        "partition": partition_description(data),
+    }
+    (output / "frozen_evaluation.json").write_text(
+        json.dumps(result, indent=2, allow_nan=False) + "\n"
+    )
+    return result

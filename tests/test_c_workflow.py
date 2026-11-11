@@ -70,6 +70,25 @@ class SelectionTests(unittest.TestCase):
 
 
 class IntegratedWorkflowTests(unittest.TestCase):
+    def test_declared_empty_cluster_is_reported_as_na(self):
+        from evaluation import (
+            make_prediction_frame,
+            evaluate_groups,
+            save_group_figures,
+        )
+
+        data = pd.DataFrame({"row_id": [0, 1], "Time": [0, 1], "Class": [0, 1]})
+        frame = make_prediction_frame(data, [0.1, 0.9], "test")
+        result = evaluate_groups(frame, [0, 0], [0.01], group_values=[0, 1])
+        empty = result["groups"][1]
+        self.assertEqual(empty["within_group"]["status"], "empty")
+        self.assertIsNone(empty["within_group"]["AP"])
+        self.assertEqual(empty["global_budget_allocation"][0]["reviewed_in_group"], 0)
+        with tempfile.TemporaryDirectory() as folder:
+            self.assertTrue(Path(save_group_figures(result, folder)[0]).is_file())
+        with self.assertRaises(ValueError):
+            evaluate_groups(frame, [0, 0], [0.01], group_values=[1])
+
     def test_g1_real_c_frame_preserves_integer_metadata(self):
         train = pd.DataFrame(
             np.zeros((4, len(FEATURE_COLUMNS))), columns=FEATURE_COLUMNS
@@ -123,6 +142,58 @@ class IntegratedWorkflowTests(unittest.TestCase):
                 prediction = pd.read_csv(private / f"{name}_predictions.csv")
                 assert_allclose(scores[name], prediction.score, rtol=1e-12, atol=1e-12)
             assert_allclose(before, bundle["kmeans"].named_steps["scaler"].mean_)
+            from c_reporting import evaluate_frozen_c
+
+            with (
+                patch(
+                    "c_reporting.choose_anomaly",
+                    side_effect=AssertionError("must not select on replay"),
+                ),
+                patch(
+                    "c_reporting.select_combination",
+                    side_effect=AssertionError("must not select quotas on replay"),
+                ),
+            ):
+                replay = evaluate_frozen_c(
+                    bundle, val, Path(folder) / "replay", phase="validation_replay"
+                )
+            self.assertFalse(replay["configuration_reselected"])
+            self.assertEqual(replay["config"], bundle["config"])
+            self.assertEqual(
+                replay["metrics"]["isolation_forest"]["AP"],
+                summary["metrics"]["isolation_forest"]["AP"],
+            )
+            classifier = pd.read_csv(private / "synthetic_proxy_predictions.csv")
+            with (
+                patch(
+                    "c_reporting.choose_anomaly",
+                    side_effect=AssertionError("no selection"),
+                ),
+                patch(
+                    "c_reporting.select_combination",
+                    side_effect=AssertionError("no selection"),
+                ),
+            ):
+                combined = evaluate_frozen_c(
+                    bundle,
+                    val,
+                    Path(folder) / "combined_replay",
+                    classifier,
+                    phase="validation_replay",
+                )
+            self.assertEqual(len(combined["comparisons"]), 4)
+            self.assertTrue(
+                all(
+                    c["classifier_share"]
+                    == bundle["config"]["combination"]["classifier_share"]
+                    for c in combined["comparisons"]
+                )
+            )
+            pending = __import__("copy").deepcopy(bundle)
+            pending["config"]["combination"]["classifier_share"] = None
+            with self.assertRaises(ValueError):
+                evaluate_frozen_c(pending, val, Path(folder) / "blocked", classifier)
+
             with self.assertRaises(ValueError):
                 score_frozen_unsupervised(bundle, val[list(reversed(FEATURE_COLUMNS))])
             bundle["config"]["n_clusters"] += 1

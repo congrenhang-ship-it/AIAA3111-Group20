@@ -180,7 +180,7 @@ def run_validation(
         for name, frame in predictions.items()
     }
     groups = {
-        name: evaluate_groups(frame, clusters, DEFAULT_BUDGETS)
+        name: evaluate_groups(frame, clusters, DEFAULT_BUDGETS, group_values=range(k))
         for name, frame in predictions.items()
     }
     selected_anomaly = choose_anomaly(metrics)

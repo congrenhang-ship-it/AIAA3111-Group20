@@ -246,7 +246,9 @@ def compare_review_lists(
     }
 
 
-def evaluate_groups(predictions, cluster_ids, review_fractions, threshold=None):
+def evaluate_groups(
+    predictions, cluster_ids, review_fractions, threshold=None, *, group_values=None
+):
     """Return within-group metrics AND the distribution of global top-K reviews.
 
     cluster_ids: aligned vector or Series keyed by row_id (not pandas row index).
@@ -267,7 +269,16 @@ def evaluate_groups(predictions, cluster_ids, review_fractions, threshold=None):
     global_order = _order(frame.score.to_numpy(), frame.row_id.to_numpy())
     records = []
     total_positive = int(frame.Class.sum())
-    for group in pd.unique(groups):
+    values = list(pd.unique(groups)) if group_values is None else list(group_values)
+    if (
+        len(set(values)) != len(values)
+        or pd.isna(values).any()
+        or not set(groups) <= set(values)
+    ):
+        raise ValueError(
+            "group_values must be distinct, nonmissing and cover observed groups"
+        )
+    for group in values:
         mask = groups == group
         positions = np.flatnonzero(mask)
         sub = frame.iloc[positions]
@@ -392,11 +403,20 @@ def save_group_figures(group_results, output_dir, label="Group evaluation"):
     rows = group_results["groups"]
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
     names = [str(r["cluster_id"]) for r in rows]
-    axes[0].bar(names, [r["within_group"]["prevalence"] for r in rows])
+    axes[0].bar(
+        names,
+        [
+            np.nan
+            if r["within_group"]["prevalence"] is None
+            else r["within_group"]["prevalence"]
+            for r in rows
+        ],
+    )
     for i, row in enumerate(rows):
         axes[0].annotate(
-            f"n={row['within_group']['n_samples']}",
-            (i, row["within_group"]["prevalence"]),
+            f"n={row['within_group']['n_samples']}"
+            + (" N/A" if row["within_group"]["prevalence"] is None else ""),
+            (i, row["within_group"]["prevalence"] or 0),
             xytext=(0, 4),
             textcoords="offset points",
             ha="center",
