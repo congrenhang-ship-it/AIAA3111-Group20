@@ -1,6 +1,24 @@
 # D local work record — 2026-11-09
 
-## Latest update — 2026-11-11
+## Latest update — 2026-11-13
+
+D4 now passes in the exact common Python 3.12.14 / 22-package environment.
+All 63 candidate records and 21 retained rules match; maximum boundary drift
+is zero. See D_COMMON_ENVIRONMENT.md and results/tables/d_freeze.json for the
+checkable A7 handoff. The integrated local A/B/C/D copy passes 53 checks with
+PYTHONUTF8=1, and B's eight separate checks pass. The initial GBK decoding
+failure and its environment-only resolution are recorded, not omitted.
+
+D5's independent real G1 AP and four-budget comparison matches B's record.
+Full A6/A8 reproduction and final cross-method cases remain pending. D6 has
+integrated methods/validation content drafts in report/Report.md and
+poster/Poster.md. These are Markdown content drafts, not paginated final
+documents or exported PDFs. Test results, author review and G3 remain pending.
+Only D4 is checked in the current remaining-task checklist. No main edit or
+test performance evaluation was made. Codex assistance for this work is recorded
+in the common-environment handoff and draft disclosures.
+
+## Previous update — 2026-11-11
 
 A3 is now implemented in A's `Task_A` commit `26c1c32`, but has not been merged
 into main. D used that unmodified commit from a detached worktree, downloaded
