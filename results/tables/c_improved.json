@@ -9598,6 +9598,7 @@
     },
     "publication_files": 8,
     "pending": "A7/G2 approval and A8 official results; then C7 final figures and C8 interpretation",
-    "D_compatibility_commit": "f26e360"
+    "D_compatibility_commit": "f26e360",
+    "D_merge_note": "Code is compatible; TASKS.md C progress row needs keeping the updated C status when merging f26e360."
   }
 }
