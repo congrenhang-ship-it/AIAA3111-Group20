@@ -9545,5 +9545,59 @@
     "plotting_code_sha256": "d3337990a483580ae41deb48e150905487a31f82d20d4205d92fc5a7d02580cd",
     "B_original_files_unchanged": true,
     "test_evaluated": false
+  },
+  "C7_handoff_verification": {
+    "date": "2026-11-13",
+    "phase": "validation_replay",
+    "independent_C7_work_complete": true,
+    "full_C7_complete": false,
+    "C8_final_test_interpretation_complete": false,
+    "group_G2_complete": false,
+    "test_evaluated": false,
+    "private_run": "data/c_handoff_20261113/run",
+    "private_publication_preview": "data/c_handoff_20261113/shared",
+    "bundle_sha256": "aad709a1844369e19e5804f01f9c1f5be3610b1e11dbf9b66250aef6e9bba6bd",
+    "evaluation_sha256": "41d5bf570dea6a615d7863acd7ddf22c9b03c721025de11a0e3c8b44cdda80f8",
+    "code_sha256": {
+      "code/evaluation.py": "21f563046bdcf3ca5e75879dfaeace3baa3df9ab9fa2ab1915f8376822103f91",
+      "code/unsupervised.py": "8949285dd316e6c499450e7c06d39437a054053ba3f39d6123ba1f6ea4490b88",
+      "code/temporal.py": "f45b13e63e78f3d7d202906d85d0088eea3e40930ca3bcb91074abf8f0e74ae0"
+    },
+    "checks": {
+      "all_selected_AP_and_budget_counts_match": true,
+      "all_selected_group_metrics_match": true,
+      "all_selected_time_window_metrics_match": true,
+      "configuration_matches_persisted_bundle": true,
+      "fit_and_selection_hooks_blocked": true,
+      "all_combined_lists_exactly_K": true,
+      "public_export_checked": true,
+      "persisted_bundle_unchanged": true,
+      "in_memory_configuration_unchanged": true,
+      "Windows_GBK_default_simulation_passed": true,
+      "A_C_checks_passed": 47,
+      "B_checks_passed": 8,
+      "isolated_A_B_C_D_checks_passed": 62
+    },
+    "partition": {
+      "rows": 56745,
+      "frauds": 57,
+      "time_min": 120393.0,
+      "time_max": 145233.0,
+      "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+    },
+    "time_window_config": {
+      "window_seconds": 3600.0,
+      "origin": 0.0,
+      "review_fractions": [
+        0.001,
+        0.005,
+        0.01,
+        0.02
+      ],
+      "budget_scope": "independent top-K within each window"
+    },
+    "publication_files": 8,
+    "pending": "A7/G2 approval and A8 official results; then C7 final figures and C8 interpretation",
+    "D_compatibility_commit": "f26e360"
   }
 }

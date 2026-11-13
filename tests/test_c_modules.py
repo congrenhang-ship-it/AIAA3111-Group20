@@ -943,13 +943,20 @@ class BCompletionTests(unittest.TestCase):
             root = Path(folder)
             freeze = root / "b_freeze.json"
             freeze.write_text(json.dumps(manifest))
+            original_read_text = Path.read_text
+
+            def windows_read_text(path, *args, **kwargs):
+                # Reproduce Windows GBK defaults while preserving explicit encodings.
+                kwargs.setdefault("encoding", "gbk")
+                return original_read_text(path, *args, **kwargs)
+
             with patch(
                 "run_b_validation.EXPERIMENTS",
                 [
                     ("logistic_regression", "original"),
                     ("logistic_regression", "class_weight"),
                 ],
-            ):
+            ), patch.object(Path, "read_text", windows_read_text):
                 prediction, fitted, record = reproduce_b_for_c(
                     train, val, freeze, root / "out", "unit_digest"
                 )
@@ -1017,7 +1024,8 @@ class BCompletionTests(unittest.TestCase):
                 ),
             ):
                 replay = evaluate_improved_frozen(
-                    bundle, val, folder, phase="validation_replay"
+                    bundle, val, folder, phase="validation_replay",
+                    window_seconds=100, window_origin=7,
                 )
             self.assertIn("B_actual", replay["metrics"])
             self.assertEqual(len(replay["B_comparisons"]), 4)
@@ -1030,9 +1038,73 @@ class BCompletionTests(unittest.TestCase):
             )
             written = pd.read_csv(Path(folder) / "B_actual_predictions.csv")
             assert_allclose(written.score, score_model(B, val[FEATURE_COLUMNS]))
+            self.assertEqual(replay["time_window_config"]["origin"], 7)
+            self.assertEqual(replay["time_window_config"]["window_seconds"], 100)
+            from temporal import evaluate_time_windows
+            expected = evaluate_time_windows(written, window_seconds=100, origin=7)
+            actual = [r for r in replay["time_windows"] if r["method"] == "B_actual"]
+            for row in expected:
+                if row["evaluation"] is not None:
+                    row["evaluation"].pop("pr_curve", None)
+            self.assertEqual(actual, expected)
+
+            from evaluation import publish_frozen_c_results
+            with tempfile.TemporaryDirectory() as public_folder:
+                provenance = {"source_commit": "fixture", "dataset_sha256": "fixture",
+                              "command": "synthetic validation replay"}
+                paths = publish_frozen_c_results(folder, public_folder, provenance=provenance)
+                self.assertEqual(len(paths), 8)  # JSON, writing aid, six PNG figures
+                summary_path = Path(public_folder) / "tables/c_validation_replay.json"
+                summary = json.loads(summary_path.read_text())
+                self.assertEqual(summary["phase"], "validation_replay")
+                self.assertEqual(summary["time_window_config"], replay["time_window_config"])
+                self.assertEqual(summary["partition"], replay["partition"])
+                for metric in summary["metrics"].values():
+                    self.assertNotIn("pr_curve", metric)
+                for key in ["comparisons", "B_comparisons"]:
+                    for row in summary[key]:
+                        self.assertFalse(any(k.endswith("_ids") for k in row))
+                self.assertIn("combined_ids", replay["B_comparisons"][0])
+                import hashlib
+                self.assertEqual(summary["publication"]["evaluation_sha256"],
+                                 hashlib.sha256((Path(folder) / "evaluation.json").read_bytes()).hexdigest())
+                for filename, digest in summary["publication"]["figure_sha256"].items():
+                    self.assertEqual(hashlib.sha256((Path(public_folder) / filename).read_bytes()).hexdigest(), digest)
+                writing = (Path(public_folder) / "tables/c_validation_replay.md").read_text()
+                self.assertIn("Validation replay", writing)
+                self.assertIn("B_actual", writing)
+                self.assertIn("N/A", writing)  # declared empty clusters
+                before = summary_path.read_bytes()
+                with self.assertRaisesRegex(ValueError, "already exist"):
+                    publish_frozen_c_results(folder, public_folder, provenance=provenance)
+                self.assertEqual(summary_path.read_bytes(), before)
+                with self.assertRaisesRegex(ValueError, "overlap"):
+                    publish_frozen_c_results(folder, Path(folder) / "public", provenance=provenance)
+                with self.assertRaisesRegex(ValueError, "provenance"):
+                    publish_frozen_c_results(folder, Path(public_folder) / "missing", provenance={})
+                # A's G2 reference is required for traceable test publication; no scoring here.
+                source = Path(folder) / "evaluation.json"
+                recorded = json.loads(source.read_text())
+                recorded["phase"] = "test"
+                source.write_text(json.dumps(recorded))
+                with self.assertRaisesRegex(ValueError, "g2_reference"):
+                    publish_frozen_c_results(folder, Path(public_folder) / "test", provenance=provenance)
+                self.assertFalse((Path(public_folder) / "test").exists())
+                source.write_text(json.dumps(replay))
             bundle["config"]["B_combination"]["share"] = None
             with self.assertRaises(ValueError):
                 evaluate_improved_frozen(bundle, val, Path(folder) / "blocked")
+
+    def test_frozen_windows_reject_invalid_settings_before_scoring(self):
+        with tempfile.TemporaryDirectory() as folder, patch(
+            "unsupervised.score_improved_bundle", side_effect=AssertionError("must not score")
+        ):
+            for seconds, origin in [(0, 0), (-1, 0), (float("nan"), 0),
+                                    (100, float("inf"))]:
+                with self.subTest(seconds=seconds, origin=origin), self.assertRaises(ValueError):
+                    evaluate_improved_frozen({}, pd.DataFrame(), folder,
+                                             window_seconds=seconds, window_origin=origin,
+                                             phase="validation_replay")
 
 
 if __name__ == "__main__":

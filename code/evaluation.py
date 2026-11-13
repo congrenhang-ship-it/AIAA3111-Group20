@@ -934,14 +934,27 @@ def evaluate_frozen_c(bundle, data, output, classifier=None, phase="test"):
     return result
 
 
-def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="test"):
-    """A8 evaluation: no candidate/weight selection or model fitting occurs here."""
+def evaluate_improved_frozen(
+    bundle, data, output, *, classifier=None, phase="test",
+    window_seconds=3600, window_origin=0,
+):
+    """A8 hook; A passes G2 window settings. No fitting or selection occurs here.
+
+    Defaults reproduce the existing validation diagnostic. A owns G2 approval;
+    this low-level function does not approve or infer whole-group freeze status.
+    Full predictions stay in output; publish_frozen_c_results exports aggregates.
+    """
     import json
     from unsupervised import score_improved_bundle, pair_comparisons
     from temporal import evaluate_time_windows
 
     if phase not in {"test", "validation_replay"}:
         raise ValueError("Invalid evaluation phase")
+    window_seconds, window_origin = _vector(
+        [window_seconds, window_origin], "time window settings", 2
+    ).tolist()
+    if window_seconds <= 0:
+        raise ValueError("window_seconds must be positive")
     output = Path(output)
     if output.exists() and any(output.iterdir()):
         raise ValueError("Output must be new or empty")
@@ -983,7 +996,11 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
         n: evaluate_groups(p, groups, DEFAULT_BUDGETS, group_values=range(3))
         for n, p in predictions.items()
     }
-    windows = evaluate_time_windows(pd.concat(predictions.values(), ignore_index=True))
+    windows = evaluate_time_windows(
+        pd.concat(predictions.values(), ignore_index=True),
+        window_seconds=window_seconds, origin=window_origin,
+        review_fractions=DEFAULT_BUDGETS,
+    )
     for w in windows:
         if w["evaluation"] is not None:
             w["evaluation"].pop("pr_curve", None)
@@ -1019,7 +1036,12 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
     )
     if b_rows:
         save_comparison_figures(
-            b_rows, output / "B_figures", label + "\nFrozen B combination"
+            b_rows, output / "B_figures", label + "\nFrozen B combination",
+            method_labels={
+                "classifier": b["method"],
+                "anomaly": config["selected_anomaly"],
+                "combined": "Frozen policy",
+            },
         )
     for name, p in predictions.items():
         p.to_csv(output / f"{name}_predictions.csv", index=False)
@@ -1028,6 +1050,12 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
         "config": config,
         "configuration_reselected": False,
         "partition": partition_description(data),
+        "time_window_config": {
+            "window_seconds": window_seconds,
+            "origin": window_origin,
+            "review_fractions": list(DEFAULT_BUDGETS),
+            "budget_scope": "independent top-K within each window",
+        },
         "metrics": metrics,
         "groups": group_metrics,
         "time_windows": windows,
@@ -1038,6 +1066,147 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
         json.dumps(result, indent=2, allow_nan=False) + "\n"
     )
     return result
+
+
+
+def _frozen_c_report(result):
+    """Result-driven writing aid for D; no selection or unsupported interpretation."""
+    phase = "Final test" if result["phase"] == "test" else "Validation replay"
+    partition = result["partition"]
+    lines = [
+        f"# C: {phase}", "",
+        f"Partition: {partition['rows']:,} transactions, {partition['frauds']} frauds. "
+        "All rankings use descending score, then ascending row_id; K = ceil(N × q).",
+        "Models, preprocessing and quotas were retained without refitting or reselection.",
+        "", "| Method | AP | Budget | K | TP | FP | Recall | Precision |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    def number(value):
+        return "N/A" if value is None else f"{value:.6f}"
+    for method, metric in result["metrics"].items():
+        for row in metric["budgets"]:
+            lines.append(
+                f"| {method} | {number(metric['AP'])} | {100 * row['review_fraction']:g}% "
+                f"| {row['K']} | {row['TP']} | {row['FP']} "
+                f"| {number(row['recall_at_k'])} | {number(row['precision_at_k'])} |"
+            )
+    lines += ["", "## Equal-budget classifier / anomaly comparison", ""]
+    if not result["B_comparisons"]:
+        lines.append("No classifier was supplied; classifier complementarity was not evaluated.")
+    for row in result["B_comparisons"]:
+        lines.append(
+            f"At {100 * row['review_fraction']:g}% (K={row['K']}), classifier TP="
+            f"{row['classifier']['TP']}, anomaly TP={row['anomaly']['TP']}, and frozen-policy "
+            f"TP={row['combined']['TP']}. Shared frauds={row['shared_frauds']}; "
+            f"classifier-only={row['classifier_only_frauds']}; anomaly-only="
+            f"{row['anomaly_only_frauds']}. Net change from classifier="
+            f"{row['combined']['TP'] - row['classifier']['TP']:+d}."
+        )
+    lines += [
+        "", "## Groups under the global 1% review budget", "",
+        "| Method | Cluster | Transactions | Frauds | Reviews | TP | Group recall |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+    ]
+    for method, grouped in result["groups"].items():
+        for group in grouped["groups"]:
+            allocation = next(r for r in group["global_budget_allocation"]
+                              if r["review_fraction"] == PRIMARY_REVIEW_FRACTION)
+            local = group["within_group"]
+            lines.append(
+                f"| {method} | {group['cluster_id']} | {local['n_samples']} "
+                f"| {local['n_positive']} | {allocation['reviewed_in_group']} "
+                f"| {allocation['frauds_detected_in_group']} "
+                f"| {number(allocation['recall_within_group'])} |"
+            )
+    windows = result["time_window_config"]
+    lines += [
+        "", "## Interpretation and limits", "",
+        "Cluster IDs describe training-defined groups, not fraud predictions. "
+        "Group recalls above use a single global top-K list, not separate group quotas.",
+        f"Time windows use origin={windows['origin']:g} seconds and width="
+        f"{windows['window_seconds']:g} seconds, with independent top-K review within each "
+        "window. Per-window review counts cannot be treated as the global review budget.",
+        "No-positive groups/windows have undefined AP and recall (N/A). "
+        "A supplies the temporal interpretation; short-term differences do not establish drift.",
+        "Anomaly scores are not fraud probabilities. An exclusive fraud case alone does not "
+        "establish a capacity-preserving gain; the net change above uses identical K.",
+        "Validation selection and final-test performance must be described separately. "
+        "These descriptive results do not support causal or demographic claims.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def publish_frozen_c_results(run, destination, *, provenance):
+    """Publish an existing frozen run to tables/ and figures/ without scoring.
+
+    A supplies source_commit, dataset_sha256, command and, for test, g2_reference.
+    These are traceability records, not automated approval of the group's G2.
+    Full row IDs, predictions, models and PR point arrays remain private.
+    """
+    import shutil
+
+    run, destination = Path(run).resolve(), Path(destination).resolve()
+    if run == destination or run in destination.parents or destination in run.parents:
+        raise ValueError("Private run and public results must not overlap")
+    source = run / "evaluation.json"
+    result = json.loads(source.read_text())
+    phase = result.get("phase")
+    if phase not in {"test", "validation_replay"}:
+        raise ValueError("Only frozen test or validation_replay results can be published")
+    if result.get("configuration_reselected") is not False:
+        raise ValueError("Frozen run must not reselect configuration")
+    required = ["source_commit", "dataset_sha256", "command"]
+    if phase == "test":
+        required.append("g2_reference")
+    if any(not isinstance(provenance.get(k), str) or not provenance[k].strip()
+           for k in required):
+        raise ValueError("Missing provenance: " + ", ".join(required))
+    prefix = "c_test" if phase == "test" else "c_validation_replay"
+    images = {p: destination / "figures" / f"{prefix}_{p.name}"
+              for p in (run / "figures").glob("*.png")}
+    if result["B_comparisons"]:
+        images[run / "B_figures/complementarity.png"] = (
+            destination / "figures" / f"{prefix}_B_complementarity.png"
+        )
+    expected = {"pr_curve.png", "review_recall.png", "review_precision.png",
+                "cluster_prevalence.png", "complementarity.png"}
+    if not expected.issubset({p.name for p in (run / "figures").glob("*.png")}) \
+            or any(not p.is_file() for p in images):
+        raise ValueError("Frozen run is missing required figures")
+    targets = [destination / "tables" / f"{prefix}.json",
+               destination / "tables" / f"{prefix}.md", *images.values()]
+    if any(p.exists() for p in targets):
+        raise ValueError("Frozen public results already exist; use another destination")
+    public = copy.deepcopy(result)
+    for metric in public["metrics"].values():
+        metric.pop("pr_curve", None)
+    for key in ["comparisons", "B_comparisons"]:
+        for row in public[key]:
+            for field in ["classifier_ids", "anomaly_ids", "combined_ids"]:
+                row.pop(field, None)
+    public["publication"] = {
+        "provenance": {key: provenance[key] for key in required},
+        "evaluation_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "figure_sha256": {
+            str(target.relative_to(destination)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path, target in images.items()
+        },
+        "note": "C export only; G2 confirmation is owned by A and the group.",
+    }
+    # Prepare all text before writing anything; malformed evidence leaves no public files.
+    summary = json.dumps(public, indent=2, allow_nan=False) + "\n"
+    writing = _frozen_c_report(public)
+    writing += "\n## Figures\n\n" + "\n".join(
+        f"![{path.stem}](../{target.relative_to(destination).as_posix()})"
+        for path, target in images.items()
+    ) + "\n"
+    for target in targets:
+        target.parent.mkdir(parents=True, exist_ok=True)
+    targets[0].write_text(summary, encoding="utf-8")
+    targets[1].write_text(writing, encoding="utf-8")
+    for path, target in images.items():
+        shutil.copy2(path, target)
+    return [str(path) for path in targets]
 
 
 def save_ablation_figure(rows, selected, path):

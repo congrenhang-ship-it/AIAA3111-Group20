@@ -181,3 +181,87 @@ Under the same 1% review budget, the reproduced class-weighted logistic regressi
 答辩要点：异常更稀有不代表更像已知欺诈；有独有案例不等于净收益；相同 K、去重补齐和事先固定的并列规则是比较基础；选择纯分类不是失败，而是保留有证据支持的策略。当前结论为验证结论，最终泛化仍由 A8 检查。
 
 最终核对：46 项 A/C 检查、8 项 B 检查通过；临时加入 D 的 7 项检查后共 61 项通过且无冲突，D 未实际合入。真实 G1、完整验证的冻结重放、行身份/容量/分群计数均已核对。B 的原算法、测试及发布结果文件未改动；测试集没有评分。
+
+## C7 接入交付（2026-11-13）
+
+当前可以独立完成的 C7 接入、发布接口及验证重放已完成。C7 的正式测试图和 C8 的正式测试解释仍依赖 A7/G2 与 A8；本节不确认全组冻结，也没有运行测试集。仅修改 C 的评价、检查及本说明，沿用原目录。
+
+### A 接入时使用的接口
+
+| 接口 | 输入与责任 | 输出 |
+|---|---|---|
+| `evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="test", window_seconds=3600, window_origin=0)` | A 提供固定划分和 G2 的窗口设置；bundle 内含训练好的 B/C。`output` 必须为新的本地目录 | 返回总体、分群、窗口、等 K 互补结果；本地保存 evaluation.json、完整预测和图 |
+| `publish_frozen_c_results(run, destination, *, provenance)` | 输入上一接口的运行目录；只发布已有结果，不训练、不评分、不选参 | 在原 tables/ 和 figures/ 中发布汇总 JSON、数值写作材料和图 |
+
+A 从自己复现的 bundle 接入，不能依赖 C 电脑上的模型路径。未显式传 `classifier` 时使用 bundle 已包含的 B 管线；显式传入时要求 method、row_id、Time、Class 与固定方案和数据一致。数据的特征及行身份不由 C 重新划分。
+
+窗口长度和起点现在均可显式传递；默认 3600 秒、起点 0 只复现已有验证诊断，A 须在 G2 中确认最终设置。返回的 `time_window_config` 记录实际使用值。每个窗口独立按 `ceil(N_window*q)` 分配容量，不能将窗口审核量之和直接解释为一次全局 top-K。群体图则使用全局名单在各簇的分配，两种口径须分开。
+
+### 不接触测试集的验证重放
+
+以下在仓库根目录运行；选择新路径，避免覆盖已有证据。此命令不会重新拟合模型。其他成员先按前文完整复现命令生成自己的 bundle，再替换模型路径。
+
+```python
+import sys
+from pathlib import Path
+import subprocess
+import joblib
+sys.path.insert(0, "code")
+from preprocessing import load_data, split_data, ULB_SHA256
+from evaluation import evaluate_improved_frozen, publish_frozen_c_results
+
+bundle = joblib.load("data/c_with_b_20261111/improved_models.joblib")
+_, validation, _ = split_data(load_data(Path("data/creditcard.csv")))
+run = "data/c_handoff_reproduction/run"
+result = evaluate_improved_frozen(
+    bundle, validation, run, phase="validation_replay",
+    window_seconds=3600, window_origin=0,
+)
+files = publish_frozen_c_results(
+    run, "data/c_handoff_reproduction/shared",
+    provenance={
+        "source_commit": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True).strip(),
+        "dataset_sha256": ULB_SHA256,
+        "command": "C7 validation replay Python API sequence in report/C_IMPROVEMENTS.md",
+    },
+)
+```
+
+本次真实运行使用 `data/c_handoff_20261113/run` 和 `data/c_handoff_20261113/shared`；详细检查记录追加在已有 `results/tables/c_improved.json` 的 `C7_handoff_verification`。原模型文件、冻结选择和先前验证数字保持不变。重放过程中阻断训练与选择函数，核对保存模型和配置未改变，并检查所有选定方法的 AP/预算、群体、时间窗口与原记录一致，组合名单仍恰好 K 笔。
+
+### G2 后 A8 的最小调用变化
+
+A 先完成全组冻结，再将上例的 `data` 替换为同一划分中的 test、`phase` 替换为 `"test"`，并传入 G2 中记录的窗口起点和长度。运行目录使用新的本地路径。发布时额外提供 `provenance["g2_reference"]`（全组冻结文件/记录及版本），`command` 填写真实运行命令，`source_commit` 填写实际实验代码版本。发布器检查来源字段存在，但不替 A 审批 G2，也不根据测试结果修改方案。
+
+发布后的命名：
+
+| 内容 | 验证重放 | 正式测试 |
+|---|---|---|
+| 公开汇总 | `results/tables/c_validation_replay.json` | `results/tables/c_test.json` |
+| 数值写作材料 | `results/tables/c_validation_replay.md` | `results/tables/c_test.md` |
+| 图表前缀 | `results/figures/c_validation_replay_` | `results/figures/c_test_` |
+
+每次发布含 PR、审核预算 Recall/Precision、簇内表现、异常方法互补图；包含 B 时另附有实际方法名称的 B/C 互补图。JSON 不发布逐行名单和完整 PR 点，保存评估文件及每张图片的 SHA-256、划分指纹、实际窗口设置和来源记录。模型、完整预测、逐行案例始终保留本地。目标同名文件已存在、缺图、缺来源或公开/私有目录相互包含时拒绝发布，保护原实验结果。无需把本次重复验证图加入 Git。
+
+JSON 的 config 是原训练/验证阶段的候选冻结记录，其中 `test_evaluated=false`、`group_G2_complete=false` 不会被 C 接口改写；实际评分阶段看顶层 phase，全组冻结依据看 A 的 G2 记录。正式结果不能因为复制了旧配置标记而被误当成验证结果。
+
+### C8 可提前完成的写作准备
+
+方法与验证分析沿用前文。发布器生成的 Markdown 从实际结果填写每个方法的 AP、全部预算 TP/FP/Recall/Precision、B/C 独有与重合欺诈、组合相对分类的净变化，以及全局 1% 下的群体计数；未定义值写 N/A。它是供 C 核对、D 整合的数值材料，不代替最终解释。
+
+拿到 A8 后，C 只需围绕以下问题补充正式结论，不追加选择：
+
+1. 固定 IF 相对距离方法的优劣是否与验证阶段一致？同时检查 AP 和各预算，不只挑最好的一个数字。
+2. 已冻结的分类配额在测试上得到多少净检出变化？纯分类端点应明确写出。测试上出现异常独有案例，也不能据此重新调整配额。
+3. 各簇交易数和欺诈数是否足以支持比较？空簇、无欺诈簇用 N/A；较小群体的极端比例只作描述。
+4. 时间分析由 A 提供，用同一窗口口径解释；不能仅凭两个交易日的窗口差异断言长期漂移。
+5. 将最终数字与验证数字明确分开，对模型已用标签做内层选择、匿名特征解释限制及少量欺诈带来的不确定性如实说明。
+
+交给 D 时：使用 c_test.md 的真实数字、c_test.json 的来源和 c_test_ 前缀的图；正文分别安排方法、等预算结果及局限。C 核对自己的全部数字与图注，A 核对共同划分/时间口径，D 统一文稿。最终演练和全组数字核对需等实际材料齐全后完成。
+
+本次 AIGC 补充：Codex 协助冻结接口、发布接口、验证重放、检查与交接说明；未新增算法、未扩大参数搜索、未评分测试集。最终结果解释由组员据真实 A8 输出审核。
+
+D 的新复核记录指出中文 Windows 的默认 GBK 会使 C 读取带中文注释的 requirements.txt 失败。本次在 C 的读取点显式指定 UTF-8，并在检查中模拟 GBK 默认编码；不再依赖用户为这个读取点设置 PYTHONUTF8。该修复不改变依赖版本或实验选择。共享 TASKS.md 保留 D 自己提交的最新进度。
+
+本次最终检查：本分支 47 项 A/C 检查与 8 项 B 检查通过；隔离接入 D 的 f26e360 后，54 项公共检查与 8 项 B 检查通过，共 62 项。真实验证重放的三种冻结方法全部指标、群体与窗口结果一致；正式测试仍未执行。未新增跟踪文件，重复图表只保存在本地预览目录。

@@ -1315,7 +1315,7 @@ def reproduce_b_for_c(train, validation, freeze_path, output, dataset_digest):
     }
     lock = dict(
         line.split("==", 1)
-        for line in (ROOT / "requirements.txt").read_text().splitlines()
+        for line in (ROOT / "requirements.txt").read_text(encoding="utf-8").splitlines()
         if "==" in line and not line.startswith("#")
     )
     mismatches = {
