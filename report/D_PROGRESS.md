@@ -1,6 +1,24 @@
 # D local work record — 2026-11-09
 
-## Latest update — 2026-11-13
+## Latest update — 2026-11-14
+
+The new task list introduces D-E1/E04. It is now implemented and run on the
+unchanged 21 fixed rules in the common environment: pairwise Jaccard,
+training-ordered cumulative/unique coverage, redundancy and B/C validation
+error linkage. Ten D checks pass. Shared results are in d_extensions.json,
+two validation-labelled figures and the existing D_VALIDATION_RESULTS.md.
+The broad union covers 56,055 transactions and 57 frauds, so error coverage
+must not be claimed as a limited-budget improvement. Full predictions remain
+local; no test set scores, new rule search or new model selection occurred.
+
+Report.md and poster/Poster.md now incorporate E04 findings and distinguish
+other extension protocols from completed experiments. D5 still requires A6
+and A8, D6 remains an incomplete content draft, and D7 awaits G3. D-E1 alone
+is marked complete in the current remaining-task checklist. Codex assistance
+for the new implementation/checks, figures and writing is recorded in the
+existing validation analysis and must be reviewed in final disclosures.
+
+## Previous update — 2026-11-13
 
 D4 now passes in the exact common Python 3.12.14 / 22-package environment.
 All 63 candidate records and 21 retained rules match; maximum boundary drift

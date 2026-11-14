@@ -1,6 +1,6 @@
 # Credit Card Fraud Detection under a Limited Review Budget
 
-AIAA 3111 · Group 20 · Integrated working draft · 2026-11-13
+AIAA 3111 · Group 20 · Integrated working draft · 2026-11-14
 
 **Editorial status:** methods and validation evidence only. Formal test results,
 final error cases, all authors' final disclosures and G3 approval are outstanding.
@@ -103,6 +103,17 @@ count/lift gate is applied there. Zero-denominator metrics are not applicable.
 The predeclared scheme criterion is the number of passing diagnostic rules,
 with equal-frequency preferred on ties; it is not a top-K fraud-yield objective.
 
+### Newly adopted ULB extensions: implementation status
+
+The 2026-11-14 protocol adds amount coverage/groups and simple references
+(E01/E06), paired row/bootstrap and time-block sensitivity (E02), fixed label
+fractions/seeds (E03), rule overlap (E04), permutation importance (E05), assumed
+cost ratios (E07), and fixed validation-threshold migration (E08). D's E04
+validation findings are now available below. Other extensions remain pending
+their owners' evidence; protocol settings are not experimental results.
+All extension configurations must enter A7 before A8. Candidate second datasets
+and customer/terminal histories remain future work outside the current ULB scope.
+
 ## 4. Common evaluation and fair capacity comparison — C contribution
 
 AP summarizes precision–recall ranking behavior. Budgeted outcomes are reported
@@ -184,13 +195,37 @@ more concentrated despite fewer passing candidates: validation R023 covers
 46 transactions with 31 frauds. Rule-count selection must not be presented as
 proof of greater review efficiency. Overlapping rule counts are never added.
 
+### Fixed-rule overlap and validation error linkage (E04)
+
+Ordering the unchanged 21 rules by training lift/confidence/length/ID gives a
+union of 56,055 validation transactions, including all 57 frauds. This covers
+98.78% of the validation population and 55,998 normal transactions. Fifteen
+rules add no new fraud at their position, and R020 adds no new transactions.
+There are no identical-coverage pairs or pairs with Jaccard >=0.9, illustrating
+that cumulative redundancy can occur without near-identical pairs. The compact
+validation display uses R001/R002/R005/R006/R009, while all 21 remain fixed for
+eventual test evaluation. The display omits a later novel fraud covered by R013.
+
+The union covers all eight classifier false negatives and all 33 IF false
+negatives, but also 516/519 classifier false positives and 538/544 IF false
+positives. Given its broad scope, this is diagnostic association and not an
+equal-budget improvement. Validation example source row 176049 is missed at
+K=568 by both models (ranks 11,505/867); normal row 170937 is ranked 321 by IF
+and 56,714 by the classifier. Both match R013/R016/R021. The shared rule match
+does not identify a business or causal explanation.
+
+Figure candidates: the validation Jaccard heatmap and two-panel cumulative
+transactions/fraud figure in results/figures/d_validation_rule_*.png. Full pair
+counts, increments, per-rule error counts and deterministic cases are in
+results/tables/d_extensions.json. Do not sum overlapping rule fraud counts.
+
 ## 6. Final test and error analysis — pending A7/A8
 
 No formal test scores are inserted into this draft. After the group freeze, A
 must publish the common overall, group, combination, time-window and fixed-rule
 tables. B/C/D then attach traceable cases and update this section together.
-Published C validation cases may motivate the questions but cannot substitute
-for final test cases or provide missing row IDs for cross-method joins.
+The new E04 validation cases have traceable row IDs and fixed-model ranks;
+they do not substitute for the final cases or justify selection on test errors.
 
 ## 7. Limitations and validation-stage conclusion
 

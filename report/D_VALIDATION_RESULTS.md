@@ -1,5 +1,86 @@
 # D training / validation analysis — 2026-11-11
 
+## E04 extension update — 2026-11-14
+
+The original 21 fixed rules and bin boundaries are unchanged. Under the
+2026-11-14 extension protocol, training lift/confidence/length/ID fixes their
+order as R001–R021. A paired coverage analysis produces
+`results/tables/d_extensions.json` plus the validation-labelled overlap heatmap
+and cumulative coverage figure in results/figures/. Python 3.12.14 and the
+common dependency environment were used. Validation has already been viewed;
+this is development-stage diagnostic evidence, not a fresh held-out experiment.
+
+| Sequential checkpoint | Unique transactions | Unique frauds |
+|---|---:|---:|
+| R001 | 4,556 | 39 |
+| Through R002 | 20,807 | 53 |
+| All 21 rules | 56,055 | 57 |
+
+The full union covers **98.78% of all validation transactions**, including
+55,998 normal transactions. Covering every validation fraud therefore does not
+establish useful limited-budget detection. There are 15 rules with zero new
+frauds at their position and R020 adds no transactions beyond the previous
+union. No pair has identical coverage or Jaccard >=0.9, yet cumulative redundancy
+still occurs: pairwise similarity and redundancy relative to a union differ.
+There are 29 antecedent-containment pairs. All pairs and increments are retained.
+
+The predeclared compact display is R001/R002/R005/R006/R009. It omits R013,
+which later adds another fraud, so it must not be described as preserving the
+entire full-set fraud coverage. All 21 original rules remain the test set;
+the five-rule subset is only an editorial display selected on validation.
+
+### Link to fixed model errors at K=568
+
+Other members' private predictions are not in Git. The existing public B/C
+interfaces therefore rebuilt only the fixed class-weighted LR and improved IF
+(100 trees, sample4096, seed42); no candidate/parameter/quota search was rerun.
+Their primary-budget TP values reproduce 49/24 respectively. Full combined
+predictions remain local in data/d_extensions/predictions.csv; the public
+summary records its SHA-256 and source code/environment/partition provenance.
+
+| Error group | All model errors | Covered by any fixed rule |
+|---|---:|---:|
+| Classifier false negatives | 8 | 8 |
+| Classifier false positives | 519 | 516 |
+| IF false negatives | 33 | 33 |
+| IF false positives | 544 | 538 |
+
+These are union counts, not sums over rules. The broad union includes both
+missed frauds and most reviewed normal transactions. It supports descriptive
+error linkage, not an efficient repair of either model's review list.
+
+Eight validation examples follow the predeclared row-ID selection order and
+are in the shared JSON with source row IDs, ranks and covering rules. Example
+D-E04-1 (source row 176049) is fraud ranked 11,505 by the classifier and 867 by
+IF, covered by R013/R016/R021. Neither model reviews it at K=568; IF would reach
+it at the supplementary 2% capacity. Example D-E04-7 (source row 170937) is a
+normal transaction ranked 321 by IF and 56,714 by the classifier, also covered
+by R013/R016/R021. The same rule combination can cover missed fraud and normal
+anomalies. Anonymous features do not justify assigning a business cause.
+
+### Reproduce and hand off to A7
+
+```powershell
+.venv-d-common/Scripts/python.exe -X utf8 code/run_d_validation.py --extensions --preprocessing-code ../AIAA3111-C-check/code
+.venv-d-common/Scripts/python.exe -m unittest discover -s tests -p test_pattern_mining.py -v
+```
+
+The dependency worktree is the same A/B/C source used for D4, commit a936f29;
+source hashes identify exact modules. E04 code/protocol precedes the real result
+commits. Ten D checks pass (three new hand/empty/training-order checks). Both
+figures were rendered and visually inspected for labels and readability.
+A7 should record the rule order, >=0.9 overlap mark, first-five-positive-increment
+display policy and deterministic two-case-per-error-category selection. The
+same frozen-rule coverage helper can be applied to A's test data ONLY after G2;
+the runner's E04 CLI intentionally uses training/validation only. Do not run a
+new search or choose a new display set from test results. No test scores were
+generated. A6/full final reproduction remains D5 work, not this validation run.
+
+Codex assisted with fixed-rule diagnostics, checks, fixed model replay, figures,
+case linking and drafting; retain the actual assistance in final disclosures.
+
+## Earlier D2–D4 record
+
 ## What can continue now
 
 A's unified data preparation is available in `Task_A` at

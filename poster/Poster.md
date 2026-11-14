@@ -1,6 +1,6 @@
 # Credit Card Fraud Detection under a Limited Review Budget
 
-Group 20 · Content editing draft · 2026-11-13
+Group 20 · Content editing draft · 2026-11-14
 
 **Validation preview.** Final A8 evidence, course layout dimensions and author
 details remain outstanding; this is not the submission poster.
@@ -49,6 +49,17 @@ validation transactions including 39 frauds (confidence 0.856%, lift 8.52):
 association alone does not make an efficient review list. Rules may overlap.
 
 ## Takeaway and limits
+
+E04 now adds fixed-rule overlap and cumulative coverage: all 21 rules cover
+56,055/56,745 transactions (98.78%), including all 57 frauds. They cover all
+eight classifier misses but also most model false positives. Fifteen rules add
+no new fraud at their position. A broad diagnostic union is not evidence of
+better review efficiency. Use the two-panel validation cumulative figure as a
+compact illustration; the original 21-rule test set remains unchanged.
+
+Other adopted ULB extensions (label budget, amount, importance, intervals,
+references, costs and threshold migration) await their owners' evidence. Include
+their actual final results after A8; no second dataset is part of this round.
 
 Validation supports the selected classifier at the stated capacity and shows
 no combination gain under the examined policy. Final generalization and rule
