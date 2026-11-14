@@ -12,7 +12,11 @@ must not be claimed as a limited-budget improvement. Full predictions remain
 local; no test set scores, new rule search or new model selection occurred.
 
 Report.md and poster/Poster.md now incorporate E04 findings and distinguish
-other extension protocols from completed experiments. D5 still requires A6
+other extension protocols from completed experiments. A second 2026-11-14
+main update (51e543a) confirms C-E1/E2/E3 delivery; the shared checklist retains
+C's new state together with D-E1 completion. C's new amount, cost and paired
+interval validation evidence has also been compiled from C commit 8818b20.
+D5 still requires A6
 and A8, D6 remains an incomplete content draft, and D7 awaits G3. D-E1 alone
 is marked complete in the current remaining-task checklist. Codex assistance
 for the new implementation/checks, figures and writing is recorded in the

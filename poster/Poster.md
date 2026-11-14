@@ -57,9 +57,13 @@ no new fraud at their position. A broad diagnostic union is not evidence of
 better review efficiency. Use the two-panel validation cumulative figure as a
 compact illustration; the original 21-rule test set remains unchanged.
 
-Other adopted ULB extensions (label budget, amount, importance, intervals,
-references, costs and threshold migration) await their owners' evidence. Include
-their actual final results after A8; no second dataset is part of this round.
+C has now delivered validation amount/reference/cost/interval evidence: at K=568,
+classifier fraud-amount coverage is 73.48%, IF 37.78%, Amount-descending 28.30%
+(only two frauds). Classifier recall's paired row interval is [76.92%,94.65%];
+it conditions on the fixed model/current sample, not all model-selection
+uncertainty. Label-budget, importance and threshold-migration evidence still
+awaits B/A. Formal test evidence for all extensions remains pending A8; no
+second dataset is part of this round.
 
 Validation supports the selected classifier at the stated capacity and shows
 no combination gain under the examined policy. Final generalization and rule

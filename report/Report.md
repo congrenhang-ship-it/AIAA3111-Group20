@@ -111,7 +111,9 @@ fractions/seeds (E03), rule overlap (E04), permutation importance (E05), assumed
 cost ratios (E07), and fixed validation-threshold migration (E08). D's E04
 validation findings are now available below. Other extensions remain pending
 their owners' evidence; protocol settings are not experimental results.
-All extension configurations must enter A7 before A8. Candidate second datasets
+Update from C's newly delivered validation evidence: E01/E02/E06/E07 are now
+implemented and validated (see below). B's E03/E05 and A's E08 still require
+their owners' evidence. All extension configurations must enter A7 before A8. Candidate second datasets
 and customer/terminal histories remain future work outside the current ULB scope.
 
 ## 4. Common evaluation and fair capacity comparison — C contribution
@@ -219,6 +221,40 @@ transactions/fraud figure in results/figures/d_validation_rule_*.png. Full pair
 counts, increments, per-rule error counts and deterministic cases are in
 results/tables/d_extensions.json. Do not sum overlapping rule fraud counts.
 
+### Amount coverage, references and assumed costs (C E01/E06/E07)
+
+C's training-only Amount boundaries are 21.94, 200.0 and 1008.6402000000035.
+At the common validation K=568, the classifier covers 73.48% of fraud amount,
+IF 37.78%, cluster distance 28.80%, and the fixed Amount-descending reference
+28.30%. The latter finds only two frauds, compared with 49 for the classifier
+and 24 for IF. Quantity and amount therefore answer different questions.
+Classifier-covered fraud amount is 8,987.38 of 12,231.09; this is coverage of
+transaction amounts, not actual money recovered. The classifier's precision
+improvement over validation prevalence is 85.88-fold; this ratio does not
+change the absolute precision of 8.63% or the number of false positives.
+
+With assumed loss L=FP+c_FN*FN and c_FN=10/50/100, classifier losses at 0.1%
+are 165/765/1515, at 0.5% 326/686/1136, at 1% 599/919/1319 and at 2%
+1166/1486/1886. These are hypothetical units. No budget was reselected from
+this table; the primary review capacity remains 1%. Higher review capacity
+does not necessarily minimize a particular assumed loss.
+
+### Paired uncertainty and limits (C E02)
+
+C uses seed 42 for 500 paired row resamples and 200 paired 1800-second block
+resamples, reporting empirical 2.5/97.5 percentiles. Per-replicate N determines
+K; methods share the same sample and preserve repeated transaction instances.
+All observed replicates contain fraud. Classifier Recall@1% is 0.8596 with
+row interval [0.7692, 0.9465] and block interval [0.7954, 0.9153]; IF recall
+is 0.4211 with intervals [0.3129, 0.5569] and [0.2496, 0.5714]. The paired
+classifier-minus-IF recall difference is 0.4386, with corresponding intervals
+[0.3056, 0.5641] and [0.3098, 0.5882]. The pure-classifier policy has exactly
+zero difference from the classifier in every replicate, as expected from its
+identical ranking. These intervals condition on chosen models/current data,
+exclude full selection uncertainty and do not constitute significance tests
+or proof of long-term stability. C's full evidence is c_extensions.json; its
+three extension figures should form a compact panel during later typesetting.
+
 ## 6. Final test and error analysis — pending A7/A8
 
 No formal test scores are inserted into this draft. After the group freeze, A
@@ -245,7 +281,7 @@ conclusions, awaiting frozen held-out evaluation.
 
 - A: [data provenance and split](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/26c1c32/data/README.md).
 - B: [classification evidence](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/55ee151/docs/B_VALIDATION_RESULTS.md).
-- C: [methods, common-environment results, caveats and figures](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/a936f29/report/C_IMPROVEMENTS.md).
+- C: [methods, common-environment results, extensions, caveats and figures](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/8818b20/report/C_IMPROVEMENTS.md).
 - D: D_VALIDATION_PROTOCOL.md, D_VALIDATION_RESULTS.md and d_validation/; current
   common-environment handoff is recorded separately in D_COMMON_ENVIRONMENT.md.
 - Dataset: [Zenodo archive](https://zenodo.org/records/7395559), originally
