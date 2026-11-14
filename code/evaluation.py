@@ -975,7 +975,31 @@ def evaluate_improved_frozen(
         predictions, groups = score_improved_bundle(bundle, data)
     else:
         predictions, groups = scored_unsupervised
-        predictions = dict(predictions)
+        # A scores once for the shared workflow. Validate and align reused tables
+        # before assigning group labels or writing evidence; never rescore here.
+        expected = list(config["selected_candidates"].values())
+        if set(predictions) != set(expected):
+            raise ValueError("Precomputed methods differ from the frozen candidates")
+        reference = make_prediction_frame(data, np.zeros(len(data)), "reference")
+        aligned = {}
+        for name in expected:
+            p = _single_method(predictions[name])
+            if p.empty or not p.method.eq(name).all() or set(p.row_id) != set(reference.row_id):
+                raise ValueError("Precomputed method or row IDs differ from the input")
+            p = p.set_index("row_id").loc[reference.row_id].reset_index()
+            if not np.array_equal(p.Class, reference.Class) or not np.array_equal(p.Time, reference.Time):
+                raise ValueError("Precomputed labels/Time disagree with the input")
+            aligned[name] = p
+        if isinstance(groups, pd.Series):
+            if not groups.index.is_unique or set(groups.index) != set(reference.row_id):
+                raise ValueError("Precomputed group index must match input row IDs")
+            groups = groups.loc[reference.row_id].to_numpy()
+        groups = _vector(groups, "precomputed groups", len(data))
+        n_clusters = config.get("n_clusters", 3)
+        if (groups != np.floor(groups)).any() or not np.isin(groups, range(n_clusters)).all():
+            raise ValueError("Precomputed groups differ from the frozen cluster domain")
+        groups = pd.Series(groups.astype(int), index=reference.row_id)
+        predictions = aligned
     comparisons = pair_comparisons(
         predictions, config["selected_candidates"], config["distance_share"]
     )
@@ -1834,6 +1858,67 @@ def run_c_extensions(bundle, data, config, output, *, phase="validation", proven
         (results / "tables").mkdir(parents=True, exist_ok=True)
         (results / "tables" / table_name).write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     return result
+
+
+
+def save_review_policy_figure(threshold_results, path, *, phase):
+    """C7 plot of A's existing E08 counts; no threshold or model is selected.
+
+    Validation thresholds were selected on this same validation partition, so
+    validation plots are diagnostic, not independent threshold generalization.
+    A8 may reuse this with phase='test' on its frozen-threshold test results.
+    """
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    if phase not in {"validation", "test"} or not threshold_results:
+        raise ValueError("Supply nonempty validation/test threshold results")
+    path = Path(path)
+    if path.exists():
+        raise ValueError("Review-policy figure already exists")
+    methods = list(threshold_results)
+    reference_windows = None
+    for name, result in threshold_results.items():
+        if result.get("selection_phase") != "validation" or not result.get("windows"):
+            raise ValueError("Thresholds must originate from validation with window counts")
+        reference = [(r["window_id"], r["start_seconds"], r["end_seconds"],
+                      r["n_samples"], r["n_positives"]) for r in result["windows"]]
+        if reference_windows is not None and reference != reference_windows:
+            raise ValueError("Policy plots must use identical windows and transactions")
+        reference_windows = reference
+        if any(r["method"] != name for r in result["windows"]):
+            raise ValueError("Window methods disagree with threshold result names")
+    fig, axes = plt.subplots(len(methods), 2, figsize=(13, 3.7*len(methods)), squeeze=False)
+    names = {"logistic_regression_class_weight": "Class-weighted LR",
+             "if_sample4096": "Isolation Forest (4096)"}
+    for row, name in enumerate(methods):
+        result = threshold_results[name]
+        windows = result["windows"]
+        x = [(w["start_seconds"] + w["end_seconds"])/7200 for w in windows]
+        for col, field in enumerate(["actual_review_fraction", "recall_at_k"]):
+            ax = axes[row, col]
+            for policy, label, marker in [("fixed_threshold", "Fixed validation threshold", "o"),
+                                           ("top_k", "Independent window top-K", "s")]:
+                values = [w[policy][field] for w in windows]
+                ax.plot(x, [np.nan if value is None else 100*value for value in values],
+                        marker=marker, label=label)
+            if col == 0:
+                ax.axhline(100*result["review_fraction"], color="grey", linestyle="--", label="Target budget")
+            else:
+                ax.set_ylim(-2, 102)
+            ax.set(title=names.get(name, name), xlabel="Relative elapsed time (hours)",
+                   ylabel="Review proportion (%)" if col == 0 else "Fraud recall (%)")
+            ax.grid(alpha=0.2)
+            ax.legend(fontsize=8)
+    note = ("Validation diagnostic: thresholds selected on this same partition"
+            if phase == "validation" else "Test: validation thresholds retained unchanged")
+    fig.suptitle(note + "\nWindow budgets are independent; first/last windows may be partial")
+    fig.tight_layout()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+    return path
 
 
 def _c_extension_cli():

@@ -1365,5 +1365,83 @@ class CExtensionWorkflowTests(unittest.TestCase):
         second = evaluate_c_extensions(reversed_input, self.val, self.config, progress=None)
         self.assertEqual(first, second)
 
+
+class CTeamIntegrationTests(unittest.TestCase):
+    setUpClass = classmethod(CExtensionWorkflowTests.setUpClass.__func__)
+    def test_precomputed_scores_align_to_source_ids_without_rescoring(self):
+        from evaluation import evaluate_improved_frozen
+        from classification import score_model
+        from unsupervised import score_improved_bundle
+        bundle = copy.deepcopy(self.bundle)
+        bundle["config"].update(distance_share=0.0, n_clusters=3)
+        predictions, groups = score_improved_bundle(bundle, self.val)
+        classifier = make_prediction_frame(self.val, score_model(bundle["B_model"], self.val[FEATURE_COLUMNS]), "B")
+        before = joblib.hash((predictions, groups, bundle))
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            normal = evaluate_improved_frozen(bundle, self.val, root/"normal", classifier=classifier,
+                                             phase="validation_replay")
+            keyed_groups = pd.Series(groups, index=self.val.row_id).iloc[::-1]
+            reversed_frames = {n: p.iloc[::-1] for n,p in predictions.items()}
+            with patch("unsupervised.score_improved_bundle", side_effect=AssertionError("no rescore")), \
+                 patch("classification.score_model", side_effect=AssertionError("no classifier rescore")):
+                cached = evaluate_improved_frozen(
+                    bundle, self.val, root/"cached", classifier=classifier.iloc[::-1],
+                    phase="validation_replay", scored_unsupervised=(reversed_frames, keyed_groups))
+            for key in ["metrics", "groups", "time_windows", "comparisons", "B_comparisons"]:
+                self.assertEqual(normal[key], cached[key])
+        self.assertEqual(joblib.hash((predictions, groups, bundle)), before)
+
+    def test_invalid_precomputed_metadata_or_groups_fail_before_output(self):
+        from classification import score_model
+        from unsupervised import score_improved_bundle
+        bundle = copy.deepcopy(self.bundle)
+        bundle["config"].update(distance_share=0.0, n_clusters=3)
+        predictions, groups = score_improved_bundle(bundle, self.val)
+        classifier = make_prediction_frame(self.val, score_model(bundle["B_model"], self.val[FEATURE_COLUMNS]), "B")
+        first = next(iter(predictions))
+        invalid = []
+        for field,value in [("Class",0),("Time",-1),("row_id",-1),("method","wrong")]:
+            changed = dict(predictions);changed[first]=predictions[first].assign(**{field:value})
+            invalid.append((changed,groups))
+        invalid += [(dict(list(predictions.items())[:1]),groups),
+                    (predictions,groups[:-1]),(predictions,np.full(len(groups),0.5)),
+                    (predictions,np.full(len(groups),9)),
+                    (predictions,pd.Series(groups,index=np.arange(len(groups))))]
+        with tempfile.TemporaryDirectory() as folder, patch(
+            "unsupervised.score_improved_bundle",side_effect=AssertionError("no scoring")):
+            for n,scored in enumerate(invalid):
+                output=Path(folder)/str(n)
+                with self.subTest(case=n), self.assertRaises(ValueError):
+                    evaluate_improved_frozen(bundle,self.val,output,classifier=classifier,
+                                             phase="validation_replay",scored_unsupervised=scored)
+                self.assertFalse(output.exists())
+
+
+class CReviewPolicyFigureTests(unittest.TestCase):
+    def test_plot_reuses_A_counts_and_refuses_invalid_or_existing_evidence(self):
+        from temporal import select_review_threshold,evaluate_review_threshold
+        from evaluation import save_review_policy_figure
+        data=pd.DataFrame({"row_id":[0,1,2,3],"Time":[0,10,30,31],"Class":[1,0,1,0]})
+        results={}
+        for name,scores in [("B",[.9,.1,.6,.2]),("IF",[.1,.2,.7,.3])]:
+            p=make_prediction_frame(data,scores,name)
+            selected=select_review_threshold(p,.5)
+            results[name]={**selected,**evaluate_review_threshold(p,selected,window_seconds=10)}
+        before=copy.deepcopy(results)
+        with tempfile.TemporaryDirectory() as folder:
+            output=Path(folder)/"policy.png"
+            self.assertEqual(save_review_policy_figure(results,output,phase="validation"),output)
+            self.assertTrue(output.read_bytes().startswith(b"\x89PNG"))
+            with self.assertRaisesRegex(ValueError,"already exists"):
+                save_review_policy_figure(results,output,phase="validation")
+            wrong=copy.deepcopy(results);wrong["IF"]["windows"][0]["n_samples"]+=1
+            with self.assertRaisesRegex(ValueError,"identical windows"):
+                save_review_policy_figure(wrong,Path(folder)/"bad.png",phase="validation")
+            self.assertFalse((Path(folder)/"bad.png").exists())
+            with self.assertRaises(ValueError):
+                save_review_policy_figure(results,Path(folder)/"bad.png",phase="unknown")
+        self.assertEqual(results,before)
+
 if __name__ == "__main__":
     unittest.main()
