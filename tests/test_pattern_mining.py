@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "code"))
-from pattern_mining import mine_rules, validate_rules
+from pattern_mining import mine_rules, validate_rules, analyze_rule_overlap
 
 
 def training_data():
@@ -133,6 +133,44 @@ class PatternMiningChecks(unittest.TestCase):
         repeated = training_data().assign(V1=[0.] * 100 + [1.] * 20)
         binner, _ = mine_rules(repeated, ["V1"], bins=3)
         self.assertEqual(binner["features"]["V1"]["effective_bins"], 1)
+
+
+class RuleOverlapChecks(unittest.TestCase):
+    def setUp(self):
+        self.data = pd.DataFrame({"row_id": [0, 1, 2, 3], "Class": [1, 0, 1, 0],
+                                  "V1": [0., 0., 1., 1.], "V2": [0., 1., 0., 1.]})
+        self.binner, _ = mine_rules(self.data, ["V1", "V2"], bins=2)
+        self.rules = [{"rule_id": name, "antecedent": items, "consequent": {"Class": 1}}
+                      for name, items in [("A", [{"feature": "V1", "bin": 0}]),
+                                          ("B", [{"feature": "V2", "bin": 0}]),
+                                          ("duplicate", [{"feature": "V1", "bin": 0}])]]
+        self.metrics = {name: {"lift": lift, "confidence": .5}
+                        for name, lift in [("A", 3), ("B", 2), ("duplicate", 1)]}
+
+    def test_hand_calculated_union_intersection_and_increments(self):
+        out = analyze_rule_overlap(self.data, self.binner, self.rules, self.metrics)
+        self.assertAlmostEqual(out["jaccard"][0][1], 1/3)
+        self.assertEqual(out["jaccard"][0][2], 1.)
+        self.assertEqual([r["transactions"] for r in out["cumulative"]], [2, 3, 3])
+        self.assertEqual([r["frauds"] for r in out["cumulative"]], [1, 2, 2])
+        self.assertEqual([r["increment_frauds"] for r in out["cumulative"]], [1, 1, 0])
+        self.assertTrue(out["cumulative"][-1]["redundant_given_previous"])
+        self.assertEqual(out["display_rule_ids"], ["A", "B"])
+
+    def test_empty_and_no_positive_coverage(self):
+        out = analyze_rule_overlap(self.data.iloc[:0], self.binner, self.rules, self.metrics)
+        self.assertTrue(all(v is None for row in out["jaccard"] for v in row))
+        self.assertEqual(out["covered_frauds"], 0)
+        other = analyze_rule_overlap(self.data.assign(Class=0), self.binner, self.rules, self.metrics)
+        self.assertEqual(other["display_rule_ids"], [])
+        self.assertEqual(other["covered_transactions"], 3)
+
+    def test_order_is_training_fixed_not_input_or_labels(self):
+        original = analyze_rule_overlap(self.data, self.binner, self.rules, self.metrics)
+        changed = analyze_rule_overlap(self.data.assign(Class=1), self.binner, self.rules[::-1], self.metrics)
+        self.assertEqual(original["rule_order"], changed["rule_order"])
+        self.assertEqual(original["jaccard"], changed["jaccard"])
+        self.assertEqual(original["rule_order"], ["A", "B", "duplicate"])
 
 
 if __name__ == "__main__":

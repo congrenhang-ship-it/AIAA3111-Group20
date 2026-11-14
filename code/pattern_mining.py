@@ -197,3 +197,49 @@ def validate_rules(data, fitted_binner, rules):
                         "consequent": {"Class": 1}, **_metrics(data, mask)})
     return results
 
+
+def analyze_rule_overlap(data, fitted_binner, rules, training_metrics):
+    """E04: fixed training order; pairwise and cumulative held-out coverage.
+
+    Empty unions have Jaccard=None. Return aggregate counts only. No rule search,
+    reordering using held-out labels or deletion from the original frozen set.
+    training_metrics maps rule_id to recorded training lift/confidence.
+    """
+    ordered = sorted(rules, key=lambda r: (
+        -training_metrics[r["rule_id"]]["lift"],
+        -training_metrics[r["rule_id"]]["confidence"],
+        len(r["antecedent"]), r["rule_id"]))
+    scored = validate_rules(data, fitted_binner, ordered)
+    sets = [set(r["covered_row_ids"]) for r in scored]
+    fraud_ids = set(data.loc[data.Class.eq(1), "row_id"])
+    matrix, pairs = [], []
+    for i, left in enumerate(sets):
+        values = []
+        for j, right in enumerate(sets):
+            union, intersection = len(left | right), len(left & right)
+            similarity = intersection / union if union else None
+            values.append(similarity)
+            if i < j:
+                a = {(x["feature"], x["bin"]) for x in ordered[i]["antecedent"]}
+                b = {(x["feature"], x["bin"]) for x in ordered[j]["antecedent"]}
+                pairs.append({"left": ordered[i]["rule_id"], "right": ordered[j]["rule_id"],
+                              "intersection": intersection, "union": union,
+                              "jaccard": similarity, "identical_coverage": left == right,
+                              "antecedent_contains_other": a < b or b < a,
+                              "high_overlap": similarity is not None and similarity >= .9})
+        matrix.append(values)
+    cumulative, seen = [], set()
+    for rule, coverage in zip(ordered, sets, strict=True):
+        added = coverage - seen
+        seen |= coverage
+        cumulative.append({"rule_id": rule["rule_id"], "transactions": len(seen),
+                           "frauds": len(seen & fraud_ids),
+                           "increment_transactions": len(added),
+                           "increment_frauds": len(added & fraud_ids),
+                           "redundant_given_previous": not added})
+    return {"rule_order": [r["rule_id"] for r in ordered], "jaccard": matrix,
+            "pairs": pairs, "cumulative": cumulative,
+            "display_rule_ids": [r["rule_id"] for r in cumulative if r["increment_frauds"] > 0][:5],
+            "n_transactions": len(data), "n_fraud": len(fraud_ids),
+            "covered_transactions": len(seen), "covered_frauds": len(seen & fraud_ids)}
+
