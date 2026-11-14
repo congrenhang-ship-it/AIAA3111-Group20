@@ -2761,5 +2761,59 @@
     "C7_final_test_figures_complete": false,
     "C8_final_test_interpretation_complete": false,
     "pending": "A7/G2 then A8 official test; C integration assistance and final figures/interpretation"
+  },
+  "team_integration": {
+    "date": "2026-11-14",
+    "A_delivery_commit": "80f3171",
+    "phase": "validation",
+    "C7_integration_acceptance_complete": true,
+    "C7_final_test_figures_complete": false,
+    "C8_final_test_interpretation_complete": false,
+    "group_G2_complete": false,
+    "test_scored": false,
+    "command": "python code/main.py --run-team-validation --output data/c_team_acceptance_20261114",
+    "private_output": "data/c_team_acceptance_20261114",
+    "A_shared_summary_sha256": "628c03ae3fdbb014a5b0feaa44b5714c1963614b5813fc1f642c0e9eef8df61e",
+    "local_summary_sha256": "063ad359ba6cd1edb018f6fa7b0f1f8588e32e3652609e731ea9a25c2dc152ad",
+    "checks": {
+      "G1_matches_A": true,
+      "C_core_and_extensions_match_published": true,
+      "D_E04_matches_published": true,
+      "A_E04_summary_shared_fields_match": true,
+      "E08_counts_and_window_totals_match_A": true,
+      "precomputed_score_alignment_validated": true,
+      "precomputed_scoring_no_duplicate_model_calls": true,
+      "repository_tests_passed": 73,
+      "B_tests_passed": 8,
+      "total_checks_passed": 81
+    },
+    "threshold_numeric_differences": {
+      "logistic_regression_class_weight": {
+        "local_threshold": 0.8042817844288124,
+        "A_published_threshold": 0.8042817844979917,
+        "absolute_difference": 6.917932893202305e-11
+      },
+      "if_sample4096": {
+        "local_threshold": 0.5317760666655312,
+        "A_published_threshold": 0.5317760666655312,
+        "absolute_difference": 0.0
+      }
+    },
+    "threshold_note": "Counts reproduce; numeric thresholds are not bitwise equal. G2 must retain each fitted model together with its own validation threshold.",
+    "review_policy_figure": {
+      "path": "results/figures/c_review_policy_validation.png",
+      "sha256": "9f577210ead1c4ba9277b8863a1e9ab9df7ddcf7c5fa704c5a11a06181109561"
+    },
+    "pending_extensions": [
+      "E03",
+      "E05"
+    ],
+    "pending": "B E03/E05 integration, group G2 and A8 official test before final C7/C8",
+    "C_acceptance_implementation_commit": "6e103ec9e3aa4cbb26714777e26a30cf70ec8566",
+    "acceptance_code_sha256": {
+      "code/evaluation.py": "44eb663a70248b93fba08383cb0f69cfe28d628f91e719c99d69b5f195150862",
+      "code/main.py": "a6f365e940af676993813f5450769e0a824e988610b4518a90311674bf59c212",
+      "code/temporal.py": "ec8242bd9a12e2066c92d097bf9ae156da5f9f8fb812a8b4b286c93130962c7e"
+    }
   }
 }

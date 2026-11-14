@@ -14,10 +14,10 @@ AIAA 3111 Course Project · Group 20
 |---|---|---|
 | `Task_A` | 数据准备、全组验证入口、E08 阈值诊断 | 主线复现、接入 E03/E05、A7 冻结、A8 测试 |
 | `b/classification-interface` | 四种分类器、不平衡对照、验证候选 | 分类扩展、最终结果与案例 |
-| `codex/c-independent-modules` | 已含 A/B；无监督、公共评价、互补及冻结发布接口 | 新增金额/参考/成本/区间已验证，正式图表与结论待 A8 |
+| `codex/c-independent-modules` | 已接入 A 80f3171 及 D；统一验证、C 扩展和 E08 计数独立验收通过 | 正式图表与结论待 G2/A8 |
 | `codex/d-pattern-mining` | 规则验证、E04 增量覆盖、共同环境复核、报告/海报内容稿 | 主线复现和正式材料 |
 
-C 已提供接入说明和真实验证重放；D4 共同环境复核已有证据。已有实现不重新列成待开发任务，剩余工作见 [TASKS.md](TASKS.md)。C/D 合并时 TASKS 的 C 进度行需保留最新状态，A 负责核对。
+C 已提供接入说明和真实验证重放；D4 共同环境复核已有证据。已有实现不重新列成待开发任务，剩余工作见 [TASKS.md](TASKS.md)。C 已完成 A 统一入口的独立验收；后续合并保留最新分工和各人的真实状态。
 
 统一入口、已交付候选与正式测试的验收状态见 [TASKS.md](TASKS.md)。
 
@@ -123,7 +123,7 @@ python -X utf8 -m unittest discover -s tests
 python -X utf8 -m unittest discover -s code -p test_classification.py
 ```
 
-本次验证阈值、逐窗审核计数和来源见 [A6/E08 验证摘要](results/tables/a_team_validation.json)。全组在 A7 确认配置后由 A8 运行正式测试。
+本次验证阈值、逐窗审核计数和来源见 [A6/E08 验证摘要](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/a_team_validation.json)。全组在 A7 确认配置后由 A8 运行正式测试。
 
 ## 分工与执行顺序
 
@@ -131,7 +131,7 @@ python -X utf8 -m unittest discover -s code -p test_classification.py
 |---|---|---|
 | A | 提交 A6 集成与 E08 验证，接入 B 待交付的 E03/E05 | A7 全组冻结 → A8 统一正式测试 → A9 提交包 |
 | B | E03 标签曲线 → E05 重要性与错误材料 | B6 补正式结果 → B7 核对/讲解 |
-| C | 配合 A 接入已交付 E01/E02/E06/E07；必要时修复集成问题 | A8 后 C7 正式图表 → C8 最终解释 |
+| C | 已验收 A 的公共入口和预计算预测复用；必要时支持集成 | G2/A8 后 C7 正式图表 → C8 最终解释 |
 | D | E04 规则覆盖；同步整合已有方法文字 | D5 独立复现/正式案例 → D6 材料 → D7 导出/演练 |
 
 具体编号、依赖和验收见 [TASKS.md](TASKS.md)。不等待他人最终图表再写已有方法；B/D 可先生成标准预测/覆盖，之后直接复用 C 的新增评价。C 不接管全部实验，D 不代写其他人的全部技术部分。
@@ -155,3 +155,5 @@ A 写数据与时间/阈值，B 写分类/标签/重要性，C 写聚类/异常/
 按依赖推进：A6 与扩展并行 → A7/G2 → A8/各人的正式分析 → G3 证据/第二台电脑复现 → PDF 导出、演练与提交。课程具体日期以 Canvas 最新要求为准。
 
 最终目录沿用：report/Report.pdf、poster/Poster.pdf；ZIP 含 Report.pdf、README.md、requirements.txt、code/、数据说明及必要 results/，海报按要求单独提交。A9 核对包内路径、实际依赖和复现命令。
+
+C 的后续验收：在完整验证段重现 A 的统一入口和 C/D 证据，81 项检查通过；新增固定阈值与窗口预算验证图，严格区分总审核 568 与逐窗取整后的 572。LR 阈值跨机器相差约 6.9e-11、计数一致，A7 应把模型与对应阈值一起冻结。源与解释见 C 分支说明及 c_extensions.json 的 team_integration；目前 GitHub 的 A 交付仍明确 E03/E05、G2 和 A8 待完成，验证图不作为正式测试图。

@@ -387,3 +387,61 @@ result = run_c_extensions(
 59 项 A/C 检查、8 项 B 检查通过；隔离接入 D f26e360 后共 74 项通过。完整 500＋200 轮分析独立复跑一致，预测分数/AP/预算与此前验证相同，金额分组加总、抽样点估计、模型文件及图像哈希均核对。不同输入字典及预测行序不会改变结果。模型训练和选择函数在独立复跑中被阻断，测试集没有评分。
 
 剩余 C 工作是 A 整合时的配合，以及 A8 后运行相同接口生成正式图和完成正式解释；没有把 C7/C8 的这些部分提前标为完成。AIGC 补充：Codex 协助实现、检查、验证运行及材料整理，最终结论需组员理解并审核。
+
+## A 新交付后的 C7 集成验收与 C8 材料（2026-11-14）
+
+已将 A 的 `80f3171` 快进接入 C 分支，同时包含最新 D 规则扩展。GitHub 当前交付的是统一验证与 E08 阈值诊断；A 的记录明确 `group_G2_complete=false`、`test_scored=false`、`pending_extensions=[E03,E05]`。没有额外的正式测试记录，因此本次完成 C7 的集成验收及可提前完成的 C8 材料，不把最终测试图/结论标成完成。
+
+### 完整入口的独立复现
+
+在本机固定环境运行：
+
+```bash
+python code/main.py --run-team-validation --output data/c_team_acceptance_20261114
+```
+
+该入口按 A 的协议在训练段重建既定主模型与 G1 基线，复用同一批验证预测检查 C 总体/分群/窗口/组合、全部 C 扩展、D E04 和 A E08；没有新选参。输出在被忽略的本地目录，主验证证据未覆盖。再次复现须换一个新的 --output。
+
+G1、划分、C 的 metrics/cost_sensitivity/uncertainty、D 规则覆盖及 E08 审核/检出和逐窗计数均通过。A 的公开摘要省略了部分详细 E04 数组，复核时比较其所有公开字段；统一入口另外与 D 的完整记录核对，不能把字段数差异误报为结果不一致。具体哈希和验收记录追加在 `results/tables/c_extensions.json` 的 `team_integration`。
+
+A 新增的 `scored_unsupervised` 复用接口现在由 C 做完整对齐检查：只接收冻结方法，核对原行号、标签和时间；分群数组按 data 行序提供，或用以 row_id 为索引的 Series。预测表可变行序，但重新对齐后才能关联分群。缺少方法、错标签、错时间、重复/错 ID、错误簇值等在写结果前失败。正常复用不再评分；必要检查验证其指标、群体和时间结果与直接评分相同，且不修改调用者对象。
+
+### E08 的可复用图及解读
+
+新增图为 `results/figures/c_review_policy_validation.png`，使用本次统一运行的实际 E08 计数。它对照“固定验证阈值”和“每个窗口单独 top-K”，阈值不重新选择。图标题明确说明阈值来自同一验证段，这只是验证诊断，不是独立测试泛化结果。
+
+| 方法 | 本机验证阈值 | 固定阈值总审核/检出 | 各窗口 top-K 总审核/检出 | 窗口固定阈值审核率范围 |
+|---|---:|---|---|---|
+| 带权逻辑回归 | 0.8042817844288124 | 568 / 49 | 572 / 49 | 0.8152%–1.1466% |
+| 改进 IF | 0.5317760666655312 | 568 / 24 | 572 / 28 | 0.7734%–1.3247% |
+
+按窗口独立向上取整产生 572 笔审核，超过全局 568 笔；分配位置也改变。因此 IF 多检出 4 笔不能直接称为同容量政策改善。分类在两种政策下均检出 49 笔，也不能据此断言所有交易段表现相同。短窗口欺诈数很少，首尾窗口不完整，波动不证明长期漂移。
+
+![验证阶段的固定阈值与窗口预算](../results/figures/c_review_policy_validation.png)
+
+C 图表接口：
+
+```python
+from evaluation import save_review_policy_figure
+# team_summary 是统一入口的 aggregate/tables/team_validation.json
+save_review_policy_figure(
+    team_summary["E08"], "results/figures/c_review_policy_validation.png",
+    phase=team_summary["phase"],
+)
+```
+
+使用新的输出路径，已有同名图拒绝覆盖。A8 若按相同 schema 输出 test 结果，可传实际 phase="test"，使用 c_review_policy_test.png；C 不用 validation 数据冒充 test。
+
+### 跨机器阈值数值差异
+
+本机 LR 阈值为 0.8042817844288124，A 公布值为 0.8042817844979917，绝对差约 6.9179e-11；IF 阈值一致。本次总体、逐窗审核/检出及阈值并列计数均与 A 一致，但不能宣称 LR 阈值逐位一致或在 1e-12 内一致。差异如实保存在 team_integration 中，没有修改 A 的摘要。
+
+A7 应将最终模型文件与该模型验证所得阈值配套冻结，保存文件哈希和来源；A8 使用这套已保存模型与阈值。不应从另一台电脑重建模型后，直接混用 A 或 C 的数值阈值。跨平台重建是复现检查，正式模型包由 A 在 G2 中确定，C 不代选。
+
+### 供组员核对并改写的解释素材
+
+The shared validation workflow reproduces the reported rankings, amount/cost analyses, paired intervals and diagnostic rule coverage. Fixed validation thresholds produce varying review rates across hourly windows. Window-wise top-K instead imposes a local capacity, and independent ceiling operations yield 572 reviews rather than the global 568. The extra Isolation Forest detections therefore do not establish an identical-capacity improvement. These are validation diagnostics because thresholds were selected on the same partition; final temporal generalization remains pending the group freeze and held-out evaluation.
+
+C7 接入检查和本图已完成，81 项检查通过（73 项公共检查、8 项 B 检查）。C7 的正式 test 图和 C8 的正式 test 解释仍需：B 的 E03/E05 接入 → A7/G2 → A8。正式测试后直接复用已交付的冻结评价、扩展发布与本图接口，无需新增模型或重新设计分析。成员最终核对/演练也需等正式材料；本次不提前勾选。
+
+本次 AIGC 使用补充：Codex 协助 A 入口复现、C 缓存预测对齐检查、窗口图与解释素材整理。成员需核对并理解源码、数据和结论，用自己的表达形成最终报告并按课程规则披露；这里的英文素材不应原样当作提交正文。
