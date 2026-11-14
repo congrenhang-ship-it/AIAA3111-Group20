@@ -1,0 +1,2765 @@
+{
+  "owner": "C",
+  "phase": "validation",
+  "test_evaluated": false,
+  "group_G2_complete": false,
+  "configuration_reselected": false,
+  "partition": {
+    "rows": 56745,
+    "frauds": 57,
+    "time_min": 120393.0,
+    "time_max": 145233.0,
+    "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+  },
+  "config": {
+    "owner": "C",
+    "schema_version": 1,
+    "group_G2_complete": false,
+    "amount_bins": {
+      "quantiles": [
+        0.5,
+        0.9,
+        0.99
+      ],
+      "cuts": [
+        21.94,
+        200.0,
+        1008.6402000000035
+      ],
+      "interval_rule": "[-inf,c0), [c0,c1), ..., [clast,+inf)",
+      "fit_partition": {
+        "rows": 170235,
+        "frauds": 342,
+        "time_min": 0.0,
+        "time_max": 120392.0,
+        "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+      }
+    },
+    "partitions": {
+      "train": {
+        "rows": 170235,
+        "frauds": 342,
+        "time_min": 0.0,
+        "time_max": 120392.0,
+        "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+      },
+      "validation": {
+        "rows": 56745,
+        "frauds": 57,
+        "time_min": 120393.0,
+        "time_max": 145233.0,
+        "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+      },
+      "inner_fit": {
+        "rows": 136186,
+        "frauds": 258,
+        "time_min": 0.0,
+        "time_max": 81825.0,
+        "row_ids_sha256": "618a6c1a2f26658a2a263a2a84eb48e94f30724a5035309888e08c84375718a2"
+      },
+      "inner_selection": {
+        "rows": 34049,
+        "frauds": 84,
+        "time_min": 81826.0,
+        "time_max": 120392.0,
+        "row_ids_sha256": "08faf82989f668ff45eb2e4f3d2df9363d7db48013508e7392c4a8e1356fdd1b"
+      }
+    },
+    "review_fractions": [
+      0.001,
+      0.005,
+      0.01,
+      0.02
+    ],
+    "primary_review_fraction": 0.01,
+    "selected_candidates": {
+      "kmeans": "km_base_raw",
+      "isolation_forest": "if_sample4096"
+    },
+    "classifier": "logistic_regression_class_weight",
+    "anomaly": "if_sample4096",
+    "combination": {
+      "name": "frozen_B_IF_policy",
+      "classifier": "logistic_regression_class_weight",
+      "anomaly": "if_sample4096",
+      "share": 1.0
+    },
+    "reference": "raw Amount descending, source row_id ascending",
+    "cost_ratios": [
+      10,
+      50,
+      100
+    ],
+    "budget_selection_performed": false,
+    "bootstrap": {
+      "seed": 42,
+      "row_resamples": 500,
+      "block_resamples": 200,
+      "block_seconds": 1800,
+      "origin": 0
+    },
+    "source_C_config_sha256": "5e5940412c484be8bf14865560b5bfebb3e4662659ebaaea211e85dfa04d3939"
+  },
+  "metrics": {
+    "if_sample4096": {
+      "status": "ok",
+      "n_samples": 56745,
+      "n_positive": 57,
+      "prevalence": 0.0010044937879989425,
+      "AP": 0.030021287457243147,
+      "budgets": [
+        {
+          "review_fraction": 0.001,
+          "actual_review_fraction": 0.0010044937879989425,
+          "K": 57,
+          "TP": 0,
+          "FP": 57,
+          "FN": 57,
+          "TN": 56631,
+          "precision_at_k": 0.0,
+          "recall_at_k": 0.0,
+          "random_expected_TP": 0.05725614591593972,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.0010044937879989425,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 0.0,
+          "amount_coverage": 0.0,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 5,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 4,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 19,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 29,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            }
+          ],
+          "precision_lift": 0.0
+        },
+        {
+          "review_fraction": 0.005,
+          "actual_review_fraction": 0.005004846241959644,
+          "K": 284,
+          "TP": 8,
+          "FP": 276,
+          "FN": 49,
+          "TN": 56412,
+          "precision_at_k": 0.028169014084507043,
+          "recall_at_k": 0.14035087719298245,
+          "random_expected_TP": 0.2852762357916997,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.005004846241959644,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 937.49,
+          "amount_coverage": 0.07664811558086809,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 52,
+              "TP": 4,
+              "fraud_amount_detected": 10.07,
+              "recall": 0.15384615384615385,
+              "amount_coverage": 0.16456937408073213
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 77,
+              "TP": 3,
+              "fraud_amount_detected": 334.52,
+              "recall": 0.1875,
+              "amount_coverage": 0.2202093344743598
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 60,
+              "TP": 1,
+              "fraud_amount_detected": 592.9,
+              "recall": 0.07692307692307693,
+              "amount_coverage": 0.08246255526827104
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 95,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            }
+          ],
+          "precision_lift": 28.04299481097109
+        },
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010009692483919287,
+          "K": 568,
+          "TP": 24,
+          "FP": 544,
+          "FN": 33,
+          "TN": 56144,
+          "precision_at_k": 0.04225352112676056,
+          "recall_at_k": 0.42105263157894735,
+          "random_expected_TP": 0.5705524715833994,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.010009692483919287,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 4621.18,
+          "amount_coverage": 0.3778224181164557,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 157,
+              "TP": 12,
+              "fraud_amount_detected": 24.98,
+              "recall": 0.46153846153846156,
+              "amount_coverage": 0.4082366399738519
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 146,
+              "TP": 6,
+              "fraud_amount_detected": 639.3100000000001,
+              "recall": 0.375,
+              "amount_coverage": 0.42084787044960836
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 108,
+              "TP": 6,
+              "fraud_amount_detected": 3956.89,
+              "recall": 0.46153846153846156,
+              "amount_coverage": 0.550337764067244
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 157,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            }
+          ],
+          "precision_lift": 42.064492216456635
+        },
+        {
+          "review_fraction": 0.02,
+          "actual_review_fraction": 0.020001762269803505,
+          "K": 1135,
+          "TP": 35,
+          "FP": 1100,
+          "FN": 22,
+          "TN": 55588,
+          "precision_at_k": 0.030837004405286344,
+          "recall_at_k": 0.6140350877192983,
+          "random_expected_TP": 1.1401004493787998,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.020001762269803505,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 8690.37,
+          "amount_coverage": 0.710514761971337,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 374,
+              "TP": 18,
+              "fraud_amount_detected": 41.85000000000001,
+              "recall": 0.6923076923076923,
+              "amount_coverage": 0.6839352835430627
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 255,
+              "TP": 8,
+              "fraud_amount_detected": 868.2099999999999,
+              "recall": 0.5,
+              "amount_coverage": 0.5715291949180435
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 221,
+              "TP": 7,
+              "fraud_amount_detected": 4319.44,
+              "recall": 0.5384615384615384,
+              "amount_coverage": 0.6007624552672973
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 285,
+              "TP": 2,
+              "fraud_amount_detected": 3460.87,
+              "recall": 1.0,
+              "amount_coverage": 1.0
+            }
+          ],
+          "precision_lift": 30.699049385578487
+        }
+      ],
+      "threshold": null,
+      "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+    },
+    "km_base_raw": {
+      "status": "ok",
+      "n_samples": 56745,
+      "n_positive": 57,
+      "prevalence": 0.0010044937879989425,
+      "AP": 0.02283083878657325,
+      "budgets": [
+        {
+          "review_fraction": 0.001,
+          "actual_review_fraction": 0.0010044937879989425,
+          "K": 57,
+          "TP": 0,
+          "FP": 57,
+          "FN": 57,
+          "TN": 56631,
+          "precision_at_k": 0.0,
+          "recall_at_k": 0.0,
+          "random_expected_TP": 0.05725614591593972,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.0010044937879989425,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 0.0,
+          "amount_coverage": 0.0,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 6,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 5,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 17,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 29,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            }
+          ],
+          "precision_lift": 0.0
+        },
+        {
+          "review_fraction": 0.005,
+          "actual_review_fraction": 0.005004846241959644,
+          "K": 284,
+          "TP": 1,
+          "FP": 283,
+          "FN": 56,
+          "TN": 56405,
+          "precision_at_k": 0.0035211267605633804,
+          "recall_at_k": 0.017543859649122806,
+          "random_expected_TP": 0.2852762357916997,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.005004846241959644,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 45.51,
+          "amount_coverage": 0.003720845811779653,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 61,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 75,
+              "TP": 1,
+              "fraud_amount_detected": 45.51,
+              "recall": 0.0625,
+              "amount_coverage": 0.029958528075834375
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 62,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 86,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            }
+          ],
+          "precision_lift": 3.5053743513713864
+        },
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010009692483919287,
+          "K": 568,
+          "TP": 14,
+          "FP": 554,
+          "FN": 43,
+          "TN": 56134,
+          "precision_at_k": 0.02464788732394366,
+          "recall_at_k": 0.24561403508771928,
+          "random_expected_TP": 0.5705524715833994,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.010009692483919287,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 3522.2000000000003,
+          "amount_coverage": 0.2879710639035442,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 146,
+              "TP": 5,
+              "fraud_amount_detected": 11.3,
+              "recall": 0.19230769230769232,
+              "amount_coverage": 0.18467069782644221
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 154,
+              "TP": 4,
+              "fraud_amount_detected": 479.32,
+              "recall": 0.25,
+              "amount_coverage": 0.3155289316042394
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 113,
+              "TP": 5,
+              "fraud_amount_detected": 3031.5800000000004,
+              "recall": 0.38461538461538464,
+              "amount_coverage": 0.4216424916515182
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 155,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            }
+          ],
+          "precision_lift": 24.537620459599705
+        },
+        {
+          "review_fraction": 0.02,
+          "actual_review_fraction": 0.020001762269803505,
+          "K": 1135,
+          "TP": 36,
+          "FP": 1099,
+          "FN": 21,
+          "TN": 55589,
+          "precision_at_k": 0.03171806167400881,
+          "recall_at_k": 0.631578947368421,
+          "random_expected_TP": 1.1401004493787998,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.020001762269803505,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 8933.169999999998,
+          "amount_coverage": 0.7303658136764588,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 387,
+              "TP": 17,
+              "fraud_amount_detected": 40.85,
+              "recall": 0.6538461538461539,
+              "amount_coverage": 0.667592743912404
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 268,
+              "TP": 10,
+              "fraud_amount_detected": 1112.01,
+              "recall": 0.625,
+              "amount_coverage": 0.7320189585939043
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 199,
+              "TP": 7,
+              "fraud_amount_detected": 4319.4400000000005,
+              "recall": 0.5384615384615384,
+              "amount_coverage": 0.6007624552672975
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 281,
+              "TP": 2,
+              "fraud_amount_detected": 3460.87,
+              "recall": 1.0,
+              "amount_coverage": 1.0
+            }
+          ],
+          "precision_lift": 31.576165082309302
+        }
+      ],
+      "threshold": null,
+      "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+    },
+    "logistic_regression_class_weight": {
+      "status": "ok",
+      "n_samples": 56745,
+      "n_positive": 57,
+      "prevalence": 0.0010044937879989425,
+      "AP": 0.7726808523329118,
+      "budgets": [
+        {
+          "review_fraction": 0.001,
+          "actual_review_fraction": 0.0010044937879989425,
+          "K": 57,
+          "TP": 42,
+          "FP": 15,
+          "FN": 15,
+          "TN": 56673,
+          "precision_at_k": 0.7368421052631579,
+          "recall_at_k": 0.7368421052631579,
+          "random_expected_TP": 0.05725614591593972,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.0010044937879989425,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 7756.0,
+          "amount_coverage": 0.6341217340400569,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 29,
+              "TP": 18,
+              "fraud_amount_detected": 43.85,
+              "recall": 0.6923076923076923,
+              "amount_coverage": 0.7166203628043798
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 14,
+              "TP": 14,
+              "fraud_amount_detected": 1388.12,
+              "recall": 0.875,
+              "amount_coverage": 0.9137778948061352
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 9,
+              "TP": 9,
+              "fraud_amount_detected": 4989.03,
+              "recall": 0.6923076923076923,
+              "amount_coverage": 0.6938913174398081
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 5,
+              "TP": 1,
+              "fraud_amount_detected": 1335.0,
+              "recall": 0.5,
+              "amount_coverage": 0.38574115757020633
+            }
+          ],
+          "precision_lift": 733.5457063711912
+        },
+        {
+          "review_fraction": 0.005,
+          "actual_review_fraction": 0.005004846241959644,
+          "K": 284,
+          "TP": 48,
+          "FP": 236,
+          "FN": 9,
+          "TN": 56452,
+          "precision_at_k": 0.16901408450704225,
+          "recall_at_k": 0.8421052631578947,
+          "random_expected_TP": 0.2852762357916997,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.005004846241959644,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 8264.17,
+          "amount_coverage": 0.6756691349667119,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 141,
+              "TP": 22,
+              "fraud_amount_detected": 48.83,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.7980062101650596
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 72,
+              "TP": 15,
+              "fraud_amount_detected": 1410.59,
+              "recall": 0.9375,
+              "amount_coverage": 0.9285695477585413
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 41,
+              "TP": 10,
+              "fraud_amount_detected": 5469.75,
+              "recall": 0.7692307692307693,
+              "amount_coverage": 0.7607514954943928
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 30,
+              "TP": 1,
+              "fraud_amount_detected": 1335.0,
+              "recall": 0.5,
+              "amount_coverage": 0.38574115757020633
+            }
+          ],
+          "precision_lift": 168.25796886582654
+        },
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010009692483919287,
+          "K": 568,
+          "TP": 49,
+          "FP": 519,
+          "FN": 8,
+          "TN": 56169,
+          "precision_at_k": 0.08626760563380281,
+          "recall_at_k": 0.8596491228070176,
+          "random_expected_TP": 0.5705524715833994,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.010009692483919287,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 8987.380000000001,
+          "amount_coverage": 0.7347979615880516,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 313,
+              "TP": 22,
+              "fraud_amount_detected": 48.83,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.7980062101650596
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 138,
+              "TP": 15,
+              "fraud_amount_detected": 1410.59,
+              "recall": 0.9375,
+              "amount_coverage": 0.9285695477585413
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 74,
+              "TP": 11,
+              "fraud_amount_detected": 6192.96,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.8613380102448841
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 43,
+              "TP": 1,
+              "fraud_amount_detected": 1335.0,
+              "recall": 0.5,
+              "amount_coverage": 0.38574115757020633
+            }
+          ],
+          "precision_lift": 85.88167160859896
+        },
+        {
+          "review_fraction": 0.02,
+          "actual_review_fraction": 0.020001762269803505,
+          "K": 1135,
+          "TP": 49,
+          "FP": 1086,
+          "FN": 8,
+          "TN": 55602,
+          "precision_at_k": 0.04317180616740088,
+          "recall_at_k": 0.8596491228070176,
+          "random_expected_TP": 1.1401004493787998,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.020001762269803505,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 8987.380000000001,
+          "amount_coverage": 0.7347979615880516,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 667,
+              "TP": 22,
+              "fraud_amount_detected": 48.83,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.7980062101650596
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 277,
+              "TP": 15,
+              "fraud_amount_detected": 1410.59,
+              "recall": 0.9375,
+              "amount_coverage": 0.9285695477585413
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 127,
+              "TP": 11,
+              "fraud_amount_detected": 6192.96,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.8613380102448841
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 64,
+              "TP": 1,
+              "fraud_amount_detected": 1335.0,
+              "recall": 0.5,
+              "amount_coverage": 0.38574115757020633
+            }
+          ],
+          "precision_lift": 42.97866913980988
+        }
+      ],
+      "threshold": null,
+      "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+    },
+    "amount_descending": {
+      "status": "ok",
+      "n_samples": 56745,
+      "n_positive": 57,
+      "prevalence": 0.0010044937879989425,
+      "AP": 0.002001746653913599,
+      "budgets": [
+        {
+          "review_fraction": 0.001,
+          "actual_review_fraction": 0.0010044937879989425,
+          "K": 57,
+          "TP": 0,
+          "FP": 57,
+          "FN": 57,
+          "TN": 56631,
+          "precision_at_k": 0.0,
+          "recall_at_k": 0.0,
+          "random_expected_TP": 0.05725614591593972,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.0010044937879989425,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 0.0,
+          "amount_coverage": 0.0,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 57,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            }
+          ],
+          "precision_lift": 0.0
+        },
+        {
+          "review_fraction": 0.005,
+          "actual_review_fraction": 0.005004846241959644,
+          "K": 284,
+          "TP": 1,
+          "FP": 283,
+          "FN": 56,
+          "TN": 56405,
+          "precision_at_k": 0.0035211267605633804,
+          "recall_at_k": 0.017543859649122806,
+          "random_expected_TP": 0.2852762357916997,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.005004846241959644,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 2125.87,
+          "amount_coverage": 0.17380871206082205,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 284,
+              "TP": 1,
+              "fraud_amount_detected": 2125.87,
+              "recall": 0.5,
+              "amount_coverage": 0.6142588424297937
+            }
+          ],
+          "precision_lift": 3.5053743513713864
+        },
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010009692483919287,
+          "K": 568,
+          "TP": 2,
+          "FP": 566,
+          "FN": 55,
+          "TN": 56122,
+          "precision_at_k": 0.0035211267605633804,
+          "recall_at_k": 0.03508771929824561,
+          "random_expected_TP": 0.5705524715833994,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.010009692483919287,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 3460.87,
+          "amount_coverage": 0.28295679289417375,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 568,
+              "TP": 2,
+              "fraud_amount_detected": 3460.87,
+              "recall": 1.0,
+              "amount_coverage": 1.0
+            }
+          ],
+          "precision_lift": 3.5053743513713864
+        },
+        {
+          "review_fraction": 0.02,
+          "actual_review_fraction": 0.020001762269803505,
+          "K": 1135,
+          "TP": 3,
+          "FP": 1132,
+          "FN": 54,
+          "TN": 55556,
+          "precision_at_k": 0.0026431718061674008,
+          "recall_at_k": 0.05263157894736842,
+          "random_expected_TP": 1.1401004493787998,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.020001762269803505,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 4386.18,
+          "amount_coverage": 0.3586090855353039,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 0,
+              "TP": 0,
+              "fraud_amount_detected": 0.0,
+              "recall": 0.0,
+              "amount_coverage": 0.0
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 440,
+              "TP": 1,
+              "fraud_amount_detected": 925.31,
+              "recall": 0.07692307692307693,
+              "amount_coverage": 0.12869527241572587
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 695,
+              "TP": 2,
+              "fraud_amount_detected": 3460.87,
+              "recall": 1.0,
+              "amount_coverage": 1.0
+            }
+          ],
+          "precision_lift": 2.6313470901924414
+        }
+      ],
+      "threshold": null,
+      "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+    },
+    "frozen_B_IF_policy": {
+      "status": "ok",
+      "n_samples": 56745,
+      "n_positive": 57,
+      "prevalence": 0.0010044937879989425,
+      "AP": 0.7726808523329118,
+      "budgets": [
+        {
+          "review_fraction": 0.001,
+          "actual_review_fraction": 0.0010044937879989425,
+          "K": 57,
+          "TP": 42,
+          "FP": 15,
+          "FN": 15,
+          "TN": 56673,
+          "precision_at_k": 0.7368421052631579,
+          "recall_at_k": 0.7368421052631579,
+          "precision_lift": 733.5457063711912,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 7756.0,
+          "amount_coverage": 0.6341217340400569,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 29,
+              "TP": 18,
+              "fraud_amount_detected": 43.85,
+              "recall": 0.6923076923076923,
+              "amount_coverage": 0.7166203628043798
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 14,
+              "TP": 14,
+              "fraud_amount_detected": 1388.12,
+              "recall": 0.875,
+              "amount_coverage": 0.9137778948061352
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 9,
+              "TP": 9,
+              "fraud_amount_detected": 4989.03,
+              "recall": 0.6923076923076923,
+              "amount_coverage": 0.6938913174398081
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 5,
+              "TP": 1,
+              "fraud_amount_detected": 1335.0,
+              "recall": 0.5,
+              "amount_coverage": 0.38574115757020633
+            }
+          ]
+        },
+        {
+          "review_fraction": 0.005,
+          "actual_review_fraction": 0.005004846241959644,
+          "K": 284,
+          "TP": 48,
+          "FP": 236,
+          "FN": 9,
+          "TN": 56452,
+          "precision_at_k": 0.16901408450704225,
+          "recall_at_k": 0.8421052631578947,
+          "precision_lift": 168.25796886582654,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 8264.17,
+          "amount_coverage": 0.6756691349667119,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 141,
+              "TP": 22,
+              "fraud_amount_detected": 48.83,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.7980062101650596
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 72,
+              "TP": 15,
+              "fraud_amount_detected": 1410.59,
+              "recall": 0.9375,
+              "amount_coverage": 0.9285695477585413
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 41,
+              "TP": 10,
+              "fraud_amount_detected": 5469.75,
+              "recall": 0.7692307692307693,
+              "amount_coverage": 0.7607514954943928
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 30,
+              "TP": 1,
+              "fraud_amount_detected": 1335.0,
+              "recall": 0.5,
+              "amount_coverage": 0.38574115757020633
+            }
+          ]
+        },
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010009692483919287,
+          "K": 568,
+          "TP": 49,
+          "FP": 519,
+          "FN": 8,
+          "TN": 56169,
+          "precision_at_k": 0.08626760563380281,
+          "recall_at_k": 0.8596491228070176,
+          "precision_lift": 85.88167160859896,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 8987.380000000001,
+          "amount_coverage": 0.7347979615880516,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 313,
+              "TP": 22,
+              "fraud_amount_detected": 48.83,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.7980062101650596
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 138,
+              "TP": 15,
+              "fraud_amount_detected": 1410.59,
+              "recall": 0.9375,
+              "amount_coverage": 0.9285695477585413
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 74,
+              "TP": 11,
+              "fraud_amount_detected": 6192.96,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.8613380102448841
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 43,
+              "TP": 1,
+              "fraud_amount_detected": 1335.0,
+              "recall": 0.5,
+              "amount_coverage": 0.38574115757020633
+            }
+          ]
+        },
+        {
+          "review_fraction": 0.02,
+          "actual_review_fraction": 0.020001762269803505,
+          "K": 1135,
+          "TP": 49,
+          "FP": 1086,
+          "FN": 8,
+          "TN": 55602,
+          "precision_at_k": 0.04317180616740088,
+          "recall_at_k": 0.8596491228070176,
+          "precision_lift": 42.97866913980988,
+          "total_fraud_amount": 12231.09,
+          "fraud_amount_detected": 8987.380000000001,
+          "amount_coverage": 0.7347979615880516,
+          "amount_groups": [
+            {
+              "amount_group": 0,
+              "n_samples": 25640,
+              "n_positive": 26,
+              "transaction_amount": 195847.99,
+              "fraud_amount": 61.190000000000005,
+              "reviewed_from_global_list": 667,
+              "TP": 22,
+              "fraud_amount_detected": 48.83,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.7980062101650596
+            },
+            {
+              "amount_group": 1,
+              "n_samples": 24249,
+              "n_positive": 16,
+              "transaction_amount": 1813053.04,
+              "fraud_amount": 1519.1,
+              "reviewed_from_global_list": 277,
+              "TP": 15,
+              "fraud_amount_detected": 1410.59,
+              "recall": 0.9375,
+              "amount_coverage": 0.9285695477585413
+            },
+            {
+              "amount_group": 2,
+              "n_samples": 6161,
+              "n_positive": 13,
+              "transaction_amount": 2471212.83,
+              "fraud_amount": 7189.93,
+              "reviewed_from_global_list": 127,
+              "TP": 11,
+              "fraud_amount_detected": 6192.96,
+              "recall": 0.8461538461538461,
+              "amount_coverage": 0.8613380102448841
+            },
+            {
+              "amount_group": 3,
+              "n_samples": 695,
+              "n_positive": 2,
+              "transaction_amount": 1272942.71,
+              "fraud_amount": 3460.87,
+              "reviewed_from_global_list": 64,
+              "TP": 1,
+              "fraud_amount_detected": 1335.0,
+              "recall": 0.5,
+              "amount_coverage": 0.38574115757020633
+            }
+          ]
+        }
+      ],
+      "threshold": null,
+      "ranking_rule": "classifier floor(K*share), anomaly scan skipping selected instances",
+      "AP_note": "Defined only at pure ranking endpoints"
+    },
+    "random_expectation": {
+      "expected_only": true,
+      "AP": null,
+      "n_samples": 56745,
+      "n_positive": 57,
+      "prevalence": 0.0010044937879989425,
+      "budgets": [
+        {
+          "review_fraction": 0.001,
+          "K": 57,
+          "actual_review_fraction": 0.0010044937879989425,
+          "TP": 0.05725614591593973,
+          "FP": 56.94274385408406,
+          "FN": 56.94274385408406,
+          "precision_at_k": 0.0010044937879989425,
+          "recall_at_k": 0.0010044937879989425,
+          "precision_lift": 1.0,
+          "fraud_amount_detected": 12.286053925455988,
+          "total_fraud_amount": 12231.09,
+          "amount_coverage": 0.0010044937879989425
+        },
+        {
+          "review_fraction": 0.005,
+          "K": 284,
+          "actual_review_fraction": 0.005004846241959644,
+          "TP": 0.2852762357916997,
+          "FP": 283.7147237642083,
+          "FN": 56.7147237642083,
+          "precision_at_k": 0.0010044937879989425,
+          "recall_at_k": 0.005004846241959644,
+          "precision_lift": 1.0,
+          "fraud_amount_detected": 61.21472482157019,
+          "total_fraud_amount": 12231.09,
+          "amount_coverage": 0.005004846241959644
+        },
+        {
+          "review_fraction": 0.01,
+          "K": 568,
+          "actual_review_fraction": 0.010009692483919287,
+          "TP": 0.5705524715833994,
+          "FP": 567.4294475284166,
+          "FN": 56.4294475284166,
+          "precision_at_k": 0.0010044937879989425,
+          "recall_at_k": 0.010009692483919287,
+          "precision_lift": 1.0,
+          "fraud_amount_detected": 122.42944964314037,
+          "total_fraud_amount": 12231.09,
+          "amount_coverage": 0.010009692483919287
+        },
+        {
+          "review_fraction": 0.02,
+          "K": 1135,
+          "actual_review_fraction": 0.020001762269803505,
+          "TP": 1.1401004493787998,
+          "FP": 1133.859899550621,
+          "FN": 55.8598995506212,
+          "precision_at_k": 0.0010044937879989425,
+          "recall_at_k": 0.020001762269803505,
+          "precision_lift": 1.0,
+          "fraud_amount_detected": 244.643354480571,
+          "total_fraud_amount": 12231.09,
+          "amount_coverage": 0.020001762269803505
+        }
+      ]
+    }
+  },
+  "cost_sensitivity": [
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 57,
+      "FN": 57,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 627.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 57,
+      "FN": 57,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 2907.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 57,
+      "FN": 57,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 5757.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 283,
+      "FN": 56,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 843.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 283,
+      "FN": 56,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 3083.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 283,
+      "FN": 56,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 5883.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 566,
+      "FN": 55,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 1116.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 566,
+      "FN": 55,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 3316.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 566,
+      "FN": 55,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 6066.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1132,
+      "FN": 54,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 1672.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1132,
+      "FN": 54,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 3832.0,
+      "expected_only": false
+    },
+    {
+      "method": "amount_descending",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1132,
+      "FN": 54,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 6532.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 15,
+      "FN": 15,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 165.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 15,
+      "FN": 15,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 765.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 15,
+      "FN": 15,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 1515.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 236,
+      "FN": 9,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 326.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 236,
+      "FN": 9,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 686.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 236,
+      "FN": 9,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 1136.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 519,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 599.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 519,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 919.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 519,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 1319.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1086,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 1166.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1086,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 1486.0,
+      "expected_only": false
+    },
+    {
+      "method": "frozen_B_IF_policy",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1086,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 1886.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 57,
+      "FN": 57,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 627.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 57,
+      "FN": 57,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 2907.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 57,
+      "FN": 57,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 5757.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 276,
+      "FN": 49,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 766.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 276,
+      "FN": 49,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 2726.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 276,
+      "FN": 49,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 5176.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 544,
+      "FN": 33,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 874.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 544,
+      "FN": 33,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 2194.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 544,
+      "FN": 33,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 3844.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1100,
+      "FN": 22,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 1320.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1100,
+      "FN": 22,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 2200.0,
+      "expected_only": false
+    },
+    {
+      "method": "if_sample4096",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1100,
+      "FN": 22,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 3300.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 57,
+      "FN": 57,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 627.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 57,
+      "FN": 57,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 2907.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 57,
+      "FN": 57,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 5757.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 283,
+      "FN": 56,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 843.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 283,
+      "FN": 56,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 3083.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 283,
+      "FN": 56,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 5883.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 554,
+      "FN": 43,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 984.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 554,
+      "FN": 43,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 2704.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 554,
+      "FN": 43,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 4854.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1099,
+      "FN": 21,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 1309.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1099,
+      "FN": 21,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 2149.0,
+      "expected_only": false
+    },
+    {
+      "method": "km_base_raw",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1099,
+      "FN": 21,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 3199.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 15,
+      "FN": 15,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 165.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 15,
+      "FN": 15,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 765.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 15,
+      "FN": 15,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 1515.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 236,
+      "FN": 9,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 326.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 236,
+      "FN": 9,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 686.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 236,
+      "FN": 9,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 1136.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 519,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 599.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 519,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 919.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 519,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 1319.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1086,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 1166.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1086,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 1486.0,
+      "expected_only": false
+    },
+    {
+      "method": "logistic_regression_class_weight",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1086,
+      "FN": 8,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 1886.0,
+      "expected_only": false
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 56.94274385408406,
+      "FN": 56.94274385408406,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 626.3701823949245,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 56.94274385408406,
+      "FN": 56.94274385408406,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 2904.079936558287,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.001,
+      "K": 57,
+      "FP": 56.94274385408406,
+      "FN": 56.94274385408406,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 5751.21712926249,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 283.7147237642083,
+      "FN": 56.7147237642083,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 850.8619614062914,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 283.7147237642083,
+      "FN": 56.7147237642083,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 3119.4509119746235,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.005,
+      "K": 284,
+      "FP": 283.7147237642083,
+      "FN": 56.7147237642083,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 5955.187100185039,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 567.4294475284166,
+      "FN": 56.4294475284166,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 1131.7239228125827,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 567.4294475284166,
+      "FN": 56.4294475284166,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 3388.901823949247,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.01,
+      "K": 568,
+      "FP": 567.4294475284166,
+      "FN": 56.4294475284166,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 6210.374200370077,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1133.859899550621,
+      "FN": 55.8598995506212,
+      "c_FP": 1,
+      "c_FN": 10.0,
+      "hypothetical_loss": 1692.4588950568332,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1133.859899550621,
+      "FN": 55.8598995506212,
+      "c_FP": 1,
+      "c_FN": 50.0,
+      "hypothetical_loss": 3926.8548770816815,
+      "expected_only": true
+    },
+    {
+      "method": "random_expectation",
+      "review_fraction": 0.02,
+      "K": 1135,
+      "FP": 1133.859899550621,
+      "FN": 55.8598995506212,
+      "c_FP": 1,
+      "c_FN": 100.0,
+      "hypothetical_loss": 6719.849854612741,
+      "expected_only": true
+    }
+  ],
+  "uncertainty": {
+    "q": 0.01,
+    "seed": 42,
+    "interval": "2.5/97.5 empirical percentiles",
+    "point_estimates": {
+      "if_sample4096": {
+        "AP": 0.030021287457243143,
+        "recall": 0.42105263157894735,
+        "K": 568,
+        "TP": 24,
+        "n_samples": 56745,
+        "n_positive": 57
+      },
+      "km_base_raw": {
+        "AP": 0.022830838786573247,
+        "recall": 0.24561403508771928,
+        "K": 568,
+        "TP": 14,
+        "n_samples": 56745,
+        "n_positive": 57
+      },
+      "logistic_regression_class_weight": {
+        "AP": 0.7726808523329116,
+        "recall": 0.8596491228070176,
+        "K": 568,
+        "TP": 49,
+        "n_samples": 56745,
+        "n_positive": 57
+      },
+      "frozen_B_IF_policy": {
+        "AP": 0.7726808523329116,
+        "recall": 0.8596491228070176,
+        "TP": 49,
+        "K": 568,
+        "n_samples": 56745,
+        "n_positive": 57
+      }
+    },
+    "combination": {
+      "name": "frozen_B_IF_policy",
+      "classifier": "logistic_regression_class_weight",
+      "anomaly": "if_sample4096",
+      "share": 1.0
+    },
+    "tie_rule": "score descending, source row_id ascending, occurrence ascending",
+    "AP_note": "quota-policy AP is undefined except at pure endpoints",
+    "limitations": "Fixed selected models only; no training/selection uncertainty. Block sensitivity does not prove drift.",
+    "block_config": {
+      "seconds": 1800.0,
+      "origin": 0.0,
+      "first_slot": 66,
+      "last_slot": 80,
+      "n_blocks": 15,
+      "occupied_blocks": 15,
+      "empty_blocks": 0,
+      "time_min": 120393.0,
+      "time_max": 145233.0,
+      "outer_blocks_may_be_partial": true
+    },
+    "schemes": {
+      "paired_rows": {
+        "replicates": 500,
+        "empty_replicates": 0,
+        "no_positive_replicates": 0,
+        "draw_counts_sha256": "617e4d90741ac81a18edf5f2f8f956bfed4a38d986f09b5817560813ccaddb55",
+        "sample_size_range": [
+          56745,
+          56745
+        ],
+        "positive_count_range": [
+          37,
+          79
+        ],
+        "K_range": [
+          568,
+          568
+        ],
+        "methods": {
+          "if_sample4096": {
+            "AP": {
+              "point": 0.030021287457243143,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.021258956281987772,
+              "upper": 0.04486652632397123,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.42105263157894735,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.3129310344827586,
+              "upper": 0.5569121447028423,
+              "degenerate": false
+            }
+          },
+          "km_base_raw": {
+            "AP": {
+              "point": 0.022830838786573247,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.016544037880228315,
+              "upper": 0.03190938878618868,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.24561403508771928,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.08491705733862243,
+              "upper": 0.3867984189723318,
+              "degenerate": false
+            }
+          },
+          "logistic_regression_class_weight": {
+            "AP": {
+              "point": 0.7726808523329116,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.6690280198685011,
+              "upper": 0.8712475456060724,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.8596491228070176,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.7692307692307693,
+              "upper": 0.9464593301435406,
+              "degenerate": false
+            }
+          },
+          "frozen_B_IF_policy": {
+            "AP": {
+              "point": 0.7726808523329116,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.6690280198685011,
+              "upper": 0.8712475456060724,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.8596491228070176,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.7692307692307693,
+              "upper": 0.9464593301435406,
+              "degenerate": false
+            }
+          }
+        },
+        "differences": {
+          "logistic_regression_class_weight minus if_sample4096": {
+            "AP": {
+              "point": 0.7426595648756684,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.6441370449188794,
+              "upper": 0.8357333879158223,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.4385964912280702,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.30557765479072985,
+              "upper": 0.5640982404692081,
+              "degenerate": false
+            }
+          },
+          "frozen_B_IF_policy minus logistic_regression_class_weight": {
+            "AP": {
+              "point": 0.0,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.0,
+              "upper": 0.0,
+              "degenerate": true
+            },
+            "recall": {
+              "point": 0.0,
+              "valid_replicates": 500,
+              "invalid_replicates": 0,
+              "lower": 0.0,
+              "upper": 0.0,
+              "degenerate": true
+            }
+          }
+        }
+      },
+      "paired_time_blocks": {
+        "replicates": 200,
+        "empty_replicates": 0,
+        "no_positive_replicates": 0,
+        "draw_counts_sha256": "a9606347949cd65090260b24b797f642a3461160c25649a9f989c380077a2fcf",
+        "sample_size_range": [
+          44888,
+          63330
+        ],
+        "positive_count_range": [
+          29,
+          83
+        ],
+        "K_range": [
+          449,
+          634
+        ],
+        "methods": {
+          "if_sample4096": {
+            "AP": {
+              "point": 0.030021287457243143,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.01932701030004947,
+              "upper": 0.0459693084305555,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.42105263157894735,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.24960937500000002,
+              "upper": 0.5714285714285714,
+              "degenerate": false
+            }
+          },
+          "km_base_raw": {
+            "AP": {
+              "point": 0.022830838786573247,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.014104441310930867,
+              "upper": 0.03356940743027449,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.24561403508771928,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.054521103896103894,
+              "upper": 0.39602521929824563,
+              "degenerate": false
+            }
+          },
+          "logistic_regression_class_weight": {
+            "AP": {
+              "point": 0.7726808523329116,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.6852595266440399,
+              "upper": 0.8528009880313253,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.8596491228070176,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.7953957680250784,
+              "upper": 0.9153458543289053,
+              "degenerate": false
+            }
+          },
+          "frozen_B_IF_policy": {
+            "AP": {
+              "point": 0.7726808523329116,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.6852595266440399,
+              "upper": 0.8528009880313253,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.8596491228070176,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.7953957680250784,
+              "upper": 0.9153458543289053,
+              "degenerate": false
+            }
+          }
+        },
+        "differences": {
+          "logistic_regression_class_weight minus if_sample4096": {
+            "AP": {
+              "point": 0.7426595648756684,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.6609045868885611,
+              "upper": 0.8048185410870983,
+              "degenerate": false
+            },
+            "recall": {
+              "point": 0.4385964912280702,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.3097739663789186,
+              "upper": 0.588235294117647,
+              "degenerate": false
+            }
+          },
+          "frozen_B_IF_policy minus logistic_regression_class_weight": {
+            "AP": {
+              "point": 0.0,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.0,
+              "upper": 0.0,
+              "degenerate": true
+            },
+            "recall": {
+              "point": 0.0,
+              "valid_replicates": 200,
+              "invalid_replicates": 0,
+              "lower": 0.0,
+              "upper": 0.0,
+              "degenerate": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "notes": [
+    "Raw amounts are not recovered losses; costs are hypothetical units.",
+    "Group allocations come from the global review list.",
+    "Random baseline is an expectation; policy AP is undefined at interior quotas.",
+    "Whole-group G2 approval is owned by A; this hook does not approve it."
+  ],
+  "provenance": {
+    "command": "python code/evaluation.py --bundle data/c_with_b_20261111/improved_models.joblib --output data/c_extensions_20261114 --results results",
+    "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "bundle_sha256": "aad709a1844369e19e5804f01f9c1f5be3610b1e11dbf9b66250aef6e9bba6bd",
+    "source_commit": "b825e0b8b7e88ff89ba7055dec2e1b0d7b2a350c",
+    "source_dirty": true,
+    "code_sha256": {
+      "code/evaluation.py": "f7a927c0ba4408ced61bc3ca9e0209275592a8356f67849837b1d8b883bd5afe",
+      "code/unsupervised.py": "8949285dd316e6c499450e7c06d39437a054053ba3f39d6123ba1f6ea4490b88",
+      "code/preprocessing.py": "8d1eaa9e986b2f29a0beca26f9de29a565c0280a7db23411bf7af8799f1c4baa",
+      "code/classification.py": "d78499308ca49b407569dac0e6f636c67492ca4b4325b6451ab6c81058668ffa"
+    },
+    "python": "3.12.14",
+    "versions": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.1",
+      "scikit-learn": "1.9.1",
+      "matplotlib": "3.11.2"
+    },
+    "implementation_commit": "5567a7dc930c6ac3ed248369960b81ef62a4f0f3"
+  },
+  "publication": {
+    "figure_sha256": {
+      "c_extensions_amount.png": "6a82785621e4155dd678843e594ddf819eee5d3b2fa26cc9a9208fc79df6888f",
+      "c_extensions_cost.png": "be06bf13b46b168d5611da83b210a6bcc2e8a168adf3b508266e7365e8a2b502",
+      "c_extensions_uncertainty.png": "7b24a3fbf65ce8068e7f74f7a982057fd1c6ca0c21f1b0a5ca7024b8673f54da"
+    }
+  },
+  "verification": {
+    "full_500_plus_200_replay_identical": true,
+    "all_selected_risk_scores_match_existing_validation": true,
+    "all_selected_AP_and_budget_counts_match_existing_validation": true,
+    "all_amount_group_counts_and_sums_reconcile": true,
+    "bootstrap_points_match_public_evaluation": true,
+    "model_bundle_sha256_unchanged": true,
+    "refit_and_selection_hooks_blocked_on_replay": true,
+    "method_input_order_independent": true,
+    "figure_hashes_match": true,
+    "code_hashes_match": true,
+    "A_C_checks_passed": 59,
+    "B_checks_passed": 8,
+    "test_evaluated": false,
+    "isolated_A_B_C_D_checks_passed": 74,
+    "D_compatibility_commit": "f26e360"
+  },
+  "completion": {
+    "C-E1": {
+      "status": "implemented_and_verified_on_real_validation",
+      "protocols": [
+        "E01",
+        "E06"
+      ]
+    },
+    "C-E2": {
+      "status": "implemented_and_verified_on_real_validation",
+      "protocols": [
+        "E07"
+      ]
+    },
+    "C-E3": {
+      "status": "implemented_and_verified_on_real_validation",
+      "protocols": [
+        "E02"
+      ]
+    },
+    "C7_final_test_figures_complete": false,
+    "C8_final_test_interpretation_complete": false,
+    "pending": "A7/G2 then A8 official test; C integration assistance and final figures/interpretation"
+  }
+}
