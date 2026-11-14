@@ -936,7 +936,7 @@ def evaluate_frozen_c(bundle, data, output, classifier=None, phase="test"):
 
 def evaluate_improved_frozen(
     bundle, data, output, *, classifier=None, phase="test",
-    window_seconds=3600, window_origin=0,
+    window_seconds=3600, window_origin=0, scored_unsupervised=None,
 ):
     """A8 hook; A passes G2 window settings. No fitting or selection occurs here.
 
@@ -971,7 +971,11 @@ def evaluate_improved_frozen(
         )
     if classifier is not None and b["share"] is None:
         raise ValueError("B combination must be selected and frozen before test")
-    predictions, groups = score_improved_bundle(bundle, data)
+    if scored_unsupervised is None:
+        predictions, groups = score_improved_bundle(bundle, data)
+    else:
+        predictions, groups = scored_unsupervised
+        predictions = dict(predictions)
     comparisons = pair_comparisons(
         predictions, config["selected_candidates"], config["distance_share"]
     )

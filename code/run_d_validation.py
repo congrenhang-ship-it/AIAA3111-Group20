@@ -148,16 +148,74 @@ def run(args):
         "output": str(args.output)}, indent=2))
 
 
+def evaluate_rule_extensions(data, predictions, frozen, training_metrics, review_fraction=0.01):
+    """Evaluate fixed rule coverage on the same B/C predictions as the shared run."""
+    from math import ceil
+    from evaluation import evaluate_scores, make_prediction_frame
+    from pattern_mining import analyze_rule_overlap
+
+    rules, binner = frozen["frozen_rules"], frozen["frozen_binner"]
+    summary = analyze_rule_overlap(data, binner, rules, training_metrics)
+    coverage = {r["rule_id"]: set(r["covered_row_ids"])
+                for r in validate_rules(data, binner, rules)}
+    all_covered = set().union(*coverage.values())
+    ids = data.row_id.to_numpy()
+    labels = data.Class.to_numpy()
+    k = ceil(len(data) * review_fraction)
+    selections, ranks, model_metrics = {}, {}, {}
+    for name in ("classifier", "IF"):
+        frame = predictions[name]
+        frame = make_prediction_frame(frame, frame.score, name).set_index("row_id")
+        if set(frame.index) != set(ids):
+            raise ValueError("D predictions must use the shared evaluation rows")
+        frame = frame.loc[ids]
+        if not np.array_equal(frame.Class, labels) or not np.array_equal(frame.Time, data.Time):
+            raise ValueError("D prediction metadata differs from the shared evaluation data")
+        scores = frame.score.to_numpy()
+        order = np.lexsort((ids, -scores))
+        selections[name] = set(ids[order[:k]])
+        ranks[name] = {int(ids[position]): rank for rank, position in enumerate(order, start=1)}
+        evaluated = evaluate_scores(labels, scores, (review_fraction,), row_ids=ids)
+        model_metrics[name] = {"AP": evaluated["AP"], "budgets": evaluated["budgets"]}
+    positives = set(data.loc[data.Class.eq(1), "row_id"])
+    negatives = set(ids) - positives
+    errors = {}
+    for name, selected in selections.items():
+        errors[name + "_FN"] = positives - selected
+        errors[name + "_FP"] = negatives & selected
+    summary["error_associations"] = {name: {"total": len(values),
+        "covered_by_any_rule": len(values & all_covered)} for name, values in errors.items()}
+    summary["per_rule_errors"] = {rule: {name: len(values & covered) for name, values in errors.items()}
+                                   for rule, covered in coverage.items()}
+    cases, used = [], set()
+    for kind, values in errors.items():
+        # Predeclared: first two covered examples by row_id, skipping prior cases.
+        candidates = sorted((values & all_covered) - used)[:2]
+        for row_id in candidates:
+            used.add(row_id)
+            cases.append({"case_id": f"D-E04-{len(cases)+1}", "source_row_id": int(row_id),
+                          "category": kind, "Class": int(row_id in positives),
+                          "classifier_rank": ranks["classifier"][int(row_id)],
+                          "IF_rank": ranks["IF"][int(row_id)],
+                          "covering_rules": [r for r in summary["rule_order"] if row_id in coverage[r]]})
+    summary["cases"] = cases
+    return summary, model_metrics
+
+
+def rule_training_metrics(path):
+    table = pd.read_csv(path)
+    return {row.rule_id: {"lift": row.train_lift, "confidence": row.train_confidence}
+            for row in table[table.scheme == "equal_frequency"].itertuples()}
+
+
 def run_extensions(args):
     """E04 only: fixed-rule diagnostics; recreate two fixed scorers if needed."""
-    import math
     from threadpoolctl import threadpool_limits
-    from pattern_mining import analyze_rule_overlap
     sys.path.insert(0, str(args.preprocessing_code.resolve()))
     from preprocessing import load_data, split_data, data_sha256, ULB_SHA256, get_features
     from classification import train_model, score_model
     from unsupervised import fit_isolation_forest, score_isolation_forest
-    from evaluation import make_prediction_frame, evaluate_scores
+    from evaluation import make_prediction_frame
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -171,17 +229,7 @@ def run_extensions(args):
         actual = hashlib.sha256("".join(f"{i}\n" for i in frame.row_id).encode("ascii")).hexdigest()
         if actual != EXPECTED_FINGERPRINTS[name]:
             raise ValueError("Shared split identity mismatch.")
-    table = pd.read_csv(ROOT / "report/d_validation/train_validation_rules.csv")
-    metrics = {row.rule_id: {"lift": row.train_lift, "confidence": row.train_confidence}
-               for row in table[table.scheme == "equal_frequency"].itertuples()}
-    rules, binner = frozen["frozen_rules"], frozen["frozen_binner"]
-    summary = analyze_rule_overlap(validation, binner, rules, metrics)
-    coverage = {r["rule_id"]: set(r["covered_row_ids"])
-                for r in validate_rules(validation, binner, rules)}
-    all_covered = set().union(*coverage.values())
-    ids = validation.row_id.to_numpy()
-    labels = validation.Class.to_numpy()
-    k = math.ceil(len(validation) * .01)
+    metrics = rule_training_metrics(ROOT / "report/d_validation/train_validation_rules.csv")
     # One fixed re-fit each, not the original candidate searches. Predictions
     # are recreated here because other members' private files are not in Git.
     with threadpool_limits(limits=1):
@@ -189,41 +237,13 @@ def run_extensions(args):
         forest = fit_isolation_forest(get_features(train), seed=42, n_estimators=100, max_samples=4096)
         scores = {"classifier": score_model(lr, get_features(validation)),
                   "IF": score_isolation_forest(forest, get_features(validation))}
-    args.output.mkdir(parents=True, exist_ok=True)
-    predictions, selections, ranks, model_metrics = [], {}, {}, {}
-    for name, values in scores.items():
-        prediction = make_prediction_frame(validation, values, name)
-        predictions.append(prediction)
-        order = np.lexsort((ids, values * -1))
-        selections[name] = set(ids[order[:k]])
-        ranks[name] = {int(ids[position]): rank for rank, position in enumerate(order, start=1)}
-        evaluated = evaluate_scores(labels, values, (.01,), row_ids=ids)
-        model_metrics[name] = {"AP": evaluated["AP"], "budgets": evaluated["budgets"]}
+    predictions = {name: make_prediction_frame(validation, values, name)
+                   for name, values in scores.items()}
+    summary, model_metrics = evaluate_rule_extensions(validation, predictions, frozen, metrics)
     if [model_metrics[n]["budgets"][0]["TP"] for n in ["classifier", "IF"]] != [49, 24]:
         raise ValueError("Fixed model replay differs from published validation TP; review source/environment.")
-    pd.concat(predictions).to_csv(args.output / "predictions.csv", index=False)
-    positives = set(validation.loc[validation.Class.eq(1), "row_id"])
-    negatives = set(ids) - positives
-    errors = {}
-    for name, selected in selections.items():
-        errors[name + "_FN"] = positives - selected
-        errors[name + "_FP"] = negatives & selected
-    summary["error_associations"] = {name: {"total": len(values),
-        "covered_by_any_rule": len(values & all_covered)} for name, values in errors.items()}
-    summary["per_rule_errors"] = {rule: {name: len(values & covered) for name, values in errors.items()}
-                                   for rule, covered in coverage.items()}
-    cases, used = [], set()
-    for kind, values in errors.items():
-        # Predeclared: first two covered examples by row_id, skipping prior cases.
-        candidates = sorted(values & all_covered - used)[:2]
-        for row_id in candidates:
-            used.add(row_id)
-            cases.append({"case_id": f"D-E04-{len(cases)+1}", "source_row_id": int(row_id),
-                          "category": kind, "Class": int(row_id in positives),
-                          "classifier_rank": ranks["classifier"][int(row_id)],
-                          "IF_rank": ranks["IF"][int(row_id)],
-                          "covering_rules": [r for r in summary["rule_order"] if row_id in coverage[r]]})
-    summary["cases"] = cases
+    args.output.mkdir(parents=True, exist_ok=True)
+    pd.concat(predictions.values()).to_csv(args.output / "predictions.csv", index=False)
     fig, ax = plt.subplots(figsize=(10, 8))
     mat = np.array(summary["jaccard"], dtype=float)
     im = ax.imshow(np.ma.masked_invalid(mat), vmin=0, vmax=1, cmap="viridis")

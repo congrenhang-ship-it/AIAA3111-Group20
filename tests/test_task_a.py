@@ -16,6 +16,7 @@ from main import REVIEW_FRACTIONS, run_validation, split_summary
 from preprocessing import DEFAULT_DATA_PATH, FEATURE_COLUMNS, ULB_SHA256, audit_data, data_sha256
 from preprocessing import get_features, load_data, split_data
 from temporal import evaluate_time_windows, summarize_time_windows
+from temporal import evaluate_review_threshold, select_review_threshold
 
 
 class DownloadTests(unittest.TestCase):
@@ -95,6 +96,32 @@ class SplitTests(unittest.TestCase):
 
 
 class HandoffTests(unittest.TestCase):
+    def test_fixed_review_threshold_keeps_boundary_ties_and_empty_windows(self):
+        predictions = pd.DataFrame({
+            "row_id": [0, 1, 2, 3, 4],
+            "Class": [1, 0, 1, 0, 0],
+            "Time": [0, 1, 2, 30, 40],
+            "method": ["classifier"] * 5,
+            "score": [0.9, 0.8, 0.8, 0.1, 0.85],
+        })
+        selection = select_review_threshold(predictions, 0.4)
+        self.assertEqual((selection["target_K"], selection["threshold"]), (2, 0.85))
+        selection = select_review_threshold(predictions, 0.6)
+        self.assertEqual((selection["target_K"], selection["equal_to_threshold"]), (3, 2))
+        result = evaluate_review_threshold(predictions, selection, window_seconds=10)
+        self.assertEqual(result["overall"]["fixed_threshold"]["K"], 4)
+        self.assertEqual(result["overall"]["top_k"]["K"], 3)
+        windows = result["windows"]
+        self.assertEqual([w["status"] for w in windows], [
+            "ok", "empty", "empty", "no_positives", "no_positives",
+        ])
+        self.assertEqual([w["fixed_threshold"]["K"] for w in windows], [3, 0, 0, 0, 1])
+        self.assertIsNone(windows[1]["fixed_threshold"]["actual_review_fraction"])
+        self.assertEqual(windows[3]["fixed_threshold"]["actual_review_fraction"], 0)
+        self.assertIsNone(windows[4]["fixed_threshold"]["recall_at_k"])
+        self.assertEqual(windows[4]["fixed_threshold"]["FP"], 1)
+        self.assertTrue(all(w["fixed_threshold"]["value"] == 0.8 for w in windows))
+
     def test_windows_align_and_delegate_to_c(self):
         first = pd.DataFrame({
             "row_id": [8, 3, 2], "Class": [1, 0, 1], "Time": [30, 10, 0],

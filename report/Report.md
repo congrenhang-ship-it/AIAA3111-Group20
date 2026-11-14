@@ -109,12 +109,20 @@ The 2026-11-14 protocol adds amount coverage/groups and simple references
 (E01/E06), paired row/bootstrap and time-block sensitivity (E02), fixed label
 fractions/seeds (E03), rule overlap (E04), permutation importance (E05), assumed
 cost ratios (E07), and fixed validation-threshold migration (E08). D's E04
-validation findings are now available below. Other extensions remain pending
-their owners' evidence; protocol settings are not experimental results.
-Update from C's newly delivered validation evidence: E01/E02/E06/E07 are now
-implemented and validated (see below). B's E03/E05 and A's E08 still require
-their owners' evidence. All extension configurations must enter A7 before A8. Candidate second datasets
+validation findings are now available below. C's E01/E02/E06/E07 and A's E08
+also have validation evidence. B's E03/E05 await delivery. All extension
+configurations must enter A7 before A8. Candidate second datasets
 and customer/terminal histories remain future work outside the current ULB scope.
+
+For E08, each fixed model's threshold was its 568th-highest score on the
+56,745-transaction validation segment. The thresholds were 0.804282 for the
+class-weighted logistic regression and 0.531776 for the improved Isolation
+Forest. Applying each threshold with an inclusive comparison flagged 568
+transactions overall and found 49 and 24 of 57 frauds, respectively. The
+validation diagnostic applies each threshold unchanged within fixed one-hour
+windows from elapsed time zero. The first and last observed windows are partial.
+See the [validation summary](../results/tables/a_team_validation.json) for the
+full-precision thresholds, window counts and fixed-capacity comparison.
 
 ## 4. Common evaluation and fair capacity comparison — C contribution
 

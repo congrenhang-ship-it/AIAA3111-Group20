@@ -91,3 +91,56 @@ def evaluate_time_windows(
             )
         results.append(summary)
     return results
+
+
+def select_review_threshold(predictions, review_fraction):
+    """Select the Kth score once on validation and record its boundary ties."""
+    from math import ceil
+    import numpy as np
+
+    if predictions.empty or predictions["method"].nunique(dropna=False) != 1:
+        raise ValueError("Threshold selection requires one nonempty validation method.")
+    if not isfinite(review_fraction) or not 0 < review_fraction <= 1:
+        raise ValueError("The review fraction must be in (0, 1].")
+    scores = predictions["score"].to_numpy(dtype=float)
+    if not np.isfinite(scores).all():
+        raise ValueError("Threshold selection requires finite scores.")
+    k = ceil(len(scores) * review_fraction)
+    threshold = float(np.partition(scores, len(scores) - k)[len(scores) - k])
+    return {
+        "selection_phase": "validation",
+        "review_fraction": review_fraction,
+        "target_K": k,
+        "threshold": threshold,
+        "strictly_above_threshold": int((scores > threshold).sum()),
+        "equal_to_threshold": int((scores == threshold).sum()),
+        "decision_rule": "score >= threshold",
+    }
+
+
+def evaluate_review_threshold(predictions, selection, *, window_seconds=3600, origin=0):
+    """Apply an existing threshold overall and in fixed windows without tuning it."""
+    from evaluation import evaluate_scores
+
+    q = selection["review_fraction"]
+    threshold = selection["threshold"]
+
+    def counts(metrics):
+        n = metrics["n_samples"]
+        fixed = metrics["threshold"]
+        return {
+            "fixed_threshold": {**fixed, "actual_review_fraction": fixed["K"] / n if n else None},
+            "top_k": metrics["budgets"][0],
+        }
+
+    windows = evaluate_time_windows(predictions, window_seconds, origin, (q,), threshold)
+    for window in windows:
+        metrics = window.pop("evaluation")
+        if metrics is None:
+            rows = predictions.iloc[:0]
+            metrics = evaluate_scores(rows.Class, rows.score, (q,), row_ids=rows.row_id, threshold=threshold)
+        window.update(counts(metrics))
+    overall = evaluate_scores(
+        predictions.Class, predictions.score, (q,), row_ids=predictions.row_id, threshold=threshold,
+    )
+    return {"overall": counts(overall), "windows": windows}
