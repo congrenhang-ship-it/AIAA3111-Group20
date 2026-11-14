@@ -1,0 +1,695 @@
+{
+  "status": "D_candidate_frozen_pending_A3_merge_and_G2",
+  "test_rule_evaluation": false,
+  "data_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+  "preprocessing_commit": "26c1c32e3b8dad50525298842c4448a78a9ac99c",
+  "d_commit": "2713837ad30d1e130883c7caf7877e5dcedf20fd",
+  "source_sha256": {
+    "preprocessing.py": "45f94c471a4d71129ab7a66a3693e81ee534b7293060db4584438a8b398d9e50",
+    "pattern_mining.py": "f506177d32432b9681316ad9c727d1dc1c17d3b6ebf41942010fb96a7c612a1c",
+    "run_d_validation.py": "72f07b422e1e87197b5fe8674dd50273a956a6d8a33b493ef4cf65a1cef1c7fa"
+  },
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.1.3",
+    "pandas": "2.2.3"
+  },
+  "command": [
+    "C:\\Users\\26793\\anaconda\\python.exe",
+    "code/run_d_validation.py",
+    "--preprocessing-code",
+    "../AIAA3111-Task-A-check/code"
+  ],
+  "partitions": {
+    "train": {
+      "rows": 170235,
+      "frauds": 342,
+      "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+    },
+    "validation": {
+      "rows": 56745,
+      "frauds": 57,
+      "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+    },
+    "test": {
+      "rows": 56746,
+      "frauds": 74,
+      "row_ids_sha256": "4909103f5579d282c4faa1ca32c3c57fdf328e5d2ade9533a297d3e0254ca5c9"
+    }
+  },
+  "feature_selection": "Amount plus four V features by absolute training Pearson correlation with Class; lexical ties",
+  "feature_columns": [
+    "Amount",
+    "V17",
+    "V14",
+    "V12",
+    "V3"
+  ],
+  "training_abs_correlations": {
+    "V17": 0.3970351100739665,
+    "V14": 0.3328925643592171,
+    "V12": 0.27508721081241183,
+    "V3": 0.26510431314498684,
+    "V10": 0.2628707452377252,
+    "V16": 0.24361487512473853,
+    "V7": 0.24271276834600886,
+    "V11": 0.17407214032699858,
+    "V4": 0.15388831916353263,
+    "V18": 0.14829304991651257,
+    "V1": 0.13518965022318166,
+    "V5": 0.1336835516312719,
+    "V2": 0.11488579662226346,
+    "V9": 0.11001129627670825,
+    "V6": 0.053504502358727606,
+    "V19": 0.04657698872226078,
+    "V8": 0.04650236260372101,
+    "V21": 0.029845366163752076,
+    "V27": 0.028146925701166704,
+    "V20": 0.026073755476870034,
+    "V22": 0.010422756984525074,
+    "V15": 0.008889542026619962,
+    "V28": 0.007737397923257968,
+    "V23": 0.007166351286126745,
+    "V24": 0.006221064170053263,
+    "V26": 0.002206871158970697,
+    "V13": 0.0019772134351528073,
+    "V25": 0.0009031607080421537
+  },
+  "validation_gate": {
+    "min_coverage": 20,
+    "min_fraud_coverage": 5,
+    "lift_exclusive": 1.0
+  },
+  "scheme_selection": "most passing validation rules; equal_frequency on tie; retain all passing rules",
+  "schemes": {
+    "equal_width": {
+      "binner": {
+        "schema_version": 1,
+        "feature_columns": [
+          "Amount",
+          "V17",
+          "V14",
+          "V12",
+          "V3"
+        ],
+        "binning": "equal_width",
+        "requested_bins": 3,
+        "max_length": 3,
+        "interval_policy": "left_closed_cut_goes_right_outer_bins_unbounded",
+        "missing_policy": "raise",
+        "limits": {
+          "min_coverage": 20,
+          "min_fraud_coverage": 5,
+          "min_lift_exclusive": 1.0,
+          "max_rules": 50
+        },
+        "features": {
+          "Amount": {
+            "cut_points": [
+              6552.176666666666,
+              13104.353333333333
+            ],
+            "train_min": 0.0,
+            "train_max": 19656.53,
+            "effective_bins": 3
+          },
+          "V17": {
+            "cut_points": [
+              -13.690690829392251,
+              -2.2185822894597003
+            ],
+            "train_min": -25.1627993693248,
+            "train_max": 9.25352625047285,
+            "effective_bins": 3
+          },
+          "V14": {
+            "cut_points": [
+              -9.300628309579364,
+              0.6130688711026693
+            ],
+            "train_min": -19.2143254902614,
+            "train_max": 10.5267660517847,
+            "effective_bins": 3
+          },
+          "V12": {
+            "cut_points": [
+              -9.839679063681334,
+              -0.9956434940183669
+            ],
+            "train_min": -18.6837146333443,
+            "train_max": 7.8483920756446,
+            "effective_bins": 3
+          },
+          "V3": {
+            "cut_points": [
+              -19.326469867961286,
+              -4.971955717570072
+            ],
+            "train_min": -33.6809840183525,
+            "train_max": 9.38255843282114,
+            "effective_bins": 3
+          }
+        }
+      },
+      "candidate_count": 38,
+      "retained_rule_ids": [
+        "R023",
+        "R025",
+        "R026",
+        "R027",
+        "R028",
+        "R029",
+        "R030",
+        "R031",
+        "R032",
+        "R033",
+        "R034",
+        "R035",
+        "R036",
+        "R037",
+        "R038"
+      ],
+      "validation_out_of_range": {
+        "Amount": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        },
+        "V17": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        },
+        "V14": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        },
+        "V12": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        },
+        "V3": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        }
+      }
+    },
+    "equal_frequency": {
+      "binner": {
+        "schema_version": 1,
+        "feature_columns": [
+          "Amount",
+          "V17",
+          "V14",
+          "V12",
+          "V3"
+        ],
+        "binning": "equal_frequency",
+        "requested_bins": 3,
+        "max_length": 3,
+        "interval_policy": "left_closed_cut_goes_right_outer_bins_unbounded",
+        "missing_policy": "raise",
+        "limits": {
+          "min_coverage": 20,
+          "min_fraud_coverage": 5,
+          "min_lift_exclusive": 1.0,
+          "max_rules": 50
+        },
+        "features": {
+          "Amount": {
+            "cut_points": [
+              9.99,
+              50.0
+            ],
+            "train_min": 0.0,
+            "train_max": 19656.53,
+            "effective_bins": 3
+          },
+          "V17": {
+            "cut_points": [
+              -0.28451140583566836,
+              0.26387525106042964
+            ],
+            "train_min": -25.1627993693248,
+            "train_max": 9.25352625047285,
+            "effective_bins": 3
+          },
+          "V14": {
+            "cut_points": [
+              -0.17888387593912636,
+              0.3664203387990453
+            ],
+            "train_min": -19.2143254902614,
+            "train_max": 10.5267660517847,
+            "effective_bins": 3
+          },
+          "V12": {
+            "cut_points": [
+              -0.2537695828426037,
+              0.44072625319830894
+            ],
+            "train_min": -18.6837146333443,
+            "train_max": 7.8483920756446,
+            "effective_bins": 3
+          },
+          "V3": {
+            "cut_points": [
+              0.20770936419133398,
+              1.0713883486110165
+            ],
+            "train_min": -33.6809840183525,
+            "train_max": 9.38255843282114,
+            "effective_bins": 3
+          }
+        }
+      },
+      "candidate_count": 25,
+      "retained_rule_ids": [
+        "R001",
+        "R002",
+        "R003",
+        "R004",
+        "R005",
+        "R006",
+        "R007",
+        "R008",
+        "R009",
+        "R010",
+        "R011",
+        "R012",
+        "R013",
+        "R014",
+        "R015",
+        "R016",
+        "R017",
+        "R018",
+        "R019",
+        "R020",
+        "R021"
+      ],
+      "validation_out_of_range": {
+        "Amount": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        },
+        "V17": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        },
+        "V14": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        },
+        "V12": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        },
+        "V3": {
+          "below_train_min": 0,
+          "above_train_max": 0
+        }
+      }
+    }
+  },
+  "selected_scheme": "equal_frequency",
+  "frozen_binner": {
+    "schema_version": 1,
+    "feature_columns": [
+      "Amount",
+      "V17",
+      "V14",
+      "V12",
+      "V3"
+    ],
+    "binning": "equal_frequency",
+    "requested_bins": 3,
+    "max_length": 3,
+    "interval_policy": "left_closed_cut_goes_right_outer_bins_unbounded",
+    "missing_policy": "raise",
+    "limits": {
+      "min_coverage": 20,
+      "min_fraud_coverage": 5,
+      "min_lift_exclusive": 1.0,
+      "max_rules": 50
+    },
+    "features": {
+      "Amount": {
+        "cut_points": [
+          9.99,
+          50.0
+        ],
+        "train_min": 0.0,
+        "train_max": 19656.53,
+        "effective_bins": 3
+      },
+      "V17": {
+        "cut_points": [
+          -0.28451140583566836,
+          0.26387525106042964
+        ],
+        "train_min": -25.1627993693248,
+        "train_max": 9.25352625047285,
+        "effective_bins": 3
+      },
+      "V14": {
+        "cut_points": [
+          -0.17888387593912636,
+          0.3664203387990453
+        ],
+        "train_min": -19.2143254902614,
+        "train_max": 10.5267660517847,
+        "effective_bins": 3
+      },
+      "V12": {
+        "cut_points": [
+          -0.2537695828426037,
+          0.44072625319830894
+        ],
+        "train_min": -18.6837146333443,
+        "train_max": 7.8483920756446,
+        "effective_bins": 3
+      },
+      "V3": {
+        "cut_points": [
+          0.20770936419133398,
+          1.0713883486110165
+        ],
+        "train_min": -33.6809840183525,
+        "train_max": 9.38255843282114,
+        "effective_bins": 3
+      }
+    }
+  },
+  "frozen_rules": [
+    {
+      "rule_id": "R001",
+      "antecedent": [
+        {
+          "feature": "V12",
+          "bin": 0
+        },
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R002",
+      "antecedent": [
+        {
+          "feature": "V14",
+          "bin": 0
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R003",
+      "antecedent": [
+        {
+          "feature": "V12",
+          "bin": 0
+        },
+        {
+          "feature": "V14",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R004",
+      "antecedent": [
+        {
+          "feature": "V14",
+          "bin": 0
+        },
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R005",
+      "antecedent": [
+        {
+          "feature": "V12",
+          "bin": 0
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R006",
+      "antecedent": [
+        {
+          "feature": "V17",
+          "bin": 0
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R007",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V12",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R008",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V14",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R009",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R010",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        },
+        {
+          "feature": "V12",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R011",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        },
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R012",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        },
+        {
+          "feature": "V14",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R013",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R014",
+      "antecedent": [
+        {
+          "feature": "V14",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R015",
+      "antecedent": [
+        {
+          "feature": "V12",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R016",
+      "antecedent": [
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R017",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R018",
+      "antecedent": [
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R019",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R020",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V17",
+          "bin": 2
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R021",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    }
+  ]
+}
