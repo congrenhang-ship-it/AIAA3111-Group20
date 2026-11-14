@@ -8,18 +8,18 @@ AIAA 3111 Course Project · Group 20
 
 ## 当前进度与分支
 
-`main` 目前仍以初始代码框架和共享文档为主，A/B/C/D 的完整实验代码尚待 A6 整合。**E01–E08 已纳入正式范围，其中 C 的 E01/E02/E06/E07 已实现并完成真实验证；其他扩展及正式测试仍待验收。**
+`Task_A` 已整合 A/B/C/D，在全量 ULB 验证段复现共同模型和 E01/E02/E04/E06/E07，并产出 E08 固定阈值诊断。B 的 E03/E05 仍待交付。主线接入和全组 G2 确认后，按同一协议进入正式测试。
 
 | 分支 | 已有交付 | 后续 |
 |---|---|---|
-| `Task_A` | 数据校验、清洗、时间划分、时间窗口及基础入口 | A6 全模块整合、A7 冻结、A8 测试 |
+| `Task_A` | 数据准备、全组验证入口、E08 阈值诊断 | 主线复现、接入 E03/E05、A7 冻结、A8 测试 |
 | `b/classification-interface` | 四种分类器、不平衡对照、验证候选 | 分类扩展、最终结果与案例 |
-| `codex/c-independent-modules` | 已含 A/B；无监督、公共评价、互补及冻结发布接口 | 新增金额/参考/成本/区间已验证，正式图表与结论待 A8 |
-| `codex/d-pattern-mining` | 规则验证、共同环境复核、报告/海报内容稿 | 规则深化、最终复现和材料 |
+| `codex/c-independent-modules` | 已接入 A 80f3171 及 D；统一验证、C 扩展和 E08 计数独立验收通过 | 正式图表与结论待 G2/A8 |
+| `codex/d-pattern-mining` | 规则验证、E04 增量覆盖、共同环境复核、报告/海报内容稿 | 主线复现和正式材料 |
 
-C 已提供接入说明和真实验证重放；D4 共同环境复核已有证据。已有实现不重新列成待开发任务，剩余工作见 [TASKS.md](TASKS.md)。C/D 合并时 TASKS 的 C 进度行需保留最新状态，A 负责核对。
+C 已提供接入说明和真实验证重放；D4 共同环境复核已有证据。已有实现不重新列成待开发任务，剩余工作见 [TASKS.md](TASKS.md)。C 已完成 A 统一入口的独立验收；后续合并保留最新分工和各人的真实状态。
 
-各分支的模型、验证结果和候选冻结不等于全组 G2。当前没有正式测试结论。读取某分支命令前应确认自己检出的分支；不能在尚未整合的 main 上假定完整入口可用。
+统一入口、已交付候选与正式测试的验收状态见 [TASKS.md](TASKS.md)。
 
 ## 项目问题与课程联系
 
@@ -51,7 +51,7 @@ C 已交付 E01/E02/E06/E07：原验证段 56,745 笔、57 笔欺诈；500＋200
 | E05 | 模型依赖哪些特征，错误有何特点？ | B | 已选分类器 AP 置换重要性、固定案例规则 | 待验收 |
 | E06 | 比简单审核参考强多少？ | C | 随机审核期望、Amount 降序、Precision 提升倍数 | 验证交付完成 |
 | E07 | 预算如何影响不同错误代价？ | C | 四档预算，假设漏报/误报成本比 10/50/100 | 验证交付完成 |
-| E08 | 固定分数阈值会产生多少后续审核量？ | A | 验证冻结阈值，测试与固定窗口实际审核率和检出 | 待验收 |
+| E08 | 固定分数阈值会产生多少后续审核量？ | A | 验证阈值，测试与固定窗口实际审核率和检出 | 验证交付完成 |
 
 金额覆盖不称真实挽回损失；成本比是假设情景；重要性不作因果解释；规则不自动形成固定容量检测器。标签不足实验明确哪些标签/特征可见，IF 参考不利用完整标签新选参。保留负结果和没有组合收益的结果。
 
@@ -107,33 +107,31 @@ data/                            本地数据与下载说明（原始文件不�
 
 ## 环境、数据与可用命令
 
-建议统一 Python 3.12。A/B/C 分支已有固定依赖与数据校验记录；main 当前 requirements.txt 仍为旧框架，A6 应合入实际锁定版本，不重新选择依赖。按运行分支对应 README 安装，保留实际版本记录。
-
-在代码整合前，main 仅确认以下原框架入口：
+在含 A6 的分支上使用 Python 3.12，安装仓库固定依赖。从仓库根目录运行以下命令。
 
 ```bash
-python code/main.py --help
-python code/main.py --tasks
-python code/main.py --check-data --data data/creditcard.csv
+python -m pip install -r requirements.txt
+python code/download_data.py
+python code/main.py --prepare-data
+python code/main.py --run-team-validation --output data/team_validation
 ```
 
-数据由各成员按 [data/README.md](data/README.md) 获取，原始数据不上传。A6 合入 A 的下载、校验和时间划分实现后，应同步完善本节的最终安装、验证、冻结测试和结果发布命令。上述 main 命令不代表完整模型及扩展已可运行。
-
-C 分支已验证的独立扩展命令（须使用自己复现的带 B 模型；main 尚未合入时不可在 main 调用）：
+数据来源、原始校验值和预期划分见 [数据说明](data/README.md)。输出目录需位于 `data/` 且尚未存在。统一入口使用已交付的配置，仅在训练段重建三个模型，复用同一批验证预测运行总体、分群、时间窗口、等预算组合、C 扩展、D 规则分析与 E08。验证通过后，模型、逐行预测和案例留在本地，汇总与图表位于输出目录的 `aggregate/`。E03/E05 在交付后接入此入口。
 
 ```bash
-python code/evaluation.py --bundle data/c_with_b_20261111/improved_models.joblib --output data/c_extensions_reproduction/run --results data/c_extensions_reproduction/shared
+python -X utf8 -m unittest discover -s tests
+python -X utf8 -m unittest discover -s code -p test_classification.py
 ```
 
-配置和公共结果集中于 c_extensions.json。A7 前补入 A 确认的 test 划分身份，冻结后复用相同接口发布 c_extensions_test.json；不重新选模型、金额边界或配额。
+本次验证阈值、逐窗审核计数和来源见 [A6/E08 验证摘要](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/a_team_validation.json)。全组在 A7 确认配置后由 A8 运行正式测试。
 
 ## 分工与执行顺序
 
 | 成员 | 现在可独立做 | 交付之后 |
 |---|---|---|
-| A | A6 整合；E08 固定阈值诊断；核对新增协议 | A7 全组冻结 → A8 统一正式测试 → A9 提交包 |
+| A | 提交 A6 集成与 E08 验证，接入 B 待交付的 E03/E05 | A7 全组冻结 → A8 统一正式测试 → A9 提交包 |
 | B | E03 标签曲线 → E05 重要性与错误材料 | B6 补正式结果 → B7 核对/讲解 |
-| C | 配合 A 接入已交付 E01/E02/E06/E07；必要时修复集成问题 | A8 后 C7 正式图表 → C8 最终解释 |
+| C | 已验收 A 的公共入口和预计算预测复用；必要时支持集成 | G2/A8 后 C7 正式图表 → C8 最终解释 |
 | D | E04 规则覆盖；同步整合已有方法文字 | D5 独立复现/正式案例 → D6 材料 → D7 导出/演练 |
 
 具体编号、依赖和验收见 [TASKS.md](TASKS.md)。不等待他人最终图表再写已有方法；B/D 可先生成标准预测/覆盖，之后直接复用 C 的新增评价。C 不接管全部实验，D 不代写其他人的全部技术部分。
@@ -157,3 +155,5 @@ A 写数据与时间/阈值，B 写分类/标签/重要性，C 写聚类/异常/
 按依赖推进：A6 与扩展并行 → A7/G2 → A8/各人的正式分析 → G3 证据/第二台电脑复现 → PDF 导出、演练与提交。课程具体日期以 Canvas 最新要求为准。
 
 最终目录沿用：report/Report.pdf、poster/Poster.pdf；ZIP 含 Report.pdf、README.md、requirements.txt、code/、数据说明及必要 results/，海报按要求单独提交。A9 核对包内路径、实际依赖和复现命令。
+
+C 的后续验收：在完整验证段重现 A 的统一入口和 C/D 证据，81 项检查通过；新增固定阈值与窗口预算验证图，严格区分总审核 568 与逐窗取整后的 572。LR 阈值跨机器相差约 6.9e-11、计数一致，A7 应把模型与对应阈值一起冻结。源与解释见 C 分支说明及 c_extensions.json 的 team_integration；目前 GitHub 的 A 交付仍明确 E03/E05、G2 和 A8 待完成，验证图不作为正式测试图。
