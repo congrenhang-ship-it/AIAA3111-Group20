@@ -1107,5 +1107,263 @@ class BCompletionTests(unittest.TestCase):
                                              phase="validation_replay")
 
 
+
+class CExtensionMetricTests(unittest.TestCase):
+    def setUp(self):
+        self.data = pd.DataFrame({
+            "row_id": [10, 11, 12, 13], "Class": [1, 0, 1, 0],
+            "Time": [0.0, 1.0, 2.0, 3.0], "Amount": [100.0, 1000.0, 10.0, 0.0],
+        })
+        self.p = make_prediction_frame(self.data, [0.9, 0.8, 0.7, 0.6], "classifier")
+        self.a = make_prediction_frame(self.data, [0.1, 0.4, 0.9, 0.8], "anomaly")
+
+    def test_amounts_align_by_id_and_global_group_sums(self):
+        from evaluation import fit_amount_bins, evaluate_amounts
+        bins = fit_amount_bins(self.data)
+        result = evaluate_amounts(self.p.iloc[::-1], self.data, bins, [0.5])
+        row = result["budgets"][0]
+        self.assertEqual((row["K"], row["TP"], row["FP"]), (2, 1, 1))
+        self.assertAlmostEqual(row["amount_coverage"], 100/110)
+        self.assertEqual(row["precision_lift"], 1)
+        self.assertEqual(sum(g["n_samples"] for g in row["amount_groups"]), 4)
+        self.assertEqual(sum(g["reviewed_from_global_list"] for g in row["amount_groups"]), 2)
+        self.assertEqual(sum(g["fraud_amount_detected"] for g in row["amount_groups"]), 100)
+        self.assertEqual(sum(g["transaction_amount"] for g in row["amount_groups"]), 1110)
+        original = evaluate_scores(self.p.Class, self.p.score, [0.5], row_ids=self.p.row_id)
+        self.assertEqual(result["AP"], original["AP"])
+        self.assertEqual(bins["cuts"], fit_amount_bins(self.data.assign(Class=1))["cuts"])
+
+    def test_duplicate_cuts_zero_fraud_amount_and_empty_groups(self):
+        from evaluation import fit_amount_bins, evaluate_amounts
+        bins = fit_amount_bins(self.data.assign(Amount=10))
+        self.assertEqual(bins["cuts"], [10])
+        zero = self.data.assign(Amount=0)
+        result = evaluate_amounts(self.p, zero, bins, [0.5])["budgets"][0]
+        self.assertIsNone(result["amount_coverage"])
+        self.assertEqual(result["amount_groups"][1]["n_samples"], 0)
+        self.assertIsNone(result["amount_groups"][1]["recall"])
+        no_fraud = self.data.assign(Class=0)
+        p = make_prediction_frame(no_fraud, self.p.score, "classifier")
+        result = evaluate_amounts(p, no_fraud, bins, [0.5])
+        self.assertIsNone(result["AP"])
+        self.assertIsNone(result["budgets"][0]["precision_lift"])
+
+    def test_monetary_metadata_and_amount_errors_rejected(self):
+        from evaluation import fit_amount_bins, evaluate_amounts
+        bins = fit_amount_bins(self.data)
+        for data in [self.data.assign(Amount=-1), self.data.assign(Amount=np.nan),
+                     self.data.assign(Class=0), self.data.assign(Time=99),
+                     self.data.assign(row_id=[10, 10, 12, 13]), self.data.drop(columns="Amount")]:
+            with self.subTest(columns=list(data)), self.assertRaises(ValueError):
+                evaluate_amounts(self.p, data, bins)
+        for cuts in [[1, 1], [-1], [2, 1], [float("nan")]]:
+            with self.assertRaises(ValueError):
+                evaluate_amounts(self.p, self.data, {"cuts": cuts})
+        with self.assertRaises(ValueError):
+            fit_amount_bins(self.data.iloc[:0])
+        with self.assertRaises(ValueError):
+            fit_amount_bins(self.data.assign(Amount=-1))
+
+    def test_costs_use_FP_and_FN_with_no_budget_selection(self):
+        from evaluation import cost_sensitivity
+        metric = evaluate_scores(self.p.Class, self.p.score, [0.5], row_ids=self.p.row_id)
+        rows = cost_sensitivity({"m": metric})
+        self.assertEqual([r["hypothetical_loss"] for r in rows], [11, 51, 101])
+        self.assertTrue(all(r["K"] == 2 for r in rows))
+        for ratios in [[0], [10, 10], [float("inf")], []]:
+            with self.assertRaises(ValueError):
+                cost_sensitivity({"m": metric}, ratios)
+
+    def test_weighted_AP_and_topK_match_explicit_bootstrap_instances(self):
+        from evaluation import _weighted_rank_metric, _order
+        from sklearn.metrics import average_precision_score
+        import itertools
+        # Exhaust all 3^3 draws, including duplicated IDs, score ties, zero weights,
+        # all-normal samples and different empirical positive proportions.
+        y = np.array([1, 0, 1])
+        scores = np.array([0.8, 0.8, 0.2])
+        ids = np.array([20, 10, 30])
+        order = _order(scores, ids)
+        ends = np.r_[np.flatnonzero(np.diff(scores[order])), len(y)-1]
+        for draw in itertools.product(range(3), repeat=3):
+            draw = np.asarray(draw)
+            counts = np.bincount(draw, minlength=3)
+            actual = _weighted_rank_metric(y, scores, counts, order, ends, 0.5)
+            occurrence_order = np.lexsort((np.arange(3), ids[draw], -scores[draw]))
+            expected_tp = int(y[draw][occurrence_order[:2]].sum())
+            self.assertEqual(actual["TP"], expected_tp)
+            self.assertEqual(actual["K"], 2)
+            if y[draw].sum():
+                self.assertAlmostEqual(actual["AP"], average_precision_score(y[draw], scores[draw]))
+                self.assertEqual(actual["recall"], expected_tp/int(y[draw].sum()))
+            else:
+                self.assertIsNone(actual["AP"])
+                self.assertIsNone(actual["recall"])
+
+    def test_pairing_reproducibility_sign_symmetry_and_endpoint_zero_gain(self):
+        from evaluation import paired_uncertainty
+        frames = {"classifier": self.p, "anomaly": self.a.iloc[::-1]}
+        policy = {"name": "policy", "classifier": "classifier", "anomaly": "anomaly", "share": 1.0}
+        kwargs = dict(q=0.5, row_resamples=50, block_resamples=30, block_seconds=2,
+                      combination=policy, pairs=[("classifier", "anomaly"), ("anomaly", "classifier"), ("policy", "classifier")])
+        first = paired_uncertainty(frames, **kwargs)
+        self.assertEqual(first, paired_uncertainty(frames, **kwargs))
+        for scheme in first["schemes"].values():
+            for metric in ["AP", "recall"]:
+                zero = scheme["differences"]["policy minus classifier"][metric]
+                self.assertEqual(zero["lower"], 0)
+                self.assertEqual(zero["upper"], 0)
+                self.assertTrue(zero["degenerate"])
+                left = scheme["differences"]["classifier minus anomaly"][metric]
+                right = scheme["differences"]["anomaly minus classifier"][metric]
+                self.assertAlmostEqual(left["lower"], -right["upper"])
+                self.assertAlmostEqual(left["upper"], -right["lower"])
+        self.assertEqual(first["point_estimates"]["classifier"]["K"], 2)
+
+    def test_interior_quota_replicates_match_public_list_policy_and_have_no_AP(self):
+        from evaluation import paired_uncertainty
+        policy = {"name": "policy", "classifier": "classifier", "anomaly": "anomaly", "share": 0.5}
+        result = paired_uncertainty({"classifier": self.p, "anomaly": self.a},
+                                   combination=policy, pairs=[("policy", "classifier")],
+                                   q=0.5, row_resamples=20, block_resamples=10, block_seconds=2)
+        expected = compare_review_lists(self.p, self.a, 2, 0.5)
+        self.assertEqual(result["point_estimates"]["policy"]["TP"], expected["combined"]["TP"])
+        self.assertIsNone(result["point_estimates"]["policy"]["AP"])
+        for scheme in result["schemes"].values():
+            self.assertEqual(scheme["methods"]["policy"]["AP"]["valid_replicates"], 0)
+            self.assertIsNone(scheme["differences"]["policy minus classifier"]["AP"]["lower"])
+        # Independently enumerate the sampled multiset through the existing
+        # list-policy implementation; compare its interval with the new kernel.
+        rng = np.random.default_rng(42)
+        recalls = []
+        for _ in range(20):
+            draw = rng.integers(4, size=4)
+            draw = draw[np.lexsort((np.arange(4), self.data.row_id.to_numpy()[draw]))]
+            sampled = self.data.iloc[draw].reset_index(drop=True).assign(row_id=np.arange(4))
+            cp = make_prediction_frame(sampled, self.p.score.to_numpy()[draw], "c")
+            ap = make_prediction_frame(sampled, self.a.score.to_numpy()[draw], "a")
+            row = compare_review_lists(cp, ap, 2, 0.5)["combined"]
+            if row["recall_at_k"] is not None: recalls.append(row["recall_at_k"])
+        actual = result["schemes"]["paired_rows"]["methods"]["policy"]["recall"]
+        self.assertAlmostEqual(actual["lower"], np.quantile(recalls, 0.025))
+        self.assertAlmostEqual(actual["upper"], np.quantile(recalls, 0.975))
+
+    def test_block_gaps_empty_resamples_and_no_positive_replicates_reported(self):
+        from evaluation import paired_uncertainty
+        data = self.data.iloc[:2].assign(Time=[0, 20], Class=[0, 0])
+        p = make_prediction_frame(data, [1, 0], "m")
+        result = paired_uncertainty({"m": p}, row_resamples=20, block_resamples=100,
+                                   q=0.5, block_seconds=10)
+        self.assertEqual(result["block_config"]["n_blocks"], 3)
+        self.assertEqual(result["block_config"]["empty_blocks"], 1)
+        blocks = result["schemes"]["paired_time_blocks"]
+        self.assertGreater(blocks["empty_replicates"], 0)
+        self.assertNotEqual(*blocks["sample_size_range"])
+        self.assertEqual(blocks["empty_replicates"] + blocks["no_positive_replicates"], 100)
+        self.assertEqual(blocks["methods"]["m"]["AP"]["valid_replicates"], 0)
+        self.assertIsNone(blocks["methods"]["m"]["recall"]["lower"])
+
+    def test_uncertainty_rejects_invalid_alignment_and_parameters(self):
+        from evaluation import paired_uncertainty
+        for kwargs in [dict(row_resamples=0), dict(block_seconds=0), dict(seed=-1),
+                       dict(q=0), dict(pairs=[("missing", "classifier")])]:
+            with self.assertRaises(ValueError):
+                paired_uncertainty({"classifier": self.p}, **kwargs)
+        with self.assertRaises(ValueError):
+            paired_uncertainty({"classifier": self.p, "anomaly": self.a.assign(Class=0)})
+
+
+class CExtensionWorkflowTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from classification import train_model
+        from evaluation import partition_description, build_c_extension_config
+        cls.train, cls.val = _demo()
+        cls.bundle = {
+            "models": {"kmeans": fit_configuration(cls.train[FEATURE_COLUMNS], configurations()[0]),
+                       "isolation_forest": fit_configuration(cls.train[FEATURE_COLUMNS], configurations()[6])},
+            "B_model": train_model(cls.train[FEATURE_COLUMNS], cls.train.Class,
+                                   "logistic_regression", strategy="class_weight"),
+            "config": {"partitions": {"train": partition_description(cls.train),
+                                        "validation": partition_description(cls.val)},
+                       "selected_candidates": {"kmeans": "km_base_raw", "isolation_forest": "if_base"},
+                       "selected_anomaly": "if_base", "B_combination": {"method": "B", "share": 1.0}},
+        }
+        cls.config = build_c_extension_config(cls.train, cls.bundle)
+        cls.config["bootstrap"].update(row_resamples=8, block_resamples=6, block_seconds=100)
+
+    def test_full_extensions_publish_aggregates_replay_and_refuse_overwrite(self):
+        from evaluation import run_c_extensions
+        before = joblib.hash(self.bundle)
+        with tempfile.TemporaryDirectory() as folder, patch(
+            "classification.train_model", side_effect=AssertionError("no fitting")
+        ), patch("unsupervised.fit_configuration", side_effect=AssertionError("no fitting")):
+            root = Path(folder)
+            first = run_c_extensions(self.bundle, self.val, self.config, root/"one",
+                                     results=root/"shared", progress=None)
+            replay = run_c_extensions(self.bundle, self.val, self.config, root/"two", progress=None)
+            self.assertEqual(first["metrics"], replay["metrics"])
+            self.assertEqual(first["uncertainty"], replay["uncertainty"])
+            self.assertFalse(first["test_evaluated"])
+            self.assertFalse(first["group_G2_complete"])
+            self.assertEqual(first["metrics"]["B"]["AP"], first["metrics"]["frozen_B_IF_policy"]["AP"])
+            for base, policy in zip(first["metrics"]["B"]["budgets"],
+                                    first["metrics"]["frozen_B_IF_policy"]["budgets"], strict=True):
+                for key in ["K", "TP", "FP", "FN", "TN", "precision_at_k", "recall_at_k",
+                            "fraud_amount_detected", "amount_coverage", "amount_groups"]:
+                    self.assertEqual(base[key], policy[key])
+            random = first["metrics"]["random_expectation"]
+            self.assertTrue(random["expected_only"])
+            self.assertIsNone(random["AP"])
+            for row in random["budgets"]:
+                self.assertAlmostEqual(row["TP"], row["K"]*10/200)
+                self.assertAlmostEqual(row["amount_coverage"], row["K"]/200)
+                self.assertEqual(row["precision_lift"], 1)
+            public = root/"shared"
+            self.assertEqual(len(list((public/"figures").glob("*.png"))), 3)
+            self.assertEqual(len(list((public/"tables").glob("*.json"))), 1)
+            for path in (public/"figures").glob("*.png"):
+                self.assertTrue(path.read_bytes().startswith(b"\x89PNG"))
+            self.assertFalse(list(public.rglob("*predictions*")))
+            self.assertNotIn('"combined_ids"', (public/"tables/c_extensions.json").read_text())
+            with patch("unsupervised.score_improved_bundle", side_effect=AssertionError("preflight")):
+                with self.assertRaisesRegex(ValueError, "already exists"):
+                    run_c_extensions(self.bundle, self.val, self.config, root/"blocked", results=public)
+                self.assertFalse((root/"blocked").exists())
+        self.assertEqual(joblib.hash(self.bundle), before)
+
+    def test_extension_phase_and_frozen_config_checked_before_scoring(self):
+        from evaluation import run_c_extensions, build_c_extension_config, partition_description
+        with tempfile.TemporaryDirectory() as folder, patch(
+            "unsupervised.score_improved_bundle", side_effect=AssertionError("must not score")
+        ):
+            with self.assertRaises(ValueError):
+                run_c_extensions(self.bundle, self.val.assign(row_id=self.val.row_id+10000),
+                                 self.config, folder)
+            changed = copy.deepcopy(self.bundle)
+            changed["config"]["B_combination"]["share"] = 0.5
+            with self.assertRaisesRegex(ValueError, "configuration differs"):
+                run_c_extensions(changed, self.val, self.config, folder)
+            with self.assertRaisesRegex(ValueError, "overlap"):
+                run_c_extensions(self.bundle, self.val, self.config, folder, results=Path(folder)/"shared")
+            cfg = copy.deepcopy(self.config)
+            cfg["partitions"]["test"] = partition_description(self.val)
+            with self.assertRaisesRegex(ValueError, "G2 reference"):
+                run_c_extensions(self.bundle, self.val, cfg, folder, phase="test")
+        with self.assertRaisesRegex(ValueError, "Training identities"):
+            build_c_extension_config(self.train.assign(row_id=self.train.row_id+10000), self.bundle)
+
+    def test_extension_evidence_ignores_mapping_and_prediction_table_order(self):
+        from evaluation import evaluate_c_extensions
+        from classification import score_model
+        from unsupervised import score_improved_bundle
+        predictions, _ = score_improved_bundle(self.bundle, self.val)
+        predictions["B"] = make_prediction_frame(
+            self.val, score_model(self.bundle["B_model"], self.val[FEATURE_COLUMNS]), "B")
+        first = evaluate_c_extensions(predictions, self.val, self.config, progress=None)
+        reversed_input = {name: predictions[name].iloc[::-1] for name in reversed(predictions)}
+        second = evaluate_c_extensions(reversed_input, self.val, self.config, progress=None)
+        self.assertEqual(first, second)
+
 if __name__ == "__main__":
     unittest.main()
