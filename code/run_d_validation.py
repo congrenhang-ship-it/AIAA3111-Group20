@@ -256,6 +256,10 @@ def run_extensions(args):
                   args.preprocessing_code/"classification.py", args.preprocessing_code/"unsupervised.py",
                   args.preprocessing_code/"evaluation.py"]},
               "python": platform.python_version(), "data_sha256": ULB_SHA256,
+              "partitions": frozen["partitions"],
+              "command": [sys.executable, *sys.argv],
+              "versions": {name: __import__("importlib.metadata", fromlist=["version"]).version(name)
+                           for name in ["numpy", "pandas", "scikit-learn", "matplotlib"]},
               "config": {"rule_order": "train lift desc, confidence desc, length asc, ID asc",
                   "high_overlap_threshold": .9, "display": "first five positive incremental fraud rules in fixed order",
                   "case_selection": "first two covered errors by row_id per category; skip earlier cases",
