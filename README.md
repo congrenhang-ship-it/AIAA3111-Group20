@@ -6,6 +6,8 @@ AIAA 3111 Course Project · Group 20
 
 负责人：A 维护公共入口和环境，D 整合材料；每位成员负责自己的实现、分析和来源记录。
 
+组员建议先读 [项目故事与逻辑线](report/PROJECT_STORY.md)，再看 [剩余任务](TASKS.md) 和 [扩展协议](report/EXTENSION_PROPOSALS.md)。
+
 ## 当前进度与分支
 
 `Task_A` 已整合 A/B/C/D，在全量 ULB 验证段复现共同模型和 E01/E02/E04/E06/E07，并产出 E08 固定阈值诊断。B 的 E03/E05 仍待交付。主线接入和全组 G2 确认后，按同一协议进入正式测试。
