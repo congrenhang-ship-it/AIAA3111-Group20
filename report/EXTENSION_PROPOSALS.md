@@ -142,6 +142,16 @@ A-N1 统一元数据保留原 CUSTOMER_ID/TERMINAL_ID（不入模），视图键
 
 验收包括小型手算时序、未来添加极端交易不改变已有特征、同时间互不可见、训练/验证边界、标签/机制字段排除、可重建指纹。实现放回 preprocessing.py/temporal.py 和既有 A 检查，缓存仍在被忽略的 data/handbook/。
 
+### 已实现的 C 接口与 A-N1 一次性交付约定（2026-11-15）
+
+C-N1/N2/N3 代码和合成接口验证已完成，正式 Handbook 数据实验仍待 A-N1。实现位于 C 分支原 unsupervised.py/evaluation.py；主线由 A6 合入，未改 A/B/D 的主责模块。合成样例只用于检查接口和时间边界，不能当作 Handbook 模拟数据或项目性能证据。现有 A/B/D 待办不因此删除。
+
+A 提供 train/validation 元数据（row_id、Class、Time、原始 Amount、CUSTOMER_ID、TERMINAL_ID），四个同身份 numeric feature views，以及只含开发段的交易流。视图用 row_id 索引，也可保留 row_id 列由 C 转为索引；禁止标签、机制、ID 和 Time 原值入模。四视图共享的单笔列必须逐值一致，transaction_only 必须含原始 Amount，两类历史视图的列为客户/终端视图的并集；C 保存列清单和 train/validation 视图指纹供 B 核对。
+
+E14 复用 A 的历史实现，回调签名为 feature_builder(context, history_keep=Series)。context 物理上仅包含 row_id、Time、CUSTOMER_ID、TERMINAL_ID、Amount；history_keep 是以全部源 row_id 为索引的布尔 Series，只控制历史状态插入，不删除任何查询行。回调必须返回全部源行的四视图，遵循 [t-window,t) 和同时间先查询后插入；全可见重建必须与交付视图一致，遮历史不得改变当前单笔列。C 不另写一套生产历史统计与 A 争用。
+
+正式调用 manifest 必须包含 dataset_id="handbook"、evidence_kind="handbook_validation"、data_sha256、generator_source、generation_parameters，以及 partitions.train/validation（由既有 partition_description 生成）。这些最小字段之外，A-N1 仍须按 E09 完整记录许可、来源版本、规模、切分和字段映射；C 的接口检查不代替 A 的来源审计。验证入口拒绝额外/测试行、时间交叠和覆盖旧证据。训练、逐行预测及模型存本地，公共目录只发布聚合表和组合图。
+
 ### E10 四组历史消融
 
 B 用 LR，C 用 IF，各自固定 seed=42 和声明参数，比较完全相同切分和四组输入：单笔；单笔+客户历史；单笔+终端历史；单笔+两类历史。IF 以 100 棵、max_samples=256、contamination=auto 为预定参考，缩放只拟合训练；LR 采用既定带权策略，不新搜索。

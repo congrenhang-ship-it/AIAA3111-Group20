@@ -445,3 +445,65 @@ The shared validation workflow reproduces the reported rankings, amount/cost ana
 C7 接入检查和本图已完成，81 项检查通过（73 项公共检查、8 项 B 检查）。C7 的正式 test 图和 C8 的正式 test 解释仍需：B 的 E03/E05 接入 → A7/G2 → A8。正式测试后直接复用已交付的冻结评价、扩展发布与本图接口，无需新增模型或重新设计分析。成员最终核对/演练也需等正式材料；本次不提前勾选。
 
 本次 AIGC 使用补充：Codex 协助 A 入口复现、C 缓存预测对齐检查、窗口图与解释素材整理。成员需核对并理解源码、数据和结论，用自己的表达形成最终报告并按课程规则披露；这里的英文素材不应原样当作提交正文。
+
+## 新增数据集：C-N1/N2/N3 独立实现交付（2026-11-15）
+
+本次完成可以独立完成的全部实现与验证，代码仍集中在原 `code/unsupervised.py`、`code/evaluation.py`，检查写回原 `tests/test_c_modules.py`。未修改 A 的数据/时间入口或 B/D 的主责代码。实现版本及文件哈希见 `results/tables/handbook_c_readiness.json`。
+
+GitHub 当前 A 分支最新交付仍为 `80f3171`，没有 A-N1 的正式 Handbook 数据、四视图和历史回调。因此本次只发布接口就绪证据，不发布虚构的正式模型效果。C-N1/N2/N3 剩余实际运行保持未勾选，B 的待办不变；G2 和最终测试未执行。
+
+### 完成了什么
+
+| 任务 | 独立完成部分 | 仍需 A-N1 的部分 |
+|---|---|---|
+| C-N1 / E10 | 四视图校验、四组固定 IF、训练期缩放、统一指标、保存/加载评分复现、紧凑消融图 | 正式数据消融及与 B 的输入指纹核对 |
+| C-N2 / E12 | 7 天不同邻居度数、新关系标记、固定 LR/IF 的图特征增量 | 正式关系特征增量及结果解释 |
+| C-N3 / E14 | 0/10/30% × 三种子，源 ID 确定性掩码，固定模型重评分，可用率/掩码指纹/种子范围图 | A 的生产历史回调及正式九条件输出 |
+
+总共拟合 7 个固定模型：四视图 IF、两类历史加关系 IF、两类历史 LR、两类历史加关系 LR；加原始金额参考共 8 个排序。两个 LR 只用于 C 的关系增量比较，不替代 B 的四组分类消融。IF 固定 100 棵、max_samples=256、contamination=auto、seed=42；LR 复用 B 的带权逻辑回归接口，不新选参。AP、四档审核预算、金额覆盖、成本敏感性复用现有评价，金额边界只用训练数据拟合。
+
+关系窗口为 `[t-7天,t)`；同时间先对所有交易查询，再批量插入，重复边只有最后一条有效交易到期才移除。只读取行身份、时间和实体键构图，标签和金额变化不影响关系特征。使用队列和邻居计数，避免为每行重新扫描完整历史。
+
+缺失掩码由源 row_id/seed 决定，缺失率嵌套，重排和分块不改变可见性。训练使用完整历史；推理时只重建历史状态，当前交易、金额、标签和模型不变。回调只接收无标签五列 context，机制字段也被物理排除。三种子阴影是最小值–最大值范围，不是置信区间。
+
+### A 如何一次接入
+
+A-N1 的视图和回调约定见 `report/EXTENSION_PROPOSALS.md` 的“已实现的 C 接口”。开发交易流只能包含训练＋验证，行身份、金额、时间与实体元数据必须相符；不得传测试段。四视图键为 transaction_only、customer_history、terminal_history、both_history；每个视图以 row_id 对齐，保留共同单笔特征，原始 Amount 与元数据逐值相同。C 自动拒绝已知标签/机制/ID/时间字段入模。
+
+在 A 现有入口取得数据和视图后调用（以下变量均由 A-N1 的正式交付提供，不是现有文件名）：
+
+```python
+from unsupervised import run_handbook_c
+
+summary, bundle = run_handbook_c(
+    train, validation, train_views, validation_views,
+    development_transactions,
+    dataset_manifest=handbook_manifest,
+    output="data/handbook_c_validation",  # 新目录，保存模型及逐行预测
+    results="results",                   # 公共聚合表与图
+    feature_builder=handbook_history_builder,
+)
+```
+
+manifest 最小字段：dataset_id="handbook"、evidence_kind="handbook_validation"、data_sha256、generator_source、generation_parameters，及 partitions 下由 `partition_description(train/validation)` 得到的两个完整描述。A 还需保存 E09 要求的许可、字段映射、生成版本、参数及划分证据。
+
+回调为 `handbook_history_builder(context, history_keep=Series)`，返回所有输入行的四视图。context 只有 row_id、Time、CUSTOMER_ID、TERMINAL_ID、Amount 五列；掩码只决定每条记录是否进入后续历史，不删除该记录的当前查询。零缺失必须与交付的 clean views 精确一致；C 的测试回调只是透明小样例 oracle，不能复制成正式 A-N1 数据生成器。
+
+输出集中在原目录：`results/tables/handbook_c.json`、`results/figures/handbook_c_ablation.png`、`results/figures/handbook_c_missing.png`。已有证据拒绝覆盖，复跑使用新的公共结果根目录。完整模型、逐行预测留本地 `data/`。若暂不传回调，E14 明确标为待 A 接口，不会报告完整正式验证完成。
+
+`run_handbook_c` 只运行验证，不负责 G2 冻结或测试。后续 A8 可使用 `score_handbook_c` 对冻结 bundle 评分（不拟合）；正式测试仍由 A 统一管理训练范围、来源及发布。当前静态模型不会自动替代 E11 的滚动快照。
+
+### 实际验证与边界
+
+```bash
+python -X utf8 -m unittest discover -s tests
+python -X utf8 -m unittest discover -s code -p test_classification.py
+```
+
+本次使用项目 `.venv`：83 项公共检查＋8 项 B 检查全部通过。新增检查覆盖：手算小图与独立集合 oracle、同时间批次、七天下界、重复边到期、未来/标签/金额扰动、掩码嵌套与分块一致、全部视图行列对齐、训练缩放范围、原始金额一致、泄漏列拒绝、缺失时禁止拟合/删除查询、九条件复跑、模型落盘复评分完全一致、公共/私有路径隔离及旧证据防覆盖。
+
+另外运行十万条生成因果交易流的关系状态检查，本机约 0.274 秒；未来追加不影响前缀、分块掩码一致。该时间仅是本机关系构建检查，既不是完整训练时间，也不是正式数据性能保证。
+
+全接口另用 320 条训练＋128 条验证的人工测试 fixture 运行：7 模型、8 排序、9 条件和两张组合图均通过，图像已人工查看。它不是 Handbook 官方生成器，样例 AP 不作为项目结论。预览只留在被忽略的 `data/handbook_c_interface_20261115/`；公开仅提交 `handbook_c_readiness.json` 的检查摘要。正式数据尚未生成/交付，因此现在不能判断历史、关系或缺失压力是否提升真实检测效果。
+
+A-N1 到位后无需重做接口设计，直接依次完成正式验证、与 B 对齐、解释正负结果，再进入 A7/A8 和 C7/C8。AIGC 补充：Codex 协助本次实现、检查、合成验证和说明整理；组员须理解并核对实现，最终报告按课程要求自行撰写并披露协助。
