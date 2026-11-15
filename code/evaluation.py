@@ -1921,6 +1921,60 @@ def save_review_policy_figure(threshold_results, path, *, phase):
     return path
 
 
+
+def save_handbook_c_figures(result, output):
+    """C-N1/N2/N3: compact dataset-specific plots; synthetic evidence labelled."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    output=Path(output)
+    prefix="handbook_c_interface" if result["evidence_kind"]=="synthetic_fixture" else "handbook_c"
+    title=("Synthetic interface check — NOT official Handbook results"
+           if result["evidence_kind"]=="synthetic_fixture" else "Handbook validation — fixed methods and budgets")
+    paths=[output/(prefix+"_ablation.png")]
+    if result["history_missing"]["status"]=="evaluated":paths.append(output/(prefix+"_missing.png"))
+    if any(p.exists() for p in paths):raise ValueError("Handbook C figures already exist")
+    output.mkdir(parents=True,exist_ok=True)
+    names=list(result["metrics"])
+    labels=[n.replace("if_","IF: ").replace("lr_","LR: ").replace("_"," ") for n in names]
+    fig,axes=plt.subplots(1,2,figsize=(14,6))
+    for ax,field in zip(axes,["AP","recall_at_k"],strict=True):
+        values=[]
+        for name in names:
+            m=result["metrics"][name]
+            value=m["AP"] if field=="AP" else next(r[field] for r in m["budgets"] if r["review_fraction"]==.01)
+            values.append(np.nan if value is None else value)
+        ax.barh(np.arange(len(names)),values)
+        ax.set_yticks(np.arange(len(names)),labels,fontsize=8)
+        ax.set(xlabel=field,title="All fixed conditions",xlim=(0,1))
+        ax.grid(axis="x",alpha=.2)
+    fig.suptitle(title);fig.tight_layout();fig.savefig(paths[0],dpi=160);plt.close(fig)
+    if len(paths)>1:
+        fig,axes=plt.subplots(1,2,figsize=(12,4.5))
+        missing=result["history_missing"]
+        for name in ["if_both_history","lr_both_history"]:
+            for ax,field in zip(axes,["AP","recall_at_k"],strict=True):
+                means,lows,highs=[],[],[]
+                for rate in missing["rates"]:
+                    values=[]
+                    for record in missing["records"]:
+                        if record["missing_fraction"]!=rate:continue
+                        m=record["metrics"][name]
+                        v=m["AP"] if field=="AP" else next(r[field] for r in m["budgets"] if r["review_fraction"]==.01)
+                        if v is not None:values.append(v)
+                    means.append(float(np.mean(values)) if values else np.nan)
+                    lows.append(min(values) if values else np.nan)
+                    highs.append(max(values) if values else np.nan)
+                x=100*np.asarray(missing["rates"])
+                ax.plot(x,means,marker="o",label=name)
+                ax.fill_between(x,lows,highs,alpha=.15)
+                ax.set(xlabel="Missing historical records (%)",ylabel=field,ylim=(-.02,1.02))
+                ax.legend(fontsize=8);ax.grid(alpha=.2)
+        fig.suptitle(title+"\nThree-seed ranges, not confidence intervals")
+        fig.tight_layout();fig.savefig(paths[1],dpi=160);plt.close(fig)
+    return paths
+
+
 def _c_extension_cli():
     """C-owned validation entry; A integrates test execution into the shared CLI."""
     import argparse

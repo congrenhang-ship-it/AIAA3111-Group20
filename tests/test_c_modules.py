@@ -1443,5 +1443,239 @@ class CReviewPolicyFigureTests(unittest.TestCase):
                 save_review_policy_figure(results,Path(folder)/"bad.png",phase="unknown")
         self.assertEqual(results,before)
 
+
+# Explicitly synthetic C interface fixtures, NOT the Handbook generator/dataset.
+def _c_handbook_fixture(n=448):
+    rng=np.random.default_rng(42)
+    ids=np.arange(1000,1000+n)
+    labels=(np.arange(n)%23==0).astype(int)
+    amounts=rng.lognormal(2,1,n)*(1+3*labels)
+    return pd.DataFrame({"row_id":ids,"Time":(np.arange(n)//2)*3600.0,
+                         "Amount":amounts,"Class":labels,
+                         "CUSTOMER_ID":[f"C{i%11}" for i in range(n)],
+                         "TERMINAL_ID":[f"T{(3*i+i//17)%13}" for i in range(n)],
+                         "TX_FRAUD_SCENARIO":labels*2})
+
+
+def _c_handbook_fixture_views(context, *, history_keep):
+    """Slow, transparent test-only oracle for A's not-yet-delivered contract."""
+    assert set(context)=={"row_id","Time","Amount","CUSTOMER_ID","TERMINAL_ID"}
+    assert history_keep.index.is_unique
+    rows=list(context.itertuples(index=False))
+    tables={name:{} for name in ("transaction_only","customer_history","terminal_history","both_history")}
+    for row in rows:
+        base={"Amount":float(row.Amount),"hour_sin":np.sin(row.Time/86400*2*np.pi),
+              "hour_cos":np.cos(row.Time/86400*2*np.pi)}
+        cf,tf={},{}
+        for days in [1,7]:
+            past=[p for p in rows if row.Time-days*86400<=p.Time<row.Time and history_keep.loc[p.row_id]]
+            for label,field,features in [("customer","CUSTOMER_ID",cf),("terminal","TERMINAL_ID",tf)]:
+                eligible=[p.Amount for p in past if getattr(p,field)==getattr(row,field)]
+                features[f"{label}_count_{days}d"]=len(eligible)
+                features[f"{label}_mean_{days}d"]=float(np.mean(eligible)) if eligible else 0.0
+        mean=cf["customer_mean_7d"]
+        cf["amount_over_customer_mean_7d"]=row.Amount/mean if mean>0 else 0.0
+        cf["customer_has_history_7d"]=int(cf["customer_count_7d"]>0)
+        tf["terminal_has_history_7d"]=int(tf["terminal_count_7d"]>0)
+        values={"transaction_only":base,"customer_history":{**base,**cf},
+                "terminal_history":{**base,**tf},"both_history":{**base,**cf,**tf}}
+        for name,features in values.items():tables[name][row.row_id]=features
+    return {name:pd.DataFrame.from_dict(values,orient="index").rename_axis("row_id")
+            for name,values in tables.items()}
+
+
+class CRelationHistoryTests(unittest.TestCase):
+    def setUp(self):
+        self.events=pd.DataFrame({"row_id":np.arange(10,20),"Time":[0,0,5,6,10,11,12,20,22,10],
+            "CUSTOMER_ID":["A","A","A","B","A","A","B","A","A","B"],
+            "TERMINAL_ID":["X","Y","X","X","Y","X","X","X","Y","Y"]})
+
+    def test_relation_counts_hand_calculation_ties_and_last_occurrence_expiry(self):
+        from unsupervised import build_relation_features
+        f=build_relation_features(self.events,window_seconds=10)
+        expected=[[0,0,1],[0,0,1],[2,1,0],[0,1,1],[2,1,0],
+                  [2,2,0],[2,2,0],[2,2,0],[1,1,1],[1,1,1]]
+        # B-Y at t=10 is visible to t=12; at t=22 it ages out.
+        expected[8]=[1,0,1]
+        assert_array_equal(f.to_numpy(),expected)
+        # Independent set-based oracle, not the queue/counter implementation.
+        oracle=[]
+        for row in self.events.itertuples(index=False):
+            p=self.events[(self.events.Time>=row.Time-10)&(self.events.Time<row.Time)]
+            pairs=set(zip(p.CUSTOMER_ID,p.TERMINAL_ID))
+            oracle.append([len({t for c,t in pairs if c==row.CUSTOMER_ID}),
+                           len({c for c,t in pairs if t==row.TERMINAL_ID}),
+                           int((row.CUSTOMER_ID,row.TERMINAL_ID) not in pairs)])
+        assert_array_equal(f.to_numpy(),oracle)
+
+    def test_relation_features_ignore_row_order_future_labels_and_amounts(self):
+        from unsupervised import build_relation_features
+        f=build_relation_features(self.events,window_seconds=10)
+        shuffled=self.events.sample(frac=1,random_state=2).assign(Class=1,Amount=1e9,TX_FRAUD_SCENARIO=99)
+        pd.testing.assert_frame_equal(f.sort_index(),build_relation_features(shuffled,window_seconds=10).sort_index())
+        future=self.events.iloc[:1].assign(row_id=999,Time=1000,CUSTOMER_ID="future")
+        extended=build_relation_features(pd.concat([self.events,future]),window_seconds=10)
+        pd.testing.assert_frame_equal(f,extended.loc[f.index])
+        for t in sorted(self.events.Time.unique()):
+            prefix=self.events[self.events.Time<=t]
+            pd.testing.assert_frame_equal(f.loc[prefix.row_id],build_relation_features(prefix,window_seconds=10))
+
+    def test_relation_history_masks_do_not_delete_queries(self):
+        from unsupervised import build_relation_features
+        keep=pd.Series(True,index=self.events.row_id);keep.loc[10]=False
+        f=build_relation_features(self.events,window_seconds=10,history_keep=keep)
+        assert_array_equal(f.loc[12],[1,0,1])
+        empty=build_relation_features(self.events,history_keep=keep&False)
+        assert_array_equal(empty.to_numpy(),np.tile([0,0,1],(len(self.events),1)))
+        self.assertEqual(list(empty.index),list(self.events.row_id))
+        with self.assertRaises(ValueError):build_relation_features(self.events,history_keep=keep.iloc[:-1])
+        with self.assertRaises(ValueError):build_relation_features(self.events,history_keep=keep.astype(int))
+        with self.assertRaises(ValueError):build_relation_features(self.events.assign(CUSTOMER_ID=None))
+        with self.assertRaises(ValueError):build_relation_features(self.events,window_seconds=0)
+
+    def test_masks_are_nested_label_independent_and_chunk_order_invariant(self):
+        from unsupervised import history_visibility_mask
+        full=history_visibility_mask(self.events,0,42)
+        self.assertTrue(full.all());self.assertFalse(history_visibility_mask(self.events,1,42).any())
+        p=history_visibility_mask(self.events,.1,42);q=history_visibility_mask(self.events,.3,42)
+        self.assertTrue((~q|p).all())
+        shuffled=self.events.sample(frac=1,random_state=4).assign(Class=1,Amount=-999,TX_FRAUD_SCENARIO=123)
+        pd.testing.assert_series_equal(p.sort_index(),history_visibility_mask(shuffled,.1,42).sort_index())
+        chunked=pd.concat([history_visibility_mask(self.events.iloc[:4],.1,42),history_visibility_mask(self.events.iloc[4:],.1,42)])
+        pd.testing.assert_series_equal(p,chunked)
+        for rate in [-1,1.1,np.nan]:
+            with self.assertRaises(ValueError):history_visibility_mask(self.events,rate)
+        with self.assertRaises(ValueError):history_visibility_mask(self.events,.1,-1)
+
+
+class CHandbookInterfaceTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from unsupervised import history_visibility_mask,build_relation_features,fit_handbook_c
+        from evaluation import partition_description
+        cls.transactions=_c_handbook_fixture()
+        cls.train=cls.transactions.iloc[:320].copy();cls.val=cls.transactions.iloc[320:].copy()
+        context=cls.transactions[["row_id","Time","CUSTOMER_ID","TERMINAL_ID","Amount"]]
+        cls.views=_c_handbook_fixture_views(context,history_keep=history_visibility_mask(context,0))
+        cls.train_views={n:x.loc[cls.train.row_id] for n,x in cls.views.items()}
+        cls.val_views={n:x.loc[cls.val.row_id] for n,x in cls.views.items()}
+        cls.relations=build_relation_features(cls.transactions)
+        cls.bundle=fit_handbook_c(cls.train,cls.train_views,cls.relations)
+        cls.manifest={"dataset_id":"handbook","evidence_kind":"synthetic_fixture",
+                      "partitions":{"train":partition_description(cls.train),"validation":partition_description(cls.val)}}
+
+    def test_four_IF_views_graph_references_and_training_only_scalers(self):
+        from unsupervised import score_handbook_c
+        self.assertEqual(len(self.bundle["models"]),7)
+        for name,model in self.bundle["models"].items():
+            view=self.bundle["config"]["model_views"][name]
+            X=self.train_views[view] if view!="both_history_graph" else pd.concat([self.train_views["both_history"],self.relations.loc[self.train.row_id]],axis=1)
+            scaler=(model.named_steps["scaler"] if name.startswith("if_")
+                    else model.named_steps["preprocessing"].named_transformers_["features"])
+            assert_allclose(scaler.mean_,X.mean().to_numpy(),rtol=1e-12,atol=1e-12)
+            if name.startswith("if_"):
+                params=model.named_steps["model"].get_params()
+                self.assertEqual((params["n_estimators"],params["max_samples"],params["random_state"]),(100,256,42))
+        p,_=score_handbook_c(self.bundle,self.val,self.val_views,self.relations)
+        reordered,_=score_handbook_c(self.bundle,self.val.iloc[::-1],self.val_views,self.relations.iloc[::-1])
+        for name in p:
+            assert_allclose(p[name].score,reordered[name].set_index("row_id").loc[self.val.row_id].score,rtol=0,atol=0)
+
+    def test_feature_schema_metadata_and_graph_domain_rejections(self):
+        from unsupervised import _checked_handbook_views,_checked_relations,score_handbook_c
+        for column in ["Class","CUSTOMER_ID","TX_FRAUD_SCENARIO","Time","label_available_time"]:
+            bad={k:x.assign(**{column:0}) for k,x in self.val_views.items()}
+            with self.subTest(column=column),self.assertRaises(ValueError):_checked_handbook_views(self.val,bad)
+        bad={k:x.reset_index(drop=True) for k,x in self.val_views.items()}
+        with self.assertRaisesRegex(ValueError,"row_ids"):_checked_handbook_views(self.val,bad)
+        wrong=copy.deepcopy(self.val_views);wrong["customer_history"].iloc[0,0]+=1
+        with self.assertRaisesRegex(ValueError,"Shared feature"):_checked_handbook_views(self.val,wrong)
+        for value in [-1,.5]:
+            bad=self.relations.copy();bad.iloc[0,0]=value
+            with self.assertRaises(ValueError):_checked_relations(self.train,bad)
+        wrong={k:x.rename(columns={x.columns[-1]:"unknown_feature"}) for k,x in self.val_views.items()}
+        with self.assertRaises(ValueError):score_handbook_c(self.bundle,self.val,wrong,self.relations)
+
+    def test_missing_history_is_frozen_paired_and_complete_for_all_nine_conditions(self):
+        from unsupervised import evaluate_history_missing,score_handbook_c
+        from evaluation import evaluate_amounts
+        before=joblib.hash(self.bundle)
+        with patch("unsupervised.fit_isolation_forest",side_effect=AssertionError("no refit")), \
+             patch("classification.train_model",side_effect=AssertionError("no refit")):
+            r=evaluate_history_missing(self.bundle,self.transactions,self.val,_c_handbook_fixture_views,self.val_views)
+        self.assertEqual(len(r["records"]),9)
+        clean,_=score_handbook_c(self.bundle,self.val,self.val_views,self.relations)
+        for row in r["records"]:
+            self.assertEqual(row["evaluation_rows"],len(self.val))
+            self.assertEqual(row["evaluation_row_ids_sha256"],self.manifest["partitions"]["validation"]["row_ids_sha256"])
+            if row["missing_fraction"]==0:
+                self.assertEqual(row["visible_events"],len(self.transactions))
+                for name in row["metrics"]:
+                    expected=evaluate_amounts(clean[name],self.val,self.bundle["config"]["amount_bins"])
+                    self.assertEqual(row["metrics"][name],expected)
+        repeat=evaluate_history_missing(self.bundle,self.transactions,self.val,_c_handbook_fixture_views,self.val_views)
+        self.assertEqual(r,repeat)
+        all_missing=evaluate_history_missing(self.bundle,self.transactions,self.val,_c_handbook_fixture_views,self.val_views,rates=(1,),seeds=(42,))
+        self.assertEqual(all_missing["records"][0]["visible_events"],0)
+        self.assertEqual(joblib.hash(self.bundle),before)
+
+    def test_bad_history_callbacks_and_context_are_rejected(self):
+        from unsupervised import evaluate_history_missing
+        def changes_current(data,*,history_keep):
+            views=_c_handbook_fixture_views(data,history_keep=history_keep)
+            # Clean call stays correct; stress call illegally alters current input.
+            if not history_keep.all():
+                for X in views.values():X["Amount"]+=1
+            return views
+        with self.assertRaisesRegex(ValueError,"current transaction|Amount"):
+            evaluate_history_missing(self.bundle,self.transactions,self.val,changes_current,self.val_views,rates=(.3,),seeds=(42,))
+        def drops_queries(data,*,history_keep):
+            return {n:x.iloc[:-1] for n,x in _c_handbook_fixture_views(data,history_keep=history_keep).items()}
+        with self.assertRaises(ValueError):evaluate_history_missing(self.bundle,self.transactions,self.val,drops_queries,self.val_views)
+        wrong=self.val.assign(Amount=self.val.Amount+1)
+        with self.assertRaisesRegex(ValueError,"metadata"):
+            evaluate_history_missing(self.bundle,self.transactions,wrong,_c_handbook_fixture_views,self.val_views)
+
+    def test_runner_preflight_rejects_test_rows_official_claims_and_bad_splits(self):
+        from unsupervised import run_handbook_c
+        with tempfile.TemporaryDirectory() as folder,patch("unsupervised.fit_isolation_forest",side_effect=AssertionError("preflight")):
+            args=(self.train,self.val,self.train_views,self.val_views)
+            future=self.transactions.iloc[:1].assign(row_id=99999,Time=1e9)
+            with self.assertRaisesRegex(ValueError,"no test"):
+                run_handbook_c(*args,pd.concat([self.transactions,future]),dataset_manifest=self.manifest,output=Path(folder)/"foreign")
+            official=copy.deepcopy(self.manifest);official["evidence_kind"]="handbook_validation"
+            with self.assertRaisesRegex(ValueError,"Official run"):
+                run_handbook_c(*args,self.transactions,dataset_manifest=official,output=Path(folder)/"official")
+            wrong=copy.deepcopy(self.manifest);wrong["partitions"]["validation"]["rows"]+=1
+            with self.assertRaisesRegex(ValueError,"identities"):
+                run_handbook_c(*args,self.transactions,dataset_manifest=wrong,output=Path(folder)/"split")
+            with self.assertRaisesRegex(ValueError,"overlap"):
+                run_handbook_c(*args,self.transactions,dataset_manifest=self.manifest,output=Path(folder),results=Path(folder)/"shared")
+            self.assertFalse(list(Path(folder).iterdir()))
+
+    def test_full_synthetic_runner_persistence_publication_and_evidence_labelling(self):
+        from unsupervised import run_handbook_c
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder)
+            r,b=run_handbook_c(self.train,self.val,self.train_views,self.val_views,self.transactions,
+                               dataset_manifest=self.manifest,output=root/"run",results=root/"shared",
+                               feature_builder=_c_handbook_fixture_views)
+            self.assertEqual(r["evidence_kind"],"synthetic_fixture")
+            self.assertFalse(r["official_validation_complete"])
+            self.assertFalse(r["group_G2_complete"]);self.assertFalse(r["test_scored"])
+            self.assertEqual(len(r["metrics"]),8)
+            self.assertEqual(len(r["history_missing"]["records"]),9)
+            self.assertTrue(r["verification"]["saved_model_scores_replay_exactly"])
+            self.assertTrue((root/"shared/tables/handbook_c_interface.json").exists())
+            self.assertFalse((root/"shared/tables/handbook_c.json").exists())
+            self.assertEqual(len(list((root/"shared/figures").glob("*.png"))),2)
+            self.assertFalse(list((root/"shared").rglob("*predictions*")))
+            for path in (root/"shared/figures").glob("*.png"):self.assertTrue(path.read_bytes().startswith(b"\x89PNG"))
+            with patch("unsupervised.fit_isolation_forest",side_effect=AssertionError("no overwrite")):
+                with self.assertRaisesRegex(ValueError,"already exists"):
+                    run_handbook_c(self.train,self.val,self.train_views,self.val_views,self.transactions,
+                                   dataset_manifest=self.manifest,output=root/"new",results=root/"shared")
+            self.assertFalse((root/"new").exists())
+
 if __name__ == "__main__":
     unittest.main()
