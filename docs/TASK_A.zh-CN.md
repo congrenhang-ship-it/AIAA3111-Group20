@@ -76,3 +76,43 @@ X_validation = get_features(validation)
 | A7 | 待 B5、C6、D4 和全组确认冻结配置、预算、窗口及代码版本。 |
 | A8 | 待 G2 冻结后统一跑正式测试并核对结果证据。 |
 | A9 | 数据与复现说明已准备。最终报告、时间分析、第二台电脑核对和提交包随正式结果完成。 |
+
+## Handbook 和 PaySim（A-N1 / A-N2 / A-N3）
+
+在仓库根目录用同一 Python 3.12 环境和固定依赖运行以下命令。输出目录须是新目录；完整数据、模型、阈值文件和逐行预测留在 data/。模型复跑时固定 BLAS 线程数为 1（Git Bash 用 export OPENBLAS_NUM_THREADS=1，PowerShell 用 $env:OPENBLAS_NUM_THREADS = "1"）。
+
+~~~bash
+python code/main.py --prepare-handbook --handbook-pilot --output data/handbook/pilot
+python code/main.py --prepare-handbook --output data/handbook/v1
+python code/main.py --run-handbook-c --output data/handbook/c_validation
+python code/main.py --run-handbook-rolling --output data/handbook/e11_validation
+curl -fL "https://www.kaggle.com/api/v1/datasets/download/ealaxi/paysim1?datasetVersionNumber=2" -o data/paysim_v2.zip
+python code/main.py --run-paysim-validation --output data/paysim_validation
+~~~
+
+Windows PowerShell 中用 curl.exe。也可从 [作者的 Kaggle v2 发布页](https://www.kaggle.com/datasets/ealaxi/paysim1) 保存同一个 ZIP，或使用 --paysim-archive 指定路径；验证入口会核对 SHA-256。Handbook 入口自动下载并校验上游生成器，分发时只需要代码和文档。重复生成使用另一目录；后续命令用 --handbook-dir 指定该目录。
+
+| 交付文件 | 用途 |
+|---|---|
+| code/handbook.py | 调用固定版本的 Handbook 公开生成器；生成 CSV 和 manifest，提供开发段加载函数 |
+| code/temporal.py | 四套按 row_id 索引的历史特征、E14 重建接口以及 E11 滚动验证 |
+| code/paysim.py | 审计并流式读取作者 ZIP，固定采样、时间切分和三组验证对照 |
+| code/main.py | 数据准备与三条验证命令 |
+| [handbook_a.json](../results/tables/handbook_a.json)、[E11 曲线](../results/figures/handbook_a_rolling.png)、[paysim_a.json](../results/tables/paysim_a.json) | 版本、分段指纹、快照与阈值、接口检查和验证聚合结果 |
+
+**组员调用。** 从仓库根目录把 code/ 加入 PYTHONPATH 后调用：
+
+~~~python
+from handbook import load_handbook_development
+from temporal import handbook_history_builder
+
+data = load_handbook_development("data/handbook/v1")
+train, validation = data["train"], data["validation"]
+train_views, validation_views = data["train_views"], data["validation_views"]
+~~~
+
+- B 将同名视图按 train.row_id 或 validation.row_id 排齐后传给分类器，目标用对应的 Class。
+- C 可直接用 --run-handbook-c。E14 用 handbook_history_builder(context, history_keep=...)，掩码只决定哪些行进入后续历史，每行仍保留当前特征。历史使用 [t−窗口, t)，同一时刻互不可见。
+- D 用元数据的 row_id、Class 按行连接 both_history 的 Amount、customer_amount_ratio_7d、customer_count_7d、terminal_count_7d，再调用 mine_rules(..., dataset_id="handbook")。TX_FRAUD_SCENARIO 单独留给事后诊断。
+
+**数据边界。** 60 天生成固定为 5,000 客户、10,000 终端、主种子 42，客户与终端生成器分别用 42、43，交易与欺诈事件沿用上游的客户号、日期种子。生成数据共 583,193 笔，训练/验证/测试各 292,139 / 145,315 / 145,739 笔。1 天试生成及两次生产生成均可由聚合记录核对。E11 更新日固定为第 30、37、44 天，最后一个验证日用相同的未拟合交易校准各自的 1% 阈值。PaySim 作者说明要求排除四个余额字段，E16 只使用请求类型和金额。正式留出评分由 A7/G2 冻结后在 A8 执行。

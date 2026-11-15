@@ -4,7 +4,7 @@
 
 负责人 A：维护数据获取、版本、格式、校验值与划分说明。B/C/D 按此获取同一份数据。
 
-## 每位组员独立准备数据
+## 每位组员独立准备 ULB 数据
 
 本组固定使用 [Zenodo 7395559 v1，2022-12-04](https://zenodo.org/records/7395559) 存档的 [creditcard.csv](https://zenodo.org/records/7395559/files/creditcard.csv)。原始数据来自 [ULB Machine Learning Group 与 Worldline](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)。原发布页列出 [ODbL](https://opendatacommons.org/licenses/odbl/1-0/) 和 [DbCL](https://opendatacommons.org/licenses/dbcl/1-0/)。
 
@@ -55,3 +55,7 @@ python -m unittest discover -s tests -v
 
 分段统计仅核对输入与标签计数。模型、分箱、缩放及重采样由各模块在训练阶段拟合。参数和方法在验证阶段确定，冻结后才评分测试集。
 
+
+## Handbook / PaySim
+
+Handbook 可运行 python code/main.py --prepare-handbook --output data/handbook/v1 自动获取并校验上游生成器，生成本地 CSV 和 manifest。PaySim 使用作者 Kaggle v2 ZIP，保存至 data/paysim_v2.zip。完整生成与下载命令、字段规则和 B/C/D 调用见上方中英文交接文档。已验证的数据和划分指纹见 [Handbook](../results/tables/handbook_a.json) 与 [PaySim](../results/tables/paysim_a.json)。

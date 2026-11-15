@@ -15,8 +15,45 @@ import download_data as downloader
 from main import REVIEW_FRACTIONS, run_validation, split_summary
 from preprocessing import DEFAULT_DATA_PATH, FEATURE_COLUMNS, ULB_SHA256, audit_data, data_sha256
 from preprocessing import get_features, load_data, split_data
-from temporal import evaluate_time_windows, summarize_time_windows
+from temporal import DAY_SECONDS, evaluate_time_windows, handbook_history_builder, summarize_time_windows
 from temporal import evaluate_review_threshold, select_review_threshold
+
+
+class HandbookHistoryTests(unittest.TestCase):
+    def setUp(self):
+        self.events = pd.DataFrame({
+            "row_id": [90, 12, 14, 18, 20, 33],
+            "Time": [0.0, 100.0, 100.0, float(DAY_SECONDS), float(7 * DAY_SECONDS), float(7 * DAY_SECONDS + 1)],
+            "CUSTOMER_ID": [1, 1, 1, 1, 1, 1],
+            "TERMINAL_ID": [2, 2, 3, 3, 2, 2],
+            "Amount": [10.0, 20.0, 30.0, 40.0, 50.0, 60.0],
+        })
+
+    def test_hand_calculated_boundaries_and_same_time_isolation(self):
+        both = handbook_history_builder(self.events)["both_history"]
+        self.assertEqual(both.loc[12, "customer_count_1d"], 1)
+        self.assertEqual(both.loc[14, "customer_mean_amount_1d"], 10)
+        self.assertEqual(both.loc[14, "terminal_count_1d"], 0)
+        self.assertEqual(both.loc[18, "customer_count_1d"], 3)
+        self.assertEqual(both.loc[18, "customer_mean_amount_1d"], 20)
+        self.assertEqual(both.loc[18, "customer_amount_ratio_1d"], 2)
+        self.assertEqual(both.loc[20, "customer_count_7d"], 4)
+        self.assertEqual(both.loc[33, "customer_count_7d"], 4)
+
+    def test_mask_and_future_do_not_delete_or_change_current_features(self):
+        clean = handbook_history_builder(self.events)
+        keep = pd.Series([False, True, True, True, True, True], index=self.events.row_id)
+        masked = handbook_history_builder(self.events.sample(frac=1, random_state=42), history_keep=keep)
+        pd.testing.assert_frame_equal(clean["transaction_only"].sort_index(), masked["transaction_only"].sort_index())
+        self.assertEqual(masked["both_history"].loc[14, "customer_count_1d"], 0)
+        self.assertEqual(masked["both_history"].loc[14, "customer_amount_ratio_unavailable_1d"], 1)
+        future = self.events.copy()
+        future.loc[5, "Amount"] = 1000000
+        after = handbook_history_builder(future)
+        for name in clean:
+            pd.testing.assert_frame_equal(clean[name].iloc[:-1], after[name].iloc[:-1])
+        with self.assertRaisesRegex(ValueError, "unlabeled"):
+            handbook_history_builder(self.events.assign(Class=0))
 
 
 class DownloadTests(unittest.TestCase):

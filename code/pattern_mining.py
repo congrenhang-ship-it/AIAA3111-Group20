@@ -20,6 +20,7 @@ MIN_COVERAGE = 20
 MIN_FRAUD_COVERAGE = 5
 MAX_FEATURES = 5
 MAX_RULES = 50
+HANDBOOK_RULE_FEATURES = ("Amount", "customer_amount_ratio_7d", "customer_count_7d", "terminal_count_7d")
 
 
 def _check_data(data, features):
@@ -79,10 +80,11 @@ def _metrics(data, mask):
     }
 
 
-def mine_rules(train_data, feature_columns, bins=3, max_length=3, binning="equal_frequency"):
+def mine_rules(train_data, feature_columns, bins=3, max_length=3, binning="equal_frequency", *, dataset_id="ulb"):
     """Fit training bins and mine feature antecedents -> Class=1 using Apriori.
 
-    Public signature unchanged. Return (binner_dict, rules). max_length includes
+    Return (binner_dict, rules). Handbook uses its declared E15 feature set.
+    max_length includes
     the one-item consequent (2..3); search uses <=5 features and 2..5 bins.
     Explicit feature choices must come from training only. Require antecedent
     coverage >=20, fraud coverage >=5, and training lift >1. Keep at most 50
@@ -92,7 +94,12 @@ def mine_rules(train_data, feature_columns, bins=3, max_length=3, binning="equal
     if isinstance(feature_columns, str):
         raise ValueError("feature_columns must be a sequence of feature names.")
     features = list(feature_columns)
-    allowed = {"Time", "Amount", *[f"V{i}" for i in range(1, 29)]}
+    if dataset_id == "ulb":
+        allowed = {"Time", "Amount", *[f"V{i}" for i in range(1, 29)]}
+    elif dataset_id == "handbook":
+        allowed = set(HANDBOOK_RULE_FEATURES)
+    else:
+        raise ValueError(f"Unsupported rule dataset: {dataset_id}")
     if not 1 <= len(features) <= MAX_FEATURES or len(set(features)) != len(features):
         raise ValueError("Provide one to five distinct features.")
     if not set(features) <= allowed:

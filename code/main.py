@@ -467,6 +467,41 @@ def run_team_validation(data_path, output):
     return {"phase": "validation", "output": str(output), "test_scored": False}
 
 
+def run_context_validation(args):
+    """Dispatch secondary datasets separately from the original ULB actions."""
+    if args.prepare_handbook:
+        from handbook import prepare_handbook
+
+        result = prepare_handbook(args.output, pilot=args.handbook_pilot)
+        return {"data_sha256": result["data_sha256"], "partitions": result["partitions"]}
+    if args.run_paysim_validation:
+        from paysim import run_paysim_validation
+
+        result = run_paysim_validation(args.paysim_archive, args.output)
+        return {"status": result["status"], "test_scored": False}
+
+    from handbook import load_handbook_development
+
+    development = load_handbook_development(args.handbook_dir)
+    if args.run_handbook_c:
+        from temporal import handbook_history_builder
+        from unsupervised import run_handbook_c
+
+        result, _ = run_handbook_c(
+            development["train"], development["validation"],
+            development["train_views"], development["validation_views"],
+            development["context"], dataset_manifest=development["manifest"],
+            output=args.output / "private", results=args.output / "aggregate",
+            feature_builder=handbook_history_builder,
+        )
+        return {"official_validation_complete": result["official_validation_complete"]}
+
+    from temporal import run_handbook_rolling
+
+    result = run_handbook_rolling(development, args.output)
+    return {"phase": result["phase"], "conditions": list(result["conditions"])}
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Group 20 data preparation and validation baseline."
@@ -525,10 +560,30 @@ def main():
         type=Path,
         help="Reproduce B manifest in shared environment and complete C combination.",
     )
+    action.add_argument("--prepare-handbook", action="store_true", help="Generate the pinned Handbook dataset.")
+    action.add_argument("--run-handbook-rolling", action="store_true", help="Run Handbook E11 development validation.")
+    action.add_argument("--run-handbook-c", action="store_true", help="Run C's Handbook validation with the shared data.")
+    action.add_argument("--run-paysim-validation", action="store_true", help="Run the PaySim E16 audit and validation.")
+    parser.add_argument("--handbook-pilot", action="store_true", help="Generate a one-day resource/field pilot.")
+    parser.add_argument("--handbook-dir", type=Path, default=ROOT / "data/handbook/v1")
+    parser.add_argument("--paysim-archive", type=Path, default=ROOT / "data/paysim_v2.zip")
     parser.add_argument(
         "--tasks", action="store_true", help="Show agreed module ownership."
     )
     args = parser.parse_args()
+    if args.handbook_pilot and not args.prepare_handbook:
+        parser.error("--handbook-pilot requires --prepare-handbook")
+    if args.prepare_handbook or args.run_handbook_rolling or args.run_handbook_c or args.run_paysim_validation:
+        if args.output is None or not args.output.resolve().is_relative_to((ROOT / "data").resolve()):
+            parser.error("Use a new --output directory under data/")
+        if args.output.exists():
+            parser.error("The --output directory already exists")
+        try:
+            message = run_context_validation(args)
+        except (ValueError, OSError, KeyError, ImportError, RuntimeError) as exc:
+            parser.error(str(exc))
+        print(json.dumps({"output": str(args.output), **message}, indent=2))
+        return 0
     run_data_action = (
         args.check_data
         or args.prepare_data

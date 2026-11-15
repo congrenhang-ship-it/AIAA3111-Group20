@@ -76,3 +76,30 @@ Local reproduction record (2026-11-10). On the same Windows computer, a clean pr
 | A7 | Awaiting B5, C6, D4 and team confirmation of the frozen settings, budgets, windows and revision. |
 | A8 | Run the frozen test plan and reconcile the evidence after G2. |
 | A9 | Data and reproduction instructions are ready. The final report, time analysis, second-machine check and submission package follow the formal results. |
+
+## Handbook and PaySim (A-N1 / A-N2 / A-N3)
+
+Use Python 3.12 with the pinned requirements from the repository root. Use a new directory for each run. Generated data, model files, paired threshold files and row-level predictions remain under data/. To replay the recorded numerical results, set OPENBLAS_NUM_THREADS=1 before the commands.
+
+~~~bash
+python code/main.py --prepare-handbook --handbook-pilot --output data/handbook/pilot
+python code/main.py --prepare-handbook --output data/handbook/v1
+python code/main.py --run-handbook-c --output data/handbook/c_validation
+python code/main.py --run-handbook-rolling --output data/handbook/e11_validation
+curl -fL "https://www.kaggle.com/api/v1/datasets/download/ealaxi/paysim1?datasetVersionNumber=2" -o data/paysim_v2.zip
+python code/main.py --run-paysim-validation --output data/paysim_validation
+~~~
+
+On Windows PowerShell, use curl.exe and $env:OPENBLAS_NUM_THREADS = "1". The PaySim v2 ZIP is also available through the [author's Kaggle release](https://www.kaggle.com/datasets/ealaxi/paysim1). Use --paysim-archive for a different path. The runner checks its SHA-256. The Handbook command retrieves and verifies the pinned simulator automatically. To replay Handbook, prepare to a new directory and pass it with --handbook-dir.
+
+| File | Responsibility |
+|---|---|
+| code/handbook.py | Pinned simulator orchestration, dataset manifest, development-only loader |
+| code/temporal.py | Row-keyed as-of history, E14 rebuild callback, E11 rolling validation |
+| code/paysim.py | Source audit, streaming sample, chronological split, three validation references |
+| code/main.py | Public data preparation and validation commands |
+| [Handbook evidence](../results/tables/handbook_a.json), [E11 curve](../results/figures/handbook_a_rolling.png), [PaySim evidence](../results/tables/paysim_a.json) | Aggregate evidence and fingerprints |
+
+Add code/ to PYTHONPATH and call load_handbook_development("data/handbook/v1") from handbook. The returned dictionary has manifest, train, validation, train_views, validation_views and context. B takes matching numeric views and Class, using metadata row_id for alignment. C can run the CLI or call run_handbook_c with the returned objects and temporal.handbook_history_builder. The callback takes the five unlabeled context fields and a boolean Series indexed by source row_id. It returns all current rows using [t-window,t) for earlier visible events. D joins row_id and Class to the four E15 fields in both_history. Use mine_rules(..., dataset_id="handbook") and keep TX_FRAUD_SCENARIO for post-hoc analysis.
+
+The 60-day configuration uses 5,000 customers, 10,000 terminals, customer/terminal profile seeds 42/43, and the published per-customer and per-day seed rules. A pilot ran first. Two production generations returned identical CSV and split fingerprints. E11 updates on days 30, 37 and 44 and pairs each final model with a 1% threshold calibrated on the same untouched final validation day. E16 uses amount and requested transaction type under the source author's balance-field guidance. Held-out scoring follows A7/G2 confirmation and A8.
