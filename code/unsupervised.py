@@ -24,7 +24,7 @@ from sklearn.preprocessing import StandardScaler, RobustScaler
 from pathlib import Path
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils.validation import check_is_fitted
-from preprocessing import FEATURE_COLUMNS
+from preprocessing import FEATURE_COLUMNS, data_sha256
 from evaluation import (
     make_prediction_frame,
     evaluate_scores,
@@ -1142,7 +1142,17 @@ def run_experiment(
         figures,
     )
     save_group_figures(
-        group_metrics[overall], figures, "Validation - selected improved C\n" + overall
+        group_metrics[overall],
+        figures,
+        "Validation - selected improved C\n" + overall,
+        comparison_groups=(
+            {
+                "B classifier": group_metrics[config["B_combination"]["method"]],
+                "C anomaly": group_metrics[overall],
+            }
+            if classifier is not None
+            else None
+        ),
     )
     save_comparison_figures(
         comparisons,
@@ -1180,11 +1190,11 @@ def run_experiment(
                 if row["classifier_share"] == config["B_combination"]["share"]
             ],
             figures,
-            "Validation - frozen B quota",
+            f"Validation - frozen classifier share {config['B_combination']['share']:.0%}",
             method_labels={
                 "classifier": config["B_combination"]["method"],
                 "anomaly": overall,
-                "combined": "B + anomaly",
+                "combined": "Frozen policy",
             },
             filename="B_complementarity.png",
         )
@@ -1270,3 +1280,516 @@ def run_experiment(
         verification["baseline_reproduced"] = True
     _dump(verification, public / "verification.json")
     return result, bundle
+
+
+def reproduce_b_for_c(train, validation, freeze_path, output, dataset_digest):
+    """C: reproduce B's declared six candidates in the shared pinned environment.
+
+    B's source and published artifacts are read-only. The supplied B proposal
+    remains the classifier under analysis; a changed winner is reported for
+    group review, never silently substituted. No test features are accepted.
+    """
+    import warnings
+    from sklearn.exceptions import ConvergenceWarning
+    from classification import train_model, score_model
+    from run_b_validation import EXPERIMENTS, select_method
+
+    freeze_path, output = Path(freeze_path), Path(output)
+    frozen = json.loads(freeze_path.read_text(encoding="utf-8"))
+    if frozen.get("owner") != "B" or frozen.get("test_evaluated"):
+        raise ValueError("Expected B's validation-only classifier manifest")
+    if not dataset_digest or frozen.get("dataset_sha256") != dataset_digest:
+        raise ValueError("B manifest does not match the verified dataset")
+    for name, frame in [("train", train), ("validation", validation)]:
+        expected = frozen["partitions"][name]
+        actual = partition_description(frame)
+        if any(
+            expected[key] != actual[key] for key in ["rows", "frauds", "row_ids_sha256"]
+        ):
+            raise ValueError("B manifest split does not match A: " + name)
+    if frozen.get("feature_columns") != FEATURE_COLUMNS or frozen.get("seed") != 42:
+        raise ValueError("B feature order or seed differs from the common protocol")
+    actual_versions = {
+        p: importlib.metadata.version(p)
+        for p in ["numpy", "pandas", "scikit-learn", "scipy"]
+    }
+    lock = dict(
+        line.split("==", 1)
+        for line in (ROOT / "requirements.txt").read_text(encoding="utf-8").splitlines()
+        if "==" in line and not line.startswith("#")
+    )
+    mismatches = {
+        p: {"actual": v, "required": lock.get(p)}
+        for p, v in actual_versions.items()
+        if lock.get(p) != v
+    }
+    if mismatches:
+        raise ValueError(
+            "B reproduction requires the pinned shared environment: "
+            + json.dumps(mismatches)
+        )
+    proposed = frozen["method"]
+    if proposed != f"{frozen['model_name']}_{frozen['strategy']}":
+        raise ValueError("B method name is inconsistent with model/strategy")
+    if output.exists() and any(output.iterdir()):
+        raise ValueError("B reproduction output must be new or empty")
+    records = []
+    selected_model = None
+    selected_frame = None
+    X_train, X_validation = train[FEATURE_COLUMNS], validation[FEATURE_COLUMNS]
+    for name, strategy in EXPERIMENTS:
+        method = f"{name}_{strategy}"
+        clock = perf_counter()
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", ConvergenceWarning)
+            model = train_model(X_train, train.Class, name, strategy=strategy, seed=42)
+            scores = score_model(model, X_validation)
+        metric = evaluate_scores(validation.Class, scores, row_ids=validation.row_id)
+        metric.pop("pr_curve", None)
+        records.append(
+            {
+                "method": method,
+                "model_name": name,
+                "strategy": strategy,
+                "fit_score_evaluation_seconds": perf_counter() - clock,
+                "metrics": metric,
+                "classifier_parameters": model.named_steps["classifier"].get_params(),
+            }
+        )
+        print(
+            f"B common-environment reproduction: {method}, AP={metric['AP']:.6f}",
+            flush=True,
+        )
+        if method == proposed:
+            selected_model = model
+            selected_frame = make_prediction_frame(validation, scores, method)
+    if selected_model is None:
+        raise ValueError("B proposed method is not among its declared candidates")
+    actual_params = selected_model.named_steps["classifier"].get_params()
+    differences = {
+        key: {"published": value, "actual": actual_params.get(key)}
+        for key, value in frozen["classifier_parameters"].items()
+        if actual_params.get(key) != value
+    }
+    if differences:
+        raise ValueError(
+            "B declared classifier parameters changed: " + json.dumps(differences)
+        )
+    winner = select_method(records)["method"]
+    output.mkdir(parents=True, exist_ok=True)
+    joblib.dump(selected_model, output / "selected_model.joblib")
+    replay = score_model(joblib.load(output / "selected_model.joblib"), X_validation)
+    np.testing.assert_allclose(replay, selected_frame.score, rtol=1e-12, atol=1e-15)
+    ids = validation.row_id.to_numpy()
+    np.testing.assert_array_equal(
+        np.lexsort((ids, -replay)), np.lexsort((ids, -selected_frame.score.to_numpy()))
+    )
+    selected_frame.to_csv(
+        output / "selected_validation_predictions.csv",
+        index=False,
+        float_format="%.17g",
+    )
+    record = {
+        "owner": "C",
+        "purpose": "B handoff reproduction, not a new classifier search",
+        "B_manifest_sha256": data_sha256(freeze_path),
+        "B_manifest_source_commit": frozen["provenance"]["source_commit"],
+        "B_branch_commit": subprocess.run(
+            ["git", "rev-parse", "origin/b/classification-interface"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        ).stdout.strip(),
+        "B_published_versions": frozen["provenance"]["versions"],
+        "actual_versions": actual_versions,
+        "dependency_lock_mismatches": {},
+        "code_sha256": {
+            name: data_sha256(ROOT / name)
+            for name in [
+                "code/classification.py",
+                "code/run_b_validation.py",
+                "requirements.txt",
+            ]
+        },
+        "dataset_sha256": dataset_digest,
+        "partitions": {
+            n: partition_description(f)
+            for n, f in [("train", train), ("validation", validation)]
+        },
+        "experiments": records,
+        "proposed_method": proposed,
+        "selected_under_common_environment": winner,
+        "selection_matches_published": winner == proposed,
+        "parameters_match_published": True,
+        "model_replay_scores_and_full_ranking_match": True,
+        "test_evaluated": False,
+        "prediction_sha256": data_sha256(
+            output / "selected_validation_predictions.csv"
+        ),
+        "published_prediction_sha256": frozen["predictions_sha256"],
+    }
+    _dump(record, output / "reproduction.json")
+    return selected_frame, selected_model, record
+
+
+# C-N1/N2/N3: generic, causal Handbook interfaces. A owns data generation and
+# customer/terminal count/amount features; C never substitutes its own dataset.
+HANDBOOK_VIEWS = ("transaction_only", "customer_history", "terminal_history", "both_history")
+RELATION_COLUMNS = ("customer_terminal_degree_7d", "terminal_customer_degree_7d", "new_customer_terminal_pair_7d")
+
+
+def _relation_events(transactions):
+    from evaluation import _row_ids, _vector
+    required = {"row_id", "Time", "CUSTOMER_ID", "TERMINAL_ID"}
+    if not isinstance(transactions, pd.DataFrame) or not required <= set(transactions):
+        raise ValueError("Relation stream requires row_id/Time/CUSTOMER_ID/TERMINAL_ID")
+    ids = _row_ids(transactions.row_id, len(transactions))
+    times = _vector(transactions.Time, "relation Time", len(transactions))
+    if (times < 0).any():
+        raise ValueError("Relation times must be nonnegative seconds")
+    for column in ["CUSTOMER_ID", "TERMINAL_ID"]:
+        for value in transactions[column]:
+            if not isinstance(value, (str, int, np.integer)) or isinstance(value, (bool, np.bool_)) or (isinstance(value, str) and not value.strip()):
+                raise ValueError("Entity keys must be nonempty strings or integers")
+    return pd.DataFrame({"row_id": ids, "Time": times,
+                         "CUSTOMER_ID": transactions.CUSTOMER_ID.to_numpy(),
+                         "TERMINAL_ID": transactions.TERMINAL_ID.to_numpy()})
+
+
+def history_visibility_mask(transactions, missing_fraction=0.0, seed=42):
+    """Label/amount-independent nested mask, stable under chunking and row order.
+
+    SplitMix64 mixes source IDs with seed; top 53 bits define a fixed uniform.
+    Unsigned wraparound is intentional. True means the event enters history
+    AFTER its time batch is scored; current transactions are never deleted.
+    """
+    from evaluation import _integer, _row_ids, _vector
+    rate = float(_vector([missing_fraction], "missing fraction")[0])
+    if not 0 <= rate <= 1:
+        raise ValueError("Missing fraction must be in [0,1]")
+    seed = _integer(seed, "history seed", 0, 2**32-1)
+    ids = _row_ids(transactions.row_id, len(transactions))
+    x = ids.astype(np.uint64) ^ np.uint64(seed)
+    with np.errstate(over="ignore"):
+        x = x + np.uint64(0x9E3779B97F4A7C15)
+        x = (x ^ (x >> np.uint64(30))) * np.uint64(0xBF58476D1CE4E5B9)
+        x = (x ^ (x >> np.uint64(27))) * np.uint64(0x94D049BB133111EB)
+        x = x ^ (x >> np.uint64(31))
+    uniform = (x >> np.uint64(11)).astype(float) / 2**53
+    return pd.Series(uniform >= rate, index=pd.Index(ids, name="row_id"), name="history_keep")
+
+
+def _checked_history_mask(events, history_keep):
+    if history_keep is None:
+        return pd.Series(True, index=pd.Index(events.row_id, name="row_id"))
+    if not isinstance(history_keep, pd.Series) or not history_keep.index.is_unique or set(history_keep.index) != set(events.row_id):
+        raise ValueError("History mask must be a boolean Series keyed by all source row IDs")
+    mask = history_keep.loc[events.row_id]
+    if mask.isna().any() or mask.dtype.kind != "b":
+        raise ValueError("History mask must contain only booleans")
+    return mask
+
+
+def build_relation_features(transactions, *, history_keep=None, window_seconds=7*86400):
+    """Past-only bipartite statistics on [t-window,t), no labels or amounts read.
+
+    Same-time queries are all answered before any events from that batch enter
+    the graph. Multiplicity counters preserve an edge until its LAST event ages
+    out. Returned numeric frame is keyed by original row_id in input order.
+    """
+    from collections import Counter, defaultdict, deque
+    from evaluation import _vector
+    events = _relation_events(transactions)
+    window = float(_vector([window_seconds], "relation window")[0])
+    if window <= 0:
+        raise ValueError("Relation window must be positive")
+    keep = _checked_history_mask(events, history_keep)
+    ordered = events.sort_values(["Time", "row_id"])
+    ordered = ordered.assign(keep=keep.loc[ordered.row_id].to_numpy())
+    customers, terminals = defaultdict(Counter), defaultdict(Counter)
+    queue = deque()
+    features = {}
+    batches = itertools.groupby(ordered.itertuples(index=False, name=None), key=lambda row: row[1])
+    for time, rows in batches:
+        batch = list(rows)
+        while queue and queue[0][0] < time-window:
+            _, c, t = queue.popleft()
+            customers[c][t] -= 1; terminals[t][c] -= 1
+            if customers[c][t] == 0: del customers[c][t]
+            if terminals[t][c] == 0: del terminals[t][c]
+            if not customers[c]: del customers[c]
+            if not terminals[t]: del terminals[t]
+        for row_id, _, c, t, visible in batch:
+            features[row_id] = (
+                len(customers.get(c, {})), len(terminals.get(t, {})),
+                int(t not in customers.get(c, {})),
+            )
+        for row_id, _, c, t, visible in batch:
+            if visible:
+                customers[c][t] += 1; terminals[t][c] += 1
+                queue.append((time, c, t))
+    return pd.DataFrame.from_dict(features, orient="index", columns=RELATION_COLUMNS).reindex(
+        pd.Index(events.row_id, name="row_id")).astype(float)
+
+
+def _checked_handbook_views(data, views, schema=None):
+    """A owns the four feature views; no inferred positional pandas alignment."""
+    from evaluation import _vector
+    make_prediction_frame(data, np.zeros(len(data)), "metadata")
+    _vector(data.Amount, "raw Amount", len(data))
+    if (data.Amount < 0).any() or not len(data) or set(views) != set(HANDBOOK_VIEWS):
+        raise ValueError("Provide nonempty data and exactly the four declared A feature views")
+    forbidden = {"class", "row_id", "time", "customer_id", "terminal_id", "dataset_id",
+                 "tx_fraud", "tx_fraud_scenario", "isfraud", "isflaggedfraud",
+                 "label_available_time", "cluster_id", "method", "score"}
+    checked = {}
+    for name in HANDBOOK_VIEWS:
+        X = views[name]
+        if not isinstance(X, pd.DataFrame):
+            raise ValueError("Feature views must be DataFrames with explicit row_id index")
+        X = X.copy()
+        if "row_id" in X: X = X.set_index("row_id")
+        if not X.index.is_unique or set(X.index) != set(data.row_id):
+            raise ValueError("Feature-view indices must match transaction row_ids")
+        if any(not isinstance(c, str) or c.lower() in forbidden or c.lower().startswith("tx_fraud") for c in X.columns):
+            raise ValueError("Target, oracle, clock and entity keys cannot be model features")
+        if set(RELATION_COLUMNS) & set(X):
+            raise ValueError("Base history views must not already contain E12 relation features")
+        X = X.loc[data.row_id]
+        _features(X)
+        if schema is not None:
+            if set(X) != set(schema[name]): raise ValueError("Frozen feature columns differ")
+            X = X[schema[name]]
+        checked[name] = X.astype(float)
+    base = set(checked["transaction_only"])
+    if "Amount" not in base or not np.array_equal(checked["transaction_only"].Amount.to_numpy(), data.Amount.to_numpy()):
+        raise ValueError("Transaction-only Amount must match the raw current transaction")
+    if not base <= set(checked["customer_history"]) or not base <= set(checked["terminal_history"]):
+        raise ValueError("History views must retain the transaction-only columns")
+    if base == set(checked["customer_history"]) or base == set(checked["terminal_history"]):
+        raise ValueError("Each history view must add its declared context columns")
+    if set(checked["both_history"]) != set(checked["customer_history"]) | set(checked["terminal_history"]):
+        raise ValueError("Both-history columns must be the union of customer and terminal views")
+    for a, b in itertools.combinations(HANDBOOK_VIEWS, 2):
+        common = sorted(set(checked[a]) & set(checked[b]))
+        if not np.array_equal(checked[a][common].to_numpy(), checked[b][common].to_numpy()):
+            raise ValueError("Shared feature values differ between A views")
+    return checked
+
+
+def fit_handbook_c(train, train_views, relation_features):
+    """C-N1/N2: four fixed IF fits plus one graph IF and two fixed LR references.
+
+    The LR references only establish the graph increment; they do not replace
+    B-N1's separate delivery. All scalers fit training views; no ULB constants.
+    """
+    from classification import train_model
+    from evaluation import fit_amount_bins
+    views = _checked_handbook_views(train, train_views)
+    relations = _checked_relations(train, relation_features)
+    models, model_views, timings = {}, {}, {}
+    extended = {**views, "both_history_graph": pd.concat([views["both_history"], relations], axis=1)}
+    if set(train.Class) != {0, 1}:
+        raise ValueError("Graph LR references require both training classes; do not resample to conceal this")
+    for view in HANDBOOK_VIEWS + ("both_history_graph",):
+        name = "if_"+view
+        start = perf_counter()
+        models[name] = fit_isolation_forest(extended[view], seed=42, n_estimators=100,
+                                           max_samples=256, contamination="auto", n_jobs=1)
+        timings[name] = perf_counter()-start
+        model_views[name] = view
+    for view in ["both_history", "both_history_graph"]:
+        name = "lr_"+view
+        start = perf_counter()
+        models[name] = train_model(extended[view], train.Class, "logistic_regression",
+                                   strategy="class_weight", seed=42)
+        timings[name] = perf_counter()-start
+        model_views[name] = view
+    return {
+        "models": models,
+        "config": {"feature_columns": {n:list(x.columns) for n,x in views.items()},
+                   "train_view_sha256": _handbook_view_fingerprints(views),
+                   "model_views": model_views, "amount_bins": fit_amount_bins(train),
+                   "train_partition": partition_description(train),
+                   "relation_columns": list(RELATION_COLUMNS), "relation_window_seconds": 7*86400,
+                   "IF": {"n_estimators":100,"max_samples":256,"contamination":"auto","seed":42,"n_jobs":1},
+                   "LR": {"model":"logistic_regression","strategy":"class_weight","seed":42},
+                   "review_fractions": list(DEFAULT_BUDGETS)},
+        "fit_seconds": timings,
+    }
+
+
+def _handbook_view_fingerprints(views):
+    """Named-column and row-keyed numeric fingerprints under the pinned pandas."""
+    result = {}
+    for name, frame in views.items():
+        h = hashlib.sha256(json.dumps(list(frame.columns)).encode())
+        h.update(pd.util.hash_pandas_object(frame, index=True).to_numpy(dtype="<u8").tobytes())
+        result[name] = h.hexdigest()
+    return result
+
+
+def _checked_relations(data, relations):
+    if not isinstance(relations, pd.DataFrame) or set(relations) != set(RELATION_COLUMNS):
+        raise ValueError("Supply the three declared relation columns")
+    if not relations.index.is_unique or not set(data.row_id) <= set(relations.index):
+        raise ValueError("Relation features must be keyed by source row_id")
+    relations = relations.loc[data.row_id, list(RELATION_COLUMNS)].copy()
+    _features(relations)
+    degrees = relations[list(RELATION_COLUMNS[:2])].to_numpy()
+    if (relations.to_numpy() < 0).any() or (degrees != np.floor(degrees)).any() or not np.isin(relations[RELATION_COLUMNS[2]], [0,1]).all():
+        raise ValueError("Relation degrees must be nonnegative and new-edge flag binary")
+    return relations.astype(float)
+
+
+def score_handbook_c(bundle, data, views, relation_features):
+    """Frozen C models on a new, A-identified partition; never fit or select."""
+    from classification import score_model
+    views = _checked_handbook_views(data, views, bundle["config"]["feature_columns"])
+    extended = {**views, "both_history_graph": pd.concat(
+        [views["both_history"], _checked_relations(data, relation_features)], axis=1)}
+    predictions, timings = {}, {}
+    for name, model in bundle["models"].items():
+        X = extended[bundle["config"]["model_views"][name]]
+        start = perf_counter()
+        score = score_isolation_forest(model, X) if name.startswith("if_") else score_model(model, X)
+        predictions[name] = make_prediction_frame(data, score, name)
+        timings[name] = perf_counter()-start
+    predictions["amount_descending"] = make_prediction_frame(data, data.Amount, "amount_descending")
+    return predictions, timings
+
+
+def evaluate_history_missing(bundle, transactions, evaluation_data, feature_builder,
+                             clean_views, *, rates=(0.0,0.1,0.3), seeds=(42,43,44)):
+    """C-N3: callback receives unlabeled raw context and row-keyed visibility mask.
+
+    A supplies feature_builder(unlabeled_transactions, history_keep=Series),
+    returning all four views for ALL source IDs. No current row is dropped.
+    Models remain trained on full history. Only fixed both-history LR/IF score.
+    """
+    from classification import score_model
+    from evaluation import evaluate_amounts, cost_sensitivity, _vector, _integer
+    rates = _vector(rates, "history missing rates")
+    if not len(rates) or ((rates < 0)|(rates > 1)).any() or len(np.unique(rates))!=len(rates):
+        raise ValueError("Missing rates must be distinct and in [0,1]")
+    seeds = [_integer(s,"missing seed",0,2**32-1) for s in seeds]
+    if not seeds or len(set(seeds))!=len(seeds): raise ValueError("Seeds must be nonempty and unique")
+    events = _relation_events(transactions)
+    if "Amount" not in transactions: raise ValueError("History builder needs raw Amount")
+    # Physically exclude labels, oracle mechanisms and any extra upstream fields.
+    context = events.assign(Amount=transactions.Amount.to_numpy())
+    if not set(evaluation_data.row_id) <= set(context.row_id):
+        raise ValueError("Evaluation IDs missing from the context stream")
+    aligned_context = context.set_index("row_id").loc[evaluation_data.row_id]
+    for column in ["Time", "Amount", "CUSTOMER_ID", "TERMINAL_ID"]:
+        if not np.array_equal(aligned_context[column].to_numpy(), evaluation_data[column].to_numpy()):
+            raise ValueError("Evaluation metadata differs from the context stream")
+    clean = _checked_handbook_views(evaluation_data, clean_views, bundle["config"]["feature_columns"])
+    all_visible = history_visibility_mask(context, 0.0, seeds[0])
+    rebuilt = feature_builder(context.copy(), history_keep=all_visible.copy())
+    rebuilt = _checked_handbook_views(context.assign(Class=0), rebuilt, bundle["config"]["feature_columns"])
+    rebuilt_eval = {n: x.loc[evaluation_data.row_id] for n,x in rebuilt.items()}
+    rebuilt_eval = _checked_handbook_views(evaluation_data,rebuilt_eval,bundle["config"]["feature_columns"])
+    for name in HANDBOOK_VIEWS:
+        if not np.array_equal(clean[name].to_numpy(),rebuilt_eval[name].to_numpy()):
+            raise ValueError("A callback's clean views differ from the delivered feature tables")
+    records = []
+    for rate in rates:
+        for seed in seeds:
+            keep = history_visibility_mask(context,float(rate),seed)
+            source = rebuilt if rate==0 else feature_builder(context.copy(),history_keep=keep.copy())
+            source = _checked_handbook_views(context.assign(Class=0), source, bundle["config"]["feature_columns"])
+            views = {n:x.loc[evaluation_data.row_id] for n,x in source.items()}
+            views = _checked_handbook_views(evaluation_data,views,bundle["config"]["feature_columns"])
+            if not np.array_equal(views["transaction_only"].to_numpy(),clean["transaction_only"].to_numpy()):
+                raise ValueError("Missing-history simulation must not change current transaction features")
+            metrics = {}
+            for name in ["if_both_history","lr_both_history"]:
+                model = bundle["models"][name]
+                X=views["both_history"]
+                scores=score_isolation_forest(model,X) if name.startswith("if_") else score_model(model,X)
+                pred=make_prediction_frame(evaluation_data,scores,name)
+                metrics[name]=evaluate_amounts(pred,evaluation_data,bundle["config"]["amount_bins"])
+            canonical = keep.sort_index()
+            digest=hashlib.sha256()
+            for row_id,visible in canonical.items():digest.update(f"{int(row_id)}:{int(visible)}\n".encode())
+            records.append({"missing_fraction":float(rate),"seed":seed,
+                            "source_events":len(context),"visible_events":int(keep.sum()),
+                            "actual_visible_fraction":float(keep.mean()),"mask_sha256":digest.hexdigest(),
+                            "evaluation_rows":len(evaluation_data),"evaluation_row_ids_sha256":partition_description(evaluation_data)["row_ids_sha256"],
+                            "metrics":metrics,"cost_sensitivity":cost_sensitivity(metrics)})
+    return {"status":"evaluated","rates":rates.tolist(),"seeds":seeds,"records":records,
+            "note":"Inference-only missing context; unchanged current rows/labels and fixed full-history models. Seed ranges are not confidence intervals."}
+
+
+def run_handbook_c(train, validation, train_views, validation_views, transactions, *,
+                   dataset_manifest, output, results=None, feature_builder=None):
+    """C new-data validation entry. A supplies official data/views and manifest.
+
+    Synthetic fixtures use a distinct evidence_kind/output namespace and NEVER
+    count as official Handbook validation. No dataset is generated here, no
+    held-out test rows enter this runner, and no method is selected from results.
+    """
+    from evaluation import evaluate_amounts, cost_sensitivity, save_handbook_c_figures
+    evidence = dataset_manifest.get("evidence_kind")
+    if dataset_manifest.get("dataset_id")!="handbook" or evidence not in {"synthetic_fixture","handbook_validation"}:
+        raise ValueError("A dataset_id and explicit synthetic/official evidence kind are required")
+    if evidence=="handbook_validation":
+        if not all(dataset_manifest.get(k) for k in ["data_sha256","generator_source","generation_parameters"]):
+            raise ValueError("Official run requires A's data hash, generator source and frozen parameters")
+    if train.empty or validation.empty or train.Time.max()>=validation.Time.min() or set(train.row_id)&set(validation.row_id):
+        raise ValueError("Training/validation must be nonempty, disjoint and chronological without split-time ties")
+    for name,data in [("train",train),("validation",validation)]:
+        if partition_description(data)!=dataset_manifest.get("partitions",{}).get(name):
+            raise ValueError("Data identities differ from A's declared partition")
+    context = _relation_events(transactions)
+    if set(context.row_id) != set(train.row_id)|set(validation.row_id):
+        raise ValueError("Context must contain exactly train+validation; no test or foreign IDs")
+    expected=pd.concat([train,validation]).set_index("row_id")
+    ordered=transactions.set_index("row_id").loc[expected.index]
+    for column in ["Time","Amount","CUSTOMER_ID","TERMINAL_ID"]:
+        if not np.array_equal(ordered[column].to_numpy(),expected[column].to_numpy()):
+            raise ValueError("Context metadata differs from the declared partitions")
+    output=Path(output)
+    if output.exists() and any(output.iterdir()):raise ValueError("Handbook C output must be new or empty")
+    prefix="handbook_c_interface" if evidence=="synthetic_fixture" else "handbook_c"
+    if results is not None:
+        results=Path(results)
+        a,b=output.resolve(),results.resolve()
+        if a==b or a in b.parents or b in a.parents:raise ValueError("Private/public outputs must not overlap")
+        targets=[results/"tables"/(prefix+".json")]+[results/"figures"/(prefix+"_"+n+".png") for n in ["ablation","missing"]]
+        if any(p.exists() for p in targets):raise ValueError("Published Handbook C evidence already exists")
+    # All identity, chronology and path checks precede model fitting.
+    train_views=_checked_handbook_views(train,train_views)
+    validation_views=_checked_handbook_views(validation,validation_views,
+                                            {n:list(x.columns) for n,x in train_views.items()})
+    relations=build_relation_features(context)
+    bundle=fit_handbook_c(train,train_views,relations)
+    predictions,score_times=score_handbook_c(bundle,validation,validation_views,relations)
+    metrics={name:evaluate_amounts(p,validation,bundle["config"]["amount_bins"]) for name,p in predictions.items()}
+    missing=(evaluate_history_missing(bundle,transactions,validation,feature_builder,validation_views)
+             if feature_builder is not None else {"status":"pending_A_history_builder"})
+    output.mkdir(parents=True,exist_ok=True)
+    joblib.dump(bundle,output/"models.joblib")
+    restored=joblib.load(output/"models.joblib")
+    replay,_=score_handbook_c(restored,validation,validation_views,relations)
+    for name in predictions:
+        np.testing.assert_array_equal(predictions[name].score.to_numpy(),replay[name].score.to_numpy())
+        predictions[name].to_csv(output/(name+"_predictions.csv"),index=False,float_format="%.17g")
+    result={"dataset_id":"handbook","phase":"validation","evidence_kind":evidence,
+            "official_validation_complete":evidence=="handbook_validation" and missing["status"]=="evaluated",
+            "group_G2_complete":False,"test_scored":False,"configuration_reselected":False,
+            "dataset_manifest":copy.deepcopy(dataset_manifest),"config":bundle["config"],
+            "validation_view_sha256":_handbook_view_fingerprints(validation_views),
+            "metrics":metrics,"cost_sensitivity":cost_sensitivity(metrics),"history_missing":missing,
+            "fit_seconds":bundle["fit_seconds"],"score_seconds":score_times,
+            "verification":{"saved_model_scores_replay_exactly":True},
+            "model_bundle_sha256":data_sha256(output/"models.joblib"),
+            "provenance":_source()}
+    _dump(result,output/"summary.json")
+    if results is not None:
+        paths=save_handbook_c_figures(result,results/"figures")
+        result["figure_sha256"]={p.name:data_sha256(p) for p in paths}
+        (results/"tables").mkdir(parents=True,exist_ok=True)
+        _dump(result,results/"tables"/(prefix+".json"))
+    return result,bundle

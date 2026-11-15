@@ -14,7 +14,7 @@ A 的原始数据校验、去重和正式时间划分保持不变：训练 170,2
 | 原 IF：100 棵、抽样 256 | 10 | 558 | 17.54% | 1.76% | 0.016546 |
 | 改进 IF：100 棵、抽样 4096 | 24 | 544 | 42.11% | 4.23% | 0.030021 |
 
-当前交给 A 的候选是改进 IF：原始 30 个输入、训练段 StandardScaler、100 棵树、max_samples=4096、contamination=auto、seed=42、n_jobs=1。其余候选和失败结果保留，不再追加调参。
+当前交给 A 的无监督对照是改进 IF：原始 30 个输入、训练段 StandardScaler、100 棵树、max_samples=4096、contamination=auto、seed=42、n_jobs=1。其余候选和失败结果保留，不再追加调参。
 
 | 审核预算 | K | 原距离 TP | 原 IF TP | 改进 IF TP |
 |---|---:|---:|---:|---:|
@@ -83,7 +83,7 @@ K-means 固定 k=3，六种配置各输出原始距离与簇内相对距离，�
 - `results/tables/c_baseline.json`：基线指标、配置、训练结构与画像。
 - `results/tables/c_improved.json`：改进指标、锁定选择、候选、分群、窗口及审计记录。
 - `results/tables/c_ablation.csv`：便于报告/海报使用的 20 候选对照。
-- `results/figures/c_*.png`：当前六张结果图及训练结构图。
+- `results/figures/c_*.png`：主实验图、训练结构图及 c_extensions_ 前缀的三张新增验证图。
 
 激活环境、准备数据与检查：
 
@@ -99,7 +99,11 @@ python -m unittest discover -s tests -v
 python code/main.py --run-c --output data/c_reproduction/run --results data/c_reproduction/shared
 ```
 
-`--run-c-baseline` 重现第一轮，`--demo` 只运行合成检查。B 的真实标准预测到位后追加 `--classification-predictions data/classifier_validation.csv`，列为 row_id/Class/Time/method/score。分类配额按预定规则在验证阶段选择，B5 来源与全组 G2 继续由相应成员确认。
+`--run-c-baseline` 重现第一轮，`--demo` 只运行合成检查。B 已接入。可追加 `--classification-freeze results/tables/b_freeze.json` 复核共同环境并完成分类组合；已有可靠预测也可传 `--classification-predictions data/classifier_validation.csv`（row_id/Class/Time/method/score）。本次完整复现命令如下：
+
+```bash
+python code/main.py --run-c --classification-freeze results/tables/b_freeze.json --output data/c_reproduction/run --results data/c_reproduction/shared
+```
 
 模型、完整评分矩阵、错误样例和详细中间导出保留在私有运行目录。历史共享文件与旧结构快照保存在被 Git 忽略的 `data/_layout_archive/`，也可从 Git 历史恢复。汇总里的 source_commit/代码哈希继续指向真实拟合版本；本次整理不重训、不改变模型选择或验证数值。
 
@@ -115,8 +119,391 @@ bundle = joblib.load("data/c_reproduction/run/improved_models.joblib")
 result = evaluate_improved_frozen(bundle, test, "data/c_final_test", phase="test")
 ```
 
-它不重新拟合或选择配置，B 配额冻结后可传 classifier；未冻结时拒绝分类组合。第一轮 bundle 的对应接口为 `evaluation.evaluate_frozen_c`。恢复检查使用 phase="validation_replay"。旧自定义变换器已迁移到 unsupervised 模块路径，原模型备份保留，预测需保持一致。
+本次模型包位于 `data/c_with_b_20261111/improved_models.joblib`，包含核验后的 B 管线；按上面的带 B 命令重现时，同一接口会自动生成 B 分数、应用已冻结配额。它不重新拟合或选择配置；也可显式传 classifier，未冻结时拒绝分类组合。第一轮 bundle 的对应接口为 `evaluation.evaluate_frozen_c`。恢复检查使用 phase="validation_replay"。旧自定义变换器已迁移到 unsupervised 模块路径，原模型备份保留，预测需保持一致。
 
-整理核对：44 项 A/C 检查通过；临时接入 D 后 51 项检查通过且无合并冲突，D 未实际合入。原指标、选择和保留图片均已核对，两份旧模型在新模块路径下恢复后分数一致。
+整理时的 44 项 A/C 检查与 51 项含 D 检查通过；本次又补入 B 接入/自动评分检查，当前检查数量见下节。原指标、选择和保留图片均已核对，两份旧模型在新模块路径下恢复后分数一致。
 
-AIGC 记录：Codex 辅助协议、代码、训练验证、检查、结构整理与分析；组员须理解并审核，再据实际使用完善最终 Disclosures。当前没有 B5 真实分类结论或 A8 最终测试结果。
+AIGC 记录：Codex 辅助协议、代码、训练验证、检查、结构整理与分析；组员须理解并审核，再据实际使用完善最终 Disclosures。本次已完成 B 的真实共同环境复核及 C 的配额选择，A8 最终测试尚未执行。
+
+## B 接入规则（执行前固定）
+
+已接入 B 的提交 55ee151，B 已公布验证结果。这里只按 B 原协议复核六个候选，使用 A 的固定依赖、数据及划分，不扩大搜索，也不修改 B 的算法或原结果。C 原先的模型/异常选择和三个内层种子规则保持不变。分类配额仍是 0/25/50/75/100%，按正式验证 1% 的 TP 最大选择，并列保留更多分类容量。正式测试留给全组 G2 后的 A8。
+
+入口增加 `--classification-freeze results/tables/b_freeze.json`：核对数据身份、参数与版本，在本地保存 B 复核模型和预测，完成分类 AP/预算、分群、窗口与等 K 互补，再将选定配额及 B 管线一并保存。A8 冻结评价会自动使用该 B 管线，不重新训练或挑配额。C 的共享结果继续只放原来的 tables/ 和 figures/，B 已发布的文件保持原样。
+
+## B 接入后的真实互补与冻结结果
+
+B 分支 55ee151 已包含 A/C，因此直接接入无冲突。其原实验使用 sklearn 1.8.0 等版本，与共同依赖不同。本次在 Python 3.12.14、NumPy 2.5.4、pandas 3.1.1、sklearn 1.9.1、SciPy 1.18.1 下，按 B 原协议复核全部六个候选。未修改 B 的代码或已发布结果。
+
+全部候选在主预算的 TP 与 B 原记录一致，选择仍为 `logistic_regression_class_weight`。该模型 AP=0.772681；随机森林 AP 从原记录 0.757048 变为 0.755615，版本差异已保留，不宣称所有数字逐位一致。重新保存/加载后，本地分数与完整排名一致。数据 SHA-256、正式划分指纹、所选参数均匹配 B 声明，真实 G1 原始逻辑回归的 AP/预算与独立复核一致。
+
+| 预算 | K | B 分类 TP | IF TP | 冻结策略 TP |
+|---|---:|---:|---:|---:|
+| 0.1% | 57 | 42 | 0 | 42 |
+| 0.5% | 284 | 48 | 8 | 48 |
+| 1% | 568 | 49 | 24 | 49 |
+| 2% | 1,135 | 49 | 35 | 49 |
+
+主预算下，B 的 Recall=85.96%、Precision=8.63%，仍有 8 笔漏检。IF 的 24 笔欺诈全部被 B 的名单覆盖；B 独有 25 笔、IF 独有 0 笔。分类配额 0/25/50/75/100% 的 TP 分别为 24/45/48/49/49，按“TP 并列保留更多分类容量”的原规则选择 **100% 分类、0% IF**。这是合法的纯方法端点，不把它包装成混合策略改善。
+
+2% 时 IF 有 1 笔独有欺诈，但 25% 分类配额的示例同时损失 1 笔 B 独有欺诈，检出仍是 49。其他已试配额也没有净收益。这只说明当前数据、容量和有限策略中没有组合提升，不能据此认定异常方法在所有场景都无用。
+
+![固定审核容量下的分类与异常](../results/figures/c_B_complementarity.png)
+
+群体统一使用同一 K-means，主预算的一个全局名单中：
+
+| 簇 | 笔数/欺诈数 | B 审核数/检出 | B Recall | IF 审核数/检出 | IF Recall |
+|---|---|---|---:|---|---:|
+| 0 | 9,596 / 14 | 62 / 13 | 92.86% | 258 / 9 | 64.29% |
+| 1 | 47,149 / 43 | 506 / 36 | 83.72% | 310 / 15 | 34.88% |
+| 2 | 0 / 0 | 0 / 0 | N/A | 0 / 0 | N/A |
+
+![同群体、同全局预算对照](../results/figures/c_cluster_prevalence.png)
+
+三个真实案例可帮助讲解，完整行身份只保存在本地 `private_cross_method_cases.csv`：
+
+| 案例 | 标签 | B 排名 | IF 排名 | 可支持的说明 |
+|---|---:|---:|---:|---|
+| C1 | 欺诈 | 4 | 605 | 分类能抓住未进入 IF 主预算名单的欺诈 |
+| C2 | 欺诈 | 11,505 | 867 | IF 在 2% 容量下有独有发现，但固定容量组合未增加总检出 |
+| C3 | 正常 | 56,545 | 1 | 异常程度最高也可能是正常交易，不能把异常分当欺诈概率 |
+
+排名从 1 开始。这些是事实性案例，不从匿名特征推断具体消费或犯罪行为。
+
+冻结记录在 `results/tables/c_improved.json` 的 config/B_reproduction/completion_verification：C 模型与原 20 候选结果未变，分类配额=1.0，threshold=null，K 向上取整、score 降序/row_id 升序；保存训练段模型，不合并 train+validation 重训。本地完整模型包自动包含 B，验证重放会核对所有风险分数、指标和容量。B 的原预测字节哈希与重建文件可能不同，原值和新值分别保存，不以字节相同冒充跨版本分数一致。
+
+C5、C6、C8 的方法/验证写作与问答已交付。C7 的最终测试图和报告最终测试数字仍需 A 汇总 G2 并执行 A8：当前 B/D 冻结文件与本地 C 包均未宣称全组 G2 完成，所以本次没有评分测试集。不能用验证图代替最终图。
+
+供组员审核改写的英文素材：
+
+Under the same 1% review budget, the reproduced class-weighted logistic regression detected 49 of 57 validation fraud cases, whereas the improved Isolation Forest detected 24. All 24 anomaly detections were covered by the classifier's top-K list. The predeclared quota search therefore selected the pure-classifier endpoint: a 75% classifier quota tied its detected-fraud count, and the tie rule preferred more classifier capacity. At 2%, one anomaly-exclusive fraud case existed, but a capacity-preserving policy traded away one classifier-exclusive fraud and produced no net gain. These findings support the value of evaluating complementarity under an identical capacity constraint, rather than using the larger union of two review lists.
+
+答辩要点：异常更稀有不代表更像已知欺诈；有独有案例不等于净收益；相同 K、去重补齐和事先固定的并列规则是比较基础；选择纯分类不是失败，而是保留有证据支持的策略。当前结论为验证结论，最终泛化仍由 A8 检查。
+
+最终核对：46 项 A/C 检查、8 项 B 检查通过；临时加入 D 的 7 项检查后共 61 项通过且无冲突，D 未实际合入。真实 G1、完整验证的冻结重放、行身份/容量/分群计数均已核对。B 的原算法、测试及发布结果文件未改动；测试集没有评分。
+
+## C7 接入交付（2026-11-13）
+
+当前可以独立完成的 C7 接入、发布接口及验证重放已完成。C7 的正式测试图和 C8 的正式测试解释仍依赖 A7/G2 与 A8；本节不确认全组冻结，也没有运行测试集。仅修改 C 的评价、检查及本说明，沿用原目录。
+
+### A 接入时使用的接口
+
+| 接口 | 输入与责任 | 输出 |
+|---|---|---|
+| `evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="test", window_seconds=3600, window_origin=0)` | A 提供固定划分和 G2 的窗口设置；bundle 内含训练好的 B/C。`output` 必须为新的本地目录 | 返回总体、分群、窗口、等 K 互补结果；本地保存 evaluation.json、完整预测和图 |
+| `publish_frozen_c_results(run, destination, *, provenance)` | 输入上一接口的运行目录；只发布已有结果，不训练、不评分、不选参 | 在原 tables/ 和 figures/ 中发布汇总 JSON、数值写作材料和图 |
+
+A 从自己复现的 bundle 接入，不能依赖 C 电脑上的模型路径。未显式传 `classifier` 时使用 bundle 已包含的 B 管线；显式传入时要求 method、row_id、Time、Class 与固定方案和数据一致。数据的特征及行身份不由 C 重新划分。
+
+窗口长度和起点现在均可显式传递；默认 3600 秒、起点 0 只复现已有验证诊断，A 须在 G2 中确认最终设置。返回的 `time_window_config` 记录实际使用值。每个窗口独立按 `ceil(N_window*q)` 分配容量，不能将窗口审核量之和直接解释为一次全局 top-K。群体图则使用全局名单在各簇的分配，两种口径须分开。
+
+### 不接触测试集的验证重放
+
+以下在仓库根目录运行；选择新路径，避免覆盖已有证据。此命令不会重新拟合模型。其他成员先按前文完整复现命令生成自己的 bundle，再替换模型路径。
+
+```python
+import sys
+from pathlib import Path
+import subprocess
+import joblib
+sys.path.insert(0, "code")
+from preprocessing import load_data, split_data, ULB_SHA256
+from evaluation import evaluate_improved_frozen, publish_frozen_c_results
+
+bundle = joblib.load("data/c_with_b_20261111/improved_models.joblib")
+_, validation, _ = split_data(load_data(Path("data/creditcard.csv")))
+run = "data/c_handoff_reproduction/run"
+result = evaluate_improved_frozen(
+    bundle, validation, run, phase="validation_replay",
+    window_seconds=3600, window_origin=0,
+)
+files = publish_frozen_c_results(
+    run, "data/c_handoff_reproduction/shared",
+    provenance={
+        "source_commit": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True).strip(),
+        "dataset_sha256": ULB_SHA256,
+        "command": "C7 validation replay Python API sequence in report/C_IMPROVEMENTS.md",
+    },
+)
+```
+
+本次真实运行使用 `data/c_handoff_20261113/run` 和 `data/c_handoff_20261113/shared`；详细检查记录追加在已有 `results/tables/c_improved.json` 的 `C7_handoff_verification`。原模型文件、冻结选择和先前验证数字保持不变。重放过程中阻断训练与选择函数，核对保存模型和配置未改变，并检查所有选定方法的 AP/预算、群体、时间窗口与原记录一致，组合名单仍恰好 K 笔。
+
+### G2 后 A8 的最小调用变化
+
+A 先完成全组冻结，再将上例的 `data` 替换为同一划分中的 test、`phase` 替换为 `"test"`，并传入 G2 中记录的窗口起点和长度。运行目录使用新的本地路径。发布时额外提供 `provenance["g2_reference"]`（全组冻结文件/记录及版本），`command` 填写真实运行命令，`source_commit` 填写实际实验代码版本。发布器检查来源字段存在，但不替 A 审批 G2，也不根据测试结果修改方案。
+
+发布后的命名：
+
+| 内容 | 验证重放 | 正式测试 |
+|---|---|---|
+| 公开汇总 | `results/tables/c_validation_replay.json` | `results/tables/c_test.json` |
+| 数值写作材料 | `results/tables/c_validation_replay.md` | `results/tables/c_test.md` |
+| 图表前缀 | `results/figures/c_validation_replay_` | `results/figures/c_test_` |
+
+每次发布含 PR、审核预算 Recall/Precision、簇内表现、异常方法互补图；包含 B 时另附有实际方法名称的 B/C 互补图。JSON 不发布逐行名单和完整 PR 点，保存评估文件及每张图片的 SHA-256、划分指纹、实际窗口设置和来源记录。模型、完整预测、逐行案例始终保留本地。目标同名文件已存在、缺图、缺来源或公开/私有目录相互包含时拒绝发布，保护原实验结果。无需把本次重复验证图加入 Git。
+
+JSON 的 config 是原训练/验证阶段的候选冻结记录，其中 `test_evaluated=false`、`group_G2_complete=false` 不会被 C 接口改写；实际评分阶段看顶层 phase，全组冻结依据看 A 的 G2 记录。正式结果不能因为复制了旧配置标记而被误当成验证结果。
+
+### C8 可提前完成的写作准备
+
+方法与验证分析沿用前文。发布器生成的 Markdown 从实际结果填写每个方法的 AP、全部预算 TP/FP/Recall/Precision、B/C 独有与重合欺诈、组合相对分类的净变化，以及全局 1% 下的群体计数；未定义值写 N/A。它是供 C 核对、D 整合的数值材料，不代替最终解释。
+
+拿到 A8 后，C 只需围绕以下问题补充正式结论，不追加选择：
+
+1. 固定 IF 相对距离方法的优劣是否与验证阶段一致？同时检查 AP 和各预算，不只挑最好的一个数字。
+2. 已冻结的分类配额在测试上得到多少净检出变化？纯分类端点应明确写出。测试上出现异常独有案例，也不能据此重新调整配额。
+3. 各簇交易数和欺诈数是否足以支持比较？空簇、无欺诈簇用 N/A；较小群体的极端比例只作描述。
+4. 时间分析由 A 提供，用同一窗口口径解释；不能仅凭两个交易日的窗口差异断言长期漂移。
+5. 将最终数字与验证数字明确分开，对模型已用标签做内层选择、匿名特征解释限制及少量欺诈带来的不确定性如实说明。
+
+交给 D 时：使用 c_test.md 的真实数字、c_test.json 的来源和 c_test_ 前缀的图；正文分别安排方法、等预算结果及局限。C 核对自己的全部数字与图注，A 核对共同划分/时间口径，D 统一文稿。最终演练和全组数字核对需等实际材料齐全后完成。
+
+本次 AIGC 补充：Codex 协助冻结接口、发布接口、验证重放、检查与交接说明；未新增算法、未扩大参数搜索、未评分测试集。最终结果解释由组员据真实 A8 输出审核。
+
+D 的新复核记录指出中文 Windows 的默认 GBK 会使 C 读取带中文注释的 requirements.txt 失败。本次在 C 的读取点显式指定 UTF-8，并在检查中模拟 GBK 默认编码；不再依赖用户为这个读取点设置 PYTHONUTF8。该修复不改变依赖版本或实验选择。共享 TASKS.md 保留 D 自己提交的最新进度。
+
+本次最终检查：本分支 47 项 A/C 检查与 8 项 B 检查通过；隔离接入 D 的 f26e360 后，54 项公共检查与 8 项 B 检查通过，共 62 项。真实验证重放的三种冻结方法全部指标、群体与窗口结果一致；正式测试仍未执行。未新增跟踪文件，重复图表只保存在本地预览目录。
+
+2026-11-13 合并记录：当时 C 与 D f26e360 仅 TASKS.md 顶部 C 进度一行有文本冲突。2026-11-14 main 已发布新的扩展路线；A6 合并时应以最新 TASKS 范围为准，保留各人真实进度，不将 D 的旧清单覆盖新分工。代码文件的兼容性由本次隔离检查核对；本次未替 A 合并 D 的业务代码。
+
+## C-E1 / C-E2 / C-E3 完成交付（2026-11-14）
+
+三项新增任务均已完成实现、必要检查、完整真实验证及独立复跑：C-E1 对应 E01/E06，C-E2 对应 E07，C-E3 对应 E02。C7 所需新增接口与验证图已就绪；全组 G2、A8 正式测试、C7 正式图和 C8 正式结论仍未完成。本次没有运行测试集，也没有新增模型或重新调参。
+
+### 结果文件与复现
+
+新增逻辑全部保存在 `code/evaluation.py`，检查仍在 `tests/test_c_modules.py`；未新增脚本、Notebook 或目录层级。共享输出只有：
+
+- `results/tables/c_extensions.json`：冻结配置、金额/参考/成本、完整区间、来源及复验记录。
+- `results/figures/c_extensions_amount.png`：同预算下的笔数/金额覆盖。
+- `results/figures/c_extensions_cost.png`：固定假设成本场景。
+- `results/figures/c_extensions_uncertainty.png`：逐行及时间块配对区间、方法差值。
+
+本地运行位于 `data/c_extensions_20261114/`，包含逐行预测、可交给 A7 的 `extension_config.json` 及私有汇总。初轮检查导出保留在 `data/_layout_archive/c_extensions_20261114_initial/`。原主实验结果、B 的发布文件和已有模型不覆盖。
+
+在 C 分支，先按前文重现带 B 的 bundle，再执行（每次用新输出/结果目录）：
+
+```bash
+python code/evaluation.py --bundle data/c_with_b_20261111/improved_models.joblib --output data/c_extensions_reproduction/run --results data/c_extensions_reproduction/shared
+```
+
+其他电脑把 bundle 路径换成自己按前文复现的模型。CLI 仅支持验证阶段；验证数据仍由 A 原 load_data/split_data 提供，并校验原始 SHA-256。各方法、配置、模型哈希、输入划分、包版本和命令在公共 JSON 中记录。`implementation_commit` 指向实际运行代码的已提交版本；原始运行时的 source_commit/source_dirty 及精确代码哈希也保留，不冒充当时工作区干净。
+
+### E01/E06：数量与金额的差异
+
+训练段的 Amount 分位边界为 21.94、200.0、1008.6402000000035；等于边界进入右组，外侧开放，未在验证段重新分箱。验证段欺诈交易金额总和为 12,231.09。
+
+| 方法 | TP@1% | 笔数 Recall | 欺诈金额覆盖 | Precision 提升倍数 |
+|---|---:|---:|---:|---:|
+| 簇中心距离 | 14 | 24.56% | 28.80% | 24.54 |
+| 改进 IF | 24 | 42.11% | 37.78% | 42.06 |
+| 带权逻辑回归 | 49 | 85.96% | 73.48% | 85.88 |
+| Amount 降序参考 | 2 | 3.51% | 28.30% | 3.51 |
+| 已冻结 B/IF 政策 | 49 | 85.96% | 73.48% | 85.88 |
+| 随机审核期望 | 0.5706（期望） | 1.001%（期望） | 1.001%（期望） | 1 |
+
+所有方法 K=568。随机值为期望，不是一次实际抽样；K 向上取整使实际比例略高于 1%。金额参考的方向在协议中固定，不是根据结果选出的方向。
+
+分类检出 49 笔，覆盖欺诈交易金额 8,987.38；IF 为 4,621.18。金额排序仅检出两笔却覆盖 3,460.87，说明数量和金额指标确实不同。金额覆盖不等于实际追回损失，也不能用它替换笔数评价。
+
+全局分类名单在最高金额组审核 43 笔、检出该组两笔欺诈中的一笔；该组金额覆盖为 38.57%。这一组只有两笔欺诈，不能据此推断普遍群体差异。其余金额组及每种方法的全局名单分配在 JSON 中，组数、欺诈数、审核数、检出及金额均已加总核对。
+
+![验证数量和金额对照](../results/figures/c_extensions_amount.png)
+
+### E07：成本假设影响预算解释
+
+采用事前固定的 `L=FP+c_FN*FN`，c_FN=10/50/100，无真实货币单位、不要求 score 已校准。分类结果如下：
+
+| 审核预算 | c_FN=10 | c_FN=50 | c_FN=100 |
+|---|---:|---:|---:|
+| 0.1% | 165 | 765 | 1515 |
+| 0.5% | 326 | 686 | 1136 |
+| 1% | 599 | 919 | 1319 |
+| 2% | 1166 | 1486 | 1886 |
+
+在这些验证数字和假设下，较高审核量并非总是更优，因为需要权衡新增检出与误报。这里只比较全部预定成本场景，没有选择新预算，主预算仍为 1%，没有根据表格替换原模型或配额。全部方法及随机期望的成本保留在 JSON。
+
+![验证成本敏感性](../results/figures/c_extensions_cost.png)
+
+### E02：配对区间与有限证据
+
+seed=42，500 轮逐行配对、200 轮 1800 秒时间块配对，报告经验 2.5%/97.5% 分位。15 个块槽均有观测，首尾可能不完整；每轮按实际抽样 N 重新计算 K。逐行样本始终 N=56,745，正类数范围 37–79；块样本 N=44,888–63,330、正类数 29–83。本次所有轮次均有正类，其他数据出现空样本/无正类时接口会显式记录有效轮数和原因，不反复重抽掩盖问题。
+
+| 量 | 点估计 | 逐行区间 | 时间块敏感性区间 |
+|---|---:|---|---|
+| 分类 AP | 0.7727 | [0.6690, 0.8712] | [0.6853, 0.8528] |
+| IF AP | 0.0300 | [0.0213, 0.0449] | [0.0193, 0.0460] |
+| 分类 Recall@1% | 0.8596 | [0.7692, 0.9465] | [0.7954, 0.9153] |
+| IF Recall@1% | 0.4211 | [0.3129, 0.5569] | [0.2496, 0.5714] |
+| 分类 − IF 的 AP | 0.7427 | [0.6441, 0.8357] | [0.6609, 0.8048] |
+| 分类 − IF 的 Recall | 0.4386 | [0.3056, 0.5641] | [0.3098, 0.5882] |
+
+在这两个重采样设定中，已选分类器保持较大优势。但这些区间条件于已选模型和当前验证样本，不包含全部训练/选参不确定性，不构成正式显著性检验，也不保证未来泛化。块区间不必比逐行区间更宽，少量时间块不足以证明长期漂移。
+
+冻结配额是 100% 分类，政策与分类的 AP/Recall 差值在每轮均为零，因此区间为 [0,0]。这是同一排序的结构性一致，不是对所有可能组合策略的最优性证明。对将来可能出现的内部配额，接口只评价名单 Recall；没有统一连续风险分时 AP 为 N/A，不虚构一条组合 PR 曲线。
+
+实现用每条原交易的抽样出现次数计算分组阈值 AP 和 top-K，避免每轮重复排序。小样例穷举重复抽样，与 sklearn 显式展开 AP 以及原 compare_review_lists 的展开组合结果对照；并列按 score、源 row_id、抽样实例顺序处理。所有方法共享相同抽样，未将重复源 ID 冒充唯一交易 ID 送入原接口。
+
+![验证配对区间](../results/figures/c_extensions_uncertainty.png)
+
+### A/B/D 可直接复用的接口
+
+| 接口 | 用途 |
+|---|---|
+| `fit_amount_bins(train)` | 仅用原始训练金额生成并记录分位边界 |
+| `evaluate_amounts(prediction, data, bins, review_fractions)` | 标准预测与原金额按 ID 对齐，计算全局名单金额/分组/提升倍数 |
+| `cost_sensitivity(metrics, ratios=(10,50,100))` | 对公共预算计数计算假设成本；不选择预算 |
+| `paired_uncertainty(predictions, ..., combination=..., pairs=...)` | 固定风险排序的配对区间；模型、数据和参数不拟合 |
+| `evaluate_c_extensions(predictions, data, config, phase=...)` | A 已有标准风险表时直接计算全部 C 扩展 |
+| `run_c_extensions(bundle, data, config, output, ..., results=...)` | 从已保存模型评分并安全发布；不训练或选参 |
+
+完整默认设置在公共结果的 config 中。B 可复用金额和成本指标，不必等 C 再写另一套计算；D 规则覆盖仍由 D 自己输出，不把规则无条件当连续排序。
+
+A 先用自己复现的 bundle 运行一次上述 CLI，核对验证结果并保存自己生成的 extension_config。公共 JSON 中的 config 用于对照；source_C_config_sha256 绑定具体 bundle 的完整配置与来源，不应将 C 电脑的配置直接套到带有不同来源/时间戳的 A 模型包。A 在 G2 前从自己的唯一划分记录补入 `config['partitions']['test']`（行数、欺诈数、时间及有序 ID 指纹；这只是划分身份，不是测试评分）。C 原模型包只记录 train/validation 及内层划分，所以此字段不能由 C 假装已确认。不要修改原 bundle 的冻结 config；全组冻结单独保存。
+
+A8 的调用示例（仅全组 G2 后执行）：
+
+```python
+from evaluation import run_c_extensions
+# bundle: A 自己复现并保存的固定模型
+# config: A7 中记录的扩展配置，含 A 确认的 test 划分身份
+# test: A 唯一划分的测试表
+result = run_c_extensions(
+    bundle, test, config, "data/c_extensions_final",
+    phase="test", results="results",
+    provenance={"g2_reference": "填写全组冻结文件及版本",
+                "source_commit": "填写实际代码版本",
+                "dataset_sha256": "填写已验证的原始数据哈希",
+                "command": "填写统一入口的真实运行命令"},
+)
+```
+
+此时发布 `c_extensions_test.json` 和三张 `c_extensions_test_*.png`，不会覆盖验证证据。接口先检查划分、原 C 配置哈希、来源及路径，测试调用要求 A 的 G2 来源记录；C 模块不代 A 审批全组 G2。金额边界、配额、成本比及区间设置原样使用。
+
+### 验收与剩余工作
+
+59 项 A/C 检查、8 项 B 检查通过；隔离接入 D f26e360 后共 74 项通过。完整 500＋200 轮分析独立复跑一致，预测分数/AP/预算与此前验证相同，金额分组加总、抽样点估计、模型文件及图像哈希均核对。不同输入字典及预测行序不会改变结果。模型训练和选择函数在独立复跑中被阻断，测试集没有评分。
+
+剩余 C 工作是 A 整合时的配合，以及 A8 后运行相同接口生成正式图和完成正式解释；没有把 C7/C8 的这些部分提前标为完成。AIGC 补充：Codex 协助实现、检查、验证运行及材料整理，最终结论需组员理解并审核。
+
+## A 新交付后的 C7 集成验收与 C8 材料（2026-11-14）
+
+已将 A 的 `80f3171` 快进接入 C 分支，同时包含最新 D 规则扩展。GitHub 当前交付的是统一验证与 E08 阈值诊断；A 的记录明确 `group_G2_complete=false`、`test_scored=false`、`pending_extensions=[E03,E05]`。没有额外的正式测试记录，因此本次完成 C7 的集成验收及可提前完成的 C8 材料，不把最终测试图/结论标成完成。
+
+### 完整入口的独立复现
+
+在本机固定环境运行：
+
+```bash
+python code/main.py --run-team-validation --output data/c_team_acceptance_20261114
+```
+
+该入口按 A 的协议在训练段重建既定主模型与 G1 基线，复用同一批验证预测检查 C 总体/分群/窗口/组合、全部 C 扩展、D E04 和 A E08；没有新选参。输出在被忽略的本地目录，主验证证据未覆盖。再次复现须换一个新的 --output。
+
+G1、划分、C 的 metrics/cost_sensitivity/uncertainty、D 规则覆盖及 E08 审核/检出和逐窗计数均通过。A 的公开摘要省略了部分详细 E04 数组，复核时比较其所有公开字段；统一入口另外与 D 的完整记录核对，不能把字段数差异误报为结果不一致。具体哈希和验收记录追加在 `results/tables/c_extensions.json` 的 `team_integration`。
+
+A 新增的 `scored_unsupervised` 复用接口现在由 C 做完整对齐检查：只接收冻结方法，核对原行号、标签和时间；分群数组按 data 行序提供，或用以 row_id 为索引的 Series。预测表可变行序，但重新对齐后才能关联分群。缺少方法、错标签、错时间、重复/错 ID、错误簇值等在写结果前失败。正常复用不再评分；必要检查验证其指标、群体和时间结果与直接评分相同，且不修改调用者对象。
+
+### E08 的可复用图及解读
+
+新增图为 `results/figures/c_review_policy_validation.png`，使用本次统一运行的实际 E08 计数。它对照“固定验证阈值”和“每个窗口单独 top-K”，阈值不重新选择。图标题明确说明阈值来自同一验证段，这只是验证诊断，不是独立测试泛化结果。
+
+| 方法 | 本机验证阈值 | 固定阈值总审核/检出 | 各窗口 top-K 总审核/检出 | 窗口固定阈值审核率范围 |
+|---|---:|---|---|---|
+| 带权逻辑回归 | 0.8042817844288124 | 568 / 49 | 572 / 49 | 0.8152%–1.1466% |
+| 改进 IF | 0.5317760666655312 | 568 / 24 | 572 / 28 | 0.7734%–1.3247% |
+
+按窗口独立向上取整产生 572 笔审核，超过全局 568 笔；分配位置也改变。因此 IF 多检出 4 笔不能直接称为同容量政策改善。分类在两种政策下均检出 49 笔，也不能据此断言所有交易段表现相同。短窗口欺诈数很少，首尾窗口不完整，波动不证明长期漂移。
+
+![验证阶段的固定阈值与窗口预算](../results/figures/c_review_policy_validation.png)
+
+C 图表接口：
+
+```python
+from evaluation import save_review_policy_figure
+# team_summary 是统一入口的 aggregate/tables/team_validation.json
+save_review_policy_figure(
+    team_summary["E08"], "results/figures/c_review_policy_validation.png",
+    phase=team_summary["phase"],
+)
+```
+
+使用新的输出路径，已有同名图拒绝覆盖。A8 若按相同 schema 输出 test 结果，可传实际 phase="test"，使用 c_review_policy_test.png；C 不用 validation 数据冒充 test。
+
+### 跨机器阈值数值差异
+
+本机 LR 阈值为 0.8042817844288124，A 公布值为 0.8042817844979917，绝对差约 6.9179e-11；IF 阈值一致。本次总体、逐窗审核/检出及阈值并列计数均与 A 一致，但不能宣称 LR 阈值逐位一致或在 1e-12 内一致。差异如实保存在 team_integration 中，没有修改 A 的摘要。
+
+A7 应将最终模型文件与该模型验证所得阈值配套冻结，保存文件哈希和来源；A8 使用这套已保存模型与阈值。不应从另一台电脑重建模型后，直接混用 A 或 C 的数值阈值。跨平台重建是复现检查，正式模型包由 A 在 G2 中确定，C 不代选。
+
+### 供组员核对并改写的解释素材
+
+The shared validation workflow reproduces the reported rankings, amount/cost analyses, paired intervals and diagnostic rule coverage. Fixed validation thresholds produce varying review rates across hourly windows. Window-wise top-K instead imposes a local capacity, and independent ceiling operations yield 572 reviews rather than the global 568. The extra Isolation Forest detections therefore do not establish an identical-capacity improvement. These are validation diagnostics because thresholds were selected on the same partition; final temporal generalization remains pending the group freeze and held-out evaluation.
+
+C7 接入检查和本图已完成，81 项检查通过（73 项公共检查、8 项 B 检查）。C7 的正式 test 图和 C8 的正式 test 解释仍需：B 的 E03/E05 接入 → A7/G2 → A8。正式测试后直接复用已交付的冻结评价、扩展发布与本图接口，无需新增模型或重新设计分析。成员最终核对/演练也需等正式材料；本次不提前勾选。
+
+本次 AIGC 使用补充：Codex 协助 A 入口复现、C 缓存预测对齐检查、窗口图与解释素材整理。成员需核对并理解源码、数据和结论，用自己的表达形成最终报告并按课程规则披露；这里的英文素材不应原样当作提交正文。
+
+## 新增数据集：C-N1/N2/N3 独立实现交付（2026-11-15）
+
+本次完成可以独立完成的全部实现与验证，代码仍集中在原 `code/unsupervised.py`、`code/evaluation.py`，检查写回原 `tests/test_c_modules.py`。未修改 A 的数据/时间入口或 B/D 的主责代码。实现版本及文件哈希见 `results/tables/handbook_c_readiness.json`。
+
+GitHub 当前 A 分支最新交付仍为 `80f3171`，没有 A-N1 的正式 Handbook 数据、四视图和历史回调。因此本次只发布接口就绪证据，不发布虚构的正式模型效果。C-N1/N2/N3 剩余实际运行保持未勾选，B 的待办不变；G2 和最终测试未执行。
+
+### 完成了什么
+
+| 任务 | 独立完成部分 | 仍需 A-N1 的部分 |
+|---|---|---|
+| C-N1 / E10 | 四视图校验、四组固定 IF、训练期缩放、统一指标、保存/加载评分复现、紧凑消融图 | 正式数据消融及与 B 的输入指纹核对 |
+| C-N2 / E12 | 7 天不同邻居度数、新关系标记、固定 LR/IF 的图特征增量 | 正式关系特征增量及结果解释 |
+| C-N3 / E14 | 0/10/30% × 三种子，源 ID 确定性掩码，固定模型重评分，可用率/掩码指纹/种子范围图 | A 的生产历史回调及正式九条件输出 |
+
+总共拟合 7 个固定模型：四视图 IF、两类历史加关系 IF、两类历史 LR、两类历史加关系 LR；加原始金额参考共 8 个排序。两个 LR 只用于 C 的关系增量比较，不替代 B 的四组分类消融。IF 固定 100 棵、max_samples=256、contamination=auto、seed=42；LR 复用 B 的带权逻辑回归接口，不新选参。AP、四档审核预算、金额覆盖、成本敏感性复用现有评价，金额边界只用训练数据拟合。
+
+关系窗口为 `[t-7天,t)`；同时间先对所有交易查询，再批量插入，重复边只有最后一条有效交易到期才移除。只读取行身份、时间和实体键构图，标签和金额变化不影响关系特征。使用队列和邻居计数，避免为每行重新扫描完整历史。
+
+缺失掩码由源 row_id/seed 决定，缺失率嵌套，重排和分块不改变可见性。训练使用完整历史；推理时只重建历史状态，当前交易、金额、标签和模型不变。回调只接收无标签五列 context，机制字段也被物理排除。三种子阴影是最小值–最大值范围，不是置信区间。
+
+### A 如何一次接入
+
+A-N1 的视图和回调约定见 `report/EXTENSION_PROPOSALS.md` 的“已实现的 C 接口”。开发交易流只能包含训练＋验证，行身份、金额、时间与实体元数据必须相符；不得传测试段。四视图键为 transaction_only、customer_history、terminal_history、both_history；每个视图以 row_id 对齐，保留共同单笔特征，原始 Amount 与元数据逐值相同。C 自动拒绝已知标签/机制/ID/时间字段入模。
+
+在 A 现有入口取得数据和视图后调用（以下变量均由 A-N1 的正式交付提供，不是现有文件名）：
+
+```python
+from unsupervised import run_handbook_c
+
+summary, bundle = run_handbook_c(
+    train, validation, train_views, validation_views,
+    development_transactions,
+    dataset_manifest=handbook_manifest,
+    output="data/handbook_c_validation",  # 新目录，保存模型及逐行预测
+    results="results",                   # 公共聚合表与图
+    feature_builder=handbook_history_builder,
+)
+```
+
+manifest 最小字段：dataset_id="handbook"、evidence_kind="handbook_validation"、data_sha256、generator_source、generation_parameters，及 partitions 下由 `partition_description(train/validation)` 得到的两个完整描述。A 还需保存 E09 要求的许可、字段映射、生成版本、参数及划分证据。
+
+回调为 `handbook_history_builder(context, history_keep=Series)`，返回所有输入行的四视图。context 只有 row_id、Time、CUSTOMER_ID、TERMINAL_ID、Amount 五列；掩码只决定每条记录是否进入后续历史，不删除该记录的当前查询。零缺失必须与交付的 clean views 精确一致；C 的测试回调只是透明小样例 oracle，不能复制成正式 A-N1 数据生成器。
+
+输出集中在原目录：`results/tables/handbook_c.json`、`results/figures/handbook_c_ablation.png`、`results/figures/handbook_c_missing.png`。已有证据拒绝覆盖，复跑使用新的公共结果根目录。完整模型、逐行预测留本地 `data/`。若暂不传回调，E14 明确标为待 A 接口，不会报告完整正式验证完成。
+
+`run_handbook_c` 只运行验证，不负责 G2 冻结或测试。后续 A8 可使用 `score_handbook_c` 对冻结 bundle 评分（不拟合）；正式测试仍由 A 统一管理训练范围、来源及发布。当前静态模型不会自动替代 E11 的滚动快照。
+
+### 实际验证与边界
+
+```bash
+python -X utf8 -m unittest discover -s tests
+python -X utf8 -m unittest discover -s code -p test_classification.py
+```
+
+本次使用项目 `.venv`：83 项公共检查＋8 项 B 检查全部通过。新增检查覆盖：手算小图与独立集合 oracle、同时间批次、七天下界、重复边到期、未来/标签/金额扰动、掩码嵌套与分块一致、全部视图行列对齐、训练缩放范围、原始金额一致、泄漏列拒绝、缺失时禁止拟合/删除查询、九条件复跑、模型落盘复评分完全一致、公共/私有路径隔离及旧证据防覆盖。
+
+另外运行十万条生成因果交易流的关系状态检查，本机约 0.274 秒；未来追加不影响前缀、分块掩码一致。该时间仅是本机关系构建检查，既不是完整训练时间，也不是正式数据性能保证。
+
+全接口另用 320 条训练＋128 条验证的人工测试 fixture 运行：7 模型、8 排序、9 条件和两张组合图均通过，图像已人工查看。它不是 Handbook 官方生成器，样例 AP 不作为项目结论。预览只留在被忽略的 `data/handbook_c_interface_20261115/`；公开仅提交 `handbook_c_readiness.json` 的检查摘要。正式数据尚未生成/交付，因此现在不能判断历史、关系或缺失压力是否提升真实检测效果。
+
+A-N1 到位后无需重做接口设计，直接依次完成正式验证、与 B 对齐、解释正负结果，再进入 A7/A8 和 C7/C8。AIGC 补充：Codex 协助本次实现、检查、合成验证和说明整理；组员须理解并核对实现，最终报告按课程要求自行撰写并披露协助。

@@ -1,6 +1,6 @@
 """负责人 C：公共评价、名单组合、图表与结果导出；A/B/D 复用本模块。
 
-仅整理模块与输出路径；所有训练、预算、并列和无正类处理口径保持不变。
+包含 C-E1/E2/E3 的金额、参考、成本和配对区间；原模型及评价口径保留。
 冻结评价不会选择参数；最终测试由 A 在全组冻结后调用。
 """
 
@@ -418,7 +418,9 @@ def save_figures(results, output_dir):
     return paths
 
 
-def save_group_figures(group_results, output_dir, label="Group evaluation"):
+def save_group_figures(
+    group_results, output_dir, label="Group evaluation", *, comparison_groups=None
+):
     """Plot group prevalence and recall under each global budget; undefined recall is a gap."""
     import matplotlib
 
@@ -453,18 +455,45 @@ def save_group_figures(group_results, output_dir, label="Group evaluation"):
     axes[0].set_xticks(np.arange(len(names)), names)
     if rows:
         axes[0].set_xlim(-0.5, len(rows) - 0.5)
-    if rows:
-        for i, budget in enumerate(rows[0]["global_budget_allocation"]):
-            values = [
-                r["global_budget_allocation"][i]["recall_within_group"] for r in rows
-            ]
-            axes[1].plot(
-                names,
-                [np.nan if v is None else v for v in values],
-                marker="o",
-                label=f"Global budget {100 * budget['review_fraction']:g}%",
+    if comparison_groups:
+        width = 0.8 / len(comparison_groups)
+        x = np.arange(len(rows))
+        for index, (method, result) in enumerate(comparison_groups.items()):
+            by_id = {str(g["cluster_id"]): g for g in result["groups"]}
+            values = []
+            for name in names:
+                row = next(
+                    r
+                    for r in by_id[name]["global_budget_allocation"]
+                    if r["review_fraction"] == 0.01
+                )
+                values.append(
+                    np.nan
+                    if row["recall_within_group"] is None
+                    else row["recall_within_group"]
+                )
+            axes[1].bar(
+                x + (index - (len(comparison_groups) - 1) / 2) * width,
+                values,
+                width=width,
+                label=method,
             )
-        axes[1].legend(fontsize=8)
+        axes[1].set_title("Global 1% review", fontsize=10)
+        axes[1].legend(fontsize=7)
+    else:
+        if rows:
+            for i, budget in enumerate(rows[0]["global_budget_allocation"]):
+                values = [
+                    r["global_budget_allocation"][i]["recall_within_group"]
+                    for r in rows
+                ]
+                axes[1].plot(
+                    names,
+                    [np.nan if v is None else v for v in values],
+                    marker="o",
+                    label=f"Global budget {100 * budget['review_fraction']:g}%",
+                )
+            axes[1].legend(fontsize=8)
     axes[1].set_xticks(np.arange(len(names)), names)
     if rows:
         axes[1].set_xlim(-0.5, len(rows) - 0.5)
@@ -512,7 +541,13 @@ def save_comparison_figures(
     ax.set_xticks(x, [str(c["K"]) for c in comparisons])
     ax.set(xlabel="Review count K", ylabel="Fraud detected", title=label)
     if comparisons:
-        ax.legend()
+        ax.legend(fontsize=8)
+        maximum = max(
+            row[key]["TP"]
+            for row in comparisons
+            for key in ["classifier", "anomaly", "combined"]
+        )
+        ax.set_ylim(0, max(1, 1.3 * maximum))
     fig.tight_layout()
     path = output / filename
     fig.savefig(path, dpi=160)
@@ -899,22 +934,72 @@ def evaluate_frozen_c(bundle, data, output, classifier=None, phase="test"):
     return result
 
 
-def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="test"):
-    """A8 evaluation: no candidate/weight selection or model fitting occurs here."""
+def evaluate_improved_frozen(
+    bundle, data, output, *, classifier=None, phase="test",
+    window_seconds=3600, window_origin=0, scored_unsupervised=None,
+):
+    """A8 hook; A passes G2 window settings. No fitting or selection occurs here.
+
+    Defaults reproduce the existing validation diagnostic. A owns G2 approval;
+    this low-level function does not approve or infer whole-group freeze status.
+    Full predictions stay in output; publish_frozen_c_results exports aggregates.
+    """
     import json
     from unsupervised import score_improved_bundle, pair_comparisons
     from temporal import evaluate_time_windows
 
     if phase not in {"test", "validation_replay"}:
         raise ValueError("Invalid evaluation phase")
+    window_seconds, window_origin = _vector(
+        [window_seconds, window_origin], "time window settings", 2
+    ).tolist()
+    if window_seconds <= 0:
+        raise ValueError("window_seconds must be positive")
     output = Path(output)
     if output.exists() and any(output.iterdir()):
         raise ValueError("Output must be new or empty")
     config = copy.deepcopy(bundle["config"])
     b = config["B_combination"]
+    if classifier is None and bundle.get("B_model") is not None:
+        if b["share"] is None:
+            raise ValueError("Persisted B model requires an already frozen quota")
+        from classification import score_model
+        from preprocessing import FEATURE_COLUMNS
+
+        classifier = make_prediction_frame(
+            data, score_model(bundle["B_model"], data[FEATURE_COLUMNS]), b["method"]
+        )
     if classifier is not None and b["share"] is None:
         raise ValueError("B combination must be selected and frozen before test")
-    predictions, groups = score_improved_bundle(bundle, data)
+    if scored_unsupervised is None:
+        predictions, groups = score_improved_bundle(bundle, data)
+    else:
+        predictions, groups = scored_unsupervised
+        # A scores once for the shared workflow. Validate and align reused tables
+        # before assigning group labels or writing evidence; never rescore here.
+        expected = list(config["selected_candidates"].values())
+        if set(predictions) != set(expected):
+            raise ValueError("Precomputed methods differ from the frozen candidates")
+        reference = make_prediction_frame(data, np.zeros(len(data)), "reference")
+        aligned = {}
+        for name in expected:
+            p = _single_method(predictions[name])
+            if p.empty or not p.method.eq(name).all() or set(p.row_id) != set(reference.row_id):
+                raise ValueError("Precomputed method or row IDs differ from the input")
+            p = p.set_index("row_id").loc[reference.row_id].reset_index()
+            if not np.array_equal(p.Class, reference.Class) or not np.array_equal(p.Time, reference.Time):
+                raise ValueError("Precomputed labels/Time disagree with the input")
+            aligned[name] = p
+        if isinstance(groups, pd.Series):
+            if not groups.index.is_unique or set(groups.index) != set(reference.row_id):
+                raise ValueError("Precomputed group index must match input row IDs")
+            groups = groups.loc[reference.row_id].to_numpy()
+        groups = _vector(groups, "precomputed groups", len(data))
+        n_clusters = config.get("n_clusters", 3)
+        if (groups != np.floor(groups)).any() or not np.isin(groups, range(n_clusters)).all():
+            raise ValueError("Precomputed groups differ from the frozen cluster domain")
+        groups = pd.Series(groups.astype(int), index=reference.row_id)
+        predictions = aligned
     comparisons = pair_comparisons(
         predictions, config["selected_candidates"], config["distance_share"]
     )
@@ -939,7 +1024,11 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
         n: evaluate_groups(p, groups, DEFAULT_BUDGETS, group_values=range(3))
         for n, p in predictions.items()
     }
-    windows = evaluate_time_windows(pd.concat(predictions.values(), ignore_index=True))
+    windows = evaluate_time_windows(
+        pd.concat(predictions.values(), ignore_index=True),
+        window_seconds=window_seconds, origin=window_origin,
+        review_fractions=DEFAULT_BUDGETS,
+    )
     for w in windows:
         if w["evaluation"] is not None:
             w["evaluation"].pop("pr_curve", None)
@@ -954,6 +1043,14 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
         group_metrics[config["selected_anomaly"]],
         output / "figures",
         label + "\n" + config["selected_anomaly"],
+        comparison_groups=(
+            {
+                "B classifier": group_metrics[b["method"]],
+                "C anomaly": group_metrics[config["selected_anomaly"]],
+            }
+            if classifier is not None
+            else None
+        ),
     )
     save_comparison_figures(
         comparisons,
@@ -967,7 +1064,12 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
     )
     if b_rows:
         save_comparison_figures(
-            b_rows, output / "B_figures", label + "\nFrozen B combination"
+            b_rows, output / "B_figures", label + "\nFrozen B combination",
+            method_labels={
+                "classifier": b["method"],
+                "anomaly": config["selected_anomaly"],
+                "combined": "Frozen policy",
+            },
         )
     for name, p in predictions.items():
         p.to_csv(output / f"{name}_predictions.csv", index=False)
@@ -976,6 +1078,12 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
         "config": config,
         "configuration_reselected": False,
         "partition": partition_description(data),
+        "time_window_config": {
+            "window_seconds": window_seconds,
+            "origin": window_origin,
+            "review_fractions": list(DEFAULT_BUDGETS),
+            "budget_scope": "independent top-K within each window",
+        },
         "metrics": metrics,
         "groups": group_metrics,
         "time_windows": windows,
@@ -986,6 +1094,147 @@ def evaluate_improved_frozen(bundle, data, output, *, classifier=None, phase="te
         json.dumps(result, indent=2, allow_nan=False) + "\n"
     )
     return result
+
+
+
+def _frozen_c_report(result):
+    """Result-driven writing aid for D; no selection or unsupported interpretation."""
+    phase = "Final test" if result["phase"] == "test" else "Validation replay"
+    partition = result["partition"]
+    lines = [
+        f"# C: {phase}", "",
+        f"Partition: {partition['rows']:,} transactions, {partition['frauds']} frauds. "
+        "All rankings use descending score, then ascending row_id; K = ceil(N × q).",
+        "Models, preprocessing and quotas were retained without refitting or reselection.",
+        "", "| Method | AP | Budget | K | TP | FP | Recall | Precision |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    def number(value):
+        return "N/A" if value is None else f"{value:.6f}"
+    for method, metric in result["metrics"].items():
+        for row in metric["budgets"]:
+            lines.append(
+                f"| {method} | {number(metric['AP'])} | {100 * row['review_fraction']:g}% "
+                f"| {row['K']} | {row['TP']} | {row['FP']} "
+                f"| {number(row['recall_at_k'])} | {number(row['precision_at_k'])} |"
+            )
+    lines += ["", "## Equal-budget classifier / anomaly comparison", ""]
+    if not result["B_comparisons"]:
+        lines.append("No classifier was supplied; classifier complementarity was not evaluated.")
+    for row in result["B_comparisons"]:
+        lines.append(
+            f"At {100 * row['review_fraction']:g}% (K={row['K']}), classifier TP="
+            f"{row['classifier']['TP']}, anomaly TP={row['anomaly']['TP']}, and frozen-policy "
+            f"TP={row['combined']['TP']}. Shared frauds={row['shared_frauds']}; "
+            f"classifier-only={row['classifier_only_frauds']}; anomaly-only="
+            f"{row['anomaly_only_frauds']}. Net change from classifier="
+            f"{row['combined']['TP'] - row['classifier']['TP']:+d}."
+        )
+    lines += [
+        "", "## Groups under the global 1% review budget", "",
+        "| Method | Cluster | Transactions | Frauds | Reviews | TP | Group recall |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+    ]
+    for method, grouped in result["groups"].items():
+        for group in grouped["groups"]:
+            allocation = next(r for r in group["global_budget_allocation"]
+                              if r["review_fraction"] == PRIMARY_REVIEW_FRACTION)
+            local = group["within_group"]
+            lines.append(
+                f"| {method} | {group['cluster_id']} | {local['n_samples']} "
+                f"| {local['n_positive']} | {allocation['reviewed_in_group']} "
+                f"| {allocation['frauds_detected_in_group']} "
+                f"| {number(allocation['recall_within_group'])} |"
+            )
+    windows = result["time_window_config"]
+    lines += [
+        "", "## Interpretation and limits", "",
+        "Cluster IDs describe training-defined groups, not fraud predictions. "
+        "Group recalls above use a single global top-K list, not separate group quotas.",
+        f"Time windows use origin={windows['origin']:g} seconds and width="
+        f"{windows['window_seconds']:g} seconds, with independent top-K review within each "
+        "window. Per-window review counts cannot be treated as the global review budget.",
+        "No-positive groups/windows have undefined AP and recall (N/A). "
+        "A supplies the temporal interpretation; short-term differences do not establish drift.",
+        "Anomaly scores are not fraud probabilities. An exclusive fraud case alone does not "
+        "establish a capacity-preserving gain; the net change above uses identical K.",
+        "Validation selection and final-test performance must be described separately. "
+        "These descriptive results do not support causal or demographic claims.",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def publish_frozen_c_results(run, destination, *, provenance):
+    """Publish an existing frozen run to tables/ and figures/ without scoring.
+
+    A supplies source_commit, dataset_sha256, command and, for test, g2_reference.
+    These are traceability records, not automated approval of the group's G2.
+    Full row IDs, predictions, models and PR point arrays remain private.
+    """
+    import shutil
+
+    run, destination = Path(run).resolve(), Path(destination).resolve()
+    if run == destination or run in destination.parents or destination in run.parents:
+        raise ValueError("Private run and public results must not overlap")
+    source = run / "evaluation.json"
+    result = json.loads(source.read_text())
+    phase = result.get("phase")
+    if phase not in {"test", "validation_replay"}:
+        raise ValueError("Only frozen test or validation_replay results can be published")
+    if result.get("configuration_reselected") is not False:
+        raise ValueError("Frozen run must not reselect configuration")
+    required = ["source_commit", "dataset_sha256", "command"]
+    if phase == "test":
+        required.append("g2_reference")
+    if any(not isinstance(provenance.get(k), str) or not provenance[k].strip()
+           for k in required):
+        raise ValueError("Missing provenance: " + ", ".join(required))
+    prefix = "c_test" if phase == "test" else "c_validation_replay"
+    images = {p: destination / "figures" / f"{prefix}_{p.name}"
+              for p in (run / "figures").glob("*.png")}
+    if result["B_comparisons"]:
+        images[run / "B_figures/complementarity.png"] = (
+            destination / "figures" / f"{prefix}_B_complementarity.png"
+        )
+    expected = {"pr_curve.png", "review_recall.png", "review_precision.png",
+                "cluster_prevalence.png", "complementarity.png"}
+    if not expected.issubset({p.name for p in (run / "figures").glob("*.png")}) \
+            or any(not p.is_file() for p in images):
+        raise ValueError("Frozen run is missing required figures")
+    targets = [destination / "tables" / f"{prefix}.json",
+               destination / "tables" / f"{prefix}.md", *images.values()]
+    if any(p.exists() for p in targets):
+        raise ValueError("Frozen public results already exist; use another destination")
+    public = copy.deepcopy(result)
+    for metric in public["metrics"].values():
+        metric.pop("pr_curve", None)
+    for key in ["comparisons", "B_comparisons"]:
+        for row in public[key]:
+            for field in ["classifier_ids", "anomaly_ids", "combined_ids"]:
+                row.pop(field, None)
+    public["publication"] = {
+        "provenance": {key: provenance[key] for key in required},
+        "evaluation_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "figure_sha256": {
+            str(target.relative_to(destination)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path, target in images.items()
+        },
+        "note": "C export only; G2 confirmation is owned by A and the group.",
+    }
+    # Prepare all text before writing anything; malformed evidence leaves no public files.
+    summary = json.dumps(public, indent=2, allow_nan=False) + "\n"
+    writing = _frozen_c_report(public)
+    writing += "\n## Figures\n\n" + "\n".join(
+        f"![{path.stem}](../{target.relative_to(destination).as_posix()})"
+        for path, target in images.items()
+    ) + "\n"
+    for target in targets:
+        target.parent.mkdir(parents=True, exist_ok=True)
+    targets[0].write_text(summary, encoding="utf-8")
+    targets[1].write_text(writing, encoding="utf-8")
+    for path, target in images.items():
+        shutil.copy2(path, target)
+    return [str(path) for path in targets]
 
 
 def save_ablation_figure(rows, selected, path):
@@ -1103,3 +1352,663 @@ def publish_c_results(staging, destination, mode):
             staging / "validation_ablation.csv", destination / "tables/c_ablation.csv"
         )
     return [str(path) for path in targets]
+
+
+# C-E1/E2/E3: fixed-model extensions; no model selection or fitting below.
+def fit_amount_bins(train):
+    """Fit E01 boundaries on raw training amounts; keep open outer intervals."""
+    if not {"row_id", "Class", "Time", "Amount"} <= set(train) or not len(train):
+        raise ValueError("Amount boundaries need nonempty training data")
+    make_prediction_frame(train, np.zeros(len(train)), "training_metadata")
+    amounts = _vector(train.Amount, "training Amount", len(train))
+    if (amounts < 0).any():
+        raise ValueError("Raw Amount must be nonnegative")
+    quantiles = [0.5, 0.9, 0.99]
+    cuts = np.unique(np.quantile(amounts, quantiles)).tolist()
+    return {
+        "quantiles": quantiles, "cuts": cuts,
+        "interval_rule": "[-inf,c0), [c0,c1), ..., [clast,+inf)",
+        "fit_partition": partition_description(train),
+    }
+
+
+def _align_extension_inputs(predictions, data):
+    """Validate identical identities/labels/times, then align by source row_id."""
+    reference = make_prediction_frame(data, np.zeros(len(data)), "reference")
+    if "Amount" not in data:
+        raise ValueError("Raw Amount is required for monetary evaluation")
+    amount = _vector(data.Amount, "raw Amount", len(data))
+    if (amount < 0).any():
+        raise ValueError("Raw Amount must be nonnegative")
+    frames = {}
+    if any(not isinstance(name, str) for name in predictions):
+        raise ValueError("Prediction mapping keys must be method names")
+    for name in sorted(predictions):
+        frame = predictions[name]
+        p = _single_method(frame)
+        if not len(p) or not p.method.eq(name).all():
+            raise ValueError("Prediction mapping names must match nonempty methods")
+        if set(p.row_id) != set(reference.row_id):
+            raise ValueError("Extension predictions must cover the same row_ids")
+        p = p.set_index("row_id").loc[reference.row_id].reset_index()
+        if not np.array_equal(p.Class, reference.Class) or not np.array_equal(p.Time, reference.Time):
+            raise ValueError("Extension labels/Time disagree by row_id")
+        frames[name] = p
+    if not frames or not len(reference):
+        raise ValueError("At least one nonempty prediction method is needed")
+    return frames, reference, amount
+
+
+def _amount_budget(y, amount, groups, selected, n_groups):
+    total_fraud_amount = float(amount[y == 1].sum())
+    detected = float(amount[selected][y[selected] == 1].sum())
+    rows = []
+    for group in range(n_groups):
+        mask = groups == group
+        chosen = selected[mask[selected]]
+        fraud_amount = float(amount[mask & (y == 1)].sum())
+        covered = float(amount[chosen][y[chosen] == 1].sum())
+        positives = int(y[mask].sum())
+        tp = int(y[chosen].sum())
+        rows.append({
+            "amount_group": group, "n_samples": int(mask.sum()),
+            "n_positive": positives, "transaction_amount": float(amount[mask].sum()),
+            "fraud_amount": fraud_amount, "reviewed_from_global_list": len(chosen),
+            "TP": tp, "fraud_amount_detected": covered,
+            "recall": tp / positives if positives else None,
+            "amount_coverage": covered / fraud_amount if fraud_amount else None,
+        })
+    return {
+        "total_fraud_amount": total_fraud_amount,
+        "fraud_amount_detected": detected,
+        "amount_coverage": detected / total_fraud_amount if total_fraud_amount else None,
+        "amount_groups": rows,
+    }
+
+
+def evaluate_amounts(prediction, data, bins, review_fractions=DEFAULT_BUDGETS):
+    """E01/E06: raw amounts joined by identity, groups use a GLOBAL review list."""
+    checked = _single_method(prediction)
+    if checked.empty:
+        raise ValueError("Monetary evaluation needs nonempty predictions")
+    name = checked.method.iloc[0]
+    frames, reference, amount = _align_extension_inputs({name: prediction}, data)
+    p = frames[name]
+    cuts = _vector(bins["cuts"], "amount cuts")
+    if len(cuts) and ((cuts < 0).any() or (np.diff(cuts) <= 0).any()):
+        raise ValueError("Amount cuts must be unique, nonnegative and increasing")
+    groups = np.searchsorted(cuts, amount, side="right")
+    metric = evaluate_scores(p.Class, p.score, review_fractions, row_ids=p.row_id)
+    metric.pop("pr_curve")
+    y = reference.Class.to_numpy()
+    order = _order(p.score.to_numpy(), reference.row_id.to_numpy())
+    for row in metric["budgets"]:
+        row.update(_amount_budget(y, amount, groups, order[:row["K"]], len(cuts) + 1))
+        row["precision_lift"] = (
+            row["precision_at_k"] / metric["prevalence"] if metric["prevalence"] else None
+        )
+    return metric
+
+
+def cost_sensitivity(metrics, ratios=(10, 50, 100)):
+    """E07: hypothetical FP + ratio*FN; no probability or actual loss claim."""
+    ratios = _vector(ratios, "cost ratios")
+    if not len(ratios) or (ratios <= 0).any() or len(np.unique(ratios)) != len(ratios):
+        raise ValueError("Cost ratios must be positive and unique")
+    return [
+        {"method": name, "review_fraction": row["review_fraction"], "K": row["K"],
+         "FP": row["FP"], "FN": row["FN"], "c_FP": 1, "c_FN": float(ratio),
+         "hypothetical_loss": row["FP"] + float(ratio) * row["FN"],
+         "expected_only": metrics[name].get("expected_only", False)}
+        for name in sorted(metrics) for row in metrics[name]["budgets"] for ratio in ratios
+    ]
+
+
+def _ranked_sample_counts(counts, order, k):
+    """Take exactly k bootstrap instances, source-ID ties already resolved by order."""
+    weights = counts[order]
+    before = np.cumsum(weights) - weights
+    chosen = np.minimum(weights, np.maximum(k - before, 0))
+    out = np.zeros_like(counts)
+    out[order] = chosen
+    return out
+
+
+def _weighted_rank_metric(y, scores, counts, order, group_ends, q):
+    """Exact multiset AP/top-K without sorting 700 copies of the same score vector.
+
+    Equal-score AP uses grouped thresholds (sklearn AP), while top-K ties use
+    source row_id then instance order. Identical source instances are contiguous
+    and exchangeable, so integer occurrence counts preserve those decisions.
+    """
+    n = int(counts.sum())
+    positives = int(np.dot(counts, y))
+    k = math.ceil(n * q)
+    selected = _ranked_sample_counts(counts, order, k)
+    tp = int(np.dot(selected, y))
+    ap = None
+    if positives:
+        weight = counts[order]
+        cumulative_n = np.cumsum(weight)[group_ends]
+        cumulative_tp = np.cumsum(weight * y[order])[group_ends]
+        delta_tp = np.diff(np.r_[0, cumulative_tp])
+        ap = float(np.sum(delta_tp / positives * cumulative_tp / np.maximum(1, cumulative_n)))
+    return {"AP": ap, "recall": tp / positives if positives else None,
+            "K": k, "TP": tp, "n_samples": n, "n_positive": positives}
+
+
+def _interval_record(values, point):
+    valid = np.asarray([v for v in values if v is not None], dtype=float)
+    return {
+        "point": point, "valid_replicates": len(valid),
+        "invalid_replicates": len(values) - len(valid),
+        "lower": float(np.quantile(valid, 0.025)) if len(valid) else None,
+        "upper": float(np.quantile(valid, 0.975)) if len(valid) else None,
+        "degenerate": bool(len(valid) and valid.min() == valid.max()),
+    }
+
+
+def paired_uncertainty(
+    predictions, *, pairs=(), combination=None, q=0.01, seed=42,
+    row_resamples=500, block_resamples=200, block_seconds=1800, origin=0,
+    progress=None,
+):
+    """E02 exact paired row/block bootstrap of already fixed rankings.
+
+    predictions are aligned by source ID, independent of caller table order.
+    Quota policy has AP only at a pure endpoint; an interior quota is a list,
+    not a continuous score, so no fictitious AP or AP difference is reported.
+    """
+    q = float(_budgets([q])[0])
+    seed = _integer(seed, "seed", 0, 2**32 - 1)
+    row_resamples = _integer(row_resamples, "row_resamples", 1, 100000)
+    block_resamples = _integer(block_resamples, "block_resamples", 1, 100000)
+    block_seconds, origin = _vector([block_seconds, origin], "block settings", 2)
+    if block_seconds <= 0:
+        raise ValueError("Block duration must be positive")
+    first = _single_method(next(iter(predictions.values()))) if predictions else None
+    if first is None or first.empty:
+        raise ValueError("Bootstrap needs nonempty predictions")
+    first = first.sort_values("row_id").reset_index(drop=True)
+    dummy = first.assign(Amount=0.0)
+    frames, reference, _ = _align_extension_inputs(predictions, dummy)
+    ids, y = reference.row_id.to_numpy(), reference.Class.to_numpy()
+    prepared = {}
+    for name, frame in frames.items():
+        scores = frame.score.to_numpy()
+        order = _order(scores, ids)
+        ordered_scores = scores[order]
+        ends = np.r_[np.flatnonzero(np.diff(ordered_scores)), len(y) - 1]
+        prepared[name] = (scores, order, ends)
+    policy = None
+    if combination is not None:
+        policy = copy.deepcopy(combination)
+        share = float(_vector([policy["share"]], "policy share")[0])
+        if not 0 <= share <= 1 or policy["name"] in prepared:
+            raise ValueError("Invalid policy share or conflicting policy name")
+        for side in ["classifier", "anomaly"]:
+            if policy[side] not in prepared:
+                raise ValueError("Policy source method missing")
+        policy["share"] = share
+    names = list(prepared) + ([policy["name"]] if policy else [])
+    if any(a not in names or b not in names for a, b in pairs):
+        raise ValueError("Unknown pair method")
+
+    def measure(counts):
+        out = {name: _weighted_rank_metric(y, spec[0], counts, spec[1], spec[2], q)
+               for name, spec in prepared.items()}
+        if policy:
+            c, a, share = policy["classifier"], policy["anomaly"], policy["share"]
+            n, pos = int(counts.sum()), int(np.dot(counts, y))
+            k = math.ceil(n * q)
+            chosen_c = _ranked_sample_counts(counts, prepared[c][1], math.floor(k * share))
+            chosen_a = _ranked_sample_counts(counts - chosen_c, prepared[a][1], k - int(chosen_c.sum()))
+            tp = int(np.dot(chosen_c + chosen_a, y))
+            ap = out[c]["AP"] if share == 1 else out[a]["AP"] if share == 0 else None
+            out[policy["name"]] = {"AP": ap, "recall": tp / pos if pos else None,
+                                    "TP": tp, "K": k, "n_samples": n, "n_positive": pos}
+        return out
+
+    point = measure(np.ones(len(y), dtype=np.int64))
+    slots = np.floor((reference.Time.to_numpy() - origin) / block_seconds).astype(np.int64)
+    first_slot, last_slot = int(slots.min()), int(slots.max())
+    n_blocks = last_slot - first_slot + 1
+    if n_blocks > 100000:
+        raise ValueError("Too many block slots; check time units")
+    block_index = slots - first_slot
+    occupancy = np.bincount(block_index, minlength=n_blocks)
+    result = {
+        "q": q, "seed": seed, "interval": "2.5/97.5 empirical percentiles",
+        "point_estimates": point, "combination": policy,
+        "tie_rule": "score descending, source row_id ascending, occurrence ascending",
+        "AP_note": "quota-policy AP is undefined except at pure endpoints",
+        "limitations": "Fixed selected models only; no training/selection uncertainty. Block sensitivity does not prove drift.",
+        "block_config": {
+            "seconds": float(block_seconds), "origin": float(origin),
+            "first_slot": first_slot, "last_slot": last_slot, "n_blocks": n_blocks,
+            "occupied_blocks": int((occupancy > 0).sum()), "empty_blocks": int((occupancy == 0).sum()),
+            "time_min": float(reference.Time.min()), "time_max": float(reference.Time.max()),
+            "outer_blocks_may_be_partial": True,
+        },
+        "schemes": {},
+    }
+    for scheme, repetitions in [("paired_rows", row_resamples), ("paired_time_blocks", block_resamples)]:
+        rng = np.random.default_rng(seed)
+        samples = {name: {"AP": [], "recall": []} for name in names}
+        differences = {f"{a} minus {b}": {"AP": [], "recall": []} for a, b in pairs}
+        empty = no_positive = 0
+        sizes, positives, ks = [], [], []
+        digest = hashlib.sha256()
+        for iteration in range(repetitions):
+            if scheme == "paired_rows":
+                counts = np.bincount(rng.integers(len(y), size=len(y)), minlength=len(y))
+            else:
+                multiplicity = np.bincount(rng.integers(n_blocks, size=n_blocks), minlength=n_blocks)
+                counts = multiplicity[block_index]
+            digest.update(np.asarray(counts, dtype="<i8").tobytes())
+            measured = measure(counts)
+            n, pos = int(counts.sum()), int(np.dot(counts, y))
+            empty += int(n == 0)
+            no_positive += int(n > 0 and pos == 0)
+            sizes.append(n); positives.append(pos); ks.append(math.ceil(n * q))
+            for name in names:
+                for metric in ["AP", "recall"]:
+                    samples[name][metric].append(measured[name][metric])
+            for a, b in pairs:
+                for metric in ["AP", "recall"]:
+                    left, right = measured[a][metric], measured[b][metric]
+                    differences[f"{a} minus {b}"][metric].append(
+                        None if left is None or right is None else left - right
+                    )
+            if progress and (iteration + 1) % 100 == 0:
+                progress(f"{scheme}: {iteration + 1}/{repetitions}")
+        pair_points = {
+            f"{a} minus {b}": {
+                metric: None if point[a][metric] is None or point[b][metric] is None
+                else point[a][metric] - point[b][metric] for metric in ["AP", "recall"]
+            } for a, b in pairs
+        }
+        result["schemes"][scheme] = {
+            "replicates": repetitions, "empty_replicates": empty,
+            "no_positive_replicates": no_positive, "draw_counts_sha256": digest.hexdigest(),
+            "sample_size_range": [min(sizes), max(sizes)],
+            "positive_count_range": [min(positives), max(positives)],
+            "K_range": [min(ks), max(ks)],
+            "methods": {name: {m: _interval_record(values, point[name][m])
+                                for m, values in metrics.items()} for name, metrics in samples.items()},
+            "differences": {name: {m: _interval_record(values, pair_points[name][m])
+                                    for m, values in metrics.items()} for name, metrics in differences.items()},
+        }
+    return result
+
+
+def build_c_extension_config(train, bundle):
+    """Train-only amount bins and previously frozen model/quota choices for A7."""
+    source = bundle["config"]
+    if partition_description(train) != source["partitions"]["train"]:
+        raise ValueError("Training identities differ from persisted C configuration")
+    b = source["B_combination"]
+    if b.get("share") is None or not b.get("method"):
+        raise ValueError("Previously frozen B combination is required")
+    return {
+        "owner": "C", "schema_version": 1,
+        "group_G2_complete": False, "amount_bins": fit_amount_bins(train),
+        "partitions": copy.deepcopy(source["partitions"]),
+        "review_fractions": list(DEFAULT_BUDGETS), "primary_review_fraction": 0.01,
+        "selected_candidates": copy.deepcopy(source["selected_candidates"]),
+        "classifier": b["method"], "anomaly": source["selected_anomaly"],
+        "combination": {"name": "frozen_B_IF_policy", "classifier": b["method"],
+                        "anomaly": source["selected_anomaly"], "share": b["share"]},
+        "reference": "raw Amount descending, source row_id ascending",
+        "cost_ratios": [10, 50, 100], "budget_selection_performed": False,
+        "bootstrap": {"seed": 42, "row_resamples": 500, "block_resamples": 200,
+                      "block_seconds": 1800, "origin": 0},
+        "source_C_config_sha256": hashlib.sha256(
+            json.dumps(source, sort_keys=True).encode()).hexdigest(),
+    }
+
+
+def evaluate_c_extensions(predictions, data, config, *, phase="validation", progress=None):
+    """A8 reusable hook: evaluate scores and frozen settings; no fit/selection."""
+    if phase not in {"validation", "test"}:
+        raise ValueError("Extension phase must be validation or test")
+    if phase not in config["partitions"] or partition_description(data) != config["partitions"][phase]:
+        raise ValueError("Extension partition differs from the frozen phase")
+    frames, reference, amount = _align_extension_inputs(predictions, data)
+    required = set(config["selected_candidates"].values()) | {config["classifier"], config["anomaly"]}
+    if set(frames) != required or "amount_descending" in frames:
+        raise ValueError("Provide exactly the frozen B/C selected predictions")
+    frames["amount_descending"] = make_prediction_frame(reference, amount, "amount_descending")
+    qs = config["review_fractions"]
+    bins = config["amount_bins"]
+    metrics = {name: evaluate_amounts(p, data, bins, qs) for name, p in frames.items()}
+    policy = config["combination"]
+    c, a = frames[policy["classifier"]], frames[policy["anomaly"]]
+    y = reference.Class.to_numpy()
+    groups = np.searchsorted(bins["cuts"], amount, side="right")
+    policy_metrics = copy.deepcopy(metrics[policy["classifier"]])
+    if policy["share"] not in [0, 1]:
+        policy_metrics["AP"] = None
+    elif policy["share"] == 0:
+        policy_metrics["AP"] = metrics[policy["anomaly"]]["AP"]
+    policy_metrics["AP_note"] = "Defined only at pure ranking endpoints"
+    policy_metrics["ranking_rule"] = "classifier floor(K*share), anomaly scan skipping selected instances"
+    policy_metrics["budgets"] = []
+    id_positions = pd.Series(np.arange(len(reference)), index=reference.row_id)
+    for q in qs:
+        row = compare_review_lists(c, a, math.ceil(len(reference) * q), policy["share"])
+        selected = id_positions.loc[row["combined_ids"]].to_numpy()
+        entry = {"review_fraction": q, "actual_review_fraction": row["K"] / len(reference), **row["combined"]}
+        entry["precision_lift"] = entry["precision_at_k"] / metrics[policy["classifier"]]["prevalence"] if y.sum() else None
+        entry.update(_amount_budget(y, amount, groups, selected, len(bins["cuts"]) + 1))
+        policy_metrics["budgets"].append(entry)
+    metrics[policy["name"]] = policy_metrics
+    n, pos = len(y), int(y.sum())
+    total_fraud_amount = float(amount[y == 1].sum())
+    metrics["random_expectation"] = {
+        "expected_only": True, "AP": None, "n_samples": n, "n_positive": pos,
+        "prevalence": pos / n, "budgets": [
+            {"review_fraction": q, "K": math.ceil(n * q),
+             "actual_review_fraction": math.ceil(n * q) / n,
+             "TP": math.ceil(n * q) * pos / n,
+             "FP": math.ceil(n * q) * (1 - pos / n), "FN": pos * (1 - math.ceil(n * q) / n),
+             "precision_at_k": pos / n, "recall_at_k": math.ceil(n * q) / n if pos else None,
+             "precision_lift": 1.0 if pos else None,
+             "fraud_amount_detected": total_fraud_amount * math.ceil(n * q) / n,
+             "total_fraud_amount": total_fraud_amount,
+             "amount_coverage": math.ceil(n * q) / n if total_fraud_amount else None}
+            for q in qs
+        ],
+    }
+    # Amount reference is descriptive, not an additional selected-model CI search.
+    uncertainty_inputs = {name: frames[name] for name in sorted(required)}
+    uncertainty = paired_uncertainty(
+        uncertainty_inputs,
+        pairs=[(config["classifier"], config["anomaly"]), (policy["name"], config["classifier"])],
+        combination=policy, q=config["primary_review_fraction"], progress=progress,
+        **config["bootstrap"],
+    )
+    return {
+        "owner": "C", "phase": phase, "test_evaluated": phase == "test",
+        "group_G2_complete": False, "configuration_reselected": False,
+        "partition": partition_description(data), "config": copy.deepcopy(config),
+        "metrics": metrics, "cost_sensitivity": cost_sensitivity(metrics, config["cost_ratios"]),
+        "uncertainty": uncertainty,
+        "notes": ["Raw amounts are not recovered losses; costs are hypothetical units.",
+                  "Group allocations come from the global review list.",
+                  "Random baseline is an expectation; policy AP is undefined at interior quotas.",
+                  "Whole-group G2 approval is owned by A; this hook does not approve it."],
+    }
+
+
+def save_c_extension_figures(result, output):
+    """Three compact C figures for E01/E06, E07, E02 in the original layout."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    prefix = "c_extensions_test" if result["phase"] == "test" else "c_extensions"
+    label = result["phase"].replace("_", " ").title()
+    aliases = {
+        result["config"]["classifier"]: "B classifier",
+        result["config"]["anomaly"]: "Selected anomaly",
+        result["config"]["selected_candidates"]["kmeans"]: "Cluster distance",
+        result["config"]["combination"]["name"]: "Frozen policy",
+        "amount_descending": "Amount descending", "random_expectation": "Random expectation",
+    }
+    def display(name):
+        if " minus " in name:
+            a, b = name.split(" minus ", 1)
+            return display(a) + " − " + display(b)
+        return aliases.get(name, name)
+
+    paths = []
+    fig, axes = plt.subplots(1, 2, figsize=(13, 4.5))
+    for name, metric in result["metrics"].items():
+        rows = metric["budgets"]
+        for ax, field in zip(axes, ["recall_at_k", "amount_coverage"], strict=True):
+            ax.plot([100*r["actual_review_fraction"] for r in rows],
+                    [np.nan if r[field] is None else r[field] for r in rows],
+                    marker="o", linestyle="--" if metric.get("expected_only") else "-", label=display(name))
+    for ax, title in zip(axes, ["Fraud-count recall", "Fraud-amount coverage"], strict=True):
+        ax.set(xlabel="Actual review proportion (%)", ylabel=title, ylim=(-0.02, 1.02))
+        ax.grid(alpha=0.2)
+    axes[1].legend(fontsize=7)
+    fig.suptitle(label + " — identical budgets; raw amounts are not recovered losses")
+    fig.tight_layout()
+    path = output / (prefix + "_amount.png"); fig.savefig(path, dpi=160); plt.close(fig); paths.append(path)
+    ratios = result["config"]["cost_ratios"]
+    fig, axes = plt.subplots(1, len(ratios), figsize=(15, 4.5), squeeze=False)
+    for ax, ratio in zip(axes[0], ratios, strict=True):
+        for name in result["metrics"]:
+            rows = [r for r in result["cost_sensitivity"] if r["method"] == name and r["c_FN"] == ratio]
+            ax.plot([100*r["K"]/result["partition"]["rows"] for r in rows],
+                    [r["hypothetical_loss"] for r in rows], marker="o", label=display(name))
+        ax.set(title=f"c_FP=1; c_FN={ratio:g}", xlabel="Actual review proportion (%)", ylabel="Hypothetical loss units")
+        ax.grid(alpha=0.2)
+    axes[0][-1].legend(fontsize=6)
+    fig.suptitle(label + " — fixed cost scenarios; no budget selected")
+    fig.tight_layout()
+    path = output / (prefix + "_cost.png"); fig.savefig(path, dpi=160); plt.close(fig); paths.append(path)
+    fig, axes = plt.subplots(2, 2, figsize=(15, 9))
+    uncertainty = result["uncertainty"]
+    for row_index, field in enumerate(["methods", "differences"]):
+        names = list(uncertainty["schemes"]["paired_rows"][field])
+        for col, metric in enumerate(["AP", "recall"]):
+            ax = axes[row_index, col]
+            for j, (scheme, content) in enumerate(uncertainty["schemes"].items()):
+                for i, name in enumerate(names):
+                    r = content[field][name][metric]
+                    height = i + (-0.1 if j == 0 else 0.1)
+                    if r["lower"] is not None:
+                        ax.hlines(height, r["lower"], r["upper"], color=f"C{j}")
+                        ax.scatter(r["point"], height, color=f"C{j}", s=24,
+                                   label=scheme if i == 0 else None)
+            ax.set_yticks(np.arange(len(names)), [display(name) for name in names], fontsize=8)
+            ax.set_xlabel(metric + (" difference" if row_index else ""))
+            if row_index: ax.axvline(0, color="grey", linestyle="--", linewidth=0.8)
+            ax.grid(axis="x", alpha=0.2); ax.legend(fontsize=7)
+    fig.suptitle(label + " — 95% empirical percentile intervals for fixed selected models")
+    fig.tight_layout()
+    path = output / (prefix + "_uncertainty.png"); fig.savefig(path, dpi=160); plt.close(fig); paths.append(path)
+    return paths
+
+
+def run_c_extensions(bundle, data, config, output, *, phase="validation", provenance=None, results=None, progress=print):
+    """A's existing scores can alternatively call evaluate_c_extensions directly.
+
+    This convenience scores the persisted B/C bundle and never fits models.
+    Public JSON contains aggregate evidence only; private files stay under data/.
+    """
+    from unsupervised import score_improved_bundle
+    from classification import score_model
+    from preprocessing import FEATURE_COLUMNS
+    output = Path(output)
+    table_name = "c_extensions_test.json" if phase == "test" else "c_extensions.json"
+    if output.exists() and any(output.iterdir()):
+        raise ValueError("Extension run output must be new or empty")
+    if results is not None:
+        results = Path(results)
+        if output.resolve() == results.resolve() or output.resolve() in results.resolve().parents or results.resolve() in output.resolve().parents:
+            raise ValueError("Private and public outputs cannot overlap")
+        prefix = table_name[:-5]
+        targets = [results / "tables" / table_name] + [results / "figures" / f"{prefix}_{suffix}.png" for suffix in ["amount", "cost", "uncertainty"]]
+        if any(p.exists() for p in targets):
+            raise ValueError("Public C extension evidence already exists")
+    if phase not in {"validation", "test"} or phase not in config["partitions"] or partition_description(data) != config["partitions"][phase]:
+        raise ValueError("Data phase must match frozen extension partition")
+    if config["source_C_config_sha256"] != hashlib.sha256(json.dumps(bundle["config"], sort_keys=True).encode()).hexdigest():
+        raise ValueError("Frozen B/C configuration differs from the extension manifest")
+    if phase == "test" and not (provenance or {}).get("g2_reference"):
+        raise ValueError("A supplies the group G2 reference for test traceability")
+    predictions, _ = score_improved_bundle(bundle, data)
+    predictions[config["classifier"]] = make_prediction_frame(
+        data, score_model(bundle["B_model"], data[FEATURE_COLUMNS]), config["classifier"])
+    result = evaluate_c_extensions(predictions, data, config, phase=phase, progress=progress)
+    result["provenance"] = copy.deepcopy(provenance or {})
+    output.mkdir(parents=True, exist_ok=True)
+    (output / "extension_config.json").write_text(json.dumps(config, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    (output / "c_extensions.json").write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    for name, frame in predictions.items():
+        frame.to_csv(output / f"{name}_predictions.csv", index=False, float_format="%.17g")
+    if results is not None:
+        paths = save_c_extension_figures(result, results / "figures")
+        result["publication"] = {"figure_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}
+        (results / "tables").mkdir(parents=True, exist_ok=True)
+        (results / "tables" / table_name).write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    return result
+
+
+
+def save_review_policy_figure(threshold_results, path, *, phase):
+    """C7 plot of A's existing E08 counts; no threshold or model is selected.
+
+    Validation thresholds were selected on this same validation partition, so
+    validation plots are diagnostic, not independent threshold generalization.
+    A8 may reuse this with phase='test' on its frozen-threshold test results.
+    """
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    if phase not in {"validation", "test"} or not threshold_results:
+        raise ValueError("Supply nonempty validation/test threshold results")
+    path = Path(path)
+    if path.exists():
+        raise ValueError("Review-policy figure already exists")
+    methods = list(threshold_results)
+    reference_windows = None
+    for name, result in threshold_results.items():
+        if result.get("selection_phase") != "validation" or not result.get("windows"):
+            raise ValueError("Thresholds must originate from validation with window counts")
+        reference = [(r["window_id"], r["start_seconds"], r["end_seconds"],
+                      r["n_samples"], r["n_positives"]) for r in result["windows"]]
+        if reference_windows is not None and reference != reference_windows:
+            raise ValueError("Policy plots must use identical windows and transactions")
+        reference_windows = reference
+        if any(r["method"] != name for r in result["windows"]):
+            raise ValueError("Window methods disagree with threshold result names")
+    fig, axes = plt.subplots(len(methods), 2, figsize=(13, 3.7*len(methods)), squeeze=False)
+    names = {"logistic_regression_class_weight": "Class-weighted LR",
+             "if_sample4096": "Isolation Forest (4096)"}
+    for row, name in enumerate(methods):
+        result = threshold_results[name]
+        windows = result["windows"]
+        x = [(w["start_seconds"] + w["end_seconds"])/7200 for w in windows]
+        for col, field in enumerate(["actual_review_fraction", "recall_at_k"]):
+            ax = axes[row, col]
+            for policy, label, marker in [("fixed_threshold", "Fixed validation threshold", "o"),
+                                           ("top_k", "Independent window top-K", "s")]:
+                values = [w[policy][field] for w in windows]
+                ax.plot(x, [np.nan if value is None else 100*value for value in values],
+                        marker=marker, label=label)
+            if col == 0:
+                ax.axhline(100*result["review_fraction"], color="grey", linestyle="--", label="Target budget")
+            else:
+                ax.set_ylim(-2, 102)
+            ax.set(title=names.get(name, name), xlabel="Relative elapsed time (hours)",
+                   ylabel="Review proportion (%)" if col == 0 else "Fraud recall (%)")
+            ax.grid(alpha=0.2)
+            ax.legend(fontsize=8)
+    note = ("Validation diagnostic: thresholds selected on this same partition"
+            if phase == "validation" else "Test: validation thresholds retained unchanged")
+    fig.suptitle(note + "\nWindow budgets are independent; first/last windows may be partial")
+    fig.tight_layout()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+    return path
+
+
+
+def save_handbook_c_figures(result, output):
+    """C-N1/N2/N3: compact dataset-specific plots; synthetic evidence labelled."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    output=Path(output)
+    prefix="handbook_c_interface" if result["evidence_kind"]=="synthetic_fixture" else "handbook_c"
+    title=("Synthetic interface check — NOT official Handbook results"
+           if result["evidence_kind"]=="synthetic_fixture" else "Handbook validation — fixed methods and budgets")
+    paths=[output/(prefix+"_ablation.png")]
+    if result["history_missing"]["status"]=="evaluated":paths.append(output/(prefix+"_missing.png"))
+    if any(p.exists() for p in paths):raise ValueError("Handbook C figures already exist")
+    output.mkdir(parents=True,exist_ok=True)
+    names=list(result["metrics"])
+    labels=[n.replace("if_","IF: ").replace("lr_","LR: ").replace("_"," ") for n in names]
+    fig,axes=plt.subplots(1,2,figsize=(14,6))
+    for ax,field in zip(axes,["AP","recall_at_k"],strict=True):
+        values=[]
+        for name in names:
+            m=result["metrics"][name]
+            value=m["AP"] if field=="AP" else next(r[field] for r in m["budgets"] if r["review_fraction"]==.01)
+            values.append(np.nan if value is None else value)
+        ax.barh(np.arange(len(names)),values)
+        ax.set_yticks(np.arange(len(names)),labels,fontsize=8)
+        ax.set(xlabel=field,title="All fixed conditions",xlim=(0,1))
+        ax.grid(axis="x",alpha=.2)
+    fig.suptitle(title);fig.tight_layout();fig.savefig(paths[0],dpi=160);plt.close(fig)
+    if len(paths)>1:
+        fig,axes=plt.subplots(1,2,figsize=(12,4.5))
+        missing=result["history_missing"]
+        for name in ["if_both_history","lr_both_history"]:
+            for ax,field in zip(axes,["AP","recall_at_k"],strict=True):
+                means,lows,highs=[],[],[]
+                for rate in missing["rates"]:
+                    values=[]
+                    for record in missing["records"]:
+                        if record["missing_fraction"]!=rate:continue
+                        m=record["metrics"][name]
+                        v=m["AP"] if field=="AP" else next(r[field] for r in m["budgets"] if r["review_fraction"]==.01)
+                        if v is not None:values.append(v)
+                    means.append(float(np.mean(values)) if values else np.nan)
+                    lows.append(min(values) if values else np.nan)
+                    highs.append(max(values) if values else np.nan)
+                x=100*np.asarray(missing["rates"])
+                ax.plot(x,means,marker="o",label=name)
+                ax.fill_between(x,lows,highs,alpha=.15)
+                ax.set(xlabel="Missing historical records (%)",ylabel=field,ylim=(-.02,1.02))
+                ax.legend(fontsize=8);ax.grid(alpha=.2)
+        fig.suptitle(title+"\nThree-seed ranges, not confidence intervals")
+        fig.tight_layout();fig.savefig(paths[1],dpi=160);plt.close(fig)
+    return paths
+
+
+def _c_extension_cli():
+    """C-owned validation entry; A integrates test execution into the shared CLI."""
+    import argparse
+    import sys
+    import subprocess
+    import platform
+    import importlib.metadata
+    import joblib
+    from preprocessing import load_data, split_data, data_sha256, ULB_SHA256, DEFAULT_DATA_PATH
+    parser = argparse.ArgumentParser(description="C E01/E02/E06/E07 validation-only extensions")
+    parser.add_argument("--bundle", type=Path, required=True)
+    parser.add_argument("--data", type=Path, default=DEFAULT_DATA_PATH)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--results", type=Path, default=Path(__file__).resolve().parents[1] / "results")
+    args = parser.parse_args()
+    if data_sha256(args.data) != ULB_SHA256:
+        parser.error("Raw dataset checksum differs from the agreed ULB version")
+    train, validation, _ = split_data(load_data(args.data))
+    bundle = joblib.load(args.bundle)
+    config = build_c_extension_config(train, bundle)
+    root = Path(__file__).resolve().parents[1]
+    provenance = {
+        "command": subprocess.list2cmdline(["python", "code/evaluation.py", *sys.argv[1:]]),
+        "dataset_sha256": ULB_SHA256, "bundle_sha256": data_sha256(args.bundle),
+        "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(),
+        "source_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=root, text=True).strip()),
+        "code_sha256": {name: data_sha256(root/name) for name in ["code/evaluation.py", "code/unsupervised.py", "code/preprocessing.py", "code/classification.py"]},
+        "python": platform.python_version(),
+        "versions": {name: importlib.metadata.version(name) for name in ["numpy", "pandas", "scikit-learn", "matplotlib"]},
+    }
+    result = run_c_extensions(bundle, validation, config, args.output, provenance=provenance, results=args.results)
+    print(json.dumps({"phase": result["phase"], "partition": result["partition"],
+                      "test_evaluated": result["test_evaluated"]}, indent=2))
+
+
+if __name__ == "__main__":
+    _c_extension_cli()

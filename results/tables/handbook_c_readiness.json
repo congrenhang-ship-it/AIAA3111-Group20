@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-15",
+  "dataset_id": "handbook",
+  "evidence_kind": "synthetic_interface_readiness",
+  "official_data_available": false,
+  "A_N1_delivered": false,
+  "official_validation_complete": false,
+  "group_G2_complete": false,
+  "test_scored": false,
+  "C_N1": {
+    "implementation_complete": true,
+    "synthetic_interface_verified": true,
+    "official_ablation_pending": true
+  },
+  "C_N2": {
+    "causal_relation_features_complete": true,
+    "synthetic_increment_verified": true,
+    "official_increment_pending": true
+  },
+  "C_N3": {
+    "implementation_complete": true,
+    "all_nine_conditions_verified": true,
+    "official_stress_results_pending": true
+  },
+  "checks": {
+    "repository_tests_passed": 83,
+    "B_tests_passed": 8,
+    "total_checks_passed": 91,
+    "strict_past_and_same_timestamp_batching": true,
+    "inclusive_lower_window_boundary": true,
+    "last_repeated_edge_expiry": true,
+    "future_label_and_amount_independence": true,
+    "mask_nested_chunk_and_order_invariance": true,
+    "current_transactions_not_dropped": true,
+    "label_and_oracle_fields_excluded": true,
+    "four_views_share_identical_transaction_features": true,
+    "train_only_scaler_means_checked": true,
+    "missing_history_no_refit": true,
+    "persisted_model_scores_replay_exactly": true,
+    "public_private_boundaries_checked": true
+  },
+  "scale_check": {
+    "rows": 100000,
+    "window_seconds": 604800,
+    "elapsed_seconds": 0.273659750004299,
+    "prefix_future_invariance": true,
+    "chunked_mask_equal": true,
+    "note": "Generated causal-stream workload only; not a fraud dataset or model-quality experiment."
+  },
+  "synthetic_interface": {
+    "train_rows": 320,
+    "validation_rows": 128,
+    "fitted_models": 7,
+    "evaluated_rankings": 8,
+    "stress_conditions": 9,
+    "private_preview": "data/handbook_c_interface_20261115/shared",
+    "note": "Test-only fixture; NOT the Handbook simulator. No synthetic AP promoted as official evidence."
+  },
+  "code_sha256": {
+    "code/unsupervised.py": "03e51e99eccf25b9c22dce307129cd48218b9a57bb35923f3954cab5b1ae0655",
+    "code/evaluation.py": "b1e5266ff33cbb45ce5fe93b6170d8c93b63331297290e312ba31fdb8ae2b346",
+    "tests/test_c_modules.py": "27726ceb38c61046783b50888a036e1b2f520f00aacec05f0ba62c6fec102dc8"
+  },
+  "next_dependency": "A-N1 official dataset, partition/source manifest, four feature views and unlabeled history-builder callback; then run the same validated API.",
+  "implementation_commit": "ae1ac5d00a4fad15f427779c717552db328292ab"
+}

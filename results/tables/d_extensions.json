@@ -1,0 +1,3184 @@
+{
+  "phase": "validation",
+  "group_G2_complete": false,
+  "test_scored": false,
+  "source_commit": "18fd6409f73474354f4997310a6f26e9630f9138",
+  "dependency_commit": "a936f29427bd9b76e1ce85dab079d75808530ed0",
+  "source_sha256": {
+    "run_d_validation.py": "ee9f7595057c90a3da7ce0f6e9cb618267645098e57a74596f6d6bdc27eea2fc",
+    "pattern_mining.py": "718f769909eb2d05f39df72061152a0ae9eaafbfc2e9da423c21071439a93175",
+    "classification.py": "2232c6063dbedd132678b8f40b2d4c8b6516a52c049c0ce539f023fdab4886c4",
+    "unsupervised.py": "0275be26e4e3a4c99617e9793b6908185d5b2f7408250425dda029d4c1cd5cb9",
+    "evaluation.py": "4faab1031ba5c7c56ed1177b4e888117718bcfd97c7b018487003431e13a6f79"
+  },
+  "python": "3.12.14",
+  "data_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+  "partitions": {
+    "train": {
+      "rows": 170235,
+      "frauds": 342,
+      "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+    },
+    "validation": {
+      "rows": 56745,
+      "frauds": 57,
+      "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+    },
+    "test": {
+      "rows": 56746,
+      "frauds": 74,
+      "row_ids_sha256": "4909103f5579d282c4faa1ca32c3c57fdf328e5d2ade9533a297d3e0254ca5c9"
+    }
+  },
+  "command": [
+    "C:\\Users\\26793\\Documents\\ChatGPT\\DATA MINING\\work\\AIAA3111-Group20\\.venv-d-common\\Scripts\\python.exe",
+    "code/run_d_validation.py",
+    "--extensions",
+    "--preprocessing-code",
+    "../AIAA3111-C-check/code"
+  ],
+  "versions": {
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.2"
+  },
+  "config": {
+    "rule_order": "train lift desc, confidence desc, length asc, ID asc",
+    "high_overlap_threshold": 0.9,
+    "display": "first five positive incremental fraud rules in fixed order",
+    "case_selection": "first two covered errors by row_id per category; skip earlier cases",
+    "primary_budget": 0.01,
+    "ranking": "score descending; row_id ascending; ceil(N*q)",
+    "fixed_classifier": "class-weighted LR seed42",
+    "fixed_IF": "100 trees, sample4096, seed42",
+    "test_set": "all original 21 rules, not only display subset"
+  },
+  "predictions_sha256": "e66a4e64e7d0abd089261532950b523a118b5b21346dac2fe91d06a0459dc99c",
+  "freeze_sha256": "5f45259ee2a02e95758f22ee5ae9ffc96aa6c9da1121983b9e758e4ff5012154",
+  "model_validation": {
+    "classifier": {
+      "AP": 0.7726808523329118,
+      "budgets": [
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010009692483919287,
+          "K": 568,
+          "TP": 49,
+          "FP": 519,
+          "FN": 8,
+          "TN": 56169,
+          "precision_at_k": 0.08626760563380281,
+          "recall_at_k": 0.8596491228070176,
+          "random_expected_TP": 0.5705524715833994,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.010009692483919287
+        }
+      ]
+    },
+    "IF": {
+      "AP": 0.030021287457243147,
+      "budgets": [
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010009692483919287,
+          "K": 568,
+          "TP": 24,
+          "FP": 544,
+          "FN": 33,
+          "TN": 56144,
+          "precision_at_k": 0.04225352112676056,
+          "recall_at_k": 0.42105263157894735,
+          "random_expected_TP": 0.5705524715833994,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.010009692483919287
+        }
+      ]
+    }
+  },
+  "E04": {
+    "rule_order": [
+      "R001",
+      "R002",
+      "R003",
+      "R004",
+      "R005",
+      "R006",
+      "R007",
+      "R008",
+      "R009",
+      "R010",
+      "R011",
+      "R012",
+      "R013",
+      "R014",
+      "R015",
+      "R016",
+      "R017",
+      "R018",
+      "R019",
+      "R020",
+      "R021"
+    ],
+    "jaccard": [
+      [
+        1.0,
+        0.025424136108040563,
+        0.1314894378804153,
+        0.15946591402518454,
+        0.1975753122703894,
+        0.14003020361401863,
+        0.18448425310603872,
+        0.029425678872173337,
+        0.04917637120617872,
+        0.1795901119797169,
+        0.15174506828528073,
+        0.04901882258710453,
+        0.051971596917963436,
+        0.05500636561072418,
+        0.27652342801650887,
+        0.05916521815661511,
+        0.11519033014613025,
+        0.1905000836260244,
+        0.06609046682538039,
+        0.0,
+        0.07069488917536491
+      ],
+      [
+        0.025424136108040563,
+        1.0,
+        0.2744093075700887,
+        0.15193120096560048,
+        0.23108463895722733,
+        0.09715388326097443,
+        0.07410329231092878,
+        0.2784417884019478,
+        0.2047192839707079,
+        0.08963011273642038,
+        0.04848737742541206,
+        0.2959873067867745,
+        0.2115989754848152,
+        0.7104449807358483,
+        0.19188588631639308,
+        0.38502133908494335,
+        0.030771810673709807,
+        0.080185799601858,
+        0.18106581267316757,
+        0.17164179104477612,
+        0.17966322853237232
+      ],
+      [
+        0.1314894378804153,
+        0.2744093075700887,
+        1.0,
+        0.1152970724432933,
+        0.3699046566256736,
+        0.02125180780973807,
+        0.1857243959154787,
+        0.1461183582564429,
+        0.07222677875743284,
+        0.2668103448275862,
+        0.038685208596713025,
+        0.22873401818047448,
+        0.08553392015648617,
+        0.3423091578813667,
+        0.49071376547705753,
+        0.11560468982791008,
+        0.019960207945574737,
+        0.04811345473601467,
+        0.08240994123188732,
+        0.10346045197740113,
+        0.11821549978992399
+      ],
+      [
+        0.15946591402518454,
+        0.15193120096560048,
+        0.1152970724432933,
+        1.0,
+        0.030509256589191996,
+        0.14779843444227006,
+        0.03288569313735857,
+        0.12538419815584886,
+        0.040278768589145586,
+        0.050482553823311065,
+        0.1900337143327029,
+        0.18704977741804937,
+        0.054564237415477085,
+        0.259325119607096,
+        0.06951542684081015,
+        0.0647089063102429,
+        0.1105619768832204,
+        0.25610469978257233,
+        0.06674366007410615,
+        0.0,
+        0.09242151569686063
+      ],
+      [
+        0.1975753122703894,
+        0.23108463895722733,
+        0.3699046566256736,
+        0.030509256589191996,
+        1.0,
+        0.10189465706707086,
+        0.21273744778119336,
+        0.08458398367150918,
+        0.12337721704150667,
+        0.3481965768015867,
+        0.054150487984048694,
+        0.10479302832244008,
+        0.2031196434693178,
+        0.17841908824313515,
+        0.7127336732216557,
+        0.2694461016015786,
+        0.04350146784093942,
+        0.08155899302396118,
+        0.10758560210467573,
+        0.08283071974266185,
+        0.1681208767822941
+      ],
+      [
+        0.14003020361401863,
+        0.09715388326097443,
+        0.02125180780973807,
+        0.14779843444227006,
+        0.10189465706707086,
+        1.0,
+        0.04041856774449514,
+        0.03201605164442118,
+        0.24558216350123865,
+        0.04503796805446452,
+        0.31149466373895723,
+        0.04701598219704633,
+        0.22126301280423663,
+        0.07963831918595456,
+        0.08639912604826012,
+        0.397778899545684,
+        0.30987236259442563,
+        0.7248703796621508,
+        0.2168349677372316,
+        0.0,
+        0.18811484256946373
+      ],
+      [
+        0.18448425310603872,
+        0.07410329231092878,
+        0.1857243959154787,
+        0.03288569313735857,
+        0.21273744778119336,
+        0.04041856774449514,
+        1.0,
+        0.22595325953259532,
+        0.1959204413472706,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.07225172074729597,
+        0.2211094925952901,
+        0.060616269146116876,
+        0.12552835938267964,
+        0.04858838748953657,
+        0.2270772299445241,
+        0.21703670140462167,
+        0.0
+      ],
+      [
+        0.029425678872173337,
+        0.2784417884019478,
+        0.1461183582564429,
+        0.12538419815584886,
+        0.08458398367150918,
+        0.03201605164442118,
+        0.22595325953259532,
+        1.0,
+        0.356273010478618,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.26775053981963676,
+        0.08763058722511091,
+        0.1121362035922806,
+        0.10883553044569994,
+        0.04807125775482619,
+        0.3941906127282927,
+        0.46148611867174744,
+        0.0
+      ],
+      [
+        0.04917637120617872,
+        0.2047192839707079,
+        0.07222677875743284,
+        0.040278768589145586,
+        0.12337721704150667,
+        0.24558216350123865,
+        0.1959204413472706,
+        0.356273010478618,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.16015786625926987,
+        0.1014318463677703,
+        0.29443348171263367,
+        0.4048737322170036,
+        0.1931168831168831,
+        0.7998504020445054,
+        0.29258787379150114,
+        0.0
+      ],
+      [
+        0.1795901119797169,
+        0.08963011273642038,
+        0.2668103448275862,
+        0.050482553823311065,
+        0.3481965768015867,
+        0.04503796805446452,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.12823414045409973,
+        0.25671864631718644,
+        0.2603966379168269,
+        0.11406353652244416,
+        0.4011896091284292,
+        0.1042858400070404,
+        0.0,
+        0.058974536876431,
+        0.0,
+        0.0,
+        0.3119248737671653
+      ],
+      [
+        0.15174506828528073,
+        0.04848737742541206,
+        0.038685208596713025,
+        0.1900337143327029,
+        0.054150487984048694,
+        0.31149466373895723,
+        0.0,
+        0.0,
+        0.0,
+        0.12823414045409973,
+        1.0,
+        0.158537421966111,
+        0.32831001076426264,
+        0.07792952284606305,
+        0.07351987198892877,
+        0.13310349342119618,
+        0.0,
+        0.34901321291185816,
+        0.0,
+        0.0,
+        0.3938936340899438
+      ],
+      [
+        0.04901882258710453,
+        0.2959873067867745,
+        0.22873401818047448,
+        0.18704977741804937,
+        0.10479302832244008,
+        0.04701598219704633,
+        0.0,
+        0.0,
+        0.0,
+        0.25671864631718644,
+        0.158537421966111,
+        1.0,
+        0.3029176051542612,
+        0.361615648418646,
+        0.14118237387099716,
+        0.12479499352611136,
+        0.0,
+        0.07666025343329132,
+        0.0,
+        0.0,
+        0.40304846397055355
+      ],
+      [
+        0.051971596917963436,
+        0.2115989754848152,
+        0.08553392015648617,
+        0.054564237415477085,
+        0.2031196434693178,
+        0.22126301280423663,
+        0.0,
+        0.0,
+        0.0,
+        0.2603966379168269,
+        0.32831001076426264,
+        0.3029176051542612,
+        1.0,
+        0.16924697825514354,
+        0.16886957141330294,
+        0.37476481116057087,
+        0.0,
+        0.17862894960320946,
+        0.0,
+        0.0,
+        0.7707517342267944
+      ],
+      [
+        0.05500636561072418,
+        0.7104449807358483,
+        0.3423091578813667,
+        0.259325119607096,
+        0.17841908824313515,
+        0.07963831918595456,
+        0.07225172074729597,
+        0.26775053981963676,
+        0.16015786625926987,
+        0.11406353652244416,
+        0.07792952284606305,
+        0.361615648418646,
+        0.16924697825514354,
+        1.0,
+        0.25257731958762886,
+        0.33279784216893754,
+        0.046173308032890575,
+        0.1479111325766723,
+        0.18969344291799148,
+        0.13760499939130788,
+        0.23549036367145496
+      ],
+      [
+        0.27652342801650887,
+        0.19188588631639308,
+        0.49071376547705753,
+        0.06951542684081015,
+        0.7127336732216557,
+        0.08639912604826012,
+        0.2211094925952901,
+        0.08763058722511091,
+        0.1014318463677703,
+        0.4011896091284292,
+        0.07351987198892877,
+        0.14118237387099716,
+        0.16886957141330294,
+        0.25257731958762886,
+        1.0,
+        0.24305081237710857,
+        0.05550725897591933,
+        0.127134724857685,
+        0.12616013298240752,
+        0.0738665570062712,
+        0.21283446565991565
+      ],
+      [
+        0.05916521815661511,
+        0.38502133908494335,
+        0.11560468982791008,
+        0.0647089063102429,
+        0.2694461016015786,
+        0.397778899545684,
+        0.060616269146116876,
+        0.1121362035922806,
+        0.29443348171263367,
+        0.1042858400070404,
+        0.13310349342119618,
+        0.12479499352611136,
+        0.37476481116057087,
+        0.33279784216893754,
+        0.24305081237710857,
+        1.0,
+        0.1308950067120002,
+        0.3456002551732387,
+        0.27422905135383496,
+        0.08854013108656703,
+        0.3371800165152766
+      ],
+      [
+        0.11519033014613025,
+        0.030771810673709807,
+        0.019960207945574737,
+        0.1105619768832204,
+        0.04350146784093942,
+        0.30987236259442563,
+        0.12552835938267964,
+        0.10883553044569994,
+        0.4048737322170036,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.046173308032890575,
+        0.05550725897591933,
+        0.1308950067120002,
+        1.0,
+        0.3264341863187824,
+        0.4866296827276694,
+        0.0,
+        0.0
+      ],
+      [
+        0.1905000836260244,
+        0.080185799601858,
+        0.04811345473601467,
+        0.25610469978257233,
+        0.08155899302396118,
+        0.7248703796621508,
+        0.04858838748953657,
+        0.04807125775482619,
+        0.1931168831168831,
+        0.058974536876431,
+        0.34901321291185816,
+        0.07666025343329132,
+        0.17862894960320946,
+        0.1479111325766723,
+        0.127134724857685,
+        0.3456002551732387,
+        0.3264341863187824,
+        1.0,
+        0.24281537695944264,
+        0.0,
+        0.22706746463547334
+      ],
+      [
+        0.06609046682538039,
+        0.18106581267316757,
+        0.08240994123188732,
+        0.06674366007410615,
+        0.10758560210467573,
+        0.2168349677372316,
+        0.2270772299445241,
+        0.3941906127282927,
+        0.7998504020445054,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.18969344291799148,
+        0.12616013298240752,
+        0.27422905135383496,
+        0.4866296827276694,
+        0.24281537695944264,
+        1.0,
+        0.27519790562862306,
+        0.0
+      ],
+      [
+        0.0,
+        0.17164179104477612,
+        0.10346045197740113,
+        0.0,
+        0.08283071974266185,
+        0.0,
+        0.21703670140462167,
+        0.46148611867174744,
+        0.29258787379150114,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.13760499939130788,
+        0.0738665570062712,
+        0.08854013108656703,
+        0.0,
+        0.0,
+        0.27519790562862306,
+        1.0,
+        0.0
+      ],
+      [
+        0.07069488917536491,
+        0.17966322853237232,
+        0.11821549978992399,
+        0.09242151569686063,
+        0.1681208767822941,
+        0.18811484256946373,
+        0.0,
+        0.0,
+        0.0,
+        0.3119248737671653,
+        0.3938936340899438,
+        0.40304846397055355,
+        0.7707517342267944,
+        0.23549036367145496,
+        0.21283446565991565,
+        0.3371800165152766,
+        0.0,
+        0.22706746463547334,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "pairs": [
+      {
+        "left": "R001",
+        "right": "R002",
+        "intersection": 529,
+        "union": 20807,
+        "jaccard": 0.025424136108040563,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R003",
+        "intersection": 1469,
+        "union": 11172,
+        "jaccard": 0.1314894378804153,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R004",
+        "intersection": 1469,
+        "union": 9212,
+        "jaccard": 0.15946591402518454,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R005",
+        "intersection": 2689,
+        "union": 13610,
+        "jaccard": 0.1975753122703894,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R006",
+        "intersection": 2689,
+        "union": 19203,
+        "jaccard": 0.14003020361401863,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R007",
+        "intersection": 1277,
+        "union": 6922,
+        "jaccard": 0.18448425310603872,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R008",
+        "intersection": 311,
+        "union": 10569,
+        "jaccard": 0.029425678872173337,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R009",
+        "intersection": 815,
+        "union": 16573,
+        "jaccard": 0.04917637120617872,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R010",
+        "intersection": 1700,
+        "union": 9466,
+        "jaccard": 0.1795901119797169,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R011",
+        "intersection": 1700,
+        "union": 11203,
+        "jaccard": 0.15174506828528073,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R012",
+        "intersection": 612,
+        "union": 12485,
+        "jaccard": 0.04901882258710453,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R013",
+        "intersection": 1032,
+        "union": 19857,
+        "jaccard": 0.051971596917963436,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R014",
+        "intersection": 1469,
+        "union": 26706,
+        "jaccard": 0.05500636561072418,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R015",
+        "intersection": 4556,
+        "union": 16476,
+        "jaccard": 0.27652342801650887,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R016",
+        "intersection": 2689,
+        "union": 45449,
+        "jaccard": 0.05916521815661511,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R017",
+        "intersection": 1277,
+        "union": 11086,
+        "jaccard": 0.11519033014613025,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R018",
+        "intersection": 4556,
+        "union": 23916,
+        "jaccard": 0.1905000836260244,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R019",
+        "intersection": 1277,
+        "union": 19322,
+        "jaccard": 0.06609046682538039,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R020",
+        "intersection": 0,
+        "union": 8971,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R021",
+        "intersection": 1700,
+        "union": 24047,
+        "jaccard": 0.07069488917536491,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R003",
+        "intersection": 5354,
+        "union": 19511,
+        "jaccard": 0.2744093075700887,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R004",
+        "intersection": 3021,
+        "union": 19884,
+        "jaccard": 0.15193120096560048,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R005",
+        "intersection": 5354,
+        "union": 23169,
+        "jaccard": 0.23108463895722733,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R006",
+        "intersection": 3021,
+        "union": 31095,
+        "jaccard": 0.09715388326097443,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R007",
+        "intersection": 1409,
+        "union": 19014,
+        "jaccard": 0.07410329231092878,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R008",
+        "intersection": 5032,
+        "union": 18072,
+        "jaccard": 0.2784417884019478,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R009",
+        "intersection": 5032,
+        "union": 24580,
+        "jaccard": 0.2047192839707079,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R010",
+        "intersection": 1924,
+        "union": 21466,
+        "jaccard": 0.08963011273642038,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R011",
+        "intersection": 1162,
+        "union": 23965,
+        "jaccard": 0.04848737742541206,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R012",
+        "intersection": 5783,
+        "union": 19538,
+        "jaccard": 0.2959873067867745,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R013",
+        "intersection": 5783,
+        "union": 27330,
+        "jaccard": 0.2115989754848152,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R014",
+        "intersection": 16780,
+        "union": 23619,
+        "jaccard": 0.7104449807358483,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R015",
+        "intersection": 5354,
+        "union": 27902,
+        "jaccard": 0.19188588631639308,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R016",
+        "intersection": 16780,
+        "union": 43582,
+        "jaccard": 0.38502133908494335,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R017",
+        "intersection": 734,
+        "union": 23853,
+        "jaccard": 0.030771810673709807,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R018",
+        "intersection": 3021,
+        "union": 37675,
+        "jaccard": 0.080185799601858,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R019",
+        "intersection": 5032,
+        "union": 27791,
+        "jaccard": 0.18106581267316757,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R020",
+        "intersection": 3105,
+        "union": 18090,
+        "jaccard": 0.17164179104477612,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R021",
+        "intersection": 5783,
+        "union": 32188,
+        "jaccard": 0.17966322853237232,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R004",
+        "intersection": 1469,
+        "union": 12741,
+        "jaccard": 0.1152970724432933,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R005",
+        "intersection": 5354,
+        "union": 14474,
+        "jaccard": 0.3699046566256736,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R006",
+        "intersection": 529,
+        "union": 24892,
+        "jaccard": 0.02125180780973807,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R007",
+        "intersection": 1837,
+        "union": 9891,
+        "jaccard": 0.1857243959154787,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R008",
+        "intersection": 1837,
+        "union": 12572,
+        "jaccard": 0.1461183582564429,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R009",
+        "intersection": 1409,
+        "union": 19508,
+        "jaccard": 0.07222677875743284,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R010",
+        "intersection": 3095,
+        "union": 11600,
+        "jaccard": 0.2668103448275862,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R011",
+        "intersection": 612,
+        "union": 15820,
+        "jaccard": 0.038685208596713025,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R012",
+        "intersection": 3095,
+        "union": 13531,
+        "jaccard": 0.22873401818047448,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R013",
+        "intersection": 1924,
+        "union": 22494,
+        "jaccard": 0.08553392015648617,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R014",
+        "intersection": 8085,
+        "union": 23619,
+        "jaccard": 0.3423091578813667,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R015",
+        "intersection": 8085,
+        "union": 16476,
+        "jaccard": 0.49071376547705753,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R016",
+        "intersection": 5354,
+        "union": 46313,
+        "jaccard": 0.11560468982791008,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R017",
+        "intersection": 311,
+        "union": 15581,
+        "jaccard": 0.019960207945574737,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R018",
+        "intersection": 1469,
+        "union": 30532,
+        "jaccard": 0.04811345473601467,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R019",
+        "intersection": 1837,
+        "union": 22291,
+        "jaccard": 0.08240994123188732,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R020",
+        "intersection": 1172,
+        "union": 11328,
+        "jaccard": 0.10346045197740113,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R021",
+        "intersection": 3095,
+        "union": 26181,
+        "jaccard": 0.11821549978992399,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R005",
+        "intersection": 529,
+        "union": 17339,
+        "jaccard": 0.030509256589191996,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R006",
+        "intersection": 3021,
+        "union": 20440,
+        "jaccard": 0.14779843444227006,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R007",
+        "intersection": 311,
+        "union": 9457,
+        "jaccard": 0.03288569313735857,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R008",
+        "intersection": 1387,
+        "union": 11062,
+        "jaccard": 0.12538419815584886,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R009",
+        "intersection": 734,
+        "union": 18223,
+        "jaccard": 0.040278768589145586,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R010",
+        "intersection": 612,
+        "union": 12123,
+        "jaccard": 0.050482553823311065,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R011",
+        "intersection": 2311,
+        "union": 12161,
+        "jaccard": 0.1900337143327029,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R012",
+        "intersection": 2311,
+        "union": 12355,
+        "jaccard": 0.18704977741804937,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R013",
+        "intersection": 1162,
+        "union": 21296,
+        "jaccard": 0.054564237415477085,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R014",
+        "intersection": 6125,
+        "union": 23619,
+        "jaccard": 0.259325119607096,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R015",
+        "intersection": 1469,
+        "union": 21132,
+        "jaccard": 0.06951542684081015,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R016",
+        "intersection": 3021,
+        "union": 46686,
+        "jaccard": 0.0647089063102429,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R017",
+        "intersection": 1387,
+        "union": 12545,
+        "jaccard": 0.1105619768832204,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R018",
+        "intersection": 6125,
+        "union": 23916,
+        "jaccard": 0.25610469978257233,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R019",
+        "intersection": 1387,
+        "union": 20781,
+        "jaccard": 0.06674366007410615,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R020",
+        "intersection": 0,
+        "union": 10540,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R021",
+        "intersection": 2311,
+        "union": 25005,
+        "jaccard": 0.09242151569686063,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R006",
+        "intersection": 2689,
+        "union": 26390,
+        "jaccard": 0.10189465706707086,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R007",
+        "intersection": 2699,
+        "union": 12687,
+        "jaccard": 0.21273744778119336,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R008",
+        "intersection": 1409,
+        "union": 16658,
+        "jaccard": 0.08458398367150918,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R009",
+        "intersection": 2699,
+        "union": 21876,
+        "jaccard": 0.12337721704150667,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R010",
+        "intersection": 4740,
+        "union": 13613,
+        "jaccard": 0.3481965768015867,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R011",
+        "intersection": 1032,
+        "union": 19058,
+        "jaccard": 0.054150487984048694,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R012",
+        "intersection": 1924,
+        "union": 18360,
+        "jaccard": 0.10479302832244008,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R013",
+        "intersection": 4740,
+        "union": 23336,
+        "jaccard": 0.2031196434693178,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R014",
+        "intersection": 5354,
+        "union": 30008,
+        "jaccard": 0.17841908824313515,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R015",
+        "intersection": 11743,
+        "union": 16476,
+        "jaccard": 0.7127336732216557,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R016",
+        "intersection": 11743,
+        "union": 43582,
+        "jaccard": 0.2694461016015786,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R017",
+        "intersection": 815,
+        "union": 18735,
+        "jaccard": 0.04350146784093942,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R018",
+        "intersection": 2689,
+        "union": 32970,
+        "jaccard": 0.08155899302396118,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R019",
+        "intersection": 2699,
+        "union": 25087,
+        "jaccard": 0.10758560210467573,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R020",
+        "intersection": 1236,
+        "union": 14922,
+        "jaccard": 0.08283071974266185,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R021",
+        "intersection": 4740,
+        "union": 28194,
+        "jaccard": 0.1681208767822941,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R007",
+        "intersection": 815,
+        "union": 20164,
+        "jaccard": 0.04041856774449514,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R008",
+        "intersection": 734,
+        "union": 22926,
+        "jaccard": 0.03201605164442118,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R009",
+        "intersection": 5948,
+        "union": 24220,
+        "jaccard": 0.24558216350123865,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R010",
+        "intersection": 1032,
+        "union": 22914,
+        "jaccard": 0.04503796805446452,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R011",
+        "intersection": 6100,
+        "union": 19583,
+        "jaccard": 0.31149466373895723,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R012",
+        "intersection": 1162,
+        "union": 24715,
+        "jaccard": 0.04701598219704633,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R013",
+        "intersection": 6100,
+        "union": 27569,
+        "jaccard": 0.22126301280423663,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R014",
+        "intersection": 3021,
+        "union": 37934,
+        "jaccard": 0.07963831918595456,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R015",
+        "intersection": 2689,
+        "union": 31123,
+        "jaccard": 0.08639912604826012,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R016",
+        "intersection": 17336,
+        "union": 43582,
+        "jaccard": 0.397778899545684,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R017",
+        "intersection": 5948,
+        "union": 19195,
+        "jaccard": 0.30987236259442563,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R018",
+        "intersection": 17336,
+        "union": 23916,
+        "jaccard": 0.7248703796621508,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R019",
+        "intersection": 5948,
+        "union": 27431,
+        "jaccard": 0.2168349677372316,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R020",
+        "intersection": 0,
+        "union": 21751,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R021",
+        "intersection": 6100,
+        "union": 32427,
+        "jaccard": 0.18811484256946373,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R008",
+        "intersection": 1837,
+        "union": 8130,
+        "jaccard": 0.22595325953259532,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R009",
+        "intersection": 2699,
+        "union": 13776,
+        "jaccard": 0.1959204413472706,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R010",
+        "intersection": 0,
+        "union": 10253,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R011",
+        "intersection": 0,
+        "union": 11990,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R012",
+        "intersection": 0,
+        "union": 12184,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R013",
+        "intersection": 0,
+        "union": 19976,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R014",
+        "intersection": 1837,
+        "union": 25425,
+        "jaccard": 0.07225172074729597,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R015",
+        "intersection": 3643,
+        "union": 16476,
+        "jaccard": 0.2211094925952901,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R016",
+        "intersection": 2699,
+        "union": 44526,
+        "jaccard": 0.060616269146116876,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R017",
+        "intersection": 1277,
+        "union": 10173,
+        "jaccard": 0.12552835938267964,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R018",
+        "intersection": 1277,
+        "union": 26282,
+        "jaccard": 0.04858838748953657,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R019",
+        "intersection": 3643,
+        "union": 16043,
+        "jaccard": 0.2270772299445241,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R020",
+        "intersection": 1437,
+        "union": 6621,
+        "jaccard": 0.21703670140462167,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R021",
+        "intersection": 0,
+        "union": 24834,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R009",
+        "intersection": 5032,
+        "union": 14124,
+        "jaccard": 0.356273010478618,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R010",
+        "intersection": 0,
+        "union": 12934,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R011",
+        "intersection": 0,
+        "union": 14671,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R012",
+        "intersection": 0,
+        "union": 14865,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R013",
+        "intersection": 0,
+        "union": 22657,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R014",
+        "intersection": 6324,
+        "union": 23619,
+        "jaccard": 0.26775053981963676,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R015",
+        "intersection": 1837,
+        "union": 20963,
+        "jaccard": 0.08763058722511091,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R016",
+        "intersection": 5032,
+        "union": 44874,
+        "jaccard": 0.1121362035922806,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R017",
+        "intersection": 1387,
+        "union": 12744,
+        "jaccard": 0.10883553044569994,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R018",
+        "intersection": 1387,
+        "union": 28853,
+        "jaccard": 0.04807125775482619,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R019",
+        "intersection": 6324,
+        "union": 16043,
+        "jaccard": 0.3941906127282927,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R020",
+        "intersection": 3391,
+        "union": 7348,
+        "jaccard": 0.46148611867174744,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R021",
+        "intersection": 0,
+        "union": 27515,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R010",
+        "intersection": 0,
+        "union": 19442,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R011",
+        "intersection": 0,
+        "union": 21179,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R012",
+        "intersection": 0,
+        "union": 21373,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R013",
+        "intersection": 0,
+        "union": 29165,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R014",
+        "intersection": 5032,
+        "union": 31419,
+        "jaccard": 0.16015786625926987,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R015",
+        "intersection": 2699,
+        "union": 26609,
+        "jaccard": 0.1014318463677703,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R016",
+        "intersection": 12832,
+        "union": 43582,
+        "jaccard": 0.29443348171263367,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R017",
+        "intersection": 5948,
+        "union": 14691,
+        "jaccard": 0.4048737322170036,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R018",
+        "intersection": 5948,
+        "union": 30800,
+        "jaccard": 0.1931168831168831,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R019",
+        "intersection": 12832,
+        "union": 16043,
+        "jaccard": 0.7998504020445054,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R020",
+        "intersection": 3904,
+        "union": 13343,
+        "jaccard": 0.29258787379150114,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R021",
+        "intersection": 0,
+        "union": 34023,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R011",
+        "intersection": 1700,
+        "union": 13257,
+        "jaccard": 0.12823414045409973,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R012",
+        "intersection": 3095,
+        "union": 12056,
+        "jaccard": 0.25671864631718644,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R013",
+        "intersection": 4740,
+        "union": 18203,
+        "jaccard": 0.2603966379168269,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R014",
+        "intersection": 3095,
+        "union": 27134,
+        "jaccard": 0.11406353652244416,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R015",
+        "intersection": 6610,
+        "union": 16476,
+        "jaccard": 0.4011896091284292,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R016",
+        "intersection": 4740,
+        "union": 45452,
+        "jaccard": 0.1042858400070404,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R017",
+        "intersection": 0,
+        "union": 14417,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R018",
+        "intersection": 1700,
+        "union": 28826,
+        "jaccard": 0.058974536876431,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R019",
+        "intersection": 0,
+        "union": 22653,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R020",
+        "intersection": 0,
+        "union": 11025,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R021",
+        "intersection": 6610,
+        "union": 21191,
+        "jaccard": 0.3119248737671653,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R012",
+        "intersection": 2311,
+        "union": 14577,
+        "jaccard": 0.158537421966111,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R013",
+        "intersection": 6100,
+        "union": 18580,
+        "jaccard": 0.32831001076426264,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R014",
+        "intersection": 2311,
+        "union": 29655,
+        "jaccard": 0.07792952284606305,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R015",
+        "intersection": 1700,
+        "union": 23123,
+        "jaccard": 0.07351987198892877,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R016",
+        "intersection": 6100,
+        "union": 45829,
+        "jaccard": 0.13310349342119618,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R017",
+        "intersection": 0,
+        "union": 16154,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R018",
+        "intersection": 8347,
+        "union": 23916,
+        "jaccard": 0.34901321291185816,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R019",
+        "intersection": 0,
+        "union": 24390,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R020",
+        "intersection": 0,
+        "union": 12762,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R021",
+        "intersection": 8347,
+        "union": 21191,
+        "jaccard": 0.3938936340899438,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R013",
+        "intersection": 5783,
+        "union": 19091,
+        "jaccard": 0.3029176051542612,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R014",
+        "intersection": 8541,
+        "union": 23619,
+        "jaccard": 0.361615648418646,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R015",
+        "intersection": 3095,
+        "union": 21922,
+        "jaccard": 0.14118237387099716,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R016",
+        "intersection": 5783,
+        "union": 46340,
+        "jaccard": 0.12479499352611136,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R017",
+        "intersection": 0,
+        "union": 16348,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R018",
+        "intersection": 2311,
+        "union": 30146,
+        "jaccard": 0.07666025343329132,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R019",
+        "intersection": 0,
+        "union": 24584,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R020",
+        "intersection": 0,
+        "union": 12956,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R021",
+        "intersection": 8541,
+        "union": 21191,
+        "jaccard": 0.40304846397055355,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R014",
+        "intersection": 5783,
+        "union": 34169,
+        "jaccard": 0.16924697825514354,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R015",
+        "intersection": 4740,
+        "union": 28069,
+        "jaccard": 0.16886957141330294,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R016",
+        "intersection": 16333,
+        "union": 43582,
+        "jaccard": 0.37476481116057087,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R017",
+        "intersection": 0,
+        "union": 24140,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R018",
+        "intersection": 6100,
+        "union": 34149,
+        "jaccard": 0.17862894960320946,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R019",
+        "intersection": 0,
+        "union": 32376,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R020",
+        "intersection": 0,
+        "union": 20748,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R021",
+        "intersection": 16333,
+        "union": 21191,
+        "jaccard": 0.7707517342267944,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R015",
+        "intersection": 8085,
+        "union": 32010,
+        "jaccard": 0.25257731958762886,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R016",
+        "intersection": 16780,
+        "union": 50421,
+        "jaccard": 0.33279784216893754,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R017",
+        "intersection": 1387,
+        "union": 30039,
+        "jaccard": 0.046173308032890575,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R018",
+        "intersection": 6125,
+        "union": 41410,
+        "jaccard": 0.1479111325766723,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R019",
+        "intersection": 6324,
+        "union": 33338,
+        "jaccard": 0.18969344291799148,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R020",
+        "intersection": 3391,
+        "union": 24643,
+        "jaccard": 0.13760499939130788,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R021",
+        "intersection": 8541,
+        "union": 36269,
+        "jaccard": 0.23549036367145496,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R016",
+        "intersection": 11743,
+        "union": 48315,
+        "jaccard": 0.24305081237710857,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R017",
+        "intersection": 1277,
+        "union": 23006,
+        "jaccard": 0.05550725897591933,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R018",
+        "intersection": 4556,
+        "union": 35836,
+        "jaccard": 0.127134724857685,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R019",
+        "intersection": 3643,
+        "union": 28876,
+        "jaccard": 0.12616013298240752,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R020",
+        "intersection": 1437,
+        "union": 19454,
+        "jaccard": 0.0738665570062712,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R021",
+        "intersection": 6610,
+        "union": 31057,
+        "jaccard": 0.21283446565991565,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R016",
+        "right": "R017",
+        "intersection": 5948,
+        "union": 45441,
+        "jaccard": 0.1308950067120002,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R016",
+        "right": "R018",
+        "intersection": 17336,
+        "union": 50162,
+        "jaccard": 0.3456002551732387,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R016",
+        "right": "R019",
+        "intersection": 12832,
+        "union": 46793,
+        "jaccard": 0.27422905135383496,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R016",
+        "right": "R020",
+        "intersection": 3904,
+        "union": 44093,
+        "jaccard": 0.08854013108656703,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R016",
+        "right": "R021",
+        "intersection": 16333,
+        "union": 48440,
+        "jaccard": 0.3371800165152766,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R017",
+        "right": "R018",
+        "intersection": 7807,
+        "union": 23916,
+        "jaccard": 0.3264341863187824,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R017",
+        "right": "R019",
+        "intersection": 7807,
+        "union": 16043,
+        "jaccard": 0.4866296827276694,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R017",
+        "right": "R020",
+        "intersection": 0,
+        "union": 12222,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R017",
+        "right": "R021",
+        "intersection": 0,
+        "union": 28998,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R018",
+        "right": "R019",
+        "intersection": 7807,
+        "union": 32152,
+        "jaccard": 0.24281537695944264,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R018",
+        "right": "R020",
+        "intersection": 0,
+        "union": 28331,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R018",
+        "right": "R021",
+        "intersection": 8347,
+        "union": 36760,
+        "jaccard": 0.22706746463547334,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R019",
+        "right": "R020",
+        "intersection": 4415,
+        "union": 16043,
+        "jaccard": 0.27519790562862306,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R019",
+        "right": "R021",
+        "intersection": 0,
+        "union": 37234,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R020",
+        "right": "R021",
+        "intersection": 0,
+        "union": 25606,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      }
+    ],
+    "cumulative": [
+      {
+        "rule_id": "R001",
+        "transactions": 4556,
+        "frauds": 39,
+        "increment_transactions": 4556,
+        "increment_frauds": 39,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R002",
+        "transactions": 20807,
+        "frauds": 53,
+        "increment_transactions": 16251,
+        "increment_frauds": 14,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R003",
+        "transactions": 22598,
+        "frauds": 53,
+        "increment_transactions": 1791,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R004",
+        "transactions": 24762,
+        "frauds": 53,
+        "increment_transactions": 2164,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R005",
+        "transactions": 28991,
+        "frauds": 54,
+        "increment_transactions": 4229,
+        "increment_frauds": 1,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R006",
+        "transactions": 41146,
+        "frauds": 55,
+        "increment_transactions": 12155,
+        "increment_frauds": 1,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R007",
+        "transactions": 41373,
+        "frauds": 55,
+        "increment_transactions": 227,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R008",
+        "transactions": 41757,
+        "frauds": 55,
+        "increment_transactions": 384,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R009",
+        "transactions": 43730,
+        "frauds": 56,
+        "increment_transactions": 1973,
+        "increment_frauds": 1,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R010",
+        "transactions": 44135,
+        "frauds": 56,
+        "increment_transactions": 405,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R011",
+        "transactions": 44939,
+        "frauds": 56,
+        "increment_transactions": 804,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R012",
+        "transactions": 45751,
+        "frauds": 56,
+        "increment_transactions": 812,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R013",
+        "transactions": 49341,
+        "frauds": 57,
+        "increment_transactions": 3590,
+        "increment_frauds": 1,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R014",
+        "transactions": 50089,
+        "frauds": 57,
+        "increment_transactions": 748,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R015",
+        "transactions": 50532,
+        "frauds": 57,
+        "increment_transactions": 443,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R016",
+        "transactions": 53227,
+        "frauds": 57,
+        "increment_transactions": 2695,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R017",
+        "transactions": 54144,
+        "frauds": 57,
+        "increment_transactions": 917,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R018",
+        "transactions": 54972,
+        "frauds": 57,
+        "increment_transactions": 828,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R019",
+        "transactions": 55458,
+        "frauds": 57,
+        "increment_transactions": 486,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R020",
+        "transactions": 55458,
+        "frauds": 57,
+        "increment_transactions": 0,
+        "increment_frauds": 0,
+        "redundant_given_previous": true
+      },
+      {
+        "rule_id": "R021",
+        "transactions": 56055,
+        "frauds": 57,
+        "increment_transactions": 597,
+        "increment_frauds": 0,
+        "redundant_given_previous": false
+      }
+    ],
+    "display_rule_ids": [
+      "R001",
+      "R002",
+      "R005",
+      "R006",
+      "R009"
+    ],
+    "n_transactions": 56745,
+    "n_fraud": 57,
+    "covered_transactions": 56055,
+    "covered_frauds": 57,
+    "error_associations": {
+      "classifier_FN": {
+        "total": 8,
+        "covered_by_any_rule": 8
+      },
+      "classifier_FP": {
+        "total": 519,
+        "covered_by_any_rule": 516
+      },
+      "IF_FN": {
+        "total": 33,
+        "covered_by_any_rule": 33
+      },
+      "IF_FP": {
+        "total": 544,
+        "covered_by_any_rule": 538
+      }
+    },
+    "per_rule_errors": {
+      "R001": {
+        "classifier_FN": 1,
+        "classifier_FP": 47,
+        "IF_FN": 18,
+        "IF_FP": 83
+      },
+      "R002": {
+        "classifier_FN": 3,
+        "classifier_FP": 413,
+        "IF_FN": 28,
+        "IF_FP": 213
+      },
+      "R003": {
+        "classifier_FN": 0,
+        "classifier_FP": 352,
+        "IF_FN": 24,
+        "IF_FP": 97
+      },
+      "R004": {
+        "classifier_FN": 0,
+        "classifier_FP": 49,
+        "IF_FN": 17,
+        "IF_FP": 161
+      },
+      "R005": {
+        "classifier_FN": 2,
+        "classifier_FP": 339,
+        "IF_FN": 26,
+        "IF_FP": 130
+      },
+      "R006": {
+        "classifier_FN": 2,
+        "classifier_FP": 51,
+        "IF_FN": 19,
+        "IF_FP": 188
+      },
+      "R007": {
+        "classifier_FN": 1,
+        "classifier_FP": 191,
+        "IF_FN": 10,
+        "IF_FP": 26
+      },
+      "R008": {
+        "classifier_FN": 1,
+        "classifier_FP": 220,
+        "IF_FN": 10,
+        "IF_FP": 55
+      },
+      "R009": {
+        "classifier_FN": 4,
+        "classifier_FP": 215,
+        "IF_FN": 13,
+        "IF_FP": 102
+      },
+      "R010": {
+        "classifier_FN": 1,
+        "classifier_FP": 123,
+        "IF_FN": 12,
+        "IF_FP": 102
+      },
+      "R011": {
+        "classifier_FN": 1,
+        "classifier_FP": 46,
+        "IF_FN": 11,
+        "IF_FP": 157
+      },
+      "R012": {
+        "classifier_FN": 2,
+        "classifier_FP": 144,
+        "IF_FN": 14,
+        "IF_FP": 159
+      },
+      "R013": {
+        "classifier_FN": 4,
+        "classifier_FP": 155,
+        "IF_FN": 16,
+        "IF_FP": 346
+      },
+      "R014": {
+        "classifier_FN": 3,
+        "classifier_FP": 451,
+        "IF_FN": 28,
+        "IF_FP": 237
+      },
+      "R015": {
+        "classifier_FN": 2,
+        "classifier_FP": 389,
+        "IF_FN": 26,
+        "IF_FP": 149
+      },
+      "R016": {
+        "classifier_FN": 8,
+        "classifier_FP": 455,
+        "IF_FN": 33,
+        "IF_FP": 496
+      },
+      "R017": {
+        "classifier_FN": 1,
+        "classifier_FP": 12,
+        "IF_FN": 5,
+        "IF_FP": 35
+      },
+      "R018": {
+        "classifier_FN": 2,
+        "classifier_FP": 67,
+        "IF_FN": 19,
+        "IF_FP": 215
+      },
+      "R019": {
+        "classifier_FN": 4,
+        "classifier_FP": 236,
+        "IF_FN": 13,
+        "IF_FP": 114
+      },
+      "R020": {
+        "classifier_FN": 2,
+        "classifier_FP": 223,
+        "IF_FN": 5,
+        "IF_FP": 63
+      },
+      "R021": {
+        "classifier_FN": 4,
+        "classifier_FP": 181,
+        "IF_FN": 16,
+        "IF_FP": 364
+      }
+    },
+    "cases": [
+      {
+        "case_id": "D-E04-1",
+        "source_row_id": 176049,
+        "category": "classifier_FN",
+        "Class": 1,
+        "classifier_rank": 11505,
+        "IF_rank": 867,
+        "covering_rules": [
+          "R013",
+          "R016",
+          "R021"
+        ]
+      },
+      {
+        "case_id": "D-E04-2",
+        "source_row_id": 191074,
+        "category": "classifier_FN",
+        "Class": 1,
+        "classifier_rank": 1405,
+        "IF_rank": 4722,
+        "covering_rules": [
+          "R001",
+          "R005",
+          "R006",
+          "R010",
+          "R011",
+          "R013",
+          "R015",
+          "R016",
+          "R018",
+          "R021"
+        ]
+      },
+      {
+        "case_id": "D-E04-3",
+        "source_row_id": 170893,
+        "category": "classifier_FP",
+        "Class": 0,
+        "classifier_rank": 341,
+        "IF_rank": 6171,
+        "covering_rules": [
+          "R002",
+          "R003",
+          "R005",
+          "R007",
+          "R008",
+          "R009",
+          "R014",
+          "R015",
+          "R016",
+          "R019",
+          "R020"
+        ]
+      },
+      {
+        "case_id": "D-E04-4",
+        "source_row_id": 170906,
+        "category": "classifier_FP",
+        "Class": 0,
+        "classifier_rank": 150,
+        "IF_rank": 1108,
+        "covering_rules": [
+          "R002",
+          "R003",
+          "R005",
+          "R014",
+          "R015",
+          "R016"
+        ]
+      },
+      {
+        "case_id": "D-E04-5",
+        "source_row_id": 172787,
+        "category": "IF_FN",
+        "Class": 1,
+        "classifier_rank": 12,
+        "IF_rank": 751,
+        "covering_rules": [
+          "R001",
+          "R002",
+          "R003",
+          "R004",
+          "R005",
+          "R006",
+          "R010",
+          "R011",
+          "R012",
+          "R013",
+          "R014",
+          "R015",
+          "R016",
+          "R018",
+          "R021"
+        ]
+      },
+      {
+        "case_id": "D-E04-6",
+        "source_row_id": 177195,
+        "category": "IF_FN",
+        "Class": 1,
+        "classifier_rank": 30,
+        "IF_rank": 973,
+        "covering_rules": [
+          "R001",
+          "R002",
+          "R003",
+          "R004",
+          "R005",
+          "R006",
+          "R014",
+          "R015",
+          "R016",
+          "R018"
+        ]
+      },
+      {
+        "case_id": "D-E04-7",
+        "source_row_id": 170937,
+        "category": "IF_FP",
+        "Class": 0,
+        "classifier_rank": 56714,
+        "IF_rank": 321,
+        "covering_rules": [
+          "R013",
+          "R016",
+          "R021"
+        ]
+      },
+      {
+        "case_id": "D-E04-8",
+        "source_row_id": 171118,
+        "category": "IF_FP",
+        "Class": 0,
+        "classifier_rank": 3818,
+        "IF_rank": 438,
+        "covering_rules": [
+          "R002",
+          "R012",
+          "R013",
+          "R014",
+          "R016",
+          "R021"
+        ]
+      }
+    ]
+  }
+}

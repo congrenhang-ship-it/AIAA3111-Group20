@@ -1,0 +1,1663 @@
+{
+  "date": "2026-11-15",
+  "dataset_id": "handbook",
+  "owner": "A",
+  "phase": "validation",
+  "group_G2_complete": false,
+  "test_scored": false,
+  "A_N1": {
+    "production": {
+      "dataset_id": "handbook",
+      "evidence_kind": "handbook_validation",
+      "data_sha256": "cf359432b7ca090e4d8614793e100a59c8fd0bb18c9cf11f414fc61644ae4ab7",
+      "data_bytes": 20005868,
+      "generator_source": {
+        "notebook": "https://raw.githubusercontent.com/Fraud-Detection-Handbook/fraud-detection-handbook/81cf7d1714bb7b2f5b496407d9055d91dc68dc25/Chapter_3_GettingStarted/SimulatedDataset.ipynb",
+        "commit": "81cf7d1714bb7b2f5b496407d9055d91dc68dc25",
+        "notebook_sha256": "3906c03740e37ecf1606f548fa937a2e8664127f76a54edad43d1bd64e9a731b",
+        "code_license": "GPL-3.0",
+        "license_url": "https://github.com/Fraud-Detection-Handbook/fraud-detection-handbook/blob/81cf7d1714bb7b2f5b496407d9055d91dc68dc25/LICENSE",
+        "reference": "Le Borgne, Siblini, Lebichot and Bontempi (2022), Transaction data simulator"
+      },
+      "generation_parameters": {
+        "days": 60,
+        "customers": 5000,
+        "terminals": 10000,
+        "seed": 42,
+        "customer_profiles_seed": 42,
+        "terminal_profiles_seed": 43,
+        "transaction_rng": "upstream per customer ID",
+        "fraud_rng": "upstream per day",
+        "radius": 5,
+        "start_date": "2018-04-01",
+        "amount_threshold": 220,
+        "compromised_terminals_per_day": 2,
+        "terminal_days": 28,
+        "compromised_customers_per_day": 3,
+        "customer_days": 14,
+        "customer_fraction": "floor(one third)",
+        "customer_amount_multiplier": 5
+      },
+      "runtime": {
+        "python": "3.12.14",
+        "numpy": "2.5.4",
+        "pandas": "3.1.1"
+      },
+      "partitions": {
+        "train": {
+          "rows": 292139,
+          "frauds": 1752,
+          "time_min": 31.0,
+          "time_max": 2591932.0,
+          "row_ids_sha256": "b4b85761383e5ea14e565a9c29a7c0fa13f3e56cbce8b6cb4b13921da6c818ea"
+        },
+        "validation": {
+          "rows": 145315,
+          "frauds": 1291,
+          "time_min": 2592114.0,
+          "time_max": 3887803.0,
+          "row_ids_sha256": "147876e0c6088929d04d72380e2d8e19d2b26de190d4c688acb05d97ed8c8345"
+        },
+        "test": {
+          "rows": 145739,
+          "frauds": 1280,
+          "time_min": 3888072.0,
+          "time_max": 5183864.0,
+          "row_ids_sha256": "7df67b626b1dce52666c668ca01efc0e6aabd4b3f74d3ab1fd2c00ab27657d5e"
+        }
+      },
+      "partition_days": {
+        "train": [
+          0,
+          30
+        ],
+        "validation": [
+          30,
+          45
+        ],
+        "test": [
+          45,
+          60
+        ]
+      },
+      "metadata_columns": [
+        "row_id",
+        "Time",
+        "CUSTOMER_ID",
+        "TERMINAL_ID",
+        "Amount",
+        "Class",
+        "TX_FRAUD_SCENARIO"
+      ],
+      "feature_columns": {
+        "transaction_only": [
+          "Amount",
+          "time_sin",
+          "time_cos"
+        ],
+        "customer_history": [
+          "Amount",
+          "time_sin",
+          "time_cos",
+          "customer_count_1d",
+          "customer_mean_amount_1d",
+          "customer_no_history_1d",
+          "customer_amount_ratio_1d",
+          "customer_amount_ratio_unavailable_1d",
+          "customer_count_7d",
+          "customer_mean_amount_7d",
+          "customer_no_history_7d",
+          "customer_amount_ratio_7d",
+          "customer_amount_ratio_unavailable_7d"
+        ],
+        "terminal_history": [
+          "Amount",
+          "time_sin",
+          "time_cos",
+          "terminal_count_1d",
+          "terminal_mean_amount_1d",
+          "terminal_no_history_1d",
+          "terminal_count_7d",
+          "terminal_mean_amount_7d",
+          "terminal_no_history_7d"
+        ],
+        "both_history": [
+          "Amount",
+          "time_sin",
+          "time_cos",
+          "customer_count_1d",
+          "customer_mean_amount_1d",
+          "customer_no_history_1d",
+          "customer_amount_ratio_1d",
+          "customer_amount_ratio_unavailable_1d",
+          "customer_count_7d",
+          "customer_mean_amount_7d",
+          "customer_no_history_7d",
+          "customer_amount_ratio_7d",
+          "customer_amount_ratio_unavailable_7d",
+          "terminal_count_1d",
+          "terminal_mean_amount_1d",
+          "terminal_no_history_1d",
+          "terminal_count_7d",
+          "terminal_mean_amount_7d",
+          "terminal_no_history_7d"
+        ]
+      },
+      "row_id_policy": "0-based chronological order; ties retain upstream emission order",
+      "duplicate_policy": "preserve distinct simulator events",
+      "time_unit": "seconds since start_date",
+      "amount_unit": "simulated currency",
+      "fraud_scenario": "separate metadata; upstream later scenarios overwrite earlier scenario codes",
+      "test_scored": false
+    },
+    "pilot": {
+      "dataset_id": "handbook",
+      "evidence_kind": "resource_pilot",
+      "data_sha256": "55f2ab0072f1c42979633738d89960442a335adc4ad46ed49655c98095011cb3",
+      "data_bytes": 292542,
+      "generator_source": {
+        "notebook": "https://raw.githubusercontent.com/Fraud-Detection-Handbook/fraud-detection-handbook/81cf7d1714bb7b2f5b496407d9055d91dc68dc25/Chapter_3_GettingStarted/SimulatedDataset.ipynb",
+        "commit": "81cf7d1714bb7b2f5b496407d9055d91dc68dc25",
+        "notebook_sha256": "3906c03740e37ecf1606f548fa937a2e8664127f76a54edad43d1bd64e9a731b",
+        "code_license": "GPL-3.0",
+        "license_url": "https://github.com/Fraud-Detection-Handbook/fraud-detection-handbook/blob/81cf7d1714bb7b2f5b496407d9055d91dc68dc25/LICENSE",
+        "reference": "Le Borgne, Siblini, Lebichot and Bontempi (2022), Transaction data simulator"
+      },
+      "generation_parameters": {
+        "days": 1,
+        "customers": 5000,
+        "terminals": 10000,
+        "seed": 42,
+        "customer_profiles_seed": 42,
+        "terminal_profiles_seed": 43,
+        "transaction_rng": "upstream per customer ID",
+        "fraud_rng": "upstream per day",
+        "radius": 5,
+        "start_date": "2018-04-01",
+        "amount_threshold": 220,
+        "compromised_terminals_per_day": 2,
+        "terminal_days": 28,
+        "compromised_customers_per_day": 3,
+        "customer_days": 14,
+        "customer_fraction": "floor(one third)",
+        "customer_amount_multiplier": 5
+      },
+      "runtime": {
+        "python": "3.12.14",
+        "numpy": "2.5.4",
+        "pandas": "3.1.1"
+      },
+      "partitions": {
+        "pilot": {
+          "rows": 9571,
+          "frauds": 5,
+          "time_min": 31.0,
+          "time_max": 86304.0,
+          "row_ids_sha256": "dba1db8c16dd0d6881a9796329c95c7c5a12d5a53642c2ca4fff4ec4c832e3ef"
+        }
+      },
+      "partition_days": null,
+      "metadata_columns": [
+        "row_id",
+        "Time",
+        "CUSTOMER_ID",
+        "TERMINAL_ID",
+        "Amount",
+        "Class",
+        "TX_FRAUD_SCENARIO"
+      ],
+      "feature_columns": {
+        "transaction_only": [
+          "Amount",
+          "time_sin",
+          "time_cos"
+        ],
+        "customer_history": [
+          "Amount",
+          "time_sin",
+          "time_cos",
+          "customer_count_1d",
+          "customer_mean_amount_1d",
+          "customer_no_history_1d",
+          "customer_amount_ratio_1d",
+          "customer_amount_ratio_unavailable_1d",
+          "customer_count_7d",
+          "customer_mean_amount_7d",
+          "customer_no_history_7d",
+          "customer_amount_ratio_7d",
+          "customer_amount_ratio_unavailable_7d"
+        ],
+        "terminal_history": [
+          "Amount",
+          "time_sin",
+          "time_cos",
+          "terminal_count_1d",
+          "terminal_mean_amount_1d",
+          "terminal_no_history_1d",
+          "terminal_count_7d",
+          "terminal_mean_amount_7d",
+          "terminal_no_history_7d"
+        ],
+        "both_history": [
+          "Amount",
+          "time_sin",
+          "time_cos",
+          "customer_count_1d",
+          "customer_mean_amount_1d",
+          "customer_no_history_1d",
+          "customer_amount_ratio_1d",
+          "customer_amount_ratio_unavailable_1d",
+          "customer_count_7d",
+          "customer_mean_amount_7d",
+          "customer_no_history_7d",
+          "customer_amount_ratio_7d",
+          "customer_amount_ratio_unavailable_7d",
+          "terminal_count_1d",
+          "terminal_mean_amount_1d",
+          "terminal_no_history_1d",
+          "terminal_count_7d",
+          "terminal_mean_amount_7d",
+          "terminal_no_history_7d"
+        ]
+      },
+      "row_id_policy": "0-based chronological order; ties retain upstream emission order",
+      "duplicate_policy": "preserve distinct simulator events",
+      "time_unit": "seconds since start_date",
+      "amount_unit": "simulated currency",
+      "fraud_scenario": "separate metadata; upstream later scenarios overwrite earlier scenario codes",
+      "test_scored": false
+    },
+    "independent_generation_runs": 2,
+    "production_manifest_sha256": "21855509dfd5df17dc20702a27dcf45493c7afd1efd6be2181f7f0e1c102403d"
+  },
+  "A_N2": {
+    "dataset_id": "handbook",
+    "experiment": "E11",
+    "phase": "validation",
+    "data_sha256": "cf359432b7ca090e4d8614793e100a59c8fd0bb18c9cf11f414fc61644ae4ab7",
+    "development_partitions": {
+      "train": {
+        "rows": 292139,
+        "frauds": 1752,
+        "time_min": 31.0,
+        "time_max": 2591932.0,
+        "row_ids_sha256": "b4b85761383e5ea14e565a9c29a7c0fa13f3e56cbce8b6cb4b13921da6c818ea"
+      },
+      "validation": {
+        "rows": 145315,
+        "frauds": 1291,
+        "time_min": 2592114.0,
+        "time_max": 3887803.0,
+        "row_ids_sha256": "147876e0c6088929d04d72380e2d8e19d2b26de190d4c688acb05d97ed8c8345"
+      }
+    },
+    "classifier": {
+      "model": "logistic_regression",
+      "strategy": "class_weight",
+      "seed": 42
+    },
+    "feature_view": "both_history",
+    "feature_columns": [
+      "Amount",
+      "time_sin",
+      "time_cos",
+      "customer_count_1d",
+      "customer_mean_amount_1d",
+      "customer_no_history_1d",
+      "customer_amount_ratio_1d",
+      "customer_amount_ratio_unavailable_1d",
+      "customer_count_7d",
+      "customer_mean_amount_7d",
+      "customer_no_history_7d",
+      "customer_amount_ratio_7d",
+      "customer_amount_ratio_unavailable_7d",
+      "terminal_count_1d",
+      "terminal_mean_amount_1d",
+      "terminal_no_history_1d",
+      "terminal_count_7d",
+      "terminal_mean_amount_7d",
+      "terminal_no_history_7d"
+    ],
+    "window_days": 30,
+    "update_every_days": 7,
+    "scheduled_update_days": [
+      30,
+      37,
+      44
+    ],
+    "time_origin_day": 0,
+    "validation_days": [
+      30,
+      45
+    ],
+    "amount_bins": {
+      "quantiles": [
+        0.5,
+        0.9,
+        0.99
+      ],
+      "cuts": [
+        45.34,
+        110.95200000000011,
+        171.45619999999997
+      ],
+      "interval_rule": "[-inf,c0), [c0,c1), ..., [clast,+inf)",
+      "fit_partition": {
+        "rows": 292139,
+        "frauds": 1752,
+        "time_min": 31.0,
+        "time_max": 2591932.0,
+        "row_ids_sha256": "b4b85761383e5ea14e565a9c29a7c0fa13f3e56cbce8b6cb4b13921da6c818ea"
+      }
+    },
+    "threshold_calibration": "Each final saved model scores the same untouched last validation window at 1%.",
+    "test_scored": false,
+    "group_G2_complete": false,
+    "conditions": {
+      "static": {
+        "delay_days": null,
+        "fits": 1,
+        "windows": [
+          {
+            "score_days": [
+              30,
+              37
+            ],
+            "fit_decision_day": 30,
+            "fit_transaction_days": [
+              0,
+              30
+            ],
+            "fit": {
+              "rows": 292139,
+              "frauds": 1752,
+              "time_min": 31.0,
+              "time_max": 2591932.0,
+              "row_ids_sha256": "b4b85761383e5ea14e565a9c29a7c0fa13f3e56cbce8b6cb4b13921da6c818ea"
+            },
+            "latest_label_available_second": 2591932,
+            "validation": {
+              "rows": 67998,
+              "frauds": 569,
+              "time_min": 2592114.0,
+              "time_max": 3196599.0,
+              "row_ids_sha256": "411882fff4780f8e1bd4078ba7c2ec1a77fd9c602032489942e9bafefc30c0e7"
+            },
+            "metrics": {
+              "AP": 0.22986413739630931,
+              "n_samples": 67998,
+              "n_positive": 569,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 68,
+                  "TP": 60,
+                  "FP": 8,
+                  "FN": 509,
+                  "precision_at_k": 0.8823529411764706,
+                  "recall_at_k": 0.1054481546572935,
+                  "amount_coverage": 0.333237567848507
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 340,
+                  "TP": 151,
+                  "FP": 189,
+                  "FN": 418,
+                  "precision_at_k": 0.4441176470588235,
+                  "recall_at_k": 0.26537785588752194,
+                  "amount_coverage": 0.6382207622526259
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 680,
+                  "TP": 166,
+                  "FP": 514,
+                  "FN": 403,
+                  "precision_at_k": 0.24411764705882352,
+                  "recall_at_k": 0.29173989455184535,
+                  "amount_coverage": 0.6727153144247756
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 1360,
+                  "TP": 182,
+                  "FP": 1178,
+                  "FN": 387,
+                  "precision_at_k": 0.1338235294117647,
+                  "recall_at_k": 0.31985940246045697,
+                  "amount_coverage": 0.7097796045559622
+                }
+              ]
+            }
+          },
+          {
+            "score_days": [
+              37,
+              44
+            ],
+            "fit_decision_day": 30,
+            "fit_transaction_days": [
+              0,
+              30
+            ],
+            "fit": {
+              "rows": 292139,
+              "frauds": 1752,
+              "time_min": 31.0,
+              "time_max": 2591932.0,
+              "row_ids_sha256": "b4b85761383e5ea14e565a9c29a7c0fa13f3e56cbce8b6cb4b13921da6c818ea"
+            },
+            "latest_label_available_second": 2591932,
+            "validation": {
+              "rows": 67697,
+              "frauds": 635,
+              "time_min": 3196840.0,
+              "time_max": 3801591.0,
+              "row_ids_sha256": "72c72687d4ae98866954661423d74306d5971d22a6a4b955938dc48442facdf9"
+            },
+            "metrics": {
+              "AP": 0.1986958792384222,
+              "n_samples": 67697,
+              "n_positive": 635,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 68,
+                  "TP": 61,
+                  "FP": 7,
+                  "FN": 574,
+                  "precision_at_k": 0.8970588235294118,
+                  "recall_at_k": 0.09606299212598425,
+                  "amount_coverage": 0.38944260340776526
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 339,
+                  "TP": 134,
+                  "FP": 205,
+                  "FN": 501,
+                  "precision_at_k": 0.3952802359882006,
+                  "recall_at_k": 0.2110236220472441,
+                  "amount_coverage": 0.6084519154250665
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 677,
+                  "TP": 152,
+                  "FP": 525,
+                  "FN": 483,
+                  "precision_at_k": 0.22451994091580502,
+                  "recall_at_k": 0.23937007874015748,
+                  "amount_coverage": 0.6463044271884341
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 1354,
+                  "TP": 172,
+                  "FP": 1182,
+                  "FN": 463,
+                  "precision_at_k": 0.12703101920236337,
+                  "recall_at_k": 0.27086614173228346,
+                  "amount_coverage": 0.6806696067946698
+                }
+              ]
+            }
+          },
+          {
+            "score_days": [
+              44,
+              45
+            ],
+            "fit_decision_day": 30,
+            "fit_transaction_days": [
+              0,
+              30
+            ],
+            "fit": {
+              "rows": 292139,
+              "frauds": 1752,
+              "time_min": 31.0,
+              "time_max": 2591932.0,
+              "row_ids_sha256": "b4b85761383e5ea14e565a9c29a7c0fa13f3e56cbce8b6cb4b13921da6c818ea"
+            },
+            "latest_label_available_second": 2591932,
+            "validation": {
+              "rows": 9620,
+              "frauds": 87,
+              "time_min": 3801641.0,
+              "time_max": 3887803.0,
+              "row_ids_sha256": "1f62312094ef51912025e08eb4198d05e0f99b7fa55904e0911e72f3a29867c7"
+            },
+            "metrics": {
+              "AP": 0.20078704907340972,
+              "n_samples": 9620,
+              "n_positive": 87,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 10,
+                  "TP": 6,
+                  "FP": 4,
+                  "FN": 81,
+                  "precision_at_k": 0.6,
+                  "recall_at_k": 0.06896551724137931,
+                  "amount_coverage": 0.2803533331027495
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 49,
+                  "TP": 22,
+                  "FP": 27,
+                  "FN": 65,
+                  "precision_at_k": 0.4489795918367347,
+                  "recall_at_k": 0.25287356321839083,
+                  "amount_coverage": 0.6520110983915093
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 97,
+                  "TP": 24,
+                  "FP": 73,
+                  "FN": 63,
+                  "precision_at_k": 0.24742268041237114,
+                  "recall_at_k": 0.27586206896551724,
+                  "amount_coverage": 0.6859533135312472
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 193,
+                  "TP": 28,
+                  "FP": 165,
+                  "FN": 59,
+                  "precision_at_k": 0.14507772020725387,
+                  "recall_at_k": 0.3218390804597701,
+                  "amount_coverage": 0.7325216783912899
+                }
+              ]
+            }
+          }
+        ],
+        "pooled_prequential_metrics": {
+          "AP": 0.20831156303349735,
+          "n_samples": 145315,
+          "n_positive": 1291,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "K": 146,
+              "TP": 128,
+              "FP": 18,
+              "FN": 1163,
+              "precision_at_k": 0.8767123287671232,
+              "recall_at_k": 0.09914794732765299,
+              "amount_coverage": 0.3626304845459981
+            },
+            {
+              "review_fraction": 0.005,
+              "K": 727,
+              "TP": 308,
+              "FP": 419,
+              "FN": 983,
+              "precision_at_k": 0.4236588720770289,
+              "recall_at_k": 0.238574748257165,
+              "amount_coverage": 0.6257341213391188
+            },
+            {
+              "review_fraction": 0.01,
+              "K": 1454,
+              "TP": 342,
+              "FP": 1112,
+              "FN": 949,
+              "precision_at_k": 0.23521320495185694,
+              "recall_at_k": 0.26491092176607284,
+              "amount_coverage": 0.6607957284470244
+            },
+            {
+              "review_fraction": 0.02,
+              "K": 2907,
+              "TP": 382,
+              "FP": 2525,
+              "FN": 909,
+              "precision_at_k": 0.13140694874441006,
+              "recall_at_k": 0.29589465530596437,
+              "amount_coverage": 0.6972310368069499
+            }
+          ]
+        },
+        "snapshot": {
+          "model_file": "static.joblib",
+          "model_sha256": "9ab76fac8ef883789c2f907096fec8f748741e54712c3e7f93efedc25bf602dc",
+          "fit": {
+            "rows": 292139,
+            "frauds": 1752,
+            "time_min": 31.0,
+            "time_max": 2591932.0,
+            "row_ids_sha256": "b4b85761383e5ea14e565a9c29a7c0fa13f3e56cbce8b6cb4b13921da6c818ea"
+          },
+          "fit_decision_day": 30,
+          "validation": {
+            "rows": 9620,
+            "frauds": 87,
+            "time_min": 3801641.0,
+            "time_max": 3887803.0,
+            "row_ids_sha256": "1f62312094ef51912025e08eb4198d05e0f99b7fa55904e0911e72f3a29867c7"
+          },
+          "calibration_scores_sha256": "595d525dc86f96089cf2c9849bace5102f982ed79ef14b255f78ca2271fbec6c",
+          "threshold": {
+            "selection_phase": "validation",
+            "review_fraction": 0.01,
+            "target_K": 97,
+            "threshold": 0.7908499335011581,
+            "strictly_above_threshold": 96,
+            "equal_to_threshold": 1,
+            "decision_rule": "score >= threshold"
+          },
+          "threshold_file": "static_threshold.json",
+          "threshold_sha256": "a4cbba0b962f59c6f203b6e068b3c28044694a7fa8230f04cf087f031c1359a2"
+        }
+      },
+      "weekly_delay_0d": {
+        "delay_days": 0,
+        "fits": 3,
+        "windows": [
+          {
+            "score_days": [
+              30,
+              37
+            ],
+            "fit_decision_day": 30,
+            "fit_transaction_days": [
+              0,
+              30
+            ],
+            "fit": {
+              "rows": 292139,
+              "frauds": 1752,
+              "time_min": 31.0,
+              "time_max": 2591932.0,
+              "row_ids_sha256": "b4b85761383e5ea14e565a9c29a7c0fa13f3e56cbce8b6cb4b13921da6c818ea"
+            },
+            "latest_label_available_second": 2591932,
+            "validation": {
+              "rows": 67998,
+              "frauds": 569,
+              "time_min": 2592114.0,
+              "time_max": 3196599.0,
+              "row_ids_sha256": "411882fff4780f8e1bd4078ba7c2ec1a77fd9c602032489942e9bafefc30c0e7"
+            },
+            "metrics": {
+              "AP": 0.22986413739630931,
+              "n_samples": 67998,
+              "n_positive": 569,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 68,
+                  "TP": 60,
+                  "FP": 8,
+                  "FN": 509,
+                  "precision_at_k": 0.8823529411764706,
+                  "recall_at_k": 0.1054481546572935,
+                  "amount_coverage": 0.333237567848507
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 340,
+                  "TP": 151,
+                  "FP": 189,
+                  "FN": 418,
+                  "precision_at_k": 0.4441176470588235,
+                  "recall_at_k": 0.26537785588752194,
+                  "amount_coverage": 0.6382207622526259
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 680,
+                  "TP": 166,
+                  "FP": 514,
+                  "FN": 403,
+                  "precision_at_k": 0.24411764705882352,
+                  "recall_at_k": 0.29173989455184535,
+                  "amount_coverage": 0.6727153144247756
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 1360,
+                  "TP": 182,
+                  "FP": 1178,
+                  "FN": 387,
+                  "precision_at_k": 0.1338235294117647,
+                  "recall_at_k": 0.31985940246045697,
+                  "amount_coverage": 0.7097796045559622
+                }
+              ]
+            }
+          },
+          {
+            "score_days": [
+              37,
+              44
+            ],
+            "fit_decision_day": 37,
+            "fit_transaction_days": [
+              7,
+              37
+            ],
+            "fit": {
+              "rows": 292293,
+              "frauds": 2158,
+              "time_min": 604838.0,
+              "time_max": 3196599.0,
+              "row_ids_sha256": "d7b3a0bdf3faa0b10525a9a8c645f3d25f0b806f68277d3953c4d85149b24c68"
+            },
+            "latest_label_available_second": 3196599,
+            "validation": {
+              "rows": 67697,
+              "frauds": 635,
+              "time_min": 3196840.0,
+              "time_max": 3801591.0,
+              "row_ids_sha256": "72c72687d4ae98866954661423d74306d5971d22a6a4b955938dc48442facdf9"
+            },
+            "metrics": {
+              "AP": 0.21020641702054868,
+              "n_samples": 67697,
+              "n_positive": 635,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 68,
+                  "TP": 62,
+                  "FP": 6,
+                  "FN": 573,
+                  "precision_at_k": 0.9117647058823529,
+                  "recall_at_k": 0.09763779527559055,
+                  "amount_coverage": 0.38636848834456405
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 339,
+                  "TP": 145,
+                  "FP": 194,
+                  "FN": 490,
+                  "precision_at_k": 0.4277286135693215,
+                  "recall_at_k": 0.2283464566929134,
+                  "amount_coverage": 0.6309683700073926
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 677,
+                  "TP": 154,
+                  "FP": 523,
+                  "FN": 481,
+                  "precision_at_k": 0.2274741506646972,
+                  "recall_at_k": 0.24251968503937008,
+                  "amount_coverage": 0.648926554788722
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 1354,
+                  "TP": 171,
+                  "FP": 1183,
+                  "FN": 464,
+                  "precision_at_k": 0.12629246676514033,
+                  "recall_at_k": 0.2692913385826772,
+                  "amount_coverage": 0.6784967152117544
+                }
+              ]
+            }
+          },
+          {
+            "score_days": [
+              44,
+              45
+            ],
+            "fit_decision_day": 44,
+            "fit_transaction_days": [
+              14,
+              44
+            ],
+            "fit": {
+              "rows": 291585,
+              "frauds": 2440,
+              "time_min": 1209630.0,
+              "time_max": 3801591.0,
+              "row_ids_sha256": "237b6d6a562f764b7d7abe6470e661348f0ddb7f0a15e8389433dd464ec4d8ec"
+            },
+            "latest_label_available_second": 3801591,
+            "validation": {
+              "rows": 9620,
+              "frauds": 87,
+              "time_min": 3801641.0,
+              "time_max": 3887803.0,
+              "row_ids_sha256": "1f62312094ef51912025e08eb4198d05e0f99b7fa55904e0911e72f3a29867c7"
+            },
+            "metrics": {
+              "AP": 0.21017500127360347,
+              "n_samples": 9620,
+              "n_positive": 87,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 10,
+                  "TP": 7,
+                  "FP": 3,
+                  "FN": 80,
+                  "precision_at_k": 0.7,
+                  "recall_at_k": 0.08045977011494253,
+                  "amount_coverage": 0.31478061780146227
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 49,
+                  "TP": 23,
+                  "FP": 26,
+                  "FN": 64,
+                  "precision_at_k": 0.46938775510204084,
+                  "recall_at_k": 0.26436781609195403,
+                  "amount_coverage": 0.6567943060426168
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 97,
+                  "TP": 24,
+                  "FP": 73,
+                  "FN": 63,
+                  "precision_at_k": 0.24742268041237114,
+                  "recall_at_k": 0.27586206896551724,
+                  "amount_coverage": 0.676483912140827
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 193,
+                  "TP": 28,
+                  "FP": 165,
+                  "FN": 59,
+                  "precision_at_k": 0.14507772020725387,
+                  "recall_at_k": 0.3218390804597701,
+                  "amount_coverage": 0.7228278796048919
+                }
+              ]
+            }
+          }
+        ],
+        "pooled_prequential_metrics": {
+          "AP": 0.21276514868824087,
+          "n_samples": 145315,
+          "n_positive": 1291,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "K": 146,
+              "TP": 128,
+              "FP": 18,
+              "FN": 1163,
+              "precision_at_k": 0.8767123287671232,
+              "recall_at_k": 0.09914794732765299,
+              "amount_coverage": 0.3594607096076406
+            },
+            {
+              "review_fraction": 0.005,
+              "K": 727,
+              "TP": 319,
+              "FP": 408,
+              "FN": 972,
+              "precision_at_k": 0.43878954607977994,
+              "recall_at_k": 0.24709527498063516,
+              "amount_coverage": 0.6350238759021375
+            },
+            {
+              "review_fraction": 0.01,
+              "K": 1454,
+              "TP": 343,
+              "FP": 1111,
+              "FN": 948,
+              "precision_at_k": 0.2359009628610729,
+              "recall_at_k": 0.2656855151045701,
+              "amount_coverage": 0.6614649268686551
+            },
+            {
+              "review_fraction": 0.02,
+              "K": 2907,
+              "TP": 373,
+              "FP": 2534,
+              "FN": 918,
+              "precision_at_k": 0.1283109735122119,
+              "recall_at_k": 0.2889233152594888,
+              "amount_coverage": 0.6898935733659151
+            }
+          ]
+        },
+        "snapshot": {
+          "model_file": "weekly_delay_0d.joblib",
+          "model_sha256": "14d063848179707f41609a8e2029eeed0d29a49483db87aa46e976cb82346a15",
+          "fit": {
+            "rows": 291585,
+            "frauds": 2440,
+            "time_min": 1209630.0,
+            "time_max": 3801591.0,
+            "row_ids_sha256": "237b6d6a562f764b7d7abe6470e661348f0ddb7f0a15e8389433dd464ec4d8ec"
+          },
+          "fit_decision_day": 44,
+          "validation": {
+            "rows": 9620,
+            "frauds": 87,
+            "time_min": 3801641.0,
+            "time_max": 3887803.0,
+            "row_ids_sha256": "1f62312094ef51912025e08eb4198d05e0f99b7fa55904e0911e72f3a29867c7"
+          },
+          "calibration_scores_sha256": "e5d24a5ac53c14599a957e1cd1717a2609cb8d6832563f1f9aa4d20489b82967",
+          "threshold": {
+            "selection_phase": "validation",
+            "review_fraction": 0.01,
+            "target_K": 97,
+            "threshold": 0.75746423978637,
+            "strictly_above_threshold": 96,
+            "equal_to_threshold": 1,
+            "decision_rule": "score >= threshold"
+          },
+          "threshold_file": "weekly_delay_0d_threshold.json",
+          "threshold_sha256": "389c579ce3ff6bff1e5e287d13264b2f7849849cc7af5193a92d52cbea82e258"
+        }
+      },
+      "weekly_delay_1d": {
+        "delay_days": 1,
+        "fits": 3,
+        "windows": [
+          {
+            "score_days": [
+              30,
+              37
+            ],
+            "fit_decision_day": 30,
+            "fit_transaction_days": [
+              0,
+              29
+            ],
+            "fit": {
+              "rows": 282441,
+              "frauds": 1690,
+              "time_min": 31.0,
+              "time_max": 2505562.0,
+              "row_ids_sha256": "774383321f064d4e2dd8380917d96f4d2f821913f3aa9edf5140badcc4bc0e8e"
+            },
+            "latest_label_available_second": 2591962,
+            "validation": {
+              "rows": 67998,
+              "frauds": 569,
+              "time_min": 2592114.0,
+              "time_max": 3196599.0,
+              "row_ids_sha256": "411882fff4780f8e1bd4078ba7c2ec1a77fd9c602032489942e9bafefc30c0e7"
+            },
+            "metrics": {
+              "AP": 0.22653882057627645,
+              "n_samples": 67998,
+              "n_positive": 569,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 68,
+                  "TP": 59,
+                  "FP": 9,
+                  "FN": 510,
+                  "precision_at_k": 0.8676470588235294,
+                  "recall_at_k": 0.10369068541300527,
+                  "amount_coverage": 0.330091020614421
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 340,
+                  "TP": 148,
+                  "FP": 192,
+                  "FN": 421,
+                  "precision_at_k": 0.43529411764705883,
+                  "recall_at_k": 0.2601054481546573,
+                  "amount_coverage": 0.6303392259119792
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 680,
+                  "TP": 166,
+                  "FP": 514,
+                  "FN": 403,
+                  "precision_at_k": 0.24411764705882352,
+                  "recall_at_k": 0.29173989455184535,
+                  "amount_coverage": 0.6727153144247756
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 1360,
+                  "TP": 181,
+                  "FP": 1179,
+                  "FN": 388,
+                  "precision_at_k": 0.13308823529411765,
+                  "recall_at_k": 0.3181019332161687,
+                  "amount_coverage": 0.707876300175758
+                }
+              ]
+            }
+          },
+          {
+            "score_days": [
+              37,
+              44
+            ],
+            "fit_decision_day": 37,
+            "fit_transaction_days": [
+              6,
+              36
+            ],
+            "fit": {
+              "rows": 292332,
+              "frauds": 2122,
+              "time_min": 518466.0,
+              "time_max": 3110329.0,
+              "row_ids_sha256": "72fc688f91931591f1a0ec559c5faf4c3e1170fa4e255f4a009a71a82688a843"
+            },
+            "latest_label_available_second": 3196729,
+            "validation": {
+              "rows": 67697,
+              "frauds": 635,
+              "time_min": 3196840.0,
+              "time_max": 3801591.0,
+              "row_ids_sha256": "72c72687d4ae98866954661423d74306d5971d22a6a4b955938dc48442facdf9"
+            },
+            "metrics": {
+              "AP": 0.2095685053776612,
+              "n_samples": 67697,
+              "n_positive": 635,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 68,
+                  "TP": 62,
+                  "FP": 6,
+                  "FN": 573,
+                  "precision_at_k": 0.9117647058823529,
+                  "recall_at_k": 0.09763779527559055,
+                  "amount_coverage": 0.38661424245763115
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 339,
+                  "TP": 145,
+                  "FP": 194,
+                  "FN": 490,
+                  "precision_at_k": 0.4277286135693215,
+                  "recall_at_k": 0.2283464566929134,
+                  "amount_coverage": 0.6309683700073926
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 677,
+                  "TP": 152,
+                  "FP": 525,
+                  "FN": 483,
+                  "precision_at_k": 0.22451994091580502,
+                  "recall_at_k": 0.23937007874015748,
+                  "amount_coverage": 0.645626696125477
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 1354,
+                  "TP": 172,
+                  "FP": 1182,
+                  "FN": 463,
+                  "precision_at_k": 0.12703101920236337,
+                  "recall_at_k": 0.27086614173228346,
+                  "amount_coverage": 0.6805340355689371
+                }
+              ]
+            }
+          },
+          {
+            "score_days": [
+              44,
+              45
+            ],
+            "fit_decision_day": 44,
+            "fit_transaction_days": [
+              13,
+              43
+            ],
+            "fit": {
+              "rows": 291578,
+              "frauds": 2393,
+              "time_min": 1123277.0,
+              "time_max": 3715141.0,
+              "row_ids_sha256": "ff5764c9d26236a52f1f91ddf166b3012c569f752ec41a9895622a2ed00e5181"
+            },
+            "latest_label_available_second": 3801541,
+            "validation": {
+              "rows": 9620,
+              "frauds": 87,
+              "time_min": 3801641.0,
+              "time_max": 3887803.0,
+              "row_ids_sha256": "1f62312094ef51912025e08eb4198d05e0f99b7fa55904e0911e72f3a29867c7"
+            },
+            "metrics": {
+              "AP": 0.21179514727945659,
+              "n_samples": 9620,
+              "n_positive": 87,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 10,
+                  "TP": 7,
+                  "FP": 3,
+                  "FN": 80,
+                  "precision_at_k": 0.7,
+                  "recall_at_k": 0.08045977011494253,
+                  "amount_coverage": 0.31478061780146227
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 49,
+                  "TP": 23,
+                  "FP": 26,
+                  "FN": 64,
+                  "precision_at_k": 0.46938775510204084,
+                  "recall_at_k": 0.26436781609195403,
+                  "amount_coverage": 0.6567943060426168
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 97,
+                  "TP": 25,
+                  "FP": 72,
+                  "FN": 62,
+                  "precision_at_k": 0.25773195876288657,
+                  "recall_at_k": 0.28735632183908044,
+                  "amount_coverage": 0.6914923860951225
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 193,
+                  "TP": 27,
+                  "FP": 166,
+                  "FN": 60,
+                  "precision_at_k": 0.13989637305699482,
+                  "recall_at_k": 0.3103448275862069,
+                  "amount_coverage": 0.7161381376872052
+                }
+              ]
+            }
+          }
+        ],
+        "pooled_prequential_metrics": {
+          "AP": 0.2109702270144427,
+          "n_samples": 145315,
+          "n_positive": 1291,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "K": 146,
+              "TP": 128,
+              "FP": 18,
+              "FN": 1163,
+              "precision_at_k": 0.8767123287671232,
+              "recall_at_k": 0.09914794732765299,
+              "amount_coverage": 0.36012259105336286
+            },
+            {
+              "review_fraction": 0.005,
+              "K": 727,
+              "TP": 318,
+              "FP": 409,
+              "FN": 973,
+              "precision_at_k": 0.437414030261348,
+              "recall_at_k": 0.24632068164213788,
+              "amount_coverage": 0.6339453536532258
+            },
+            {
+              "review_fraction": 0.01,
+              "K": 1454,
+              "TP": 341,
+              "FP": 1113,
+              "FN": 950,
+              "precision_at_k": 0.234525447042641,
+              "recall_at_k": 0.2641363284275755,
+              "amount_coverage": 0.6594915994409343
+            },
+            {
+              "review_fraction": 0.02,
+              "K": 2907,
+              "TP": 374,
+              "FP": 2533,
+              "FN": 917,
+              "precision_at_k": 0.1286549707602339,
+              "recall_at_k": 0.28969790859798605,
+              "amount_coverage": 0.6905261869080034
+            }
+          ]
+        },
+        "snapshot": {
+          "model_file": "weekly_delay_1d.joblib",
+          "model_sha256": "8e38d502624c65c8f82b2abf3a0d7023577cee804c9d40e0811035fefa4ae6cf",
+          "fit": {
+            "rows": 291578,
+            "frauds": 2393,
+            "time_min": 1123277.0,
+            "time_max": 3715141.0,
+            "row_ids_sha256": "ff5764c9d26236a52f1f91ddf166b3012c569f752ec41a9895622a2ed00e5181"
+          },
+          "fit_decision_day": 44,
+          "validation": {
+            "rows": 9620,
+            "frauds": 87,
+            "time_min": 3801641.0,
+            "time_max": 3887803.0,
+            "row_ids_sha256": "1f62312094ef51912025e08eb4198d05e0f99b7fa55904e0911e72f3a29867c7"
+          },
+          "calibration_scores_sha256": "2ad2a8c9f57e61828d3a16f37f8437e561e02c42d9b17d6fa2317e0497be17fd",
+          "threshold": {
+            "selection_phase": "validation",
+            "review_fraction": 0.01,
+            "target_K": 97,
+            "threshold": 0.7580375442260973,
+            "strictly_above_threshold": 96,
+            "equal_to_threshold": 1,
+            "decision_rule": "score >= threshold"
+          },
+          "threshold_file": "weekly_delay_1d_threshold.json",
+          "threshold_sha256": "22fe18ac0b12e89c2770b2267e6443bf9901bcf2c43b958399bcf664403c6e00"
+        }
+      },
+      "weekly_delay_7d": {
+        "delay_days": 7,
+        "fits": 3,
+        "windows": [
+          {
+            "score_days": [
+              30,
+              37
+            ],
+            "fit_decision_day": 30,
+            "fit_transaction_days": [
+              0,
+              23
+            ],
+            "fit": {
+              "rows": 223877,
+              "frauds": 1180,
+              "time_min": 31.0,
+              "time_max": 1987080.0,
+              "row_ids_sha256": "6b148ef7170bd59d97ccc6bb9aed3705410b672367b87e33501b23adc060bef5"
+            },
+            "latest_label_available_second": 2591880,
+            "validation": {
+              "rows": 67998,
+              "frauds": 569,
+              "time_min": 2592114.0,
+              "time_max": 3196599.0,
+              "row_ids_sha256": "411882fff4780f8e1bd4078ba7c2ec1a77fd9c602032489942e9bafefc30c0e7"
+            },
+            "metrics": {
+              "AP": 0.21932028900545686,
+              "n_samples": 67998,
+              "n_positive": 569,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 68,
+                  "TP": 59,
+                  "FP": 9,
+                  "FN": 510,
+                  "precision_at_k": 0.8676470588235294,
+                  "recall_at_k": 0.10369068541300527,
+                  "amount_coverage": 0.33104682849094286
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 340,
+                  "TP": 145,
+                  "FP": 195,
+                  "FN": 424,
+                  "precision_at_k": 0.4264705882352941,
+                  "recall_at_k": 0.2548330404217926,
+                  "amount_coverage": 0.621126069119593
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 680,
+                  "TP": 163,
+                  "FP": 517,
+                  "FN": 406,
+                  "precision_at_k": 0.23970588235294119,
+                  "recall_at_k": 0.28646748681898065,
+                  "amount_coverage": 0.6675657263364134
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 1360,
+                  "TP": 177,
+                  "FP": 1183,
+                  "FN": 392,
+                  "precision_at_k": 0.13014705882352942,
+                  "recall_at_k": 0.3110720562390158,
+                  "amount_coverage": 0.6973227959901505
+                }
+              ]
+            }
+          },
+          {
+            "score_days": [
+              37,
+              44
+            ],
+            "fit_decision_day": 37,
+            "fit_transaction_days": [
+              0,
+              30
+            ],
+            "fit": {
+              "rows": 292139,
+              "frauds": 1752,
+              "time_min": 31.0,
+              "time_max": 2591932.0,
+              "row_ids_sha256": "b4b85761383e5ea14e565a9c29a7c0fa13f3e56cbce8b6cb4b13921da6c818ea"
+            },
+            "latest_label_available_second": 3196732,
+            "validation": {
+              "rows": 67697,
+              "frauds": 635,
+              "time_min": 3196840.0,
+              "time_max": 3801591.0,
+              "row_ids_sha256": "72c72687d4ae98866954661423d74306d5971d22a6a4b955938dc48442facdf9"
+            },
+            "metrics": {
+              "AP": 0.1986958792384222,
+              "n_samples": 67697,
+              "n_positive": 635,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 68,
+                  "TP": 61,
+                  "FP": 7,
+                  "FN": 574,
+                  "precision_at_k": 0.8970588235294118,
+                  "recall_at_k": 0.09606299212598425,
+                  "amount_coverage": 0.38944260340776526
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 339,
+                  "TP": 134,
+                  "FP": 205,
+                  "FN": 501,
+                  "precision_at_k": 0.3952802359882006,
+                  "recall_at_k": 0.2110236220472441,
+                  "amount_coverage": 0.6084519154250665
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 677,
+                  "TP": 152,
+                  "FP": 525,
+                  "FN": 483,
+                  "precision_at_k": 0.22451994091580502,
+                  "recall_at_k": 0.23937007874015748,
+                  "amount_coverage": 0.6463044271884341
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 1354,
+                  "TP": 172,
+                  "FP": 1182,
+                  "FN": 463,
+                  "precision_at_k": 0.12703101920236337,
+                  "recall_at_k": 0.27086614173228346,
+                  "amount_coverage": 0.6806696067946698
+                }
+              ]
+            }
+          },
+          {
+            "score_days": [
+              44,
+              45
+            ],
+            "fit_decision_day": 44,
+            "fit_transaction_days": [
+              7,
+              37
+            ],
+            "fit": {
+              "rows": 292293,
+              "frauds": 2158,
+              "time_min": 604838.0,
+              "time_max": 3196599.0,
+              "row_ids_sha256": "d7b3a0bdf3faa0b10525a9a8c645f3d25f0b806f68277d3953c4d85149b24c68"
+            },
+            "latest_label_available_second": 3801399,
+            "validation": {
+              "rows": 9620,
+              "frauds": 87,
+              "time_min": 3801641.0,
+              "time_max": 3887803.0,
+              "row_ids_sha256": "1f62312094ef51912025e08eb4198d05e0f99b7fa55904e0911e72f3a29867c7"
+            },
+            "metrics": {
+              "AP": 0.21114078072877987,
+              "n_samples": 9620,
+              "n_positive": 87,
+              "budgets": [
+                {
+                  "review_fraction": 0.001,
+                  "K": 10,
+                  "TP": 7,
+                  "FP": 3,
+                  "FN": 80,
+                  "precision_at_k": 0.7,
+                  "recall_at_k": 0.08045977011494253,
+                  "amount_coverage": 0.31478061780146227
+                },
+                {
+                  "review_fraction": 0.005,
+                  "K": 49,
+                  "TP": 23,
+                  "FP": 26,
+                  "FN": 64,
+                  "precision_at_k": 0.46938775510204084,
+                  "recall_at_k": 0.26436781609195403,
+                  "amount_coverage": 0.6567943060426168
+                },
+                {
+                  "review_fraction": 0.01,
+                  "K": 97,
+                  "TP": 26,
+                  "FP": 71,
+                  "FN": 61,
+                  "precision_at_k": 0.26804123711340205,
+                  "recall_at_k": 0.2988505747126437,
+                  "amount_coverage": 0.7057449951366505
+                },
+                {
+                  "review_fraction": 0.02,
+                  "K": 193,
+                  "TP": 27,
+                  "FP": 166,
+                  "FN": 60,
+                  "precision_at_k": 0.13989637305699482,
+                  "recall_at_k": 0.3103448275862069,
+                  "amount_coverage": 0.7161381376872052
+                }
+              ]
+            }
+          }
+        ],
+        "pooled_prequential_metrics": {
+          "AP": 0.20437263064460007,
+          "n_samples": 145315,
+          "n_positive": 1291,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "K": 146,
+              "TP": 128,
+              "FP": 18,
+              "FN": 1163,
+              "precision_at_k": 0.8767123287671232,
+              "recall_at_k": 0.09914794732765299,
+              "amount_coverage": 0.3618298854320107
+            },
+            {
+              "review_fraction": 0.005,
+              "K": 727,
+              "TP": 299,
+              "FP": 428,
+              "FN": 992,
+              "precision_at_k": 0.41127922971114167,
+              "recall_at_k": 0.2316034082106894,
+              "amount_coverage": 0.6139021444714943
+            },
+            {
+              "review_fraction": 0.01,
+              "K": 1454,
+              "TP": 337,
+              "FP": 1117,
+              "FN": 954,
+              "precision_at_k": 0.23177441540577717,
+              "recall_at_k": 0.26103795507358635,
+              "amount_coverage": 0.6551260477147316
+            },
+            {
+              "review_fraction": 0.02,
+              "K": 2907,
+              "TP": 376,
+              "FP": 2531,
+              "FN": 915,
+              "precision_at_k": 0.12934296525627795,
+              "recall_at_k": 0.29124709527498066,
+              "amount_coverage": 0.691989460140103
+            }
+          ]
+        },
+        "snapshot": {
+          "model_file": "weekly_delay_7d.joblib",
+          "model_sha256": "a480361c472f402665dd026631338de344c5f58c51fa6dfc85157df37d2b64f2",
+          "fit": {
+            "rows": 292293,
+            "frauds": 2158,
+            "time_min": 604838.0,
+            "time_max": 3196599.0,
+            "row_ids_sha256": "d7b3a0bdf3faa0b10525a9a8c645f3d25f0b806f68277d3953c4d85149b24c68"
+          },
+          "fit_decision_day": 44,
+          "validation": {
+            "rows": 9620,
+            "frauds": 87,
+            "time_min": 3801641.0,
+            "time_max": 3887803.0,
+            "row_ids_sha256": "1f62312094ef51912025e08eb4198d05e0f99b7fa55904e0911e72f3a29867c7"
+          },
+          "calibration_scores_sha256": "f2f45235915bf00c9b0a74d2e374e4f1d40d9fff969822c33891a4493b562fcb",
+          "threshold": {
+            "selection_phase": "validation",
+            "review_fraction": 0.01,
+            "target_K": 97,
+            "threshold": 0.7605706972498475,
+            "strictly_above_threshold": 96,
+            "equal_to_threshold": 1,
+            "decision_rule": "score >= threshold"
+          },
+          "threshold_file": "weekly_delay_7d_threshold.json",
+          "threshold_sha256": "72b1e2103ce97bb84bf62437b1a37032d85500cc845ba979b14967cb72beae45"
+        }
+      }
+    },
+    "independent_validation_runs": 2,
+    "full_summary_sha256": "305bab93faacebe7a42abe44f098492f4613eae586955828521c7382fd1c77e4"
+  },
+  "interface_checks": {
+    "B": {
+      "component": "B fixed weighted LR and C public evaluation; interface check",
+      "shared_four_view_sha256": {
+        "train": {
+          "transaction_only": "0e6a00488bb019f4aefda1a16d7f61b2fbee1c53aa5dffc5270a58d1090a4ef3",
+          "customer_history": "f6240085af9fd74f050f3694eb0c72d1d296a36d3017ce4d6489809f7bbf021a",
+          "terminal_history": "e55d310bad863ccf981641f50eac4d3ef038681a7247fd1306ab2563e22b1b4f",
+          "both_history": "d2096dca39202ad83124a64f6ff0aa2de4f14cbc713e373a1b71d69e3f1c87f3"
+        },
+        "validation": {
+          "transaction_only": "fe8647d0fbdf3e2db2b98daf42ec1b8e7d84d29813abb54f7fc059c3fa6acf22",
+          "customer_history": "b714743ebead12d959025cc4fa7beee2fba02888f58597424a06314aee5fc57e",
+          "terminal_history": "f596f6eebf9f4304dfc74dff9efef813305bddf92b55c9b50c2175b2777fcf4c",
+          "both_history": "3b5d9d0717cb956291ec432c0738e8b473de62ebde1f7bbcb9507b8fc024e971"
+        }
+      },
+      "validation_views": [
+        "transaction_only",
+        "customer_history",
+        "terminal_history",
+        "both_history"
+      ]
+    },
+    "C": {
+      "component": "C official Handbook runner on production data",
+      "official_validation_complete": true,
+      "history_missing_conditions": 9,
+      "model_replay_exact": true,
+      "methods": [
+        "if_transaction_only",
+        "if_customer_history",
+        "if_terminal_history",
+        "if_both_history",
+        "if_both_history_graph",
+        "lr_both_history",
+        "lr_both_history_graph",
+        "amount_descending"
+      ],
+      "replay_metrics_and_stress_exact": true,
+      "validated_partitions": {
+        "rows": 145315,
+        "frauds": 1291,
+        "time_min": 2592114.0,
+        "time_max": 3887803.0,
+        "row_ids_sha256": "147876e0c6088929d04d72380e2d8e19d2b26de190d4c688acb05d97ed8c8345"
+      }
+    },
+    "D": {
+      "component": "D training Apriori and held-out coverage; interface check",
+      "validation_row_ids_sha256": "147876e0c6088929d04d72380e2d8e19d2b26de190d4c688acb05d97ed8c8345",
+      "validated_rule_counts": {
+        "equal_width": 16,
+        "equal_frequency": 24
+      }
+    },
+    "ULB": {
+      "status": "replayed ULB unified validation",
+      "agrees_with_preintegration_evidence": [
+        "partitions",
+        "g1",
+        "fixed_fits",
+        "window_settings",
+        "E08",
+        "pending_extensions",
+        "E04 coverage and model validation"
+      ],
+      "test_scored": false
+    }
+  },
+  "checks_passed": {
+    "repository": 85,
+    "classification": 8,
+    "total": 93
+  },
+  "source_branches": {
+    "b": "55ee15119a1fad1ddce0ac3c7a59cc6555d22bfb",
+    "c": "5648bcd4837546ca3c0c3318633b0d00548692da",
+    "d": "33e07a3e02a888628f1f1adefd9f536aea0d0d72"
+  },
+  "code_sha256": {
+    "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
+    "code/temporal.py": "c046dddcabc0fad2266ed6031712991f876104e369e9fd2cd84fa2402e98da0d",
+    "code/main.py": "b678be7555791090657480fb82dda4c1d0bf7c4e583fc7c9b65b547f703e0f2e",
+    "code/classification.py": "d78499308ca49b407569dac0e6f636c67492ca4b4325b6451ab6c81058668ffa",
+    "code/unsupervised.py": "03e51e99eccf25b9c22dce307129cd48218b9a57bb35923f3954cab5b1ae0655",
+    "code/pattern_mining.py": "b35e8952e8f4b9cbac39536fd53f2bd8172a75bc13ea746bc14fc494b3f205a0",
+    "code/evaluation.py": "b1e5266ff33cbb45ce5fe93b6170d8c93b63331297290e312ba31fdb8ae2b346"
+  },
+  "code_sha256_policy": "UTF-8 text, LF newlines"
+}
