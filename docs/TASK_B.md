@@ -1,5 +1,7 @@
 # B 分类实验协议与交接
 
+2026-11-15 更新：已同步 main、Task_A 和 C 的最新代码，B-E1/E2/N1/N2 完成本机正式数据验证。新结果和可排版文字见 [B 分类稿](../report/B_CLASSIFICATION.md)，集中汇总为 `results/tables/b_extensions.json` 与 `handbook_b.json`。B 的 11 项检查通过，完整仓库 84/85 通过；1 项共同依赖版本门槛仍待复核。以下保留原基线协议与历史交接。
+
 本协议在首次真实验证比较前写入。B 使用本地 `b/classification-interface` 分支，已同步 A 的 `origin/Task_A`（26c1c32）和 C 的 `origin/codex/c-independent-modules`（24c9212）。远程 main 当前尚不含这些实现。
 
 ## 预先限定的实验

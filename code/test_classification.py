@@ -105,6 +105,38 @@ class ClassificationInterfaceTests(unittest.TestCase):
         )
         np.testing.assert_array_equal(score_model(model, np.zeros((2, 1))), [0.8, 0.3])
 
+    def test_label_masks_are_nested_training_only_and_reproducible(self):
+        from classification import nested_label_masks
+        masks = nested_label_masks(self.labels, 42)
+        replay = nested_label_masks(self.labels, 42)
+        previous = set()
+        for fraction, positions in masks.items():
+            np.testing.assert_array_equal(positions, replay[fraction])
+            self.assertTrue(previous <= set(positions))
+            self.assertTrue(set(positions) <= set(range(len(self.labels))))
+            self.assertEqual(len(positions), len(np.unique(positions)))
+            for label in (0, 1):
+                self.assertEqual(int((self.labels[positions] == label).sum()),
+                                 int(np.ceil((self.labels == label).sum() * fraction)))
+            previous = set(positions)
+        model = train_model(self.train.iloc[masks[.05]], self.labels[masks[.05]], 'logistic_regression', 'class_weight')
+        scaler = model.named_steps['preprocessing'].named_transformers_['features']
+        self.assertEqual(scaler.n_samples_seen_, len(masks[.05]))
+
+    def test_cold_start_groups_are_anchored_to_initial_entities(self):
+        from classification import cold_start_groups
+        train = pd.DataFrame(dict(CUSTOMER_ID=[1], TERMINAL_ID=[10]))
+        validation = pd.DataFrame(dict(CUSTOMER_ID=[1,2,1,2,2], TERMINAL_ID=[10,10,20,20,20]))
+        self.assertEqual(list(cold_start_groups(train, validation)),
+                         ['both_seen','new_customer_only','new_terminal_only','both_new','both_new'])
+
+    def test_error_cases_follow_declared_ranking_with_ties(self):
+        from classification import fixed_error_cases
+        frame = pd.DataFrame(dict(row_id=[5,4,3,2,1,0], Class=[1,0,0,1,0,1], score=[.1,.2,.3,.4,.5,.5], Time=[0]*6))
+        cases = fixed_error_cases(frame, 3, per_category=1)
+        expected = {'near_boundary_FP':1, 'near_boundary_FN':5, 'highest_ranked_FP':1}
+        self.assertEqual(dict(zip(cases.category, cases.row_id)), expected)
+
     def test_invalid_scores_and_missing_positive_class_are_rejected(self):
         for probabilities in (np.array([[np.nan, 0.2]]), np.array([[0.1, 1.2]]), np.ones((1, 3))):
             with self.subTest(probabilities=probabilities):

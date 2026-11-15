@@ -142,7 +142,199 @@ def run(data_path=DEFAULT_DATA_PATH):
     return freeze
 
 
+def extension_provenance():
+    return dict(
+        phase="validation", test_scored=False, group_G2_complete=False,
+        source_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        code_sha256={name: data_sha256(ROOT / name) for name in (
+            "code/classification.py", "code/run_b_validation.py", "code/evaluation.py",
+            "code/handbook.py", "code/temporal.py", "code/unsupervised.py")},
+        python=platform.python_version(),
+        versions={name: importlib.metadata.version(name) for name in ("numpy", "pandas", "scikit-learn", "scipy")},
+    )
+
+
+def compact_metrics(frame):
+    metric = evaluate_scores(frame.Class, frame.score, DEFAULT_BUDGETS, row_ids=frame.row_id)
+    metric.pop("pr_curve", None)
+    return metric
+
+
+def run_ulb_extensions(data_path, output):
+    """E03/E05 only; all masks/models/cases stay private, one public summary."""
+    from classification import LABEL_FRACTIONS, LABEL_SEEDS, nested_label_masks, fixed_error_cases
+    from unsupervised import fit_isolation_forest, score_isolation_forest
+    from sklearn.inspection import permutation_importance
+
+    if data_sha256(data_path) != ULB_SHA256:
+        raise ValueError("ULB file differs from A's pinned source")
+    train, validation, test = split_data(load_data(data_path))
+    partitions = split_summary((train, validation, test))
+    del test
+    X, V = get_features(train), get_features(validation)
+    rows, cached = [], {}
+    full_model = None
+    for seed in LABEL_SEEDS:
+        for fraction, positions in nested_label_masks(train.Class, seed).items():
+            mask_hash = hashlib.sha256(train.row_id.to_numpy(dtype="<i8")[positions].tobytes()).hexdigest()
+            reused = mask_hash in cached
+            if not reused:
+                start = perf_counter()
+                model = train_model(X.iloc[positions], train.Class.iloc[positions], "logistic_regression", "class_weight", seed=42)
+                seconds = perf_counter() - start
+                start = perf_counter()
+                frame = make_prediction_frame(validation, score_model(model, V), f"lr_labels_{fraction:g}_{seed}")
+                score_seconds = perf_counter() - start
+                cached[mask_hash] = (compact_metrics(frame), seconds, score_seconds)
+                joblib.dump(model, output / f"ulb_labels_{fraction:g}_{seed}.joblib")
+                if fraction == 1:
+                    full_model = model
+            metric, seconds, score_seconds = cached[mask_hash]
+            np.save(output / f"ulb_mask_{fraction:g}_{seed}.npy", positions)
+            rows.append(dict(fraction=fraction, mask_seed=seed, model_seed=42,
+                             labeled_rows=len(positions), labeled_frauds=int(train.Class.iloc[positions].sum()),
+                             mask_sha256=mask_hash, reuse_full_fit=reused,
+                             train_seconds=seconds, score_seconds=score_seconds, metrics=metric))
+            print(f"E03 fraction={fraction} seed={seed} AP={metric['AP']:.6f}", flush=True)
+    start = perf_counter()
+    if_model = fit_isolation_forest(X, seed=42)
+    if_seconds = perf_counter() - start
+    start = perf_counter()
+    reference = make_prediction_frame(validation, score_isolation_forest(if_model, V), "IF_fixed256")
+    if_score_seconds = perf_counter() - start
+    joblib.dump(if_model, output / "ulb_if256.joblib")
+    frame = make_prediction_frame(validation, score_model(full_model, V), "logistic_regression_class_weight")
+    start = perf_counter()
+    importance = permutation_importance(full_model, V, validation.Class, scoring="average_precision",
+                                       n_repeats=5, random_state=42, n_jobs=1)
+    importance_rows = [dict(feature=name, mean=float(importance.importances_mean[i]),
+                            std=float(importance.importances_std[i]), repeats=importance.importances[i].tolist())
+                       for i, name in enumerate(V.columns)]
+    k = int(np.ceil(len(validation) * PRIMARY_REVIEW_FRACTION))
+    cases = fixed_error_cases(frame, k)
+    cases.merge(validation, on=["row_id", "Class", "Time"], validate="many_to_one").to_csv(output / "ulb_error_cases.csv", index=False)
+    result = dict(dataset_id="ulb", metadata=extension_provenance(), partitions=partitions,
+                  dataset_sha256=ULB_SHA256,
+                  E03=dict(fractions=list(LABEL_FRACTIONS), seeds=list(LABEL_SEEDS),
+                           mask_hash_rule="SHA256 of selected row_ids in training order, little-endian int64",
+                           sampling="class-stratified nested permutations; ceil per class; labels used only to simulate annotation",
+                           fitting="LR sees only labeled rows; IF sees all unlabeled training features; hidden labels never become 0",
+                           pipeline_parameters=full_model.named_steps['classifier'].get_params(),
+                           conditions=rows, IF_reference=dict(metrics=compact_metrics(reference), train_seconds=if_seconds,
+                               score_seconds=if_score_seconds, parameters=if_model.named_steps['model'].get_params())),
+                  E05=dict(scoring="average_precision", seed=42, repeats=5, fitting="no refit, all original features",
+                           elapsed_seconds=perf_counter()-start, importances=importance_rows,
+                           case_rule="two FP closest inside K; two FN closest outside K; two highest-ranked FP; score desc,row_id asc; categories may overlap",
+                           case_counts={str(key):int(value) for key,value in cases.category.value_counts().items()},
+                           private_cases=str((output / 'ulb_error_cases.csv').relative_to(ROOT))))
+    write_json(output / "ulb_b_extensions.json", result)
+    write_json(ROOT / "results/tables/b_extensions.json", result)
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+    for field, label in (("AP", "AP"), ("recall_at_k", "Recall@1%")):
+        matrix = np.array([[next(r for r in rows if r['fraction']==f and r['mask_seed']==s)['metrics']['AP']
+                            if field=='AP' else next(b['recall_at_k'] for b in next(r for r in rows if r['fraction']==f and r['mask_seed']==s)['metrics']['budgets'] if b['review_fraction']==.01)
+                            for s in LABEL_SEEDS] for f in LABEL_FRACTIONS])
+        x = np.array(LABEL_FRACTIONS)*100
+        axes[0].plot(x, matrix.mean(axis=1), marker='o', label=label)
+        axes[0].fill_between(x, matrix.min(axis=1), matrix.max(axis=1), alpha=.15)
+    axes[0].axhline(result['E03']['IF_reference']['metrics']['AP'], ls='--', label='IF AP (fixed 256)')
+    axes[0].set(xlabel="Labeled training rows (%)", ylabel="Validation metric", title="Mean and three-seed range (not CI)", ylim=(0,1))
+    axes[0].legend(fontsize=8)
+    top = sorted(importance_rows, key=lambda r:r['mean'])[-10:]
+    axes[1].barh([r['feature'] for r in top], [r['mean'] for r in top], xerr=[r['std'] for r in top])
+    axes[1].set(xlabel="AP decrease after permutation (5 repeats)", title="Fixed weighted LR: model reliance")
+    fig.suptitle("ULB validation only - E03 / E05")
+    fig.tight_layout()
+    fig.savefig(ROOT / "results/figures/b_extensions.png", dpi=160)
+    plt.close(fig)
+    print("E03/E05 completed", flush=True)
+    return result
+
+
+def run_handbook_b(dataset_dir, output):
+    """E10/E13: four fixed LR fits using A's views; no test or view selection."""
+    from handbook import load_handbook_development
+    from classification import cold_start_groups
+    from unsupervised import _checked_handbook_views, _handbook_view_fingerprints
+    from evaluation import evaluate_amounts, evaluate_groups, fit_amount_bins
+    development = load_handbook_development(dataset_dir)
+    expected = json.loads((ROOT / 'results/tables/handbook_a.json').read_text(encoding='utf-8'))['A_N1']['production']
+    if development['manifest']['data_sha256'] != expected['data_sha256']:
+        raise ValueError("Generated Handbook bytes differ from A's delivered dataset; do not publish unmatched records")
+    train, validation = development['train'], development['validation']
+    views = _checked_handbook_views(train, development['train_views'])
+    valid_views = _checked_handbook_views(validation, development['validation_views'])
+    groups = cold_start_groups(train, validation)
+    group_names = ['both_seen', 'new_customer_only', 'new_terminal_only', 'both_new']
+    bins, conditions = fit_amount_bins(train), {}
+    for name, X in views.items():
+        start = perf_counter()
+        model = train_model(X, train.Class, 'logistic_regression', 'class_weight', seed=42)
+        seconds = perf_counter()-start
+        start = perf_counter()
+        scores = score_model(model, valid_views[name])
+        score_seconds = perf_counter()-start
+        frame = make_prediction_frame(validation, scores, f'lr_{name}')
+        joblib.dump(model, output / f'handbook_lr_{name}.joblib')
+        frame.to_csv(output / f'handbook_lr_{name}.csv', index=False)
+        grouping = evaluate_groups(frame, groups, DEFAULT_BUDGETS, group_values=group_names)
+        for record in grouping['groups']:
+            group = record['cluster_id']
+            mask = groups == group
+            # Only global allocations are used; discard independent local quotas.
+            record['within_group'] = {key:value for key,value in record['within_group'].items() if key in ('status','n_samples','n_positive','AP','prevalence')}
+            record['history_availability'] = {entity:float((valid_views['both_history'].loc[mask, f'{entity}_no_history_7d']==0).mean()) if mask.any() else None for entity in ('customer','terminal')}
+        metrics = compact_metrics(frame)
+        for i, budget in enumerate(metrics['budgets']):
+            assert sum(r['global_budget_allocation'][i]['reviewed_in_group'] for r in grouping['groups']) == budget['K']
+            assert sum(r['global_budget_allocation'][i]['frauds_detected_in_group'] for r in grouping['groups']) == budget['TP']
+        conditions[name] = dict(metrics=metrics, amounts=evaluate_amounts(frame, validation, bins),
+                                cold_start=grouping, train_seconds=seconds, score_seconds=score_seconds,
+                                features=list(X.columns), parameters=model.named_steps['classifier'].get_params())
+        print(f"Handbook {name}: AP={metrics['AP']:.6f}", flush=True)
+    result = dict(dataset_id='handbook', metadata=extension_provenance(), evidence_kind='handbook_validation',
+                  manifest=development['manifest'], feature_fingerprints=dict(train=_handbook_view_fingerprints(views), validation=_handbook_view_fingerprints(valid_views)),
+                  fixed_reference='both_history; all four views retained, no selection', cold_start_rule='initial training entities, not development updates',
+                  amount_bins=bins, conditions=conditions)
+    write_json(output / 'handbook_b.json', result)
+    write_json(ROOT / 'results/tables/handbook_b.json', result)
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(1, 2, figsize=(12,4.5))
+    names = list(conditions)
+    for ax, field in zip(axes, ('AP','recall_at_k')):
+        values = [conditions[n]['metrics']['AP'] if field=='AP' else next(b['recall_at_k'] for b in conditions[n]['metrics']['budgets'] if b['review_fraction']==.01) for n in names]
+        ax.bar(range(len(names)), values)
+        ax.set_xticks(range(len(names)), [n.replace('_','\n') for n in names], fontsize=8)
+        ax.set(title=field, ylim=(0,1))
+    fig.suptitle('Handbook validation - fixed weighted LR history ablation')
+    fig.tight_layout()
+    fig.savefig(ROOT / 'results/figures/handbook_b_ablation.png', dpi=160)
+    plt.close(fig)
+    return result
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA_PATH)
-    run(parser.parse_args().data)
+    parser.add_argument("--extensions", action="store_true", help="Run ULB E03/E05 only; no baseline reselection.")
+    parser.add_argument("--handbook", action="store_true", help="Run Handbook E10/E13 on A's verified views.")
+    parser.add_argument("--handbook-dir", type=Path, default=ROOT / "data/handbook/v1")
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    if args.extensions or args.handbook:
+        if args.output is None or not args.output.resolve().is_relative_to((ROOT / "data").resolve()) or args.output.exists():
+            parser.error("Extensions require a new --output directory inside data/")
+        args.output = args.output.resolve()
+        args.output.mkdir(parents=True)
+        with threadpool_limits(limits=1):
+            if args.extensions:
+                run_ulb_extensions(args.data, args.output)
+            if args.handbook:
+                run_handbook_b(args.handbook_dir, args.output)
+    else:
+        run(args.data)

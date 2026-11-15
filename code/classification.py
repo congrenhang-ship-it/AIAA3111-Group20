@@ -124,3 +124,45 @@ def score_model(model, X):
         raise ValueError("Fraud probabilities must be finite and between 0 and 1.")
     return scores
 
+
+LABEL_FRACTIONS = (0.05, 0.10, 0.25, 0.50, 1.0)
+LABEL_SEEDS = (42, 43, 44)
+
+
+def nested_label_masks(labels, seed):
+    """E03 controlled, label-informed simulation, not real annotation acquisition.
+
+    One random permutation per class; ceil class_count*fraction, minimum one.
+    Returned positions are in original training order, never validation rows.
+    """
+    y = np.asarray(labels)
+    if y.ndim != 1 or set(np.unique(y)) != {0, 1}:
+        raise ValueError("Label simulation requires a binary training vector")
+    rng = np.random.default_rng(seed)
+    permutations = [rng.permutation(np.flatnonzero(y == label)) for label in (0, 1)]
+    return {fraction: np.sort(np.concatenate([
+        group[:int(np.ceil(len(group) * fraction))] for group in permutations
+    ])) for fraction in LABEL_FRACTIONS}
+
+
+def fixed_error_cases(predictions, k, per_category=2):
+    """E05: near-boundary FP/FN and highest-ranked FP, deterministically selected."""
+    frame = predictions.sort_values(["score", "row_id"], ascending=[False, True]).copy()
+    frame["rank"] = np.arange(1, len(frame) + 1)
+    reviewed = frame.iloc[:k]
+    selections = {
+        "near_boundary_FP": reviewed.loc[reviewed.Class.eq(0)].tail(per_category).iloc[::-1],
+        "near_boundary_FN": frame.iloc[k:].loc[lambda x: x.Class.eq(1)].head(per_category),
+        "highest_ranked_FP": reviewed.loc[reviewed.Class.eq(0)].head(per_category),
+    }
+    import pandas as pd
+    return pd.concat([part.assign(category=name) for name, part in selections.items()], ignore_index=True)
+
+
+def cold_start_groups(train, validation):
+    """E13 mutually exclusive groups anchored to initial training entities."""
+    new_customer = ~validation.CUSTOMER_ID.isin(train.CUSTOMER_ID)
+    new_terminal = ~validation.TERMINAL_ID.isin(train.TERMINAL_ID)
+    names = np.array(["both_seen", "new_customer_only", "new_terminal_only", "both_new"])
+    return names[new_customer.to_numpy(int) + 2 * new_terminal.to_numpy(int)]
+
