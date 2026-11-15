@@ -2,242 +2,184 @@
 
 AIAA 3111 Course Project · Group 20
 
-负责人：A 维护运行与环境说明，D 协调文档整合，全组核对实验约定。
+更新：2026-11-15。研究有限审核容量下，分类、异常检测与规则解释的能力、上下文价值和可靠性。保留 ULB 主实验，正式新增 Handbook 交易模拟数据及上下文/时间实验；PaySim 做后续轻量外部复核。新增数据实际交付及正式实验仍待完成；C 的历史消融、关系特征与缺失压力接口已实现并完成合成检查。不开展 LLM、GNN、复杂神经网络或前端。
 
-本仓库按课程最终提交要求组织，使用 ULB 信用卡交易数据研究有限审核预算下的欺诈检测。
+负责人：A 维护公共入口和环境，D 整合材料；每位成员负责自己的实现、分析和来源记录。
 
-## 项目范围与投入比重
+组员建议先读 [项目故事与逻辑线](report/PROJECT_STORY.md)，再看 [剩余任务](TASKS.md) 和 [扩展协议](report/EXTENSION_PROPOSALS.md)。
 
-主问题：在有限审核预算下，监督分类与无监督异常检测分别能发现哪些欺诈？它们在不同交易群体和相对时间窗口中的表现是否一致？模式挖掘提供可验证的特征组合分析。
+## 当前进度与分支
 
-以下百分比是组内工作投入建议，不是课程评分权重，也不代表算法组合分数。聚类、异常检测和时间分析纳入正式计划；LLM 与 Agent 不开展。
+`Task_A` 已整合 A/B/C/D，在全量 ULB 验证段复现共同模型和 E01/E02/E04/E06/E07，并产出 E08 固定阈值诊断。B 的 E03/E05 仍待交付。主线接入和全组 G2 确认后，按同一协议进入正式测试。
 
-| 模块 | 建议投入 | 研究问题与最小实验 |
+| 分支 | 已有交付 | 后续 |
 |---|---|---|
-| 数据预处理 | 10% | 数据检查、统一时间划分、训练阶段缩放，建立可靠比较基础 |
-| 模式挖掘 | 10% | 少量特征分箱后用 Apriori 发现短规则，比较两种分箱并验证覆盖与稳定性 |
-| 分类 | 25% | 比较既定四种模型，对代表模型比较类别权重和一种重采样策略 |
-| 聚类 | 15% | K-means 在不使用标签时发现哪些群体？用少量簇数设置分析稳定性及各簇欺诈覆盖 |
-| 异常检测 | 25% | Isolation Forest 与聚类距离异常分数在相同预算下能检出多少欺诈？是否覆盖分类遗漏的样本？ |
-| 时间分析 | 15% | 冻结模型后，不同相对时间窗口中的检出能力、误报和类别比例如何变化？ |
+| `Task_A` | 数据准备、全组验证入口、E08 阈值诊断 | 主线复现、接入 E03/E05、A7 冻结、A8 测试 |
+| `b/classification-interface` | 四种分类器、不平衡对照、验证候选 | 分类扩展、最终结果与案例 |
+| `codex/c-independent-modules` | 已接入 A 80f3171 及 D；统一验证、C 扩展和 E08 计数独立验收通过 | 正式图表与结论待 G2/A8 |
+| `codex/d-pattern-mining` | 规则验证、E04 增量覆盖、共同环境复核、报告/海报内容稿 | 主线复现和正式材料 |
 
-深度来自统一审核任务下的方法差异、互补性、分组和时间评价，不靠增加大量算法。所有模块的结论以实际实验为准。
+C 已提供接入说明和真实验证重放；D4 共同环境复核已有证据。已有实现不重新列成待开发任务，剩余工作见 [TASKS.md](TASKS.md)。C 已完成 A 统一入口的独立验收；后续合并保留最新分工和各人的真实状态。
 
-## 统一实验路线
+统一入口、已交付候选与正式测试的验收状态见 [TASKS.md](TASKS.md)。
 
-1. 先跑通一个分类基线及公共评价，再并行推进分类、K-means、Isolation Forest 和规则挖掘。
-2. 分类比较逻辑回归、决策树、Gaussian Naive Bayes、随机森林；不平衡实验只用于代表模型，避免穷举。
-3. K-means 只在训练特征上拟合，簇数通过训练部分的结构指标和稳定性检查选择，不能把两个簇直接当成正常与欺诈。轮廓系数使用固定子样本控制成本。训练后使用标签描述每簇样本量、欺诈比例、欺诈覆盖量，并报告各簇内的模型表现。
-4. 异常方法在不使用标签筛选的混合训练数据上拟合。比较 Isolation Forest 和到最近训练簇中心的距离分数。高异常分不直接等同于欺诈；Isolation Forest 原始分数方向须转换为越大越可疑。
-5. 使用同一验证集，比较分类、异常方法与随机审核基线的 AP、PR 曲线和预算表现。异常方法若使用验证标签选择参数或组合权重，应明确说明这一点；其训练仍不使用标签。
-6. 在相同审核预算下报告两种方法名单中的重合欺诈、分类独有欺诈、异常方法独有欺诈。补充预先设定的合并名单策略：按验证阶段确定的配额从两种排序去重选入，直到总审核数恰好为 K。比较相同 K 下是否真正增加检出量，不直接比较容量翻倍后的并集。
-7. 规则仅在训练阶段发现，验证后冻结。将规则覆盖情况与预测错误作关联分析，不把规则当成模型的因果解释或未知业务行为。
-8. 参数、阈值、规则和组合策略在验证阶段冻结，再统一进行最终测试。测试结果不用于继续挑选方法。
-9. 在最终测试部分按预先约定的相对时间窗口分析固定模型：报告交易数、欺诈数、AP、审核数量与检出能力。各方法使用相同窗口和预算口径。没有正类的窗口将 Recall、AP 标为不适用；不预设每个窗口都有足够欺诈。
-10. 时间仅指相对经过时间，不解释为本地钟点、个人交易序列或长期季节性。两天数据只支持短期表现分析，差异也可能来自窗口样本量或类别比例，不直接认定为概念漂移。
+## 项目问题与课程联系
 
-### 报告与海报叙事
+主线：有限审核资源 → 分类基线 → 聚类群体和异常排序 → 同预算互补 → 标签不足与可靠性 → 规则及错误解释 → 时间和阈值表现。
 
-有限审核资源 → 分类基线 → 无标签群体与异常排序 → 相同预算下的互补与局限 → 群体和时间窗口中的可靠性 → 用规则和错误案例补充解释。
+| 课程内容 | 项目对应 |
+|---|---|
+| 数据预处理 | 数据校验、去重、唯一时间划分、训练期缩放、稳定行身份 |
+| Pattern Mining I/II | 分箱、Apriori、规则留出验证、重叠和增量覆盖 |
+| Classification Basic/Advanced | 四种基线、不平衡处理、有限标签曲线、成本/阈值评价 |
+| Clustering I/II | K-means、结构及稳定性、群体画像与表现 |
+| Anomaly Detection | IF、簇距离、无标签参考、等预算组合 |
+| Diverse Data | 新增客户/终端类别信息、严格历史统计、基础关系图特征和跨数据集验证；均为待实现任务 |
 
-### 简化范围
+课程覆盖以实际实验和分析为准，不用增加算法数量代替深度，也不保证扩展会提高检测指标或成绩。
 
-只使用 ULB 数据。聚类先做 K-means，异常方法先做 Isolation Forest 和已有簇中心距离，不增加 DBSCAN、LOF、复杂神经网络或第二数据集。共同评价由同一模块生成。LLM、Agent 和额外前端不纳入计划。
+## 本轮正式新增：只用原数据
 
-## 目录
+全部采用现有 ULB 数据，复用公共接口。详细默认设置、边界处理和验收见 [扩展实验协议](report/EXTENSION_PROPOSALS.md)。
+
+C 已交付 E01/E02/E06/E07：原验证段 56,745 笔、57 笔欺诈；500＋200 轮配对分析复跑一致，代码/原模型及金额加总均核对，临时整合 D 后共 74 项检查通过。结果与接入说明位于 C 分支：[汇总](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/results/tables/c_extensions.json)、[C 说明](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/report/C_IMPROVEMENTS.md)。main 的业务代码尚待 A6 合入；上述均为验证结果，不是测试结果。
+
+| 编号 | 内容与研究问题 | 主责 | 最小实验与结果 | 状态 |
+|---|---|---|---|---|
+| E01 | 检出笔数与欺诈金额覆盖是否一致？ | C | 原预算下金额覆盖、训练边界金额分组 | 验证交付完成 |
+| E02 | 少量欺诈样本下差值是否稳定？ | C | 配对 bootstrap、时间块敏感性、AP/Recall 差值区间 | 验证交付完成 |
+| E03 | 可见标签减少时分类与 IF 如何变化？ | B | 5/10/25/50/100% 标注、种子 42/43/44、固定参考 IF | 待验收 |
+| E04 | 多条规则提供多少新增覆盖？ | D | Jaccard、固定顺序累计去重覆盖、分类/异常错误关联 | 待验收 |
+| E05 | 模型依赖哪些特征，错误有何特点？ | B | 已选分类器 AP 置换重要性、固定案例规则 | 待验收 |
+| E06 | 比简单审核参考强多少？ | C | 随机审核期望、Amount 降序、Precision 提升倍数 | 验证交付完成 |
+| E07 | 预算如何影响不同错误代价？ | C | 四档预算，假设漏报/误报成本比 10/50/100 | 验证交付完成 |
+| E08 | 固定分数阈值会产生多少后续审核量？ | A | 验证阈值，测试与固定窗口实际审核率和检出 | 验证交付完成 |
+
+金额覆盖不称真实挽回损失；成本比是假设情景；重要性不作因果解释；规则不自动形成固定容量检测器。标签不足实验明确哪些标签/特征可见，IF 参考不利用完整标签新选参。保留负结果和没有组合收益的结果。
+
+新增内容的工作量主要是有限对照和评价，不新增模型搜索。每位成员先做可独立完成的训练/验证工作；A6 整合可同时进行，A7 按数据集纳入对应新增协议再正式测试。
+
+## 统一实验约定
+
+1. 使用相同原始 CSV、SHA-256、去重及 A 的唯一时间划分。约 60/20/20，同一时间边界进入后段；row_id/Class 不作特征。
+2. 缩放、模型、分箱及规则只拟合相应训练记录。标签模拟中的分类管线仅拟合已标注子集。验证用于已声明的选择与诊断，测试留到 G2 后。
+3. 四种分类基线为逻辑回归、决策树、Gaussian NB、随机森林，保留原类别权重和重采样对照；不重新穷举算法。
+4. K-means 群体不能当成欺诈类别，IF/簇距离分数越高越可疑，不当欺诈概率。C 已有训练内部选择与验证披露，A 合并时保持实际选择流程和说明一致。
+5. 主要预算为 1%，补充为 0.1%、0.5%、2%。K=ceil(N*q)，score 降序、row_id 升序；名单组合去重补齐后仍恰好 K。
+6. 同时报告 AP、审核计数、TP/FP、Precision/Recall、金额覆盖和随机参考；无正类或零分母标 N/A，空组/窗口单列。
+7. 群体使用同一训练 K-means，分清全局 top-K 在群体的分配与独立组预算。固定阈值 score>=t 的实际审核数可能超过目标 K，单独报告。
+8. 规则仅在训练发现、验证检查并冻结；后续覆盖、冗余及案例保留原规则来源。不能累加重叠规则的欺诈数。
+9. 时间只解释相对经过时间；窗口起点、长度及独立窗口预算在 G2 中记录。两天数据的短时差异不证明长期漂移。
+10. 配置、掩码种子、分箱/金额边界、规则顺序、阈值、成本比、重采样和解释协议在 A7 冻结。正式测试不回流选优；ULB 原训练边界不变，新数据滚动只发生在开发期；实现错误修复需记录影响和重跑原因。
+
+新增 E03 的分层标注模拟使用真实训练标签构造子集，必须披露；不能隐藏这一信息后宣称完全模拟真实标注过程。已有验证已被查看，也应在方法和局限中说明。
+
+## 新增数据集已进入正式任务：深度来自受控对照
+
+2026-11-15 将原候选升级为任务 E09–E16，详细协议见 [扩展协议](report/EXTENSION_PROPOSALS.md)，逐人步骤见 [TASKS.md](TASKS.md)。当前仅完成设计和分工，未生成新数据或运行新实验。
+
+主问题扩展为：**在相同审核容量下，历史与关系上下文带来多少价值，这些收益在标签延迟、冷启动和历史不完整时是否可靠？**
+
+| 编号 | 正式内容 | 负责 | 主要对照与产出 |
+|---|---|---|---|
+| E09 | Handbook 数据与无泄漏历史接口 | A | 可复现生成、时间划分、单笔/客户/终端历史视图 |
+| E10 | 历史特征消融 | B 分类、C 异常 | 单笔、加客户、加终端、两类历史；同一 LR/IF 与预算 |
+| E11 | 开发期滚动验证与标签延迟 | A，复用 B 管线 | 固定模型 vs 每 7 天更新；延迟 0/1/7 天，最终测试前锁定快照 |
+| E12 | 基础客户–终端关系特征 | C | 历史特征上增加过去度数/新边标记，不用 GNN |
+| E13 | 冷启动分群 | B，复用 C 评价 | 初始训练已见/新客户、新终端，检查全局名单分配 |
+| E14 | 历史缺失压力测试 | C | 隐去 0/10/30% 历史记录，当前交易与标签不变 |
+| E15 | 有业务含义的规则及机制诊断 | D | 训练发现短规则、留出验证、按生成机制解释成功/失败 |
+| E16 | PaySim 可行性与轻量外部复核 | A | 先审计来源/字段/资源；通过后仅 Amount/LR/IF 小对照 |
+
+Handbook 是本轮主要第二数据集，使用[公开生成方法](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/SimulatedDataset.html)及[历史特征参考](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/BaselineFeatureTransformation.html)。拟采用 60 天、seed=42，先固定规模与生成设置，再开展模型实验。它有人工设计的欺诈机制，结果用于受控研究，不能宣称现实泛化。
+
+[PaySim](https://github.com/EdgarLopezPhD/PaySim)不再只是一个名字：A-N3 必须交付可行性审计；可复现获取、字段可用性和资源检查通过后再做 E16 最小实验，不复制整套 E09–E15。若无法可靠获取或存在未解决问题，记录证据和不适用原因，不把“已审计”写成“模型实验完成”。它不阻塞 ULB/Handbook 的测试或提交。
+
+ULB 保留原切分、特征和已完成成果；不同数据集分别训练、分别评价，不拼表，不直接套用 ULB 模型。AP 随类别比例变化，跨数据集主要比较方法的相对表现与局限，不平均成一个总分。所有结果带 dataset_id。
+
+C 独立实现进度（2026-11-15）：四组 IF 历史消融、7 天客户–终端关系增量、九条件历史缺失压力测试已完成，91 项检查通过。实现继续放在原模块，代码由 A6 从 C 分支集成；main 同步共享说明。[C 接入说明](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/report/C_IMPROVEMENTS.md)包含 API 和 A 的交付约定，[检查摘要](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/results/tables/handbook_c_readiness.json)明确标注合成接口证据。当前 A-N1 尚未交付，Handbook 正式验证、G2 和正式测试均未完成；此次检查不证明新特征能提高检测效果，也不替代 B/D 的新增任务。
+
+深度优先级：先完成 E09/E10/E15 的第二数据集闭环，再补 E11/E12，之后 E13/E14 压力分析；PaySim 最后。E13 的群体若样本/欺诈不足就如实报告，不反复生成直到出现好看的结果。新增方向均已分派任务，优先级不等于已完成。
+
+## 冻结与报告安排
+
+继续使用 G2/G3 两个公共节点，但 G2 按数据集分别记录配置与验收状态。ULB 已具备条件即可冻结/测试，不等待 PaySim 或尚未就绪的新数据线；Handbook 准备好后冻结自己的协议，再评分自己的测试段。当前尚未存在已确认的 G2/A8。
+
+历史特征只读取当前时刻之前的交易，同时间批次预测后再更新状态。标签延迟是明确的模拟假设，不能使用尚未到达的标签。新数据的开发期滚动可以使用当时已可得的历史开发标签；进入最终测试前保存各情景的固定快照，测试期不训练、不用测试标签回填。真正测试期在线更新暂不开展。[时间验证参考](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_5_ModelValidationAndSelection/ValidationStrategies.html)
+
+正文仍为 6–10 页：ULB 作真实匿名数据主线，Handbook 用 1–2 张组合图解释上下文与可靠性；完整压力条件、规则和 PaySim 放补充材料。高分目标落实为公平比较、可解释发现、可复现闭环和答辩证据，不承诺增加数据或模块就必然提高成绩。
+
+## 简单目录与文件责任
 
 ```text
-report/                  报告编辑稿与最终 Report.pdf
-poster/                  海报编辑稿与最终 Poster.pdf
-code/main.py             命令入口
-code/preprocessing.py    数据检查、划分与预处理
-code/classification.py   分类模型与类别不平衡处理
-code/unsupervised.py     C：K-means、Isolation Forest 与簇距离
-code/evaluation.py       C：公共评价、等预算组合、群体分析与绘图
-tests/test_c_modules.py  C：公共评价与无监督模块检查
-code/temporal.py         A：相对时间窗口评价
-code/pattern_mining.py   特征组合与关联规则挖掘
-data/                    本地原始数据及下载说明
-results/figures/         正式实验图表
-results/tables/          正式实验汇总表
+README.md                         公共路线、状态与运行说明（A）
+TASKS.md                          剩余分工（D 维护，各人更新自己的任务）
+code/main.py                      公共调度与冻结/最终运行（A）
+code/preprocessing.py              数据适配、数据版本和各自唯一划分（A）
+code/temporal.py                   历史特征、滚动/延迟、时间与阈值诊断（A）
+code/classification.py             分类、标签预算与解释（B）
+code/unsupervised.py               K-means、IF、基础图特征与压力实验（C）
+code/evaluation.py                 公共评价、金额、区间、参考、成本、发布（C）
+code/pattern_mining.py             规则和覆盖分析（D）
+report/EXTENSION_PROPOSALS.md       E01–E16 协议、状态和条件（全组遵守）
+report/                           各模块已有说明、报告及 Report.pdf
+poster/                           海报稿及 Poster.pdf
+results/tables/                    汇总 JSON/CSV；不逐实验新建目录
+results/figures/                   精选图；注明 validation/test
+data/                            本地数据与下载说明（原始文件不提交）
 ```
 
-C 的说明集中在 [report/C_IMPROVEMENTS.md](report/C_IMPROVEMENTS.md)。图在 `results/figures/`，汇总在 `results/tables/`；最终报告、海报和最终测试尚未完成。
+沿用各分支已有运行脚本，扩展放回主责模块；不为每项扩展新增脚本、Notebook 或层级。完整预测、模型、样例行和临时导出保留被忽略的本地 data/。细节见扩展协议的汇总约定。
 
-## 环境安装
+## 环境、数据与可用命令
 
-建议组员统一使用 Python 3.12。在仓库根目录执行：
-
-```bash
-python -m venv .venv
-```
-
-macOS / Linux 激活环境：
-
-```bash
-source .venv/bin/activate
-```
-
-Windows PowerShell 激活环境：
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-安装依赖：
+在含 A6 的分支上使用 Python 3.12，安装仓库固定依赖。从仓库根目录运行以下命令。
 
 ```bash
 python -m pip install -r requirements.txt
-```
-
-依赖版本已固定，组员使用 Python 3.12 和同一份 `requirements.txt`。
-
-## 数据准备
-
-Task A 交接与文件索引 · [中文](docs/TASK_A.zh-CN.md) · [English](docs/TASK_A.en.md)
-
-每位组员在仓库根目录运行 `python code/download_data.py` 获取并验证同一份原始数据。文件保存在被 Git 忽略的 `data/creditcard.csv`。手动下载、校验值和预期结果见 [数据说明](data/README.md)。
-
-## C 的实现与结果
-
-C 的算法与实验流程放在 `code/unsupervised.py`，共同评价、绘图和结果导出放在 `code/evaluation.py`，统一由 `main.py` 调用。运行与分析见 [C 说明](report/C_IMPROVEMENTS.md)。当前改进 IF 在验证 1% 预算下检出 24/57，原 IF 为 10/57、原距离为 14/57；最终测试尚未执行。
-
-共享文件保持原目录：`results/tables/c_baseline.json`、`c_improved.json`、`c_ablation.csv`；图均为 `results/figures/c_*.png`。原始数据、模型和详细中间记录留在本地 `data/`。
-
-复现时使用新的本地输出目录，避免覆盖已有证据：
-
-```bash
-python code/main.py --run-c --output data/c_reproduction/run --results data/c_reproduction/shared
-```
-
-`--run-c-baseline` 重现第一轮，`--demo` 仅检查程序。B 的标准预测到位后追加 `--classification-predictions`。C 的检查集中在 `tests/test_c_modules.py`。
-
-## 当前可运行的命令
-
-在仓库根目录执行：
-
-```bash
-python code/main.py --help
-python code/main.py --tasks
-python code/main.py --check-data
+python code/download_data.py
 python code/main.py --prepare-data
-python -m unittest discover -s tests -v
+python code/main.py --run-team-validation --output data/team_validation
 ```
 
-`--tasks` 显示四人模块分工，不需要数据文件。
-
-`--check-data` 输出 SHA-256、字段、标签、缺失、重复和时间/金额范围。`--prepare-data` 先验证文件 SHA-256，再报告去重后的三段样本、欺诈数、时间范围和有序行号指纹。测试用小样例检查接口，并在 CSV 存在时校对全量数据指纹。
-也可以指定其他 CSV 路径：
+数据来源、原始校验值和预期划分见 [数据说明](data/README.md)。输出目录需位于 `data/` 且尚未存在。统一入口使用已交付的配置，仅在训练段重建三个模型，复用同一批验证预测运行总体、分群、时间窗口、等预算组合、C 扩展、D 规则分析与 E08。验证通过后，模型、逐行预测和案例留在本地，汇总与图表位于输出目录的 `aggregate/`。E03/E05 在交付后接入此入口。
 
 ```bash
-python code/main.py --check-data --data /path/to/creditcard.csv
+python -X utf8 -m unittest discover -s tests
+python -X utf8 -m unittest discover -s code -p test_classification.py
 ```
 
-A 的准备与时间窗口、C 的模型与评价均已接入。G1 入口 `python code/main.py --run-validation` 仍需 B2 的真实分类实现。正式测试安排在全组 G2 冻结后。
+本次验证阈值、逐窗审核计数和来源见 [A6/E08 验证摘要](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/a_team_validation.json)。全组在 A7 确认配置后由 A8 运行正式测试。
 
-## 实施顺序与时间安排
+## 分工与执行顺序
 
-当前安排从 2026 年 11 月 9 日开始，按现有项目材料中的海报和最终提交日期规划；如 Canvas 更新，以最新通知为准。
+| 成员 | 现在可独立做 | 交付之后 |
+|---|---|---|
+| A | 保留 A6 验收成果，A-N1 数据/历史接口 | A-N2 时间/延迟；各数据线具备条件即 A7/A8，A-N3 后做 |
+| B | 先完成原 B-E1/B-E2；可用小样例准备新数据管线 | B-N1 历史对照 → B-N2 冷启动 → 原 B6/B7 |
+| C | C-N1/N2/N3 实现与合成接口验证已完成 | A-N1 数据/四视图/回调交付后连续正式验证；各线测试后 C7/C8 |
+| D | 现有稿件继续；准备语义特征规则与机制解释 | A-N1 后 D-N1，逐线收取证据并做 D5–D7 |
 
-| 时间 | 工作与验收 |
-|---|---|
-| 11 月 9–11 日 | 统一数据、划分、评价接口；在第二位成员电脑上复现逻辑回归验证结果 |
-| 11 月 12–16 日 | 并行完成分类比较、K-means、Isolation Forest、簇中心距离和小规模 Apriori |
-| 11 月 17–20 日 | 验证阶段完成分群、预算和互补性实验，确定时间窗口规则，冻结参数与规则 |
-| 11 月 21–22 日 | 统一最终测试，生成窗口表现、误报漏报、规则和群体分析 |
-| 11 月 23–26 日 | 完成报告初稿、核心图表和海报，全组核对证据与结论 |
-| 11 月 27 日 | 提交 Poster.pdf |
-| 11 月 28 日–12 月 4 日 | 复现核查、问答演练和 Poster Session，不根据测试结果重选最优模型 |
-| 12 月 5–11 日 | 完善局限、运行说明、报告与提交包，12 月 11 日最终提交 |
+具体编号、依赖和验收见 [TASKS.md](TASKS.md)。不等待他人最终图表再写已有方法；B/D 可先生成标准预测/覆盖，之后直接复用 C 的新增评价。C 不接管全部实验，D 不代写其他人的全部技术部分。
 
-## 四人分工
+## 公共接口与结果
 
-逐项执行与完成标准见 [TASKS.md](TASKS.md)。每个人沿自己的编号连续推进，公共交付只集中在基础接口、方案冻结和最终证据核对三个节点。
+标准预测表为 `row_id, Class, Time, method, score`，可附 cluster_id；金额通过 row_id 从原始表对齐，不改变 B/C 现有表的必需列。完整行身份只在本地。
 
-以下 A/B/C/D 由组员自行对应姓名。每个公共代码文件由一人主责，其他成员通过 PR 提议修改。
+A 提供统一划分；B 的模型管线和 C 的冻结模型评分输出同一分数方向。C 的公共评价管理预算、并列、缺失指标、金额/成本和区间；D 提供按同一 row_id 的规则覆盖。A 时间评价复用 C 指标，避免独立实现另一种统计口径。
 
-| 成员 | 职责 | 主要文件 | 交付物 |
-|---|---|---|---|
-| A：数据、时间分析与整合 | 数据获取检查、统一划分、相对时间窗口分析、运行整合 | `code/preprocessing.py`、`code/main.py`、`code/temporal.py`、`data/README.md` | 统一数据、可复现入口、各窗口统计和表现分析 |
-| B：分类模型 | 四种基础模型、有限调参、不平衡处理，提供分类风险排序 | `code/classification.py` | 模型流程、验证风险分数、冻结后的分类方案 |
-| C：聚类、异常检测与统一评价 | K-means、Isolation Forest、簇距离、统一预算评价及互补分析 | `code/unsupervised.py`、`code/evaluation.py`、`results/` | 聚类画像、异常排序、共同评价和等预算组合结果 |
-| D：模式挖掘与文档协调 | 分箱、Apriori、规则验证，协助跨方法案例分析和文档整合 | `code/pattern_mining.py`、`report/`、`poster/` | 规则结果、代表案例、统一排版的报告和海报 |
+扩展阶段先发布 validation 汇总，G2 后以相同冻结方案输出 test 汇总。图表及每项结果应关联数据指纹、命令、配置、代码版本和 phase，拒绝覆盖已有正式证据。实验实现、运行结果和通过验收分别记录。
 
-C 的范围限于既定 K-means、Isolation Forest、簇距离与公共评价，不额外增加算法。A、B、D 各自整理本模块图表和分析，避免将全部结果分析集中给 C 或全部写作集中给 D。
+## 报告、海报与提交
 
-### 共同接口
+报告正文保持 6–10 页（含图表），参考文献、Disclosures、附录按课程要求处理。新增内容使用组合图与简表：主问题/数据约 1 页，方法约 1.5 页，主对照与互补约 2 页，标签/可靠性约 1.5–2 页，规则/解释/时间约 1.5–2 页，结论和局限约 0.5 页；按实际内容压缩，总正文不超过 10 页。
 
-- A 提供唯一的数据划分。组员先运行 `--prepare-data` 确认数据一致，再从各自位于 `code/` 的 Python 脚本调用以下函数。
-- B 的 `train_model` 返回含预处理的模型流程。B 与 C 均输出同一行序、同一交易编号对应的连续分数，统一为越大越可疑。聚类编号单独保留，不能直接作为欺诈预测标签。
-- C 的 `evaluate_scores` 统一负责所有分类、异常与组合方法的指标。提前约定 K 的取整、并列排序、无正类窗口及零分母处理。A 的时间分析直接复用这一接口。
-- D 只在训练阶段拟合分箱并发现规则，在验证集检查稳定性，冻结选择后再进行测试评价。
-- 标准化、特征选择、重采样和规则发现均遵守训练边界。参数、阈值和规则筛选在验证阶段确定。
+全部重要性、种子结果、成本场景和抽样细节放补充表；正文优先清楚解释主要发现，不要求每个实验单独占页。海报围绕主要结果选图，不复刻全部报告。
 
-```python
-from preprocessing import DEFAULT_DATA_PATH, get_features, load_data, split_data
+A 写数据与时间/阈值，B 写分类/标签/重要性，C 写聚类/异常/公共评价与可靠性，D 写规则并整合。全组核对 Introduction、Conclusion、Limitations 和实际外部协作/AIGC 记录。没有改善的结果如实报告。
 
-train, validation, test = split_data(load_data(DEFAULT_DATA_PATH))
-X_train, y_train = get_features(train), train["Class"]
-X_validation = get_features(validation)
-```
+按依赖推进：A6 与扩展并行 → A7/G2 → A8/各人的正式分析 → G3 证据/第二台电脑复现 → PDF 导出、演练与提交。课程具体日期以 Canvas 最新要求为准。
 
-`load_data` 返回附有原始 `row_id` 的数据表。`split_data` 负责去重和唯一时间划分，三段都保留标签、时间和原始行号。`get_features` 返回 Group 20 声明的 Time、V1–V28、Amount，不包含 `Class` 或 `row_id`，也不进行缩放。若要比较是否纳入 Time，先在验证阶段决定并记录。D 的规则挖掘从训练表读取特征和后件标签，并复用验证表的原始行号。
+最终目录沿用：report/Report.pdf、poster/Poster.pdf；ZIP 含 Report.pdf、README.md、requirements.txt、code/、数据说明及必要 results/，海报按要求单独提交。A9 核对包内路径、实际依赖和复现命令。
 
-### 公共预测表
-
-分类与异常方法统一使用以下列，表格保留原始交易行身份，不把 row_id 当成模型输入：
-
-| 列 | 含义 |
-|---|---|
-| `row_id` | 原始 CSV 的稳定行编号，排序/划分后保持不变 |
-| `Class` | 真实标签，仅用于评价 |
-| `Time` | 相对经过秒数，用于窗口分析 |
-| `method` | 模型与策略的唯一名称 |
-| `score` | 连续风险分数，越高越可疑 |
-| `cluster_id`（可选） | 群体编号，不等同于欺诈标签 |
-
-B/C 的打分数组与输入行顺序一致，C 的 `make_prediction_frame` 负责统一组表。`evaluate_scores` 必须接收 `row_ids`，用于确定并列排序；A 的 `evaluate_time_windows` 复用该函数。按群体或窗口单独分配预算与全局 top-K 的分布是不同分析，结果必须注明口径。无正类时 AP/Recall 为不适用；空窗口另行标记。D 的规则结果保留覆盖的 row_id，便于交叉分析。
-
-`evaluate_time_windows` 按共用起点划分左闭右开的窗口，并检查各方法使用同一批交易。返回各方法从首个到末个观测窗口的编号、边界、交易数、欺诈数、状态和 C 的评价结果。空窗口的评价为 `None`。在 C 的评价就绪前，`summarize_time_windows` 可独立生成同样的窗口计数。当前验证入口用 3,600 秒窗口和起点 0，正式方案在验证阶段确定。
-
-每个 Python 文件开头均写明负责人、输入输出和实现状态。`NotImplementedError` 表示待实现，不能将接口数量当成完成实验的数量。
-
-### 第一个共同里程碑
-
-A 接好数据检查和划分，B 提供一个逻辑回归基线，C 生成第一张验证集审核预算表，由 B 或 C 在另一台电脑通过统一入口复现；D 后续在最终材料整合前再复核一次，避免早期流程等待规则模块。达成后并行扩展分类、聚类、异常检测和模式挖掘；A 准备时间窗口分析，D 在此之前可准备规则编码和报告提纲。
-
-### 报告与海报
-
-A 撰写数据、预处理和时间分析，B 撰写分类方法及实验，C 撰写聚类、异常检测、统一预算与互补分析，D 撰写模式挖掘并整合排版。Introduction、Conclusion 和 Limitations 由全组讨论后共同完成，所有成员都应能解释完整主线。篇幅重点放在等预算比较、互补性、群体差异和时间结果，而不是每种算法各写一节独立故事。
-
-## 协作约定
-
-- 各自在任务分支修改，通过 Pull Request 合并到 `main`。
-- 修改公共函数的输入或输出前，先与其他成员确认。
-- 仅提交代码、说明、编辑稿和选定的正式结果；不提交原始数据、虚拟环境、缓存或临时模型。
-- 匿名特征只按 V1-V28 等原名报告，不虚构业务含义。
-- 报告记录实际使用的外部协作和 AIGC 辅助。
-
-## 提交整理
-
-报告正文 6–10 页，含图表；参考文献、Disclosures、附录不计入正文页数。
-报告编辑稿可保存为 `report/Report.docx`，最终导出 `Report.pdf`。
-海报编辑稿可保存为 `poster/Poster.pptx`，最终导出 `Poster.pdf` 并单独提交。
-
-最终 ZIP 建议整理为以下内容，并使用实际 Canvas 组编号命名：
-
-```text
-Group_20_Project.zip
-├── Report.pdf
-├── README.md
-├── requirements.txt
-├── code/
-├── data/
-│   └── README.md
-└── results/
-    ├── figures/
-    └── tables/
-```
-
-`results/` 为补充结果。打包时应检查 README 中的路径与运行说明仍然适用于提交包。
-
+C 的后续验收：在完整验证段重现 A 的统一入口和 C/D 证据，81 项检查通过；新增固定阈值与窗口预算验证图，严格区分总审核 568 与逐窗取整后的 572。LR 阈值跨机器相差约 6.9e-11、计数一致，A7 应把模型与对应阈值一起冻结。源与解释见 C 分支说明及 c_extensions.json 的 team_integration；目前 GitHub 的 A 交付仍明确 E03/E05、G2 和 A8 待完成，验证图不作为正式测试图。
