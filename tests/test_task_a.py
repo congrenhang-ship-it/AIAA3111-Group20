@@ -19,6 +19,79 @@ from temporal import DAY_SECONDS, evaluate_time_windows, handbook_history_builde
 from temporal import evaluate_review_threshold, select_review_threshold
 
 
+class BExtensionIntegrationTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import numpy as np
+        from evaluation import partition_description
+        rng=np.random.default_rng(42)
+        def fixture(rows,start):
+            frame=pd.DataFrame(rng.normal(size=(rows,len(FEATURE_COLUMNS))),columns=FEATURE_COLUMNS,
+                               index=range(start,start+rows))
+            frame["Amount"]=rng.uniform(1,100,rows)
+            frame["Time"]=range(start,start+rows)
+            return frame.assign(row_id=range(start,start+rows),Class=(np.arange(rows)%11==0).astype(int))
+        cls.train,cls.validation,cls.test=fixture(320,0),fixture(96,1000),fixture(64,2000)
+        cls.partitions={n:partition_description(f) for n,f in
+                        (("train",cls.train),("validation",cls.validation),("test",cls.test))}
+
+    def test_standalone_delegates_the_verified_split_to_the_same_implementation(self):
+        import run_b_validation as b
+        marker=object()
+        with (patch.object(b,"data_sha256",return_value=ULB_SHA256),
+              patch.object(b,"load_data",return_value="loaded"),
+              patch.object(b,"split_data",return_value=(self.train,self.validation,self.test)),
+              patch.object(b,"run_ulb_extensions_on_split",return_value=marker) as shared):
+            self.assertIs(b.run_ulb_extensions("source.csv",Path("output")),marker)
+            args=shared.call_args.args
+            self.assertIs(args[0],self.train);self.assertIs(args[1],self.validation)
+            self.assertEqual(args[2],self.partitions)
+            self.assertEqual(shared.call_args.kwargs["results"],b.ROOT/"results")
+
+    def test_actual_shared_split_keeps_models_and_cases_private_and_all_conditions(self):
+        import json
+        import run_b_validation as b
+        from sklearn.inspection import permutation_importance
+        before=data_sha256(b.ROOT/"results/tables/b_extensions.json")
+        with TemporaryDirectory(dir=b.ROOT/"data") as folder:
+            private,public=Path(folder)/"private",Path(folder)/"aggregate"
+            with (patch.object(b,"load_data",side_effect=AssertionError("do not reload test data")),
+                  patch.object(b,"split_data",side_effect=AssertionError("do not repartition")),
+                  patch.object(b,"train_model",wraps=b.train_model) as fit,
+                  patch("sklearn.inspection.permutation_importance",wraps=permutation_importance) as importance):
+                result=b.run_ulb_extensions_on_split(self.train,self.validation,self.partitions,
+                                                     private,results=public)
+            self.assertEqual(fit.call_count,13)  # 15 conditions, identical full subsets reused.
+            for call in fit.call_args_list:
+                self.assertTrue(call.args[0].index.isin(self.train.index).all())
+            self.assertTrue(importance.call_args.args[1].equals(get_features(self.validation)))
+            self.assertEqual(importance.call_args.kwargs["n_repeats"],5)
+            self.assertEqual(importance.call_args.kwargs["scoring"],"average_precision")
+            self.assertEqual(len(result["E03"]["conditions"]),15)
+            self.assertEqual(len(result["E05"]["importances"]),30)
+            self.assertTrue(all(len(r["repeats"])==5 for r in result["E05"]["importances"]))
+            self.assertEqual(len(list(private.glob("ulb_mask_*.npy"))),15)
+            self.assertTrue((private/"ulb_error_cases.csv").is_file())
+            self.assertFalse(list(public.rglob("*.csv")))
+            self.assertFalse(list(public.rglob("*.joblib")))
+            summary=json.loads((public/"tables/b_extensions.json").read_text())
+            self.assertEqual(summary["partitions"],self.partitions)
+            self.assertTrue((public/"figures/b_extensions.png").is_file())
+            self.assertFalse(summary["metadata"]["test_scored"])
+        self.assertEqual(data_sha256(b.ROOT/"results/tables/b_extensions.json"),before)
+
+    def test_wrong_partition_identity_stops_before_training(self):
+        import copy
+        import run_b_validation as b
+        wrong=copy.deepcopy(self.partitions);wrong["validation"]["frauds"]+=1
+        with TemporaryDirectory(dir=b.ROOT/"data") as folder,patch.object(b,"train_model") as fit:
+            with self.assertRaisesRegex(ValueError,"different validation split"):
+                b.run_ulb_extensions_on_split(self.train,self.validation,wrong,
+                                             Path(folder)/"private",results=Path(folder)/"aggregate")
+            fit.assert_not_called()
+            self.assertFalse((Path(folder)/"private").exists())
+
+
 class HandbookHistoryTests(unittest.TestCase):
     def setUp(self):
         self.events = pd.DataFrame({

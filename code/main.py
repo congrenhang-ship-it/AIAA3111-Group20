@@ -300,6 +300,7 @@ def run_team_validation(data_path, output):
         save_c_extension_figures,
     )
     from run_d_validation import evaluate_rule_extensions, rule_training_metrics
+    from run_b_validation import run_ulb_extensions_on_split, compact_metrics
     from temporal import evaluate_review_threshold, select_review_threshold
     from unsupervised import fit_configuration, score_improved_bundle
 
@@ -442,6 +443,22 @@ def run_team_validation(data_path, output):
         figures = save_c_extension_figures(extensions, share / "figures")
         extensions["publication"] = {"figure_sha256": {path.name: data_sha256(path) for path in figures}}
         write_json(share / "tables/c_extensions.json", extensions)
+        # Reuse B's implementation on the already verified A split. All fitted
+        # models/masks/cases remain private; aggregate evidence stays staged.
+        with threadpool_limits(limits=1):
+            b_extensions = run_ulb_extensions_on_split(
+                train, validation, partitions, stage / "b_extensions", results=share,
+            )
+        full_metrics = compact_metrics(b_frame)
+        if any(row["metrics"] != full_metrics for row in b_extensions["E03"]["conditions"]
+               if row["fraction"] == 1):
+            raise ValueError("E03 full-label reference differs from the shared classifier")
+        # The staging folder is renamed below; publish its final case location.
+        b_extensions["E05"]["private_cases"] = (
+            output / "b_extensions/ulb_error_cases.csv"
+        ).relative_to(ROOT).as_posix()
+        write_json(stage / "b_extensions/ulb_b_extensions.json", b_extensions)
+        write_json(share / "tables/b_extensions.json", b_extensions)
         write_json(stage / "rule_cases.json", rules.pop("cases"))
         bundle_path = stage / "models.joblib"
         joblib.dump(bundle, bundle_path)
@@ -460,7 +477,9 @@ def run_team_validation(data_path, output):
             "window_settings": {"seconds": TIME_WINDOW_SECONDS, "origin": 0},
             "E04": {"coverage": rules, "model_validation": rule_model_metrics},
             "E08": thresholds,
-            "pending_extensions": ["E03", "E05"],
+            "E03": b_extensions["E03"],
+            "E05": b_extensions["E05"],
+            "pending_extensions": [],
         }
         write_json(share / "tables/team_validation.json", report)
         stage.rename(output)

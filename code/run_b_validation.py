@@ -147,7 +147,7 @@ def extension_provenance():
         phase="validation", test_scored=False, group_G2_complete=False,
         source_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         code_sha256={name: data_sha256(ROOT / name) for name in (
-            "code/classification.py", "code/run_b_validation.py", "code/evaluation.py",
+            "code/classification.py", "code/run_b_validation.py", "code/main.py", "code/evaluation.py",
             "code/handbook.py", "code/temporal.py", "code/unsupervised.py")},
         python=platform.python_version(),
         versions={name: importlib.metadata.version(name) for name in ("numpy", "pandas", "scikit-learn", "scipy")},
@@ -161,16 +161,33 @@ def compact_metrics(frame):
 
 
 def run_ulb_extensions(data_path, output):
-    """E03/E05 only; all masks/models/cases stay private, one public summary."""
-    from classification import LABEL_FRACTIONS, LABEL_SEEDS, nested_label_masks, fixed_error_cases
-    from unsupervised import fit_isolation_forest, score_isolation_forest
-    from sklearn.inspection import permutation_importance
-
+    """Standalone E03/E05 command, sharing the team runner's implementation."""
     if data_sha256(data_path) != ULB_SHA256:
         raise ValueError("ULB file differs from A's pinned source")
     train, validation, test = split_data(load_data(data_path))
     partitions = split_summary((train, validation, test))
-    del test
+    return run_ulb_extensions_on_split(train, validation, partitions, output,
+                                       results=ROOT / "results")
+
+
+def run_ulb_extensions_on_split(train, validation, partitions, output, *, results):
+    """E03/E05 on A's supplied split; no loading/repartitioning or test scoring.
+
+    The team runner supplies private and aggregate staging directories. The
+    standalone command supplies the existing shared results directory.
+    """
+    from classification import LABEL_FRACTIONS, LABEL_SEEDS, nested_label_masks, fixed_error_cases
+    from unsupervised import fit_isolation_forest, score_isolation_forest
+    from sklearn.inspection import permutation_importance
+    from evaluation import partition_description
+
+    for name, frame in (("train", train), ("validation", validation)):
+        if partition_description(frame) != partitions[name]:
+            raise ValueError(f"B extensions received a different {name} split")
+    output, results = Path(output).resolve(), Path(results).resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    (results / "tables").mkdir(parents=True, exist_ok=True)
+    (results / "figures").mkdir(parents=True, exist_ok=True)
     X, V = get_features(train), get_features(validation)
     rows, cached = [], {}
     full_model = None
@@ -228,7 +245,7 @@ def run_ulb_extensions(data_path, output):
                            case_counts={str(key):int(value) for key,value in cases.category.value_counts().items()},
                            private_cases=str((output / 'ulb_error_cases.csv').relative_to(ROOT))))
     write_json(output / "ulb_b_extensions.json", result)
-    write_json(ROOT / "results/tables/b_extensions.json", result)
+    write_json(results / "tables/b_extensions.json", result)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -248,7 +265,7 @@ def run_ulb_extensions(data_path, output):
     axes[1].set(xlabel="AP decrease after permutation (5 repeats)", title="Fixed weighted LR: model reliance")
     fig.suptitle("ULB validation only - E03 / E05")
     fig.tight_layout()
-    fig.savefig(ROOT / "results/figures/b_extensions.png", dpi=160)
+    fig.savefig(results / "figures/b_extensions.png", dpi=160)
     plt.close(fig)
     print("E03/E05 completed", flush=True)
     return result
