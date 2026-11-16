@@ -1,0 +1,312 @@
+{
+  "date": "2026-11-15",
+  "dataset_id": "handbook",
+  "evidence_kind": "implementation_and_official_validation_readiness",
+  "official_data_available": true,
+  "A_N1_delivered": true,
+  "official_validation_complete": true,
+  "group_G2_complete": false,
+  "test_scored": false,
+  "C_N1": {
+    "implementation_complete": true,
+    "synthetic_interface_verified": true,
+    "official_ablation_pending": false,
+    "official_validation_complete": true
+  },
+  "C_N2": {
+    "causal_relation_features_complete": true,
+    "synthetic_increment_verified": true,
+    "official_increment_pending": false,
+    "official_validation_complete": true
+  },
+  "C_N3": {
+    "implementation_complete": true,
+    "all_nine_conditions_verified": true,
+    "official_stress_results_pending": false,
+    "official_validation_complete": true
+  },
+  "checks": {
+    "repository_tests_passed": 83,
+    "B_tests_passed": 8,
+    "total_checks_passed": 91,
+    "strict_past_and_same_timestamp_batching": true,
+    "inclusive_lower_window_boundary": true,
+    "last_repeated_edge_expiry": true,
+    "future_label_and_amount_independence": true,
+    "mask_nested_chunk_and_order_invariance": true,
+    "current_transactions_not_dropped": true,
+    "label_and_oracle_fields_excluded": true,
+    "four_views_share_identical_transaction_features": true,
+    "train_only_scaler_means_checked": true,
+    "missing_history_no_refit": true,
+    "persisted_model_scores_replay_exactly": true,
+    "public_private_boundaries_checked": true
+  },
+  "scale_check": {
+    "rows": 100000,
+    "window_seconds": 604800,
+    "elapsed_seconds": 0.273659750004299,
+    "prefix_future_invariance": true,
+    "chunked_mask_equal": true,
+    "note": "Generated causal-stream workload only; not a fraud dataset or model-quality experiment."
+  },
+  "synthetic_interface": {
+    "train_rows": 320,
+    "validation_rows": 128,
+    "fitted_models": 7,
+    "evaluated_rankings": 8,
+    "stress_conditions": 9,
+    "private_preview": "data/handbook_c_interface_20261115/shared",
+    "note": "Test-only fixture; NOT the Handbook simulator. No synthetic AP promoted as official evidence."
+  },
+  "code_sha256": {
+    "code/unsupervised.py": "03e51e99eccf25b9c22dce307129cd48218b9a57bb35923f3954cab5b1ae0655",
+    "code/evaluation.py": "b1e5266ff33cbb45ce5fe93b6170d8c93b63331297290e312ba31fdb8ae2b346",
+    "tests/test_c_modules.py": "27726ceb38c61046783b50888a036e1b2f520f00aacec05f0ba62c6fec102dc8"
+  },
+  "next_dependency": "A6 shared integration and A7/G2 freeze, followed by A8 held-out results for C7/C8; no further independent C development pending.",
+  "implementation_commit": "ae1ac5d00a4fad15f427779c717552db328292ab",
+  "last_updated": "2026-11-16",
+  "formal_acceptance": {
+    "date": "2026-11-16",
+    "source_commit": "ef16480e0523d56d9369bde523f92fd0f8af169a",
+    "branch_heads_reviewed": {
+      "main": "935b5c47f59f2b0aa8fec14371f1bb183593d55e",
+      "Task_A": "a5513f1c5160b008bacc72c5e7def01a3538190f",
+      "b/classification-interface": "ef16480e0523d56d9369bde523f92fd0f8af169a",
+      "codex/c-independent-modules": "5648bcd4837546ca3c0c3318633b0d00548692da",
+      "codex/d-pattern-mining": "33e07a3e02a888628f1f1adefd9f536aea0d0d72"
+    },
+    "all_reviewed_heads_contained_in_C": true,
+    "data_sha256": "cf359432b7ca090e4d8614793e100a59c8fd0bb18c9cf11f414fc61644ae4ab7",
+    "data_and_partition_identity_A_B_C_equal": true,
+    "feature_columns_A_B_C_equal": true,
+    "raw_view_fingerprints_A_B_C_equal": false,
+    "fingerprint_note": "Historical pre-fix observation; resolved by versioned numeric fingerprints, see fingerprint_resolution. Historical native hashes remain different and are not comparable to v2.",
+    "B_both_history_LR_AP_delta": 0.0,
+    "repository_tests_passed": 85,
+    "classification_tests_passed": 11,
+    "pip_check_passed": true,
+    "independent_runs": 2,
+    "all_metrics_costs_and_nine_stress_conditions_exact": true,
+    "eight_prediction_csv_sha256_exact": true,
+    "saved_model_scores_replay_exact": true,
+    "commands": [
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/main.py --prepare-handbook --output data/handbook/c_acceptance_20261116",
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/main.py --run-handbook-c --handbook-dir data/handbook/c_acceptance_20261116 --output data/handbook/c_validation_20261116",
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/main.py --run-handbook-c --handbook-dir data/handbook/c_acceptance_20261116 --output data/handbook/c_validation_20261116_replay"
+    ],
+    "additional_code_sha256": {
+      "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
+      "code/temporal.py": "c046dddcabc0fad2266ed6031712991f876104e369e9fd2cd84fa2402e98da0d",
+      "code/classification.py": "d92788dba8c59f3332eee5d72a1bff784e5e3fe6fac6800f6015b4dc3a43d3c0",
+      "code/main.py": "b678be7555791090657480fb82dda4c1d0bf7c4e583fc7c9b65b547f703e0f2e"
+    },
+    "formal_summary": "results/tables/handbook_c.json",
+    "group_G2_complete": false,
+    "test_scored": false,
+    "historical_checks_note": "Earlier synthetic evidence above is retained as a 2026-11-15 implementation record, not official performance evidence."
+  },
+  "fingerprint_resolution": {
+    "date": "2026-11-16",
+    "status": "fixed_and_verified",
+    "implementation_commit": "481ecd1fc7b3a0d8103afb166bb4b3b93bbaf745",
+    "scope": "Fingerprint-only canonicalization. Feature generation, model inputs, fitting parameters and evaluation unchanged.",
+    "version": "handbook-view-v2-time12",
+    "rule": "Sort integer row_id; declared column order; little-endian float64; round only time_sin/time_cos to 12 decimal places for hashing; normalize signed zero.",
+    "development_rows_compared": 437454,
+    "numeric_columns_compared": 19,
+    "reproduced_cause": "CPU/math implementation changes the final floating-point bit of sin/cos. Legacy exact hashes magnified harmless time-encoding differences into unrelated digests.",
+    "arm_dependency_change": {
+      "versions_before": [
+        "2.5.4",
+        "3.1.1"
+      ],
+      "versions_after": [
+        "2.4.4",
+        "3.0.2"
+      ],
+      "all_feature_values_bitwise_equal": true,
+      "legacy_hashes_equal": true
+    },
+    "arm_vs_x86_column_comparison": {
+      "Amount": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "time_sin": {
+        "unequal_rows": 71665,
+        "max_abs_delta": 1.1102230246251565e-16,
+        "max_ulp_delta": 1
+      },
+      "time_cos": {
+        "unequal_rows": 89185,
+        "max_abs_delta": 1.1102230246251565e-16,
+        "max_ulp_delta": 1
+      },
+      "customer_count_1d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "customer_mean_amount_1d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "customer_no_history_1d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "customer_amount_ratio_1d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "customer_amount_ratio_unavailable_1d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "customer_count_7d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "customer_mean_amount_7d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "customer_no_history_7d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "customer_amount_ratio_7d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "customer_amount_ratio_unavailable_7d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "terminal_count_1d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "terminal_mean_amount_1d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "terminal_no_history_1d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "terminal_count_7d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "terminal_mean_amount_7d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      },
+      "terminal_no_history_7d": {
+        "unequal_rows": 0,
+        "max_abs_delta": 0.0,
+        "max_ulp_delta": 0
+      }
+    },
+    "environments": [
+      {
+        "machine": "arm64",
+        "python": "3.12.14",
+        "numpy": "2.5.4",
+        "pandas": "3.1.1",
+        "label": "arm_A"
+      },
+      {
+        "machine": "arm64",
+        "python": "3.12.14",
+        "numpy": "2.4.4",
+        "pandas": "3.0.2",
+        "label": "arm_B"
+      },
+      {
+        "machine": "x86_64",
+        "python": "3.12.4",
+        "numpy": "2.4.4",
+        "pandas": "3.0.2",
+        "label": "x86_B"
+      }
+    ],
+    "v2_eight_hashes_equal_across_all_three_environments": true,
+    "v2_partition_fingerprints": {
+      "train": {
+        "transaction_only": "220502fb70902f80d31ec61de4b9bcbf0c063ce882eb0eb470b579f82275c247",
+        "customer_history": "9209ebb673c0b8a4dbf728f7aef2bcb52bb46abe460b6f69cd67f272bca589cb",
+        "terminal_history": "1de28eaca76d235e7dac3afdfc8d10d806c979f61a3e6dd0e325a803420fe12c",
+        "both_history": "5afe022d8905178603cc1d76007164da56673d3dca111450a087207e42bce9ac"
+      },
+      "validation": {
+        "transaction_only": "b3588f4c1b9a221c6a01696f22da650191ae7ee5206003779d76afe528d1a640",
+        "customer_history": "b8eabea6c0d84f6bc6b05dd235620089ed3fbeca401ac56faa852085d0cca2cc",
+        "terminal_history": "5fceee5ad0c56b2ca39b91f6d0e7799b5b58668907a9a7078d1918cbc2b1604b",
+        "both_history": "3237e395d2b220a5f8c6b4536014f4d1864a8a7dc1e10b7db0c30709693f85a5"
+      }
+    },
+    "source_line_endings": {
+      "code/classification.py": {
+        "LF_matches": false,
+        "CRLF_matches": true
+      },
+      "code/run_b_validation.py": {
+        "LF_matches": true,
+        "CRLF_matches": false
+      },
+      "code/evaluation.py": {
+        "LF_matches": false,
+        "CRLF_matches": true
+      },
+      "code/handbook.py": {
+        "LF_matches": false,
+        "CRLF_matches": true
+      },
+      "code/temporal.py": {
+        "LF_matches": false,
+        "CRLF_matches": true
+      },
+      "code/unsupervised.py": {
+        "LF_matches": false,
+        "CRLF_matches": true
+      }
+    },
+    "historical_limit": "The archived Windows A/B per-row feature values were not committed. Their exact legacy digests were not recreated; no claim of bitwise equality to those missing arrays. Old results and digests remain in Git history.",
+    "B_C_actual_runner_v2_fingerprints_equal": true,
+    "B_four_view_metrics_amounts_and_cold_start_unchanged": true,
+    "C_all_metrics_costs_nine_stress_conditions_unchanged": true,
+    "C_eight_prediction_csv_sha256_unchanged": true,
+    "checks": {
+      "repository_tests_passed": 88,
+      "classification_tests_passed": 11,
+      "total": 99,
+      "pip_check_passed": true
+    },
+    "commands": [
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/main.py --run-handbook-c --handbook-dir data/handbook/c_acceptance_20261116 --output data/handbook/c_fingerprint_v2_20261116",
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/run_b_validation.py --handbook --handbook-dir data/handbook/c_acceptance_20261116 --output data/handbook/b_fingerprint_v2_20261116"
+    ],
+    "private_diagnostic_artifacts": "data/fingerprint_audit_20261116/",
+    "test_scored": false,
+    "group_G2_complete": false
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "split_fractions_target": [
+    0.6,
+    0.2,
+    0.2
+  ],
+  "rows_removed_as_exact_duplicates": 1081,
+  "partitions": {
+    "train": {
+      "rows": 170235,
+      "frauds": 342,
+      "time_min": 0.0,
+      "time_max": 120392.0,
+      "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+    },
+    "validation": {
+      "rows": 56745,
+      "frauds": 57,
+      "time_min": 120393.0,
+      "time_max": 145233.0,
+      "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+    },
+    "test": {
+      "rows": 56746,
+      "frauds": 74,
+      "time_min": 145234.0,
+      "time_max": 172792.0,
+      "row_ids_sha256": "4909103f5579d282c4faa1ca32c3c57fdf328e5d2ade9533a297d3e0254ca5c9"
+    }
+  },
+  "experiment": {
+    "split": "validation",
+    "model": "logistic_regression",
+    "strategy": "original",
+    "seed": 42,
+    "feature_columns": [
+      "Time",
+      "V1",
+      "V2",
+      "V3",
+      "V4",
+      "V5",
+      "V6",
+      "V7",
+      "V8",
+      "V9",
+      "V10",
+      "V11",
+      "V12",
+      "V13",
+      "V14",
+      "V15",
+      "V16",
+      "V17",
+      "V18",
+      "V19",
+      "V20",
+      "V21",
+      "V22",
+      "V23",
+      "V24",
+      "V25",
+      "V26",
+      "V27",
+      "V28",
+      "Amount"
+    ],
+    "review_fractions": [
+      0.001,
+      0.005,
+      0.01,
+      0.02
+    ],
+    "window_seconds": 3600,
+    "window_origin": 0,
+    "overall": {
+      "status": "ok",
+      "n_samples": 56745,
+      "n_positive": 57,
+      "prevalence": 0.0010044937879989425,
+      "AP": 0.6424292493857157,
+      "budgets": [
+        {
+          "review_fraction": 0.001,
+          "actual_review_fraction": 0.0010044937879989425,
+          "K": 57,
+          "TP": 37,
+          "FP": 20,
+          "FN": 20,
+          "TN": 56668,
+          "precision_at_k": 0.6491228070175439,
+          "recall_at_k": 0.6491228070175439,
+          "random_expected_TP": 0.05725614591593972,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.0010044937879989425
+        },
+        {
+          "review_fraction": 0.005,
+          "actual_review_fraction": 0.005004846241959644,
+          "K": 284,
+          "TP": 46,
+          "FP": 238,
+          "FN": 11,
+          "TN": 56450,
+          "precision_at_k": 0.1619718309859155,
+          "recall_at_k": 0.8070175438596491,
+          "random_expected_TP": 0.2852762357916997,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.005004846241959644
+        },
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010009692483919287,
+          "K": 568,
+          "TP": 48,
+          "FP": 520,
+          "FN": 9,
+          "TN": 56168,
+          "precision_at_k": 0.08450704225352113,
+          "recall_at_k": 0.8421052631578947,
+          "random_expected_TP": 0.5705524715833994,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.010009692483919287
+        },
+        {
+          "review_fraction": 0.02,
+          "actual_review_fraction": 0.020001762269803505,
+          "K": 1135,
+          "TP": 48,
+          "FP": 1087,
+          "FN": 9,
+          "TN": 55601,
+          "precision_at_k": 0.04229074889867841,
+          "recall_at_k": 0.8421052631578947,
+          "random_expected_TP": 1.1401004493787998,
+          "random_expected_precision": 0.0010044937879989425,
+          "random_expected_recall": 0.020001762269803505
+        }
+      ],
+      "threshold": null,
+      "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+    }
+  },
+  "sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+  "matches_ulb_v1": true
+}

@@ -1,0 +1,446 @@
+{
+  "status": "D4_common_environment_verified",
+  "group_G2_complete": false,
+  "test_rule_evaluation": false,
+  "python": "3.12.14",
+  "packages": {
+    "cloudpickle": "3.1.2",
+    "contourpy": "1.4.0",
+    "cycler": "0.12.1",
+    "fonttools": "4.68.0",
+    "imbalanced-learn": "0.14.2",
+    "joblib": "1.6.0",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.11.2",
+    "mlxtend": "0.25.0",
+    "narwhals": "2.28.0",
+    "numpy": "2.5.4",
+    "packaging": "26.3",
+    "pandas": "3.1.1",
+    "pillow": "13.0.0",
+    "pyparsing": "3.3.3",
+    "python-dateutil": "4.0.0",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "seaborn": "0.13.2",
+    "sklearn-compat": "0.1.6",
+    "threadpoolctl": "3.8.0",
+    "tzdata": "2026.6"
+  },
+  "dependency_mismatches": {},
+  "reference_implementation_commit": "2713837ad30d1e130883c7caf7877e5dcedf20fd",
+  "preprocessing_commit": "a936f29427bd9b76e1ce85dab079d75808530ed0",
+  "replay_source_sha256": {
+    "preprocessing.py": "45f94c471a4d71129ab7a66a3693e81ee534b7293060db4584438a8b398d9e50",
+    "pattern_mining.py": "f506177d32432b9681316ad9c727d1dc1c17d3b6ebf41942010fb96a7c612a1c",
+    "run_d_validation.py": "72f07b422e1e87197b5fe8674dd50273a956a6d8a33b493ef4cf65a1cef1c7fa"
+  },
+  "data_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+  "partitions": {
+    "train": {
+      "rows": 170235,
+      "frauds": 342,
+      "row_ids_sha256": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333"
+    },
+    "validation": {
+      "rows": 56745,
+      "frauds": 57,
+      "row_ids_sha256": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1"
+    },
+    "test": {
+      "rows": 56746,
+      "frauds": 74,
+      "row_ids_sha256": "4909103f5579d282c4faa1ca32c3c57fdf328e5d2ade9533a297d3e0254ca5c9"
+    }
+  },
+  "candidate_rows_compared": 63,
+  "retained_rules": 21,
+  "max_boundary_absolute_difference": 0.0,
+  "float_tolerance": {
+    "rtol": 1e-12,
+    "atol": 1e-12
+  },
+  "frozen_binner": {
+    "schema_version": 1,
+    "feature_columns": [
+      "Amount",
+      "V17",
+      "V14",
+      "V12",
+      "V3"
+    ],
+    "binning": "equal_frequency",
+    "requested_bins": 3,
+    "max_length": 3,
+    "interval_policy": "left_closed_cut_goes_right_outer_bins_unbounded",
+    "missing_policy": "raise",
+    "limits": {
+      "min_coverage": 20,
+      "min_fraud_coverage": 5,
+      "min_lift_exclusive": 1.0,
+      "max_rules": 50
+    },
+    "features": {
+      "Amount": {
+        "cut_points": [
+          9.99,
+          50.0
+        ],
+        "train_min": 0.0,
+        "train_max": 19656.53,
+        "effective_bins": 3
+      },
+      "V17": {
+        "cut_points": [
+          -0.28451140583566836,
+          0.26387525106042964
+        ],
+        "train_min": -25.1627993693248,
+        "train_max": 9.25352625047285,
+        "effective_bins": 3
+      },
+      "V14": {
+        "cut_points": [
+          -0.17888387593912636,
+          0.3664203387990453
+        ],
+        "train_min": -19.2143254902614,
+        "train_max": 10.5267660517847,
+        "effective_bins": 3
+      },
+      "V12": {
+        "cut_points": [
+          -0.2537695828426037,
+          0.44072625319830894
+        ],
+        "train_min": -18.6837146333443,
+        "train_max": 7.8483920756446,
+        "effective_bins": 3
+      },
+      "V3": {
+        "cut_points": [
+          0.20770936419133398,
+          1.0713883486110165
+        ],
+        "train_min": -33.6809840183525,
+        "train_max": 9.38255843282114,
+        "effective_bins": 3
+      }
+    }
+  },
+  "frozen_rules": [
+    {
+      "rule_id": "R001",
+      "antecedent": [
+        {
+          "feature": "V12",
+          "bin": 0
+        },
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R002",
+      "antecedent": [
+        {
+          "feature": "V14",
+          "bin": 0
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R003",
+      "antecedent": [
+        {
+          "feature": "V12",
+          "bin": 0
+        },
+        {
+          "feature": "V14",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R004",
+      "antecedent": [
+        {
+          "feature": "V14",
+          "bin": 0
+        },
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R005",
+      "antecedent": [
+        {
+          "feature": "V12",
+          "bin": 0
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R006",
+      "antecedent": [
+        {
+          "feature": "V17",
+          "bin": 0
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R007",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V12",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R008",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V14",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R009",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R010",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        },
+        {
+          "feature": "V12",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R011",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        },
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R012",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        },
+        {
+          "feature": "V14",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R013",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        },
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R014",
+      "antecedent": [
+        {
+          "feature": "V14",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R015",
+      "antecedent": [
+        {
+          "feature": "V12",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R016",
+      "antecedent": [
+        {
+          "feature": "V3",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R017",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R018",
+      "antecedent": [
+        {
+          "feature": "V17",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R019",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R020",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 0
+        },
+        {
+          "feature": "V17",
+          "bin": 2
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    },
+    {
+      "rule_id": "R021",
+      "antecedent": [
+        {
+          "feature": "Amount",
+          "bin": 2
+        }
+      ],
+      "consequent": {
+        "Class": 1
+      }
+    }
+  ],
+  "note": "Original bins/rules preserved; no reselection; A confirms group G2 separately."
+}
