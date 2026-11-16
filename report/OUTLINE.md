@@ -1,26 +1,27 @@
 # Report working outline — D1
 
-Status: outline only; no ULB experiment has been run by D. Do not turn placeholders
-into performance claims. Main text target: 8 pages (allowed 6–10); references,
+Status: page/evidence plan supporting the integrated validation draft. D has
+completed ULB rules and E04 validation; Handbook D-N1 and final test material
+remain outstanding. Main text target: 8–10 pages (allowed 6–10); references,
 disclosures and appendices are outside the main-text count. Final pagination
 must be checked after the real tables and figures are available.
 
 | Planned pages | Shared story and evidence | Lead contribution |
 |---|---|---|
 | 1 | Problem: finite review capacity; research questions; contributions supported by actual experiments | All; D integrates |
-| 2 | Data provenance/hash, audit decisions, chronological split counts; common leakage boundaries | A |
+| 2 | ULB, Handbook and PaySim provenance, split counts and leakage boundaries | A |
 | 3 | Risk-ranking methods and compact settings table: four classifiers, representative imbalance contrasts, K-means and Isolation Forest | B/C |
 | 4 | Common evaluation protocol: AP/PR, stable ranking, K rounding, random baseline, validation selection and frozen test protocol | C/A |
 | 5 | Same-budget results: PR figure and main budget table; which observed differences matter at the chosen primary budget? | B/C |
 | 6 | Complementary fraud coverage and exactly-K combined lists; group and relative-time differences with counts/uncertainty | C/A |
-| 7 | Training-only rule discovery and held-out stability; link frozen-rule coverage to actual errors; representative cases | D with B/C |
-| 8 | Limitations, justified conclusions, reproducibility summary | All |
+| 7 | ULB rules, overlap and error associations; semantic rule/mechanism diagnosis remains pending | D with B/C |
+| 8–10 | Labels/importance and Handbook context/reliability combination panels; compact PaySim reference, limitations and conclusion | All |
 
 Keep algorithm descriptions short so equal-budget evidence drives the narrative.
 If 8 pages become crowded, allow up to 10 rather than shrinking text excessively.
 If rules show no reliable generalization, report that outcome and its counts.
 
-## Planned evidence register (nothing is populated yet)
+## Evidence register (validation available; formal test pending)
 
 | ID | Required artifact | Owner | Source needed |
 |---|---|---|---|
@@ -34,6 +35,8 @@ If rules show no reliable generalization, report that outcome and its counts.
 
 ## Integration checklist for later D6
 
+- B writing from b73df08 is merged; Report.md/Poster.md now include E03/E05 and
+  the completed second-data validation. D-N1 and A8 remain pending.
 - Each author supplies methods, actual findings, limitations, source table/figure,
   command, environment, data hash and code commit for their module.
 - Clearly distinguish training, validation and final test in filenames/captions.

@@ -17,11 +17,13 @@ AIAA 3111 Course Project · Group 20
 | 保留的成员分支 | 本次合入的最新提交 | 交付 |
 |---|---|---|
 | Task_A | a5513f1 | ULB 统一验证/E08、Handbook 数据/E11、PaySim |
-| b/classification-interface | ef16480 | 分类基线、E03/E05、Handbook 历史/冷启动 |
+| b/classification-interface | b73df08 | 分类基线、E03/E05、Handbook 历史/冷启动，以及新增正文和讲解材料 |
 | codex/c-independent-modules | 304baa3 | 聚类/异常及公共评价、C 全部扩展、指纹修复和 B/C 共同环境验收 |
 | codex/d-pattern-mining | 33e07a3 | ULB 规则/E04、复现说明、报告/海报验证稿 |
 
 上述内容已包含在 main，不需要组员重复拣选提交。B 的 E03/E05 已接入 --run-team-validation，原独立命令仍可使用，两者共用同一实现。A6 和 B-E1/E2 已验收完成。D-N1、G2、正式测试及最终 PDF 继续按 [TASKS.md](TASKS.md) 推进。
+
+写作同步（2026-11-16）：B 的 b73df08 已合入 main。[报告验证稿](report/Report.md)已整合分类/标签/重要性正文、Handbook 历史/冷启动及现有 C/A/PaySim 验证结果；[海报验证稿](poster/Poster.md)及两份大纲同步更新，删除了 E03/E05 待交付、仅 ULB 和第二数据集尚未开展的过期说明。[B 方法与讲解材料](report/B_CLASSIFICATION.md)保留完整来源表及讲解要点。B6/D6 的验证稿整合部分已完成，D-N1、正式测试后的最终图文、G3 和 PDF 导出仍待完成。正文 6–10 页须在最终排版时核对。
 
 查看最新主线：
 
@@ -192,9 +194,9 @@ python code/main.py --run-paysim-validation --paysim-archive data/paysim_v2.zip 
 | 成员 | 现在可独立做 | 交付之后 |
 |---|---|---|
 | A | A6 及 E03/E05 接入验收完成，ULB 可进入 A7 冻结整理 | 各数据线具备条件即 A7/A8 |
-| B | 原扩展及 Handbook 共同环境验收完成，推进 B6 | A8 后补正式结果及 B7 核对 |
+| B | 验证正文与讲解材料已合入 main 并整合报告/海报 | A8 后补 B6 正式结果及 B7 核对 |
 | C | C-N1/N2/N3 正式验证、复跑、组合图及解释已完成 | 各线 A7/A8 后补 C7/C8 正式 test 图文 |
-| D | 现有稿件继续；准备语义特征规则与机制解释 | A-N1 后 D-N1，逐线收取证据并做 D5–D7 |
+| D | 验证稿过期描述已更新；继续 D-N1 和独立复现 | A8 后完成 D6 正式整合，再 D7 导出/演练 |
 
 具体编号、依赖和验收见 [TASKS.md](TASKS.md)。不等待他人最终图表再写已有方法；B/D 可先生成标准预测/覆盖，之后直接复用 C 的新增评价。C 不接管全部实验，D 不代写其他人的全部技术部分。
 

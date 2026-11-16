@@ -1,21 +1,26 @@
 # Credit Card Fraud Detection under a Limited Review Budget
 
-Group 20 · Content editing draft · 2026-11-14
+Group 20 · Content editing draft · 2026-11-16
 
 **Validation preview.** Final A8 evidence, course layout dimensions and author
-details remain outstanding; this is not the submission poster.
+details and Handbook rule/mechanism analysis remain outstanding; this is not
+the submission poster.
 
 ## Question
 
 When only a small fraction of transactions can be reviewed, do anomaly detection
 and classification find complementary fraud? Do short feature rules offer
-stable diagnostic associations?
+stable diagnostic associations? How do labels and customer/terminal context
+affect detection at the same review capacity?
 
-## One shared protocol
+## Shared review task and three datasets
 
-- ULB/Worldline data; fixed CSV SHA-256 and stable transaction IDs.
-- Chronological train/validation/test: 170,235 / 56,745 / 56,746 transactions.
-- Primary capacity: 1% of validation, exactly 568 reviews; 57 validation frauds.
+- ULB is the main real-data comparison; fixed CSV SHA-256 and stable IDs.
+- ULB train/validation/test: 170,235 / 56,745 / 56,746 transactions.
+- Handbook: 583,193 simulated transactions over 60 days, split 30/15/15 days.
+- PaySim: fixed approximately 10% sample, 635,359 transactions; lightweight reference.
+- Primary capacity: 1%; ULB validation has K=568 and 57 frauds.
+- Datasets are modeled separately; histories use only strictly earlier transactions.
 - Rank by score descending, row_id ascending. Fit preprocessing on training.
 - Select on development/validation; final test awaits the group G2 freeze.
 
@@ -61,17 +66,47 @@ C has now delivered validation amount/reference/cost/interval evidence: at K=568
 classifier fraud-amount coverage is 73.48%, IF 37.78%, Amount-descending 28.30%
 (only two frauds). Classifier recall's paired row interval is [76.92%,94.65%];
 it conditions on the fixed model/current sample, not all model-selection
-uncertainty. Label-budget, importance and threshold-migration evidence still
-awaits B/A. Formal test evidence for all extensions remains pending A8; no
-second dataset is part of this round.
+uncertainty.
+
+## Labels, model reliance and contextual validation
+
+E03/E05 and E08 are now delivered and included in the shared ULB validation
+entry. With 5% labeled training data, mean AP is 0.3799 (three-seed range
+0.2562–0.6259), compared with full-label AP 0.7727. Amount has the largest
+permutation AP decrease (0.580432); this is fixed-model reliance, not causality.
+The label experiment's IF256 reference is distinct from the selected IF4096.
+Fixed validation thresholds show varying hourly review rates; they are
+validation diagnostics, not independent held-out results.
+
+On Handbook, both-history LR detects 342/1,291 frauds at K=1,454, versus
+331 for transaction-only LR; AP falls from 0.255353 to 0.208312. Adding
+relationship features reduces two-history LR detections to 334 and IF from
+124 to 82. History therefore does not uniformly improve the fixed models.
+With 30% missing history, fixed IF detects 74–82 frauds across seeds. The
+19 new-customer transactions have no frauds, so cold-start detection is not
+estimable. Rolling/label-delay and full stress evidence are available in the
+Handbook summaries; semantic-rule/mechanism analysis remains pending D-N1.
+
+PaySim's K=1,274 lists detect 6/64 frauds for weighted LR and amount ranking,
+and 4/64 for IF256. This limited-field simulated reference does not establish
+strong real-world transfer. All findings shown here are validation evidence;
+formal test results for the three data lines remain pending A7/A8.
 
 Validation supports the selected classifier at the stated capacity and shows
 no combination gain under the examined policy. Final generalization and rule
-coverage of prediction errors remain pending. Two-day data, anonymous features,
-small fraud counts and development choices limit conclusions. Anomaly is not
+coverage of prediction errors remain pending. ULB's two-day observation, anonymous
+features, small fraud counts, simulated mechanisms and development choices
+limit conclusions. Anomaly is not
 fraud; association is not causality.
 
-Evidence: B `55ee151`, C `a936f29`, D's rule manifest and common-environment
-record. Dataset attribution: ULB/Worldline, Zenodo 7395559. Source and AIGC
-records must be checked against the final report before export. D7 will set
-final dimensions, typography, figure labels and PDF checks after G3.
+Evidence: [shared ULB validation](../results/tables/a_team_validation.json),
+[B labels/importance](../results/tables/b_extensions.json),
+[Handbook A](../results/tables/handbook_a.json),
+[B](../results/tables/handbook_b.json), [C](../results/tables/handbook_c.json),
+[PaySim](../results/tables/paysim_a.json), and
+[D rule findings](../report/D_VALIDATION_RESULTS.md). B's report and presentation
+material from b73df08 is integrated in main. Attribution: ULB/Worldline,
+Fraud Detection Handbook and the author's PaySim release, with pinned sources
+and licenses in [data/README.md](../data/README.md). Source and AIGC records
+remain part of the final report review. D7 sets dimensions, typography, figure
+labels and PDF checks after G3.

@@ -124,7 +124,7 @@ With 5% labeled training data, mean AP is 0.3799, ranging from 0.2562 to 0.6259 
 
 ### Handbook context and cold-start findings
 
-We fit the same weighted LR separately on four A-provided feature views, using identical training and validation transactions and strictly past-only histories. Source data, partitions and all eight train/validation view fingerprints agree with the shared delivery. Transaction-only, customer-history, terminal-history and both-history AP values are respectively 0.255353, 0.218989, 0.235494 and 0.208312. At the common K=1,454, they detect 331, 348, 325 and 342 of 1,291 validation frauds. Histories therefore do not uniformly improve AP, although customer history increases detection at the declared capacity. Both-history remains the predeclared reference; the ablation does not trigger further view selection.
+We fit the same weighted LR separately on four A-provided feature views, using identical training and validation transactions and strictly past-only histories. Source data and partitions match A's handoff; B/C share the eight versioned v2 numeric view fingerprints. Transaction-only, customer-history, terminal-history and both-history AP values are respectively 0.255353, 0.218989, 0.235494 and 0.208312. At the common K=1,454, they detect 331, 348, 325 and 342 of 1,291 validation frauds. Histories therefore do not uniformly improve AP, although customer history increases detection at the declared capacity. Both-history remains the predeclared reference; the ablation does not trigger further view selection.
 
 Cold-start groups are anchored to entities observed in the initial training segment. Of 145,315 validation transactions, 145,296 involve previously seen customers and terminals. Only 19 involve new customers, none are fraudulent, and the two new-terminal groups are empty. AP and recall are undefined for these groups; this dataset provides insufficient evidence about cold-start fraud detection. It cannot support demographic-fairness claims. All findings above concern validation, with formal held-out evaluation pending the group freeze. The simulator's designed mechanisms and the datasets' different prevalences also limit cross-dataset generalization.
 
@@ -137,7 +137,7 @@ Cold-start groups are anchored to entities observed in the initial training segm
 | 历史消融、冷启动 | [组合图](../results/figures/handbook_b_ablation.png)、[完整汇总](../results/tables/handbook_b.json) | 四组静态模型，不与 A 的滚动快照混比 |
 | 统一接入与共同环境验收 | [主线记录](../results/tables/a_team_validation.json) | 102 项通过为远程主线验收记录，不是本机新运行的检查 |
 
-`Report.md` 仍保留旧的“B 的 E03/E05 await delivery”和“第二数据集属于 future work”段落。D 整合时应按最新主线和本稿替换；旧稿不能作为最终状态依据。B 的正文可先整合，不需要等待 D 的 Handbook 规则结果。
+2026-11-16 整合更新：本稿的方法、标签/重要性及历史/冷启动验证正文已整合到 Report.md，Poster.md 已同步核心发现；旧的待交付和仅 ULB 范围描述已替换。讲解要点和 A8 后核对清单保留在本稿。B6 的正式测试补充与 B7 的最终核对仍待 A7/A8/G3。
 
 ## B7 讲解准备：可核查的回答要点
 

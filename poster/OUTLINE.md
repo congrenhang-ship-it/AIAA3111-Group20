@@ -1,12 +1,14 @@
 # Poster working outline — D1
 
-Status: content plan, not a completed poster. Layout size/orientation must follow
+Status: content/layout plan accompanying the updated three-dataset validation
+poster draft. Layout size/orientation must follow
 the course brief when confirmed. D6 will integrate only completed experiments;
 D7 exports Poster.pdf after G3.
 
 Title: Credit Card Fraud Detection under a Limited Review Budget
 
 Reading order:
+
 1. **Question and protocol** — limited human review, common chronological split,
    training/validation/test boundaries, same-budget comparison (A/C).
 2. **Main evidence** — largest panel: public PR/budget figure and compact table;
@@ -17,6 +19,9 @@ Reading order:
    counts and held-out stability; report no reliable rules if applicable (D).
 5. **Takeaways and limits** — claims supported by final evidence, reproducibility
    link, data attribution, actual required disclosures (all).
+6. **Context and reliability inset** — compact Handbook history/relationship/
+   missing-context comparison; PaySim remains a small external-reference note.
+   Keep the ULB capacity/complementarity panels dominant.
 
 Pending inputs: official poster format, group member names, G2 configurations,
 final result tables/figures and disclosures. Do not populate illustrative numbers.
