@@ -1677,5 +1677,41 @@ class CHandbookInterfaceTests(unittest.TestCase):
                                    dataset_manifest=self.manifest,output=root/"new",results=root/"shared")
             self.assertFalse((root/"new").exists())
 
+class CHandbookFingerprintTests(unittest.TestCase):
+    def setUp(self):
+        self.frame = pd.DataFrame({"Amount": [12.5, 0.0], "time_sin": [0.5, -0.0],
+                                   "count": [3.0, 0.0]}, index=pd.Index([9, 2], name="row_id"))
+
+    def test_numeric_fingerprint_is_row_order_dtype_and_endian_independent(self):
+        from unsupervised import _handbook_view_fingerprints
+        before = self.frame.copy(deep=True)
+        expected = _handbook_view_fingerprints({"v": self.frame})
+        self.assertEqual(expected, {"v": "2bbc616a67e9c48afec3a1bb5d0502d8524ec916afdf285b3be745e23c52f6db"})
+        other = self.frame.iloc[::-1].astype(">f8")
+        other.index = other.index.astype("int32")
+        self.assertEqual(_handbook_view_fingerprints({"v": other}), expected)
+        right = self.frame.copy();right.loc[9,"time_sin"] = np.nextafter(0.5,1.0)
+        right.loc[2,"time_sin"] = 0.0
+        self.assertEqual(_handbook_view_fingerprints({"v": right}), expected)
+        pd.testing.assert_frame_equal(self.frame,before)
+
+    def test_money_history_and_material_time_differences_still_change_hash(self):
+        from unsupervised import _handbook_view_fingerprints
+        expected = _handbook_view_fingerprints({"v": self.frame})
+        for col in ("Amount","count","time_sin"):
+            with self.subTest(column=col):
+                right=self.frame.copy()
+                right.loc[9,col] = (self.frame.loc[9,col]+1e-8 if col=="time_sin"
+                                    else np.nextafter(self.frame.loc[9,col],np.inf))
+                self.assertNotEqual(_handbook_view_fingerprints({"v":right}),expected)
+        for right in (self.frame.rename(index={9:8}),self.frame[["count","Amount","time_sin"]]):
+            self.assertNotEqual(_handbook_view_fingerprints({"v":right}),expected)
+
+    def test_invalid_identity_and_nonfinite_features_rejected(self):
+        from unsupervised import _handbook_view_fingerprints
+        for bad in (self.frame.set_axis([1,1]),self.frame.set_axis([1.5,2.5]),
+                    self.frame.set_axis([2**53,2]),self.frame.assign(Amount=np.nan)):
+            with self.assertRaises(ValueError):_handbook_view_fingerprints({"v":bad})
+
 if __name__ == "__main__":
     unittest.main()

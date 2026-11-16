@@ -1609,6 +1609,7 @@ def fit_handbook_c(train, train_views, relation_features):
         "models": models,
         "config": {"feature_columns": {n:list(x.columns) for n,x in views.items()},
                    "train_view_sha256": _handbook_view_fingerprints(views),
+                   "feature_fingerprint_version": HANDBOOK_FINGERPRINT_VERSION,
                    "model_views": model_views, "amount_bins": fit_amount_bins(train),
                    "train_partition": partition_description(train),
                    "relation_columns": list(RELATION_COLUMNS), "relation_window_seconds": 7*86400,
@@ -1619,12 +1620,35 @@ def fit_handbook_c(train, train_views, relation_features):
     }
 
 
+HANDBOOK_FINGERPRINT_VERSION = "handbook-view-v2-time12"
+
+
 def _handbook_view_fingerprints(views):
-    """Named-column and row-keyed numeric fingerprints under the pinned pandas."""
+    """Cross-platform numeric fingerprints; model inputs are never modified.
+
+    Hash sorted row IDs, declared columns and little-endian float64 values.
+    Only time_sin/time_cos are rounded (12 decimal places); other values stay
+    exact. Normalize signed zero. Version this format separately from the old
+    unversioned pandas/bitwise hashes, which remain in historical evidence.
+    """
     result = {}
     for name, frame in views.items():
-        h = hashlib.sha256(json.dumps(list(frame.columns)).encode())
-        h.update(pd.util.hash_pandas_object(frame, index=True).to_numpy(dtype="<u8").tobytes())
+        if (not frame.index.is_unique or not pd.api.types.is_integer_dtype(frame.index.dtype)
+                or (frame.index < 0).any() or (frame.index >= 2**53).any()):
+            raise ValueError("Fingerprint requires unique nonnegative integer row_ids below 2**53")
+        ordered = frame.sort_index()
+        values = _features(ordered).to_numpy(dtype="<f8", copy=True)
+        for col in ("time_sin", "time_cos"):
+            if col in ordered:
+                i = ordered.columns.get_loc(col)
+                values[:, i] = np.round(values[:, i], 12)
+        values[values == 0] = 0.0
+        header = {"version": HANDBOOK_FINGERPRINT_VERSION,
+                  "columns": list(ordered.columns), "shape": list(values.shape)}
+        h = hashlib.sha256(json.dumps(header, ensure_ascii=False, sort_keys=True,
+                                      separators=(",", ":")).encode("utf-8"))
+        h.update(ordered.index.to_numpy(dtype="<i8").tobytes())
+        h.update(np.ascontiguousarray(values, dtype="<f8").tobytes())
         result[name] = h.hexdigest()
     return result
 

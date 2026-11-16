@@ -258,7 +258,7 @@ def run_handbook_b(dataset_dir, output):
     """E10/E13: four fixed LR fits using A's views; no test or view selection."""
     from handbook import load_handbook_development
     from classification import cold_start_groups
-    from unsupervised import _checked_handbook_views, _handbook_view_fingerprints
+    from unsupervised import _checked_handbook_views, _handbook_view_fingerprints, HANDBOOK_FINGERPRINT_VERSION
     from evaluation import evaluate_amounts, evaluate_groups, fit_amount_bins
     development = load_handbook_development(dataset_dir)
     expected = json.loads((ROOT / 'results/tables/handbook_a.json').read_text(encoding='utf-8'))['A_N1']['production']
@@ -297,6 +297,7 @@ def run_handbook_b(dataset_dir, output):
         print(f"Handbook {name}: AP={metrics['AP']:.6f}", flush=True)
     result = dict(dataset_id='handbook', metadata=extension_provenance(), evidence_kind='handbook_validation',
                   manifest=development['manifest'], feature_fingerprints=dict(train=_handbook_view_fingerprints(views), validation=_handbook_view_fingerprints(valid_views)),
+                  feature_fingerprint_version=HANDBOOK_FINGERPRINT_VERSION,
                   fixed_reference='both_history; all four views retained, no selection', cold_start_rule='initial training entities, not development updates',
                   amount_bins=bins, conditions=conditions)
     write_json(output / 'handbook_b.json', result)
