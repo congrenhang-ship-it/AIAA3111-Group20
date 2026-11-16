@@ -8,35 +8,37 @@ A 协调整合与公共节点，D 维护共享清单和材料，各人更新自�
 
 | 成员 | 现在先做 | 完成后连续推进 | 等待条件 |
 |---|---|---|---|
-| A | A-N1/N2/N3 已交付；A6 将最新 A/B/C/D 整合到 main | 统一环境核对后分线 A7/G2 → A8 → A9 | Handbook 尚缺 D-N1；不能把模块 freeze 当全组 G2 |
+| A | 各分支已合入 main 并验收；A6 剩 E03/E05 统一入口接入 | 统一环境核对后分线 A7/G2 → A8 → A9 | Handbook 尚缺 D-N1；不能把模块 freeze 当全组 G2 |
 | B | Handbook B-N1/N2 共同环境复核已完成；ULB E03/E05 仍需复核 | 交 A6/A7；B6 验证稿已可整合，A8 后补 test/B7 | 不重做已验收 Handbook 设计或模型搜索 |
 | C | C-N1/N2/N3 已独立完成正式验证、复跑和图文 | A7/A8 后直接生成 C7/C8 正式 test 图文 | 当前无剩余独立开发；指纹问题已修复验证，只等正式测试 |
 | D | 既有稿件继续，准备语义规则和机制诊断 | A-N1 后 D-N1；逐线 D5/D6，最后 D7 | 不等分类所有图才开始规则/方法文字 |
 
 A-N1 是新数据唯一一次基础交付：数据/生成配置、划分、元数据与 numeric feature views。之后 B/C/D 各自调用并连续推进，复用现有模型和公共评价，不传截图交接。原 ULB 收尾和新数据开发并行。新的固定模型仅 LR/IF 及金额参考，不开展神经网络或新参数大搜索。
 
+主线合并验收（2026-11-16）：Task_A@a5513f1、B@ef16480、C@304baa3、D@33e07a3 均已包含在 main，全部成员分支保留，无合并冲突。88 项公共检查＋11 项分类检查、依赖检查通过；main 上完整 ULB 统一验证和 Handbook C 验证运行成功。Handbook 指标、九个压力条件和 v2 指纹复现一致。[主线摘要](results/tables/a_team_validation.json)的 main_integration 记录来源提交和命令。Git 合并已完成；A6 的 E03/E05 调度、B 的 ULB 复核、D-N1 及 G2/A8 继续保留。
+
 ## A：公共整合、时间阈值与正式运行
 
 主责：code/main.py、code/preprocessing.py、code/temporal.py、README、数据/冻结说明与最终提交包。
 
-本地验证记录。统一入口在全量验证段复现 G1、B/C 固定模型、C 的 E01/E02/E06/E07 及 D 的 E04。E08 使用同一份预测，阈值、并列和逐窗统计见 [A6/E08 验证摘要](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/a_team_validation.json)。A6 剩主线复现及 E03/E05 接入。正式测试待 G2。
+本地验证记录。统一入口在全量验证段复现 G1、B/C 固定模型、C 的 E01/E02/E06/E07 及 D 的 E04。E08 使用同一份预测，阈值、并列和逐窗统计见 [A6/E08 验证摘要](results/tables/a_team_validation.json)。本次已在 main 完整复现，A6 剩 E03/E05 接入。正式测试待 G2。
 
-- [ ] **A6 接通全模块公共入口。** 以 C 已包含 A/B 的代码为基础合入 D，保留最新 C/D 任务状态；合入实际锁定依赖和数据说明，更新 main 的真实运行命令。复用既有基线、冻结评分、规则、窗口及发布接口；新增按 dataset_config 调度的位置，不覆盖 ULB 原入口/特征常量。先使用验证数据检查，正式测试入口需在 G2 后使用。**验收：**从主线可复现统一验证，已有 G1 记录可追溯，模块使用同一划分且必要检查通过；扩展已实现后一起接入，不只保留分散脚本。
+- [ ] **A6 完成 E03/E05 的统一入口接入。** 各成员分支合入 main、固定依赖、数据说明及现有 ULB/Handbook 入口的主线验证已于 2026-11-16 完成；不重复做 Git 合并。**剩余：**将 B 已交付的标签预算/重要性扩展接入 --run-team-validation 的调度和汇总，与现有独立命令采用同一训练/验证记录及配置。**验收：**统一入口实际输出 E03/E05，pending_extensions 与实际运行一致；保留原 ULB、C/D 和新数据协议，不把仅合并代码算成全部入口接通。
 - [x] **A-N1 完成 E09 数据与历史接口。** 按扩展协议先做 Handbook 资源/字段试运行，在建模前固定生成版本、许可、seed/规模，默认 60 天及 30/15/15 天切分。提供单笔、客户、终端、两类历史视图；元数据中的 ID/标签/生成机制不入模，所有历史严格只见过去，同时间批次不可互见。**验收：**原始/生成哈希、各段计数/指纹、字段表、手算与未来扰动检查齐全；B/C/D 从同一接口得到完全相同记录。一次交付后立即做 A-N2。
 - [x] **A-N2 完成 E11 开发期滚动与标签延迟。** 复用 B 固定 LR，比较静态与开发期每 7 天更新、30 天可得标签窗口，以及周更新的 0/1/7 天延迟。每次记录截止时间与可见标签。测试前按预定时点保存各情景快照，测试期不更新、不回填标签。**验收：**时间截止检查、全部固定场景、实际训练范围、更新次数和验证曲线齐全；A7 可冻结模型/阈值配套文件；不按最佳验证 AP 挑快照。
 - [ ] **A7 汇总全部冻结方案 G2。** 按数据集验收，ULB 无需等 A-N1/N2/N3：ULB 依赖原 A6/E08、B-E1/B-E2 及已交付 C/D；Handbook 依赖 A-N1/N2、B-N1/N2、C-N1/N2/N3、D-N1 的验证交付。ULB 沿用已有模型选择，新增数据遵守预定快照拟合范围；分别记录各自纳入的 E01–E16 的金额边界、标签掩码/比例/种子、固定 IF 参考、规则顺序、重要性协议、参考排序、成本比、区间设置和阈值；包括数据指纹、预算/并列规则、拟合范围、窗口、依赖、代码版本、完整运行命令。**验收：**同一 G2 记录按数据集给出已冻结/待就绪状态和代码/模型/阈值哈希；某线具备条件立即测试，不等 PaySim。不能把尚未实现的条件列成已冻结完成，也不根据旧测试结果调整新生成设置。
 - [ ] **A8 运行冻结方案的统一正式测试。** 对已冻结数据线执行其主对照及全部预定条件；各数据集单独训练/评价，使用配套模型与阈值。ULB 训练政策不变；Handbook 使用测试前最后合法快照，测试期不训练。复用公共预测计算金额、成本、区间、时间/阈值与规则覆盖；标签条件全部按协议报告，不按测试选标注比例。**验收：**总体/群体/窗口样本数与审核量一致、结果标为 test、来源齐全；汇总带 dataset_id 交 B/C/D，完整预测和模型留本地；不池化不同数据集 AP，错误修复及重跑明确记录。
-- [x] **A-N3 完成 E16 审计和最小对照的验证阶段。** 使用作者 v2 ZIP，来源、许可、标签无关固定抽样和切分指纹见 [E16 证据](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/paysim_a.json)。Amount/LR/IF 三组验证均已完成且复跑一致。测试评分列入 A8，由该数据线 G2 冻结后执行。
+- [x] **A-N3 完成 E16 审计和最小对照的验证阶段。** 使用作者 v2 ZIP，来源、许可、标签无关固定抽样和切分指纹见 [E16 证据](results/tables/paysim_a.json)。Amount/LR/IF 三组验证均已完成且复跑一致。测试评分列入 A8，由该数据线 G2 冻结后执行。
 
 - [ ] **A9 完成 A 的报告内容及提交包。** 现在可写数据和时间方法；A8 后补时间/阈值结果与局限，配合 D5 第二台电脑复现。D7 导出后核对 ZIP、数据获取、依赖、代码和路径。**验收：**包内运行说明与实际冻结版本一致，报告与单独海报提交项完整。
 
-A 交付记录见 [中英文说明](data/README.md)、[E09/E11 接入证据](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/handbook_a.json)和 [E11 曲线](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/figures/handbook_a_rolling.png)。B/D 接口检查已通过，各自的完整实验仍归原负责人。
+A 交付记录见 [中英文说明](data/README.md)、[E09/E11 接入证据](results/tables/handbook_a.json)和 [E11 曲线](results/figures/handbook_a_rolling.png)。B/D 接口检查已通过，各自的完整实验仍归原负责人。
 
 ## B：标签预算、模型解释与分类写作
 
 主责：code/classification.py 及已有 B 验证脚本；分类与新增 B 图文。复用 C 公共评价和 IF 接口，不新建一套指标或额外脚本目录。
 
-B 本地交付（2026-11-15）：B-E1/E2/N1/N2 已实现并完成正式数据 validation；15 个标签条件、30×5 次置换、四个 LR 历史视图及四类冷启动汇总齐全。Handbook 数据和八个视图指纹与 A 一致。11 项 B 检查通过；全仓 84/85 通过，1 项因共同锁定依赖门槛未通过，故保留未验收勾选。材料见 [B 分类稿](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/b/classification-interface/report/B_CLASSIFICATION.md)，汇总为 results/tables/b_extensions.json、handbook_b.json。B6 验证稿可先整合，最终 test/B7 仍等 A7/A8。
+B 本地交付（2026-11-15）：B-E1/E2/N1/N2 已实现并完成正式数据 validation；15 个标签条件、30×5 次置换、四个 LR 历史视图及四类冷启动汇总齐全。Handbook 数据和八个视图指纹与 A 一致。11 项 B 检查通过；全仓 84/85 通过，1 项因共同锁定依赖门槛未通过，故保留未验收勾选。材料见 [B 分类稿](report/B_CLASSIFICATION.md)，汇总为 results/tables/b_extensions.json、handbook_b.json。B6 验证稿可先整合，最终 test/B7 仍等 A7/A8。
 
 2026-11-16 追加验收：B-N1/N2 已在锁定环境完整复跑，四视图指标/金额/冷启动统计与原结果一致，B/C 八个 v2 指纹一致；从剩余任务中移除。B-E1/E2 的 ULB 证据仍待共同环境复核，保留以下待办。
 
@@ -49,13 +51,13 @@ B 本地交付（2026-11-15）：B-E1/E2/N1/N2 已实现并完成正式数据 va
 
 主责：code/evaluation.py、code/unsupervised.py、C 图文和 results 公共格式。
 
-2026-11-14 完成记录：**C-E1（E01/E06）、C-E2（E07）、C-E3（E02）均完成实现、检查、真实验证和复跑。**使用 56,745 笔/57 笔欺诈的原验证段，500 轮逐行＋200 轮时间块结果精确重现；原分数/配置未变，59 项 A/C＋8 项 B 检查通过，隔离接入 D 后共 74 项通过。交付在 C 分支的 results/tables/c_extensions.json、三张 c_extensions_ 图及 report/C_IMPROVEMENTS.md；main 代码仍由 A6 合入。C7 独立接口和验证图准备已完成，以下仅保留尚需集成或正式结果的工作。
+2026-11-14 完成记录：**C-E1（E01/E06）、C-E2（E07）、C-E3（E02）均完成实现、检查、真实验证和复跑。**使用 56,745 笔/57 笔欺诈的原验证段，500 轮逐行＋200 轮时间块结果精确重现；原分数/配置未变，59 项 A/C＋8 项 B 检查通过，隔离接入 D 后共 74 项通过。交付在 C 分支的 results/tables/c_extensions.json、三张 c_extensions_ 图及 report/C_IMPROVEMENTS.md；这些代码现已随本次主线整合合入 main。C7 独立接口和验证图准备已完成，以下仅保留尚需集成或正式结果的工作。
 
 追加集成验收（2026-11-14）：已接入 A 80f3171 并在本机运行完整 --run-team-validation，C/D 证据与 A 窗口计数复现通过，81 项检查通过；C7 接入部分完成。新增固定阈值/窗口图及解释见 C 分支的 report/C_IMPROVEMENTS.md，记录在 c_extensions.json 的 team_integration。LR 阈值与 A 约有 6.9e-11 差异而计数一致，A7 需配套冻结模型与阈值。C8 验证解释已补充，正式 test 结果未生成。
 
-新增独立部分交付（2026-11-15）：C-N1/N2/N3 的实现、接口与合成样例验证已完成，91 项检查通过；十万条因果交易流的关系状态检查通过。代码留在 C 分支原 unsupervised.py/evaluation.py，使用方法见 [C 交付说明](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/report/C_IMPROVEMENTS.md)，[验收摘要](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/results/tables/handbook_c_readiness.json)明确不是正式 Handbook 结果。Task_A 已交付 A-N1，A 两次运行 C 的正式验证入口，结果和四视图指纹一致。A 的接口核对记录见 [Handbook 证据](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/handbook_a.json)。该阶段的待复核事项已于下述 2026-11-16 验收中完成；B 原待办保留。
+新增独立部分交付（2026-11-15）：C-N1/N2/N3 的实现、接口与合成样例验证已完成，91 项检查通过；十万条因果交易流的关系状态检查通过。代码沿用原 unsupervised.py/evaluation.py，现已合入 main，使用方法见 [C 交付说明](report/C_IMPROVEMENTS.md)，[验收摘要](results/tables/handbook_c_readiness.json)明确不是正式 Handbook 结果。Task_A 已交付 A-N1，A 两次运行 C 的正式验证入口，结果和四视图指纹一致。A 的接口核对记录见 [Handbook 证据](results/tables/handbook_a.json)。该阶段的待复核事项已于下述 2026-11-16 验收中完成；B 原待办保留。
 
-2026-11-16 验收：**C-N1（E10）、C-N2（E12）、C-N3（E14）正式数据验证、两遍复跑与结果解释已完成**，故不再列为剩余开发任务。数据字节/划分/列清单与 A/B 一致；8 排序全部指标、九个压力条件及逐行预测哈希精确复现，85＋11＝96 项检查通过。发布见 [正式汇总](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/results/tables/handbook_c.json)、[图文](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/report/C_IMPROVEMENTS.md)。保留负结果：历史/关系未改善固定 IF，关系量也未改善 LR。
+2026-11-16 验收：**C-N1（E10）、C-N2（E12）、C-N3（E14）正式数据验证、两遍复跑与结果解释已完成**，故不再列为剩余开发任务。数据字节/划分/列清单与 A/B 一致；8 排序全部指标、九个压力条件及逐行预测哈希精确复现，85＋11＝96 项检查通过。发布见 [正式汇总](results/tables/handbook_c.json)、[图文](report/C_IMPROVEMENTS.md)。保留负结果：历史/关系未改善固定 IF，关系量也未改善 LR。
 
 指纹问题已修复（2026-11-16）：跨 ARM/x86 对照定位到两列时间编码最后 1 位浮点差异（最大 1.11e-16），金额和历史 17 列逐位一致。共享指纹改为 handbook-view-v2-time12，仅哈希时统一两列时间编码，不改模型输入。三环境八个指纹一致，实际 B/C 复跑也一致；效果不变，99 项检查通过。旧未标版本指纹保留在历史，不与 v2 混比。此项已完成，不再单列为 A7 待排查问题。
 
@@ -77,15 +79,15 @@ D 交付记录（2026-11-14）：D-E1 已完成真实验证运行，10 项规则
 
 | 分支（核对的提交） | 已有交付 | 仍缺少的内容 |
 |---|---|---|
-| Task_A / a5513f1 | Handbook 数据、四视图/E11、PaySim 审计和验证、统一 ULB 验证入口 | A6 合到 main 并接入 B E03/E05（当前入口仍将其列 pending）；A7/G2、A8、A9 |
+| Task_A / a5513f1 | Handbook 数据、四视图/E11、PaySim 审计和验证、统一 ULB 验证入口 | Git 合并与现有入口验收已完成；A6 接入 B E03/E05；A7/G2、A8、A9 |
 | b/classification-interface / ef16480 | E03 五比例三种子、E05 置换/案例、E10 四 LR、E13 冷启动、B6 验证稿 | Handbook 共同环境复核已完成；ULB E03/E05 复核、A6 接入、B6 正式测试补充及 B7 |
 | codex/c-independent-modules / 本次交付 | 原 C 全部验证＋E10/E12/E14 正式数据复跑、图表和解释 | 仅 A7/A8 后的 C7/C8 正式测试图文与 G3 核对 |
 | codex/d-pattern-mining / 33e07a3 | ULB 规则 E04、复现说明、报告/海报验证稿 | D-N1 Handbook 语义规则及机制诊断；D5 独立复现/正式案例；D6 最终整合、D7 PDF/演练 |
-| main / 935b5c4（本次同步前） | 共享规划及原骨架 | 最新功能分支尚未整体合入；没有新验证入口/完整测试及正式成果，须 A6 整合 |
+| main / 本次整合 | 已包含四个成员分支最新代码、验证汇总、图表和报告/海报稿；99 项检查及两个实际入口通过 | E03/E05 统一调度、剩余成员实验、G2/A8、最终 PDF 与提交包 |
 
-全部已核对分支头均已包含在本次 C 检出，没有合并冲突；这不代表 main 已完成整合。B 的扩展结果明确来自不同于共同锁定的依赖；目前 99 项检查通过，Handbook 已在锁定环境重跑；ULB E03/E05 仍保留原复核事项。视图指纹问题已修复验证，不覆盖历史结论。D 的接口已由 A 试通，但这不代替 D-N1 的完整实验。
+全部已核对分支头均已包含在 main，没有合并冲突；各成员分支及原提交完整保留。B 的扩展结果明确来自不同于共同锁定的依赖；目前 99 项检查通过，Handbook 已在锁定环境重跑；ULB E03/E05 仍保留原复核事项。视图指纹问题已修复验证，不覆盖历史结论。D 的接口已由 A 试通，但这不代替 D-N1 的完整实验。
 
-优先顺序：B 的 ULB 统一环境复核和 D-N1 可立即并行；A6 集成已交付模块；ULB/PaySim 就绪后独立 A7/A8，不必等 Handbook E15；Handbook 验收后做自己的 A7/A8。最后 B/C/D 补正式图文、D5/G3 复现与数值核对，再 D7 导出 6–10 页 Report.pdf、Poster.pdf，A9 整理提交包。当前所有正式测试与最终 PDF 均未完成，不能提交现有占位稿作为最终成果。
+优先顺序：B 的 ULB 统一环境复核和 D-N1 可立即并行；A6 接入 E03/E05 统一调度；ULB/PaySim 就绪后独立 A7/A8，不必等 Handbook E15；Handbook 验收后做自己的 A7/A8。最后 B/C/D 补正式图文、D5/G3 复现与数值核对，再 D7 导出 6–10 页 Report.pdf、Poster.pdf，A9 整理提交包。当前所有正式测试与最终 PDF 均未完成，不能提交现有占位稿作为最终成果。
 
 ## 两个公共节点
 

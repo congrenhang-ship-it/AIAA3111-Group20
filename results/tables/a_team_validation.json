@@ -913,5 +913,116 @@
     "published_D_rule_diagnostics_matched": true,
     "E08_exact_replay_match": true,
     "E08_window_confusion_counts_sum_to_overall": true
+  },
+  "main_integration": {
+    "date": "2026-11-16",
+    "merge_commit": "c5aa4e40258e2e289b78c64daacc95b33cae6ece",
+    "merged_branch_heads": {
+      "Task_A": "a5513f1c5160b008bacc72c5e7def01a3538190f",
+      "b/classification-interface": "ef16480e0523d56d9369bde523f92fd0f8af169a",
+      "codex/c-independent-modules": "304baa3640e5f1033dbadbb2397ce728028b0717",
+      "codex/d-pattern-mining": "33e07a3e02a888628f1f1adefd9f536aea0d0d72"
+    },
+    "previous_main": "1ab08469f77175bf8438ae29ae7191ad50f7dc6e",
+    "all_member_heads_are_ancestors_of_main": true,
+    "member_branches_retained": true,
+    "merge_conflicts": false,
+    "validation_commands": [
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests",
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s code -p test_classification.py",
+      ".venv/bin/python -m pip check",
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/main.py --run-team-validation --output data/main_team_validation_20261116",
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/main.py --run-handbook-c --handbook-dir data/handbook/c_acceptance_20261116 --output data/handbook/main_validation_20261116"
+    ],
+    "handbook_run_summary_sha256": "e6ed5fcb19bfe4b82f363d298a244932e11ca4c13343d4b1ac3b1f0e61c902a5",
+    "scope": "Development/validation integration only; E03/E05 are available via existing B script but still pending the unified team runner. No G2 or held-out scoring.",
+    "provenance": {
+      "command": "python code/main.py --run-team-validation --output data/main_team_validation_20261116",
+      "source_commit": "c5aa4e40258e2e289b78c64daacc95b33cae6ece",
+      "source_dirty": false,
+      "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+      "python": "3.12.14",
+      "versions": {
+        "cloudpickle": "3.1.2",
+        "contourpy": "1.4.0",
+        "cycler": "0.12.1",
+        "fonttools": "4.68.0",
+        "imbalanced-learn": "0.14.2",
+        "joblib": "1.6.0",
+        "kiwisolver": "1.5.1",
+        "matplotlib": "3.11.2",
+        "mlxtend": "0.25.0",
+        "narwhals": "2.28.0",
+        "numpy": "2.5.4",
+        "packaging": "26.3",
+        "pandas": "3.1.1",
+        "pillow": "13.0.0",
+        "pyparsing": "3.3.3",
+        "python-dateutil": "4.0.0",
+        "scikit-learn": "1.9.1",
+        "scipy": "1.18.1",
+        "seaborn": "0.13.2",
+        "sklearn-compat": "0.1.6",
+        "threadpoolctl": "3.8.0",
+        "tzdata": "2026.6"
+      },
+      "source_sha256": {
+        "results/tables/b_freeze.json": "470d9a2063a2bd8d45c1d24de84720fa217e6cf83072351a545309d86ade44ff",
+        "results/tables/c_improved.json": "61d83f78c09708fe87c50d9ed3d693436b8e5e3cc8c02e12c6c8dffbe218cc86",
+        "results/tables/d_freeze.json": "9204aaf587c8e2a1c03ef7f98c297f2bebad21b4f9db8c9a2e6a539847736059",
+        "results/tables/d_extensions.json": "a2403cb545aee5b24d981bdca5175b3d5f963e91053166a91c01d73c3b8370c3",
+        "results/tables/c_extensions.json": "c9da9ae2e7d9f57e15e65095c78b3d45b56023e94adfbaa70e18f1e388191afd",
+        "results/tables/d_g1_reproduction.json": "c34a7d87f7cd6adc177ae2d04c37f6ef063cbe6d6a596b9c86f964700eafc07c",
+        "report/d_validation/train_validation_rules.csv": "443ead5dc8fbf2dfcaa56c731b4593b95dd76a5ff89cabedf428335c1d6bc9f0",
+        "requirements.txt": "3002c581c4ecbf0108116561a218702ce694cc26175659437c805f2e40be3416",
+        "code/check_d_freeze.py": "0ea8406e4824f14f2b8b6a990f0734c53fff71fafdd25d87dfa6a1200c685022",
+        "code/classification.py": "d92788dba8c59f3332eee5d72a1bff784e5e3fe6fac6800f6015b4dc3a43d3c0",
+        "code/download_data.py": "832e71c0a3db8ee61ef49da9e38a1b6ff43c52663e551dc0dff5730a0eb46d8d",
+        "code/evaluation.py": "b1e5266ff33cbb45ce5fe93b6170d8c93b63331297290e312ba31fdb8ae2b346",
+        "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
+        "code/main.py": "b678be7555791090657480fb82dda4c1d0bf7c4e583fc7c9b65b547f703e0f2e",
+        "code/pattern_mining.py": "b35e8952e8f4b9cbac39536fd53f2bd8172a75bc13ea746bc14fc494b3f205a0",
+        "code/paysim.py": "f67e136b489f2e52082ba8de5046935396ec05720dfa5ae8a3cce138bff0c934",
+        "code/preprocessing.py": "8d1eaa9e986b2f29a0beca26f9de29a565c0280a7db23411bf7af8799f1c4baa",
+        "code/run_b_validation.py": "48026ccfa2b2c1c1c9bbc58e32e4d4f9cbe7d0c0d7f2574ade4a998637caefdb",
+        "code/run_d_validation.py": "83446da9b0b69b408342938f0dc842080ec237e3b4fe6014938ad2d39ce85abd",
+        "code/temporal.py": "c046dddcabc0fad2266ed6031712991f876104e369e9fd2cd84fa2402e98da0d",
+        "code/test_classification.py": "6505439044dfa916a1eed756377190c95f7e659db79199463abfd5104ecaa5ef",
+        "code/unsupervised.py": "d116c6ef1340f5c90a5584f6e00b5650a06b75e5eae623351ab977ec90313411"
+      }
+    },
+    "verification": {
+      "repository_tests_passed": 88,
+      "classification_tests_passed": 11,
+      "total_tests_passed": 99,
+      "pip_check_passed": true,
+      "G1_AP_and_budget_counts_matched": true,
+      "B_C_AP_and_budget_counts_matched": true,
+      "published_B_IF_policy_matched": true,
+      "published_C_extensions_matched": true,
+      "published_D_rule_diagnostics_matched": true,
+      "E08_overall_and_window_counts_matched": true,
+      "E08_threshold_deltas_vs_previous_A_summary": {
+        "logistic_regression_class_weight": -6.917932893202305e-11,
+        "if_sample4096": 0.0
+      },
+      "model_bundle_hash_note": "Validation rebuilt the fixed models on this machine; the bundle hash is from this run, not byte identity to A. A7 pairs the final model and threshold.",
+      "handbook_main_validation_matches_published_metrics_costs_stress_and_v2_fingerprints": true
+    },
+    "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
+    "ULB_run_summary_sha256": "6406d302306648666648141ea5a549451ad734914a7eee4cd2471c995c9491d2",
+    "ULB_validation_partitions_match_previous": true,
+    "current_validation_thresholds": {
+      "logistic_regression_class_weight": 0.8042817844288124,
+      "if_sample4096": 0.5317760666655312
+    },
+    "current_model_bundle_sha256": "d4c4c9314067c54c48363aebb78115bfc5ea10626de25247cf4f22a497e5658c",
+    "private_outputs": [
+      "data/main_team_validation_20261116",
+      "data/handbook/main_validation_20261116"
+    ],
+    "group_G2_complete": false,
+    "test_scored": false,
+    "note": "Historical A evidence above is retained unchanged; this section records the current main integration acceptance."
   }
 }

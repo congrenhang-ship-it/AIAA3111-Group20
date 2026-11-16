@@ -2,7 +2,7 @@
 
 AIAA 3111 Course Project · Group 20
 
-更新：2026-11-16。研究有限审核容量下，分类、异常检测与规则解释的能力、上下文价值和可靠性。保留 ULB 主实验，正式新增 Handbook 交易模拟数据及上下文/时间实验；PaySim 用于轻量外部复核。A 已交付 E09 数据和接口、E11 滚动验证及 E16 审计和验证。B/C 新扩展已交付验证；D-N1、main 集成及各线 G2 后正式测试待完成。不开展 LLM、GNN、复杂神经网络或前端。
+更新：2026-11-16。研究有限审核容量下，分类、异常检测与规则解释的能力、上下文价值和可靠性。保留 ULB 主实验，正式新增 Handbook 交易模拟数据及上下文/时间实验；PaySim 用于轻量外部复核。A 已交付 E09 数据和接口、E11 滚动验证及 E16 审计和验证。B/C 新扩展已交付验证；main 已合并各分支最新交付；D-N1、E03/E05 统一入口接入及各线 G2 后正式测试待完成。不开展 LLM、GNN、复杂神经网络或前端。
 
 负责人：A 维护公共入口和环境，D 整合材料；每位成员负责自己的实现、分析和来源记录。
 
@@ -10,18 +10,27 @@ AIAA 3111 Course Project · Group 20
 
 ## 当前进度与分支
 
-`Task_A` 已整合 A/B/C/D，在全量 ULB 验证段复现共同模型和 E01/E02/E04/E06/E07，并产出 E08 固定阈值诊断。B 的 E03/E05 仍待交付。主线接入和全组 G2 确认后，按同一协议进入正式测试。
+2026-11-16 已将全部成员分支最新内容合入 main，无合并冲突，各成员分支保留。main 现在包含 ULB 统一验证、B 标签/重要性扩展、Handbook 数据/历史/关系/压力实验、PaySim 审计与验证代码，以及现有报告和海报稿。
 
-| 分支 | 已有交付 | 后续 |
+主线验收：88 项公共检查＋11 项分类检查通过，依赖检查通过；完整 ULB 统一入口和 Handbook C 入口运行成功。Handbook 指标、九个压力条件和 v2 指纹与已发布结果一致。证据见 [主线验证摘要](results/tables/a_team_validation.json)的 main_integration。
+
+| 保留的成员分支 | 本次合入的最新提交 | 交付 |
 |---|---|---|
-| `Task_A` | ULB 统一验证、E08、Handbook 数据接口与 E11、PaySim 审计与验证 | 主线验收、接入 E03/E05、分线冻结和正式测试 |
-| `b/classification-interface` | 四种分类器、不平衡对照、验证候选 | 分类扩展、最终结果与案例 |
-| `codex/c-independent-modules` | 已接入 A 80f3171 及 D；统一验证、C 扩展和 E08 计数独立验收通过 | 正式图表与结论待 G2/A8 |
-| `codex/d-pattern-mining` | 规则验证、E04 增量覆盖、共同环境复核、报告/海报内容稿 | 主线复现和正式材料 |
+| Task_A | a5513f1 | ULB 统一验证/E08、Handbook 数据/E11、PaySim |
+| b/classification-interface | ef16480 | 分类基线、E03/E05、Handbook 历史/冷启动 |
+| codex/c-independent-modules | 304baa3 | 聚类/异常及公共评价、C 全部扩展、指纹修复和 B/C 共同环境验收 |
+| codex/d-pattern-mining | 33e07a3 | ULB 规则/E04、复现说明、报告/海报验证稿 |
 
-C 已提供接入说明和真实验证重放；D4 共同环境复核已有证据。已有实现不重新列成待开发任务，剩余工作见 [TASKS.md](TASKS.md)。C 已完成 A 统一入口的独立验收；后续合并保留最新分工和各人的真实状态。
+上述内容已包含在 main，不需要组员重复拣选提交。B 的 E03/E05 已交付，可用下方独立命令运行；它们仍待 A6 接入 --run-team-validation。D-N1、G2、正式测试及最终 PDF 继续按 [TASKS.md](TASKS.md) 推进。
 
-统一入口、已交付候选与正式测试的验收状态见 [TASKS.md](TASKS.md)。
+查看最新主线：
+
+```bash
+git switch main
+git pull --ff-only origin main
+```
+
+继续本人工作时，切回自己的成员分支后运行 git fetch origin 和 git merge origin/main，取得本次整合；无需删除或重建成员分支。
 
 ## 项目问题与课程联系
 
@@ -34,23 +43,23 @@ C 已提供接入说明和真实验证重放；D4 共同环境复核已有证据
 | Classification Basic/Advanced | 四种基线、不平衡处理、有限标签曲线、成本/阈值评价 |
 | Clustering I/II | K-means、结构及稳定性、群体画像与表现 |
 | Anomaly Detection | IF、簇距离、无标签参考、等预算组合 |
-| Diverse Data | 新增客户/终端类别信息、严格历史统计、基础关系图特征和跨数据集验证；均为待实现任务 |
+| Diverse Data | Handbook 历史、关系、缺失压力及 PaySim 验证已交付；机制规则分析待 D-N1 |
 
 课程覆盖以实际实验和分析为准，不用增加算法数量代替深度，也不保证扩展会提高检测指标或成绩。
 
-## 本轮正式新增：只用原数据
+## ULB 数据上的扩展（E01–E08）
 
 全部采用现有 ULB 数据，复用公共接口。详细默认设置、边界处理和验收见 [扩展实验协议](report/EXTENSION_PROPOSALS.md)。
 
-C 已交付 E01/E02/E06/E07：原验证段 56,745 笔、57 笔欺诈；500＋200 轮配对分析复跑一致，代码/原模型及金额加总均核对，临时整合 D 后共 74 项检查通过。结果与接入说明位于 C 分支：[汇总](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/results/tables/c_extensions.json)、[C 说明](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/report/C_IMPROVEMENTS.md)。main 的业务代码尚待 A6 合入；上述均为验证结果，不是测试结果。
+C 已交付 E01/E02/E06/E07：原验证段 56,745 笔、57 笔欺诈；500＋200 轮配对分析复跑一致，代码/原模型及金额加总均核对，临时整合 D 后共 74 项检查通过。结果与接入说明位于 C 分支：[汇总](results/tables/c_extensions.json)、[C 说明](report/C_IMPROVEMENTS.md)。这些代码和材料现已合入 main；上述均为验证结果，不是测试结果。
 
 | 编号 | 内容与研究问题 | 主责 | 最小实验与结果 | 状态 |
 |---|---|---|---|---|
 | E01 | 检出笔数与欺诈金额覆盖是否一致？ | C | 原预算下金额覆盖、训练边界金额分组 | 验证交付完成 |
 | E02 | 少量欺诈样本下差值是否稳定？ | C | 配对 bootstrap、时间块敏感性、AP/Recall 差值区间 | 验证交付完成 |
-| E03 | 可见标签减少时分类与 IF 如何变化？ | B | 5/10/25/50/100% 标注、种子 42/43/44、固定参考 IF | 待验收 |
-| E04 | 多条规则提供多少新增覆盖？ | D | Jaccard、固定顺序累计去重覆盖、分类/异常错误关联 | 待验收 |
-| E05 | 模型依赖哪些特征，错误有何特点？ | B | 已选分类器 AP 置换重要性、固定案例规则 | 待验收 |
+| E03 | 可见标签减少时分类与 IF 如何变化？ | B | 5/10/25/50/100% 标注、种子 42/43/44、固定参考 IF | 已交付，待共同环境复核/统一入口接入 |
+| E04 | 多条规则提供多少新增覆盖？ | D | Jaccard、固定顺序累计去重覆盖、分类/异常错误关联 | 验证交付完成 |
+| E05 | 模型依赖哪些特征，错误有何特点？ | B | 已选分类器 AP 置换重要性、固定案例规则 | 已交付，待共同环境复核/统一入口接入 |
 | E06 | 比简单审核参考强多少？ | C | 随机审核期望、Amount 降序、Precision 提升倍数 | 验证交付完成 |
 | E07 | 预算如何影响不同错误代价？ | C | 四档预算，假设漏报/误报成本比 10/50/100 | 验证交付完成 |
 | E08 | 固定分数阈值会产生多少后续审核量？ | A | 验证阈值，测试与固定窗口实际审核率和检出 | 验证交付完成 |
@@ -76,7 +85,7 @@ C 已交付 E01/E02/E06/E07：原验证段 56,745 笔、57 笔欺诈；500＋200
 
 ## 新增数据集已进入正式任务：深度来自受控对照
 
-2026-11-15 将原候选升级为任务 E09–E16，详细协议见 [扩展协议](report/EXTENSION_PROPOSALS.md)，逐人步骤见 [TASKS.md](TASKS.md)。当前仅完成设计和分工，未生成新数据或运行新实验。
+2026-11-15 将原候选升级为任务 E09–E16，详细协议见 [扩展协议](report/EXTENSION_PROPOSALS.md)，逐人步骤见 [TASKS.md](TASKS.md)。A/B/C 的相应数据与验证已交付并合入 main；E15 仍待 D 完成。
 
 主问题扩展为：**在相同审核容量下，历史与关系上下文带来多少价值，这些收益在标签延迟、冷启动和历史不完整时是否可靠？**
 
@@ -93,13 +102,13 @@ C 已交付 E01/E02/E06/E07：原验证段 56,745 笔、57 笔欺诈；500＋200
 
 Handbook 是本轮主要第二数据集，使用[公开生成方法](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/SimulatedDataset.html)及[历史特征参考](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/BaselineFeatureTransformation.html)。采用 60 天、seed=42，先完成一天试运行，生产规模和生成设置在建模前固定。它有人工设计的欺诈机制，结果用于受控研究，不能宣称现实泛化。
 
-A 已通过 [PaySim](https://github.com/EdgarLopezPhD/PaySim) 来源与字段审计，使用作者的 v2 ZIP 完成 E16 三组验证。来源、固定采样与结果见 [E16 聚合证据](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/paysim_a.json)。正式测试按 A7/A8 处理。
+A 已通过 [PaySim](https://github.com/EdgarLopezPhD/PaySim) 来源与字段审计，使用作者的 v2 ZIP 完成 E16 三组验证。来源、固定采样与结果见 [E16 聚合证据](results/tables/paysim_a.json)。正式测试按 A7/A8 处理。
 
 ULB 保留原切分、特征和已完成成果；不同数据集分别训练、分别评价，不拼表，不直接套用 ULB 模型。AP 随类别比例变化，跨数据集主要比较方法的相对表现与局限，不平均成一个总分。所有结果带 dataset_id。
 
-C 交付更新（2026-11-16）：A-N1 已到位；C 的四组 IF 历史消融、关系增量、九条件缺失压力已在正式 Handbook 数据上独立运行两遍，全部指标/逐行预测精确复现，96 项检查通过。[正式验证汇总](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/results/tables/handbook_c.json)和 [C 图文说明](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/report/C_IMPROVEMENTS.md)已发布，保留历史/关系未改善的结果。指纹差异已定位并修复：只在哈希时统一两列时间编码，模型输入不变；ARM/x86 三环境以及实际 B/C 复跑的八个 v2 指纹一致，99 项检查通过，原效果不变。C 已无剩余独立开发，正式 test 图文仍待 A7/G2、A8。所有分支当前缺口及顺序见 [TASKS.md](TASKS.md)。main 仍需 A6 集成功能分支，本次 main 同步共享状态。
+C 交付更新（2026-11-16）：A-N1 已到位；C 的四组 IF 历史消融、关系增量、九条件缺失压力已在正式 Handbook 数据上独立运行两遍，全部指标/逐行预测精确复现，96 项检查通过。[正式验证汇总](results/tables/handbook_c.json)和 [C 图文说明](report/C_IMPROVEMENTS.md)已发布，保留历史/关系未改善的结果。指纹差异已定位并修复：只在哈希时统一两列时间编码，模型输入不变；ARM/x86 三环境以及实际 B/C 复跑的八个 v2 指纹一致，99 项检查通过，原效果不变。C 已无剩余独立开发，正式 test 图文仍待 A7/G2、A8。所有分支当前缺口及顺序见 [TASKS.md](TASKS.md)。上述实现、数据接口和结果现已合入 main。
 
-数据生成、下载、B/C/D 调用与文件结构见 [中文交接](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/docs/TASK_A.zh-CN.md) / [English handoff](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/docs/TASK_A.en.md)。
+数据生成、下载、B/C/D 调用与文件结构见 [中文交接](docs/TASK_A.zh-CN.md) / [English handoff](docs/TASK_A.en.md)。
 
 深度优先级：先完成 E09/E10/E15 的第二数据集闭环，再补 E11/E12，之后 E13/E14 压力分析；PaySim 最后。E13 的群体若样本/欺诈不足就如实报告，不反复生成直到出现好看的结果。新增方向均已分派任务，优先级不等于已完成。
 
@@ -135,7 +144,7 @@ data/                            本地数据与下载说明（原始文件不�
 
 ## 环境、数据与可用命令
 
-在含 A6 的分支上使用 Python 3.12，安装仓库固定依赖。从仓库根目录运行以下命令。
+在 main 上使用 Python 3.12 虚拟环境，安装仓库固定依赖。从仓库根目录运行以下命令。
 
 ```bash
 python -m pip install -r requirements.txt
@@ -144,20 +153,43 @@ python code/main.py --prepare-data
 python code/main.py --run-team-validation --output data/team_validation
 ```
 
-数据来源、原始校验值和预期划分见 [数据说明](data/README.md)。输出目录需位于 `data/` 且尚未存在。统一入口使用已交付的配置，仅在训练段重建三个模型，复用同一批验证预测运行总体、分群、时间窗口、等预算组合、C 扩展、D 规则分析与 E08。验证通过后，模型、逐行预测和案例留在本地，汇总与图表位于输出目录的 `aggregate/`。E03/E05 在交付后接入此入口。
+数据来源、原始校验值和预期划分见 [数据说明](data/README.md)。输出目录需位于 `data/` 且尚未存在。统一入口使用已交付的配置，仅在训练段重建三个模型，复用同一批验证预测运行总体、分群、时间窗口、等预算组合、C 扩展、D 规则分析与 E08。验证通过后，模型、逐行预测和案例留在本地，汇总与图表位于输出目录的 `aggregate/`。E03/E05 已有独立入口，尚未纳入此统一重放，当前摘要仍明确将二者列为 pending。
 
 ```bash
 python -X utf8 -m unittest discover -s tests
 python -X utf8 -m unittest discover -s code -p test_classification.py
 ```
 
-本次验证阈值、逐窗审核计数和来源见 [A6/E08 验证摘要](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/a_team_validation.json)。全组在 A7 确认配置后由 A8 运行正式测试。
+B 的 ULB 标签/重要性扩展目前使用已有命令，输出完整模型/案例仍保存在 data/：
+
+```bash
+python code/run_b_validation.py --extensions --output data/b_extensions_main
+```
+
+Handbook 从同一数据接口运行各模块，以下命令用于新克隆后的新输出目录：
+
+```bash
+python code/main.py --prepare-handbook --output data/handbook/v1
+python code/run_b_validation.py --handbook --output data/handbook/b_validation
+python code/main.py --run-handbook-c --output data/handbook/c_validation
+python code/main.py --run-handbook-rolling --output data/handbook/e11_validation
+```
+
+默认读取 data/handbook/v1；已有其他生成目录时传 --handbook-dir。PaySim 获取作者 v2 ZIP 后运行：
+
+```bash
+python code/main.py --run-paysim-validation --paysim-archive data/paysim_v2.zip --output data/paysim_validation
+```
+
+来源和获取步骤见 [数据说明](data/README.md)。以上均为开发/验证入口；已存在的运行目录应换新名字，以保留原证据。
+
+本次验证阈值、逐窗审核计数和来源见 [A6/E08 验证摘要](results/tables/a_team_validation.json)。全组在 A7 确认配置后由 A8 运行正式测试。
 
 ## 分工与执行顺序
 
 | 成员 | 现在可独立做 | 交付之后 |
 |---|---|---|
-| A | A-N1/N2/N3 的交付与验证已完成 | 各数据线具备条件即 A7/A8 |
+| A | main 合并及现有入口验收已完成；继续 A6 接入 B E03/E05 | 各数据线具备条件即 A7/A8 |
 | B | Handbook 共同环境复核已完成，剩 ULB E03/E05 复核 | 交 A6/A7；A8 后补 B6/B7 |
 | C | C-N1/N2/N3 正式验证、复跑、组合图及解释已完成 | 各线 A7/A8 后补 C7/C8 正式 test 图文 |
 | D | 现有稿件继续；准备语义特征规则与机制解释 | A-N1 后 D-N1，逐线收取证据并做 D5–D7 |
@@ -184,4 +216,4 @@ A 写数据与时间/阈值，B 写分类/标签/重要性，C 写聚类/异常/
 
 最终目录沿用：report/Report.pdf、poster/Poster.pdf；ZIP 含 Report.pdf、README.md、requirements.txt、code/、数据说明及必要 results/，海报按要求单独提交。A9 核对包内路径、实际依赖和复现命令。
 
-C 的后续验收：在完整验证段重现 A 的统一入口和 C/D 证据，81 项检查通过；新增固定阈值与窗口预算验证图，严格区分总审核 568 与逐窗取整后的 572。LR 阈值跨机器相差约 6.9e-11、计数一致，A7 应把模型与对应阈值一起冻结。源与解释见 C 分支说明及 c_extensions.json 的 team_integration；目前 GitHub 的 A 交付仍明确 E03/E05、G2 和 A8 待完成，验证图不作为正式测试图。
+本次主线验收使用固定候选与协议，未增加模型搜索或评分最终测试。ULB 固定阈值/逐窗审核计数复现；LR 阈值与 A 旧摘要约差 6.9e-11、计数不变，A7 沿用模型与阈值配套冻结。合并不代表 G2 或最终项目已完成。
