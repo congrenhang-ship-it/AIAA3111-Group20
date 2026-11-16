@@ -144,6 +144,8 @@ A-N1 统一元数据保留原 CUSTOMER_ID/TERMINAL_ID（不入模），视图键
 
 ### 已实现的 C 接口与 A-N1 一次性交付约定（2026-11-15）
 
+2026-11-16 状态更新：A-N1 已交付，C-N1/N2/N3 已完成正式数据独立复跑和发布（不是合成样例结论），下述接口约定继续有效。A/B/C 原始数据、划分与列清单相同，但 A/B 与 C 的数值视图指纹不同；已记录供 A7 统一环境冻结，未修改他人证据。正式测试仍等 A7/G2、A8。
+
 A-N1 已提供正式 Handbook 数据和回调。A 通过 --run-handbook-c 两次执行 C-N1/N2/N3 正式验证入口，指标、特征指纹及九个历史缺失条件一致。C 负责复核、解释和发布自己的结果。
 
 A 提供 train/validation 元数据（row_id、Class、Time、原始 Amount、CUSTOMER_ID、TERMINAL_ID），四个同身份 numeric feature views，以及只含开发段的交易流。视图用 row_id 索引，也可保留 row_id 列由 C 转为索引；禁止标签、机制、ID 和 Time 原值入模。四视图共享的单笔列必须逐值一致，transaction_only 必须含原始 Amount，两类历史视图的列为客户/终端视图的并集；C 保存列清单和 train/validation 视图指纹供 B 核对。

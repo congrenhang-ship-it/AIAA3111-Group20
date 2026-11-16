@@ -2,7 +2,7 @@
 
 AIAA 3111 Course Project · Group 20
 
-更新：2026-11-15。研究有限审核容量下，分类、异常检测与规则解释的能力、上下文价值和可靠性。保留 ULB 主实验，正式新增 Handbook 交易模拟数据及上下文/时间实验；PaySim 用于轻量外部复核。A 已交付 E09 数据和接口、E11 滚动验证及 E16 审计和验证。各线正式测试在 G2 后执行。不开展 LLM、GNN、复杂神经网络或前端。
+更新：2026-11-16。研究有限审核容量下，分类、异常检测与规则解释的能力、上下文价值和可靠性。保留 ULB 主实验，正式新增 Handbook 交易模拟数据及上下文/时间实验；PaySim 用于轻量外部复核。A 已交付 E09 数据和接口、E11 滚动验证及 E16 审计和验证。B/C 新扩展已交付验证；D-N1、main 集成及各线 G2 后正式测试待完成。不开展 LLM、GNN、复杂神经网络或前端。
 
 负责人：A 维护公共入口和环境，D 整合材料；每位成员负责自己的实现、分析和来源记录。
 
@@ -93,13 +93,13 @@ C 已交付 E01/E02/E06/E07：原验证段 56,745 笔、57 笔欺诈；500＋200
 
 Handbook 是本轮主要第二数据集，使用[公开生成方法](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/SimulatedDataset.html)及[历史特征参考](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/BaselineFeatureTransformation.html)。采用 60 天、seed=42，先完成一天试运行，生产规模和生成设置在建模前固定。它有人工设计的欺诈机制，结果用于受控研究，不能宣称现实泛化。
 
-A 已通过 [PaySim](https://github.com/EdgarLopezPhD/PaySim) 来源与字段审计，使用作者的 v2 ZIP 完成 E16 三组验证。来源、固定采样与结果见 [E16 聚合证据](results/tables/paysim_a.json)。正式测试按 A7/A8 处理。
+A 已通过 [PaySim](https://github.com/EdgarLopezPhD/PaySim) 来源与字段审计，使用作者的 v2 ZIP 完成 E16 三组验证。来源、固定采样与结果见 [E16 聚合证据](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/results/tables/paysim_a.json)。正式测试按 A7/A8 处理。
 
 ULB 保留原切分、特征和已完成成果；不同数据集分别训练、分别评价，不拼表，不直接套用 ULB 模型。AP 随类别比例变化，跨数据集主要比较方法的相对表现与局限，不平均成一个总分。所有结果带 dataset_id。
 
-A 在完整 Handbook 数据上运行了 C 的正式验证入口，复跑后历史消融、关系增量、九个压力条件和视图指纹一致。另用 B 分类器和 D 规则模块完成真实接口检查。各成员的分析与发布状态见 [TASKS.md](TASKS.md)，A 的证据见 [Handbook 聚合记录](results/tables/handbook_a.json)。
+C 交付更新（2026-11-16）：A-N1 已到位；C 的四组 IF 历史消融、关系增量、九条件缺失压力已在正式 Handbook 数据上独立运行两遍，全部指标/逐行预测精确复现，96 项检查通过。[正式验证汇总](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/results/tables/handbook_c.json)和 [C 图文说明](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/report/C_IMPROVEMENTS.md)已发布，保留历史/关系未改善的结果。A/B/C 原数据字节、划分和列一致，但 A/B 与 C 的数值视图哈希不同，统一环境核对列入 A7；没有宣称位级特征完全相同。C 已无剩余独立开发，正式 test 图文仍待 A7/G2、A8。所有分支当前缺口及顺序见 [TASKS.md](TASKS.md)。main 仍需 A6 集成功能分支，本次 main 同步共享状态。
 
-数据生成、下载、B/C/D 调用与文件结构见 [中文交接](docs/TASK_A.zh-CN.md) / [English handoff](docs/TASK_A.en.md)。
+数据生成、下载、B/C/D 调用与文件结构见 [中文交接](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/docs/TASK_A.zh-CN.md) / [English handoff](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/docs/TASK_A.en.md)。
 
 深度优先级：先完成 E09/E10/E15 的第二数据集闭环，再补 E11/E12，之后 E13/E14 压力分析；PaySim 最后。E13 的群体若样本/欺诈不足就如实报告，不反复生成直到出现好看的结果。新增方向均已分派任务，优先级不等于已完成。
 
@@ -158,8 +158,8 @@ python -X utf8 -m unittest discover -s code -p test_classification.py
 | 成员 | 现在可独立做 | 交付之后 |
 |---|---|---|
 | A | A-N1/N2/N3 的交付与验证已完成 | 各数据线具备条件即 A7/A8 |
-| B | 先完成原 B-E1/B-E2；可用小样例准备新数据管线 | B-N1 历史对照 → B-N2 冷启动 → 原 B6/B7 |
-| C | A 已运行 C-N1/N2/N3 正式验证入口 | C 复核并发布聚合结果；各线测试后 C7/C8 |
+| B | E03/E05/E10/E13 已交付，先在锁定环境复核 | 交 A6/A7；A8 后补 B6/B7 |
+| C | C-N1/N2/N3 正式验证、复跑、组合图及解释已完成 | 各线 A7/A8 后补 C7/C8 正式 test 图文 |
 | D | 现有稿件继续；准备语义特征规则与机制解释 | A-N1 后 D-N1，逐线收取证据并做 D5–D7 |
 
 具体编号、依赖和验收见 [TASKS.md](TASKS.md)。不等待他人最终图表再写已有方法；B/D 可先生成标准预测/覆盖，之后直接复用 C 的新增评价。C 不接管全部实验，D 不代写其他人的全部技术部分。

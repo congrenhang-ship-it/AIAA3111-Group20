@@ -1,26 +1,29 @@
 {
   "date": "2026-11-15",
   "dataset_id": "handbook",
-  "evidence_kind": "synthetic_interface_readiness",
-  "official_data_available": false,
-  "A_N1_delivered": false,
-  "official_validation_complete": false,
+  "evidence_kind": "implementation_and_official_validation_readiness",
+  "official_data_available": true,
+  "A_N1_delivered": true,
+  "official_validation_complete": true,
   "group_G2_complete": false,
   "test_scored": false,
   "C_N1": {
     "implementation_complete": true,
     "synthetic_interface_verified": true,
-    "official_ablation_pending": true
+    "official_ablation_pending": false,
+    "official_validation_complete": true
   },
   "C_N2": {
     "causal_relation_features_complete": true,
     "synthetic_increment_verified": true,
-    "official_increment_pending": true
+    "official_increment_pending": false,
+    "official_validation_complete": true
   },
   "C_N3": {
     "implementation_complete": true,
     "all_nine_conditions_verified": true,
-    "official_stress_results_pending": true
+    "official_stress_results_pending": false,
+    "official_validation_complete": true
   },
   "checks": {
     "repository_tests_passed": 83,
@@ -61,6 +64,47 @@
     "code/evaluation.py": "b1e5266ff33cbb45ce5fe93b6170d8c93b63331297290e312ba31fdb8ae2b346",
     "tests/test_c_modules.py": "27726ceb38c61046783b50888a036e1b2f520f00aacec05f0ba62c6fec102dc8"
   },
-  "next_dependency": "A-N1 official dataset, partition/source manifest, four feature views and unlabeled history-builder callback; then run the same validated API.",
-  "implementation_commit": "ae1ac5d00a4fad15f427779c717552db328292ab"
+  "next_dependency": "A6 shared integration and A7/G2 freeze, followed by A8 held-out results for C7/C8; no further independent C development pending.",
+  "implementation_commit": "ae1ac5d00a4fad15f427779c717552db328292ab",
+  "last_updated": "2026-11-16",
+  "formal_acceptance": {
+    "date": "2026-11-16",
+    "source_commit": "ef16480e0523d56d9369bde523f92fd0f8af169a",
+    "branch_heads_reviewed": {
+      "main": "935b5c47f59f2b0aa8fec14371f1bb183593d55e",
+      "Task_A": "a5513f1c5160b008bacc72c5e7def01a3538190f",
+      "b/classification-interface": "ef16480e0523d56d9369bde523f92fd0f8af169a",
+      "codex/c-independent-modules": "5648bcd4837546ca3c0c3318633b0d00548692da",
+      "codex/d-pattern-mining": "33e07a3e02a888628f1f1adefd9f536aea0d0d72"
+    },
+    "all_reviewed_heads_contained_in_C": true,
+    "data_sha256": "cf359432b7ca090e4d8614793e100a59c8fd0bb18c9cf11f414fc61644ae4ab7",
+    "data_and_partition_identity_A_B_C_equal": true,
+    "feature_columns_A_B_C_equal": true,
+    "raw_view_fingerprints_A_B_C_equal": false,
+    "fingerprint_note": "A/B published native pandas numeric fingerprints differ from C on macOS despite identical source bytes, partition identities and feature schemas. Possible platform/math-library floating-point difference; not established as bitwise feature equivalence. A7 must record the canonical frozen environment and its actual hashes.",
+    "B_both_history_LR_AP_delta": 0.0,
+    "repository_tests_passed": 85,
+    "classification_tests_passed": 11,
+    "pip_check_passed": true,
+    "independent_runs": 2,
+    "all_metrics_costs_and_nine_stress_conditions_exact": true,
+    "eight_prediction_csv_sha256_exact": true,
+    "saved_model_scores_replay_exact": true,
+    "commands": [
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/main.py --prepare-handbook --output data/handbook/c_acceptance_20261116",
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/main.py --run-handbook-c --handbook-dir data/handbook/c_acceptance_20261116 --output data/handbook/c_validation_20261116",
+      "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/main.py --run-handbook-c --handbook-dir data/handbook/c_acceptance_20261116 --output data/handbook/c_validation_20261116_replay"
+    ],
+    "additional_code_sha256": {
+      "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
+      "code/temporal.py": "c046dddcabc0fad2266ed6031712991f876104e369e9fd2cd84fa2402e98da0d",
+      "code/classification.py": "d92788dba8c59f3332eee5d72a1bff784e5e3fe6fac6800f6015b4dc3a43d3c0",
+      "code/main.py": "b678be7555791090657480fb82dda4c1d0bf7c4e583fc7c9b65b547f703e0f2e"
+    },
+    "formal_summary": "results/tables/handbook_c.json",
+    "group_G2_complete": false,
+    "test_scored": false,
+    "historical_checks_note": "Earlier synthetic evidence above is retained as a 2026-11-15 implementation record, not official performance evidence."
+  }
 }
