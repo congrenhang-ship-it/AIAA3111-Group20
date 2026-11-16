@@ -4,21 +4,21 @@
     "phase": "validation",
     "test_scored": false,
     "group_G2_complete": false,
-    "source_commit": "ade461ac93a15e000569cc22ab39f7f40a04c2e2",
+    "source_commit": "481ecd1fc7b3a0d8103afb166bb4b3b93bbaf745",
     "code_sha256": {
-      "code/classification.py": "7bd0c017dce4ba683f4580ebef088d2a739b39df96a7e21f9721ca62f6f70da8",
-      "code/run_b_validation.py": "34e6e45111c6b1f45d0bab39aa99d6d3731c763737ead0000ea3cd171d25bba4",
-      "code/evaluation.py": "b96e4ebc2561073f266eaa21a5b66d5bef87767446f4650800080746a5520b82",
-      "code/handbook.py": "fd26656cb9a6834f02520f4f22e59b5c7dd4004016d168202084be74cd5c4487",
-      "code/temporal.py": "793e0ad86aeaeadad180f207eb181a68973e5cb75e168ce6534e931f9d7063e1",
-      "code/unsupervised.py": "ddb9cc00f5f381bc0c5e1ce8f207f242dc18c13d3a508a2856a10f095c99269a"
+      "code/classification.py": "d92788dba8c59f3332eee5d72a1bff784e5e3fe6fac6800f6015b4dc3a43d3c0",
+      "code/run_b_validation.py": "48026ccfa2b2c1c1c9bbc58e32e4d4f9cbe7d0c0d7f2574ade4a998637caefdb",
+      "code/evaluation.py": "b1e5266ff33cbb45ce5fe93b6170d8c93b63331297290e312ba31fdb8ae2b346",
+      "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
+      "code/temporal.py": "c046dddcabc0fad2266ed6031712991f876104e369e9fd2cd84fa2402e98da0d",
+      "code/unsupervised.py": "d116c6ef1340f5c90a5584f6e00b5650a06b75e5eae623351ab977ec90313411"
     },
-    "python": "3.12.6",
+    "python": "3.12.14",
     "versions": {
-      "numpy": "2.4.4",
-      "pandas": "3.0.2",
-      "scikit-learn": "1.8.0",
-      "scipy": "1.17.1"
+      "numpy": "2.5.4",
+      "pandas": "3.1.1",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1"
     }
   },
   "evidence_kind": "handbook_validation",
@@ -55,9 +55,9 @@
       "customer_amount_multiplier": 5
     },
     "runtime": {
-      "python": "3.12.6",
-      "numpy": "2.4.4",
-      "pandas": "3.0.2"
+      "python": "3.12.14",
+      "numpy": "2.5.4",
+      "pandas": "3.1.1"
     },
     "partitions": {
       "train": {
@@ -168,18 +168,19 @@
   },
   "feature_fingerprints": {
     "train": {
-      "transaction_only": "0e6a00488bb019f4aefda1a16d7f61b2fbee1c53aa5dffc5270a58d1090a4ef3",
-      "customer_history": "f6240085af9fd74f050f3694eb0c72d1d296a36d3017ce4d6489809f7bbf021a",
-      "terminal_history": "e55d310bad863ccf981641f50eac4d3ef038681a7247fd1306ab2563e22b1b4f",
-      "both_history": "d2096dca39202ad83124a64f6ff0aa2de4f14cbc713e373a1b71d69e3f1c87f3"
+      "transaction_only": "220502fb70902f80d31ec61de4b9bcbf0c063ce882eb0eb470b579f82275c247",
+      "customer_history": "9209ebb673c0b8a4dbf728f7aef2bcb52bb46abe460b6f69cd67f272bca589cb",
+      "terminal_history": "1de28eaca76d235e7dac3afdfc8d10d806c979f61a3e6dd0e325a803420fe12c",
+      "both_history": "5afe022d8905178603cc1d76007164da56673d3dca111450a087207e42bce9ac"
     },
     "validation": {
-      "transaction_only": "fe8647d0fbdf3e2db2b98daf42ec1b8e7d84d29813abb54f7fc059c3fa6acf22",
-      "customer_history": "b714743ebead12d959025cc4fa7beee2fba02888f58597424a06314aee5fc57e",
-      "terminal_history": "f596f6eebf9f4304dfc74dff9efef813305bddf92b55c9b50c2175b2777fcf4c",
-      "both_history": "3b5d9d0717cb956291ec432c0738e8b473de62ebde1f7bbcb9507b8fc024e971"
+      "transaction_only": "b3588f4c1b9a221c6a01696f22da650191ae7ee5206003779d76afe528d1a640",
+      "customer_history": "b8eabea6c0d84f6bc6b05dd235620089ed3fbeca401ac56faa852085d0cca2cc",
+      "terminal_history": "5fceee5ad0c56b2ca39b91f6d0e7799b5b58668907a9a7078d1918cbc2b1604b",
+      "both_history": "3237e395d2b220a5f8c6b4536014f4d1864a8a7dc1e10b7db0c30709693f85a5"
     }
   },
+  "feature_fingerprint_version": "handbook-view-v2-time12",
   "fixed_reference": "both_history; all four views retained, no selection",
   "cold_start_rule": "initial training entities, not development updates",
   "amount_bins": {
@@ -723,8 +724,8 @@
           }
         ]
       },
-      "train_seconds": 0.1236141000117641,
-      "score_seconds": 0.016938399989157915,
+      "train_seconds": 0.17174387502018362,
+      "score_seconds": 0.00821433390956372,
       "features": [
         "Amount",
         "time_sin",
@@ -1267,8 +1268,8 @@
           }
         ]
       },
-      "train_seconds": 0.47082139999838546,
-      "score_seconds": 0.02934609999647364,
+      "train_seconds": 0.6839665829902515,
+      "score_seconds": 0.07446816703304648,
       "features": [
         "Amount",
         "time_sin",
@@ -1821,8 +1822,8 @@
           }
         ]
       },
-      "train_seconds": 0.3423991000163369,
-      "score_seconds": 0.02959379999083467,
+      "train_seconds": 0.3541775420308113,
+      "score_seconds": 0.06716475007124245,
       "features": [
         "Amount",
         "time_sin",
@@ -2371,8 +2372,8 @@
           }
         ]
       },
-      "train_seconds": 0.586388600000646,
-      "score_seconds": 0.040181699994718656,
+      "train_seconds": 1.2753473330521956,
+      "score_seconds": 0.2264534579589963,
       "features": [
         "Amount",
         "time_sin",
@@ -2412,23 +2413,24 @@
       }
     }
   },
-  "execution_command": "python -X utf8 code/run_b_validation.py --handbook --output data/handbook_b_20261115",
-  "private_output": "data/handbook_b_20261115",
+  "execution_command": "OPENBLAS_NUM_THREADS=1 .venv/bin/python code/run_b_validation.py --handbook --handbook-dir data/handbook/c_acceptance_20261116 --output data/handbook/b_fingerprint_v2_20261116",
+  "private_output": "data/handbook/b_fingerprint_v2_20261116",
   "artifact_hashes": {
-    "handbook_lr_both_history.csv": "4f7d3e5ff0d126cd062b52b258574aa3b52b7acd6deabf5db9da594ff67737b0",
-    "handbook_lr_both_history.joblib": "b3c02cea08b642c1eae5aa2c01906b0967803dd2af831990c6100d8b069dfbbb",
-    "handbook_lr_customer_history.csv": "ffb3fb1498ddabfcdfc5bfe90f07299ee87bb5573b7687ef24877af1fc3ea72e",
-    "handbook_lr_customer_history.joblib": "006f0a2bb1b4d34a41a9f4935b3d07b79f310eefc033a441a9e9a2e0b683a32f",
-    "handbook_lr_terminal_history.csv": "44558b21380fc7a2890b2358537cb540fcaaadf07b17adab475a6ce76b7ea3f8",
-    "handbook_lr_terminal_history.joblib": "377dbaad0a77a28878ece6f78e739f8e5e753b01e8034ac25bca813932314dfb",
-    "handbook_lr_transaction_only.csv": "2c34a0a387a7cfb456a6f92c0110a073008d5c294d899e6258dcbed05e4f4143",
-    "handbook_lr_transaction_only.joblib": "6bb7f49cfb1773d793dd5a29611a64f0838d897947c7942700390bbd57a8b9ef"
+    "handbook_lr_both_history.csv": "0e0426ee689ad930afc1f968d183b48fb06f7d25d11edede6568df7570cbcfed",
+    "handbook_lr_both_history.joblib": "729e8f7f92faf60da4b46c358522cd6b5205a26b5d75fb4c9b20794b8e643d00",
+    "handbook_lr_customer_history.csv": "2703379b5eb08e1489195cdf5a6e190c982f3552029b5f4ccf419ae319c92252",
+    "handbook_lr_customer_history.joblib": "602fb426e7f11b15efe75a77b09b3a3cec3987f3878f6db9bf863c20f5d9ac81",
+    "handbook_lr_terminal_history.csv": "2eb7c30f995edbe5235e9cb85aa4f53127810a04266eb77027a1b26c7fce985c",
+    "handbook_lr_terminal_history.joblib": "8cb18d3743e6e25ac30b91a1a19e5d243ea9123ee3de77a861cca4a63ac979ae",
+    "handbook_lr_transaction_only.csv": "1e9b24f3eef0196dbf5de580e07c7a7af7055395b5dcef4b72a811bd11c1a468",
+    "handbook_lr_transaction_only.joblib": "7a6bb2e7f0e93eac2dcb9112ada2a68afb920fb78878be2d5825d85323210499"
   },
   "checks": {
+    "repository_tests_passed": 88,
     "B_tests_passed": 11,
-    "repository_tests_passed": 84,
-    "repository_environment_gate_failed": 1,
-    "A_B_view_fingerprints_match": true,
-    "limitation": "Shared pinned-version gate not passed; actual versions recorded. No test scoring."
+    "repository_environment_gate_failed": 0,
+    "B_C_v2_fingerprints_match": true,
+    "metrics_amounts_and_cold_start_unchanged": true,
+    "limitation": "Validation only. Legacy unversioned fingerprints are retained in Git history and must not be compared directly to v2."
   }
 }

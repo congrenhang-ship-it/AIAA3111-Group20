@@ -97,7 +97,7 @@ A 已通过 [PaySim](https://github.com/EdgarLopezPhD/PaySim) 来源与字段审
 
 ULB 保留原切分、特征和已完成成果；不同数据集分别训练、分别评价，不拼表，不直接套用 ULB 模型。AP 随类别比例变化，跨数据集主要比较方法的相对表现与局限，不平均成一个总分。所有结果带 dataset_id。
 
-C 交付更新（2026-11-16）：A-N1 已到位；C 的四组 IF 历史消融、关系增量、九条件缺失压力已在正式 Handbook 数据上独立运行两遍，全部指标/逐行预测精确复现，96 项检查通过。[正式验证汇总](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/results/tables/handbook_c.json)和 [C 图文说明](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/report/C_IMPROVEMENTS.md)已发布，保留历史/关系未改善的结果。A/B/C 原数据字节、划分和列一致，但 A/B 与 C 的数值视图哈希不同，统一环境核对列入 A7；没有宣称位级特征完全相同。C 已无剩余独立开发，正式 test 图文仍待 A7/G2、A8。所有分支当前缺口及顺序见 [TASKS.md](TASKS.md)。main 仍需 A6 集成功能分支，本次 main 同步共享状态。
+C 交付更新（2026-11-16）：A-N1 已到位；C 的四组 IF 历史消融、关系增量、九条件缺失压力已在正式 Handbook 数据上独立运行两遍，全部指标/逐行预测精确复现，96 项检查通过。[正式验证汇总](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/results/tables/handbook_c.json)和 [C 图文说明](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/codex/c-independent-modules/report/C_IMPROVEMENTS.md)已发布，保留历史/关系未改善的结果。指纹差异已定位并修复：只在哈希时统一两列时间编码，模型输入不变；ARM/x86 三环境以及实际 B/C 复跑的八个 v2 指纹一致，99 项检查通过，原效果不变。C 已无剩余独立开发，正式 test 图文仍待 A7/G2、A8。所有分支当前缺口及顺序见 [TASKS.md](TASKS.md)。main 仍需 A6 集成功能分支，本次 main 同步共享状态。
 
 数据生成、下载、B/C/D 调用与文件结构见 [中文交接](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/docs/TASK_A.zh-CN.md) / [English handoff](https://github.com/congrenhang-ship-it/AIAA3111-Group20/blob/Task_A/docs/TASK_A.en.md)。
 
@@ -158,7 +158,7 @@ python -X utf8 -m unittest discover -s code -p test_classification.py
 | 成员 | 现在可独立做 | 交付之后 |
 |---|---|---|
 | A | A-N1/N2/N3 的交付与验证已完成 | 各数据线具备条件即 A7/A8 |
-| B | E03/E05/E10/E13 已交付，先在锁定环境复核 | 交 A6/A7；A8 后补 B6/B7 |
+| B | Handbook 共同环境复核已完成，剩 ULB E03/E05 复核 | 交 A6/A7；A8 后补 B6/B7 |
 | C | C-N1/N2/N3 正式验证、复跑、组合图及解释已完成 | 各线 A7/A8 后补 C7/C8 正式 test 图文 |
 | D | 现有稿件继续；准备语义特征规则与机制解释 | A-N1 后 D-N1，逐线收取证据并做 D5–D7 |
 

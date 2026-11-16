@@ -206,11 +206,12 @@
       ]
     },
     "train_view_sha256": {
-      "transaction_only": "a769b0d48cd832c6cbb19b124b8efedc96e3c0caa4a45d3a107ff334ab2c8dfe",
-      "customer_history": "9993b21f0db03f0136593a0e5153d7402402887c4c20fb5b96e3d69f2fc4c3c1",
-      "terminal_history": "bd04acd7ea74b44af7ad003d1cf45f85fd56faf5b76cee29febfda11ae083fba",
-      "both_history": "62b02f929bdcb0bb012956ead15788e066f1ed5ee326d7265f05f9916b9efcb7"
+      "transaction_only": "220502fb70902f80d31ec61de4b9bcbf0c063ce882eb0eb470b579f82275c247",
+      "customer_history": "9209ebb673c0b8a4dbf728f7aef2bcb52bb46abe460b6f69cd67f272bca589cb",
+      "terminal_history": "1de28eaca76d235e7dac3afdfc8d10d806c979f61a3e6dd0e325a803420fe12c",
+      "both_history": "5afe022d8905178603cc1d76007164da56673d3dca111450a087207e42bce9ac"
     },
+    "feature_fingerprint_version": "handbook-view-v2-time12",
     "model_views": {
       "if_transaction_only": "transaction_only",
       "if_customer_history": "customer_history",
@@ -273,10 +274,10 @@
     ]
   },
   "validation_view_sha256": {
-    "transaction_only": "ef2604973f271a03e83a53a29eb15e44816ac1856ae15c1a63422313328ba5c9",
-    "customer_history": "7c20dbc53f33d69c788b2dc4de502860055ca3d184dad50cc1b0a97f81ebb046",
-    "terminal_history": "f43620950b786b5cd6f4b3fe17c46eb5bd34bbe3a725086f79a6b1a0f982c30c",
-    "both_history": "5c101194e53c33e2395401b50115b2bef92e88fa563f3736f17430eb023816d5"
+    "transaction_only": "b3588f4c1b9a221c6a01696f22da650191ae7ee5206003779d76afe528d1a640",
+    "customer_history": "b8eabea6c0d84f6bc6b05dd235620089ed3fbeca401ac56faa852085d0cca2cc",
+    "terminal_history": "5fceee5ad0c56b2ca39b91f6d0e7799b5b58668907a9a7078d1918cbc2b1604b",
+    "both_history": "3237e395d2b220a5f8c6b4536014f4d1864a8a7dc1e10b7db0c30709693f85a5"
   },
   "metrics": {
     "if_transaction_only": {
@@ -11215,37 +11216,37 @@
     "note": "Inference-only missing context; unchanged current rows/labels and fixed full-history models. Seed ranges are not confidence intervals."
   },
   "fit_seconds": {
-    "if_transaction_only": 0.22685070906300098,
-    "if_customer_history": 0.21708554204087704,
-    "if_terminal_history": 0.20278612500987947,
-    "if_both_history": 0.27533045795280486,
-    "if_both_history_graph": 0.41619191702920943,
-    "lr_both_history": 0.8056417499901727,
-    "lr_both_history_graph": 0.7770073330029845
+    "if_transaction_only": 0.5094540410209447,
+    "if_customer_history": 0.38634583295788616,
+    "if_terminal_history": 0.2594952089712024,
+    "if_both_history": 0.3035510409390554,
+    "if_both_history_graph": 0.46169083402492106,
+    "lr_both_history": 1.0414951249258593,
+    "lr_both_history_graph": 0.4973710000049323
   },
   "score_seconds": {
-    "if_transaction_only": 0.432084875064902,
-    "if_customer_history": 0.46786166704259813,
-    "if_terminal_history": 0.4598685409873724,
-    "if_both_history": 0.47334066696930677,
-    "if_both_history_graph": 0.6042975829914212,
-    "lr_both_history": 0.07119920908007771,
-    "lr_both_history_graph": 0.04876166698522866
+    "if_transaction_only": 0.3487643329426646,
+    "if_customer_history": 0.4341796659864485,
+    "if_terminal_history": 0.4314297499367967,
+    "if_both_history": 0.43471237493213266,
+    "if_both_history_graph": 0.4618006249656901,
+    "lr_both_history": 0.02786458400078118,
+    "lr_both_history_graph": 0.023396417032927275
   },
   "verification": {
     "saved_model_scores_replay_exactly": true
   },
-  "model_bundle_sha256": "40153b1fbb9e5c2fa3f74305cbb63e2544cfb0fe55b1f45274566551af2811ee",
+  "model_bundle_sha256": "2919abd360ab6422088b214c9418d85d0d78d7c99663da61427f55f8b2fce439",
   "provenance": {
-    "source_commit": "ef16480e0523d56d9369bde523f92fd0f8af169a",
-    "source_dirty": false,
+    "source_commit": "481ecd1fc7b3a0d8103afb166bb4b3b93bbaf745",
+    "source_dirty": true,
     "code_sha256": {
-      "code/unsupervised.py": "03e51e99eccf25b9c22dce307129cd48218b9a57bb35923f3954cab5b1ae0655",
+      "code/unsupervised.py": "d116c6ef1340f5c90a5584f6e00b5650a06b75e5eae623351ab977ec90313411",
       "code/evaluation.py": "b1e5266ff33cbb45ce5fe93b6170d8c93b63331297290e312ba31fdb8ae2b346",
       "code/main.py": "b678be7555791090657480fb82dda4c1d0bf7c4e583fc7c9b65b547f703e0f2e",
       "code/preprocessing.py": "8d1eaa9e986b2f29a0beca26f9de29a565c0280a7db23411bf7af8799f1c4baa",
       "code/temporal.py": "c046dddcabc0fad2266ed6031712991f876104e369e9fd2cd84fa2402e98da0d",
-      "report/C_IMPROVEMENTS.md": "f1e52b74598259c822a9f1d89770a3ad0f7b6b2e71e58bfe24a38465ce46ee01"
+      "report/C_IMPROVEMENTS.md": "055b83ae5293d30671213ce34e1773a6ffe3d8bb87a155de35b1a01bfcc7a345"
     },
     "versions": {
       "numpy": "2.5.4",
