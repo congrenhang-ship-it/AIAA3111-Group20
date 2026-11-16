@@ -3,9 +3,9 @@
   "group_G2_complete": false,
   "test_scored": false,
   "provenance": {
-    "command": "python code/main.py --run-team-validation --output data/a_team_validation_replay",
-    "source_commit": "8818b20ef83b5f343c6e19f7d20ba5df34e8f724",
-    "source_dirty": true,
+    "command": "python code/main.py --run-team-validation --output data/main_team_e03_e05_20261116",
+    "source_commit": "4589b77c2dfec4a51cec1afe563c689e421b7c9a",
+    "source_dirty": false,
     "dataset_sha256": "76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89",
     "python": "3.12.14",
     "versions": {
@@ -37,22 +37,24 @@
       "results/tables/c_improved.json": "61d83f78c09708fe87c50d9ed3d693436b8e5e3cc8c02e12c6c8dffbe218cc86",
       "results/tables/d_freeze.json": "9204aaf587c8e2a1c03ef7f98c297f2bebad21b4f9db8c9a2e6a539847736059",
       "results/tables/d_extensions.json": "a2403cb545aee5b24d981bdca5175b3d5f963e91053166a91c01d73c3b8370c3",
-      "results/tables/c_extensions.json": "41753d5c8a812b41380383863783cbb0dee2ef4d2fc8716c318a7d39cc9b6909",
+      "results/tables/c_extensions.json": "c9da9ae2e7d9f57e15e65095c78b3d45b56023e94adfbaa70e18f1e388191afd",
       "results/tables/d_g1_reproduction.json": "c34a7d87f7cd6adc177ae2d04c37f6ef063cbe6d6a596b9c86f964700eafc07c",
       "report/d_validation/train_validation_rules.csv": "443ead5dc8fbf2dfcaa56c731b4593b95dd76a5ff89cabedf428335c1d6bc9f0",
       "requirements.txt": "3002c581c4ecbf0108116561a218702ce694cc26175659437c805f2e40be3416",
       "code/check_d_freeze.py": "0ea8406e4824f14f2b8b6a990f0734c53fff71fafdd25d87dfa6a1200c685022",
-      "code/classification.py": "d78499308ca49b407569dac0e6f636c67492ca4b4325b6451ab6c81058668ffa",
+      "code/classification.py": "d92788dba8c59f3332eee5d72a1bff784e5e3fe6fac6800f6015b4dc3a43d3c0",
       "code/download_data.py": "832e71c0a3db8ee61ef49da9e38a1b6ff43c52663e551dc0dff5730a0eb46d8d",
-      "code/evaluation.py": "58fa0086db6dd2634b78bf8615bf3edf7ea996ea4d07bea0815daa1f91b7f051",
-      "code/main.py": "a6f365e940af676993813f5450769e0a824e988610b4518a90311674bf59c212",
-      "code/pattern_mining.py": "d33c617a0b3fae2e05d63566878dace74c3995f6295fd89633cb32cac10db6e2",
+      "code/evaluation.py": "b1e5266ff33cbb45ce5fe93b6170d8c93b63331297290e312ba31fdb8ae2b346",
+      "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
+      "code/main.py": "8a14bcba00e005d59bc868e96a3fb438d03d89dfc80f247d0bb4da8ebfdc5554",
+      "code/pattern_mining.py": "b35e8952e8f4b9cbac39536fd53f2bd8172a75bc13ea746bc14fc494b3f205a0",
+      "code/paysim.py": "f67e136b489f2e52082ba8de5046935396ec05720dfa5ae8a3cce138bff0c934",
       "code/preprocessing.py": "8d1eaa9e986b2f29a0beca26f9de29a565c0280a7db23411bf7af8799f1c4baa",
-      "code/run_b_validation.py": "2586e7c7085b879db7894783da98959442231a8831d07adb1c434fbd4a7f8da2",
+      "code/run_b_validation.py": "3814d8b10ef13eb93cada0e433c5f7a8fadc546201f97809883cd026d5587021",
       "code/run_d_validation.py": "83446da9b0b69b408342938f0dc842080ec237e3b4fe6014938ad2d39ce85abd",
-      "code/temporal.py": "ec8242bd9a12e2066c92d097bf9ae156da5f9f8fb812a8b4b286c93130962c7e",
-      "code/test_classification.py": "bf8b62d73348e2e4e2b91b1712332fe1937e4c185fe9fe2ec0e1181c23990d98",
-      "code/unsupervised.py": "8949285dd316e6c499450e7c06d39437a054053ba3f39d6123ba1f6ea4490b88"
+      "code/temporal.py": "c046dddcabc0fad2266ed6031712991f876104e369e9fd2cd84fa2402e98da0d",
+      "code/test_classification.py": "6505439044dfa916a1eed756377190c95f7e659db79199463abfd5104ecaa5ef",
+      "code/unsupervised.py": "d116c6ef1340f5c90a5584f6e00b5650a06b75e5eae623351ab977ec90313411"
     }
   },
   "partitions": {
@@ -140,7 +142,7 @@
     ]
   },
   "fixed_fits": {
-    "bundle_sha256": "deb353f623c17cedba1f873bcf4ffac31303192c8b1541d4ebecbafc8968b22d",
+    "bundle_sha256": "d4c4c9314067c54c48363aebb78115bfc5ea10626de25247cf4f22a497e5658c",
     "classifier": "logistic_regression_class_weight",
     "classifier_seed": 42,
     "classifier_parameters": {
@@ -186,8 +188,6 @@
   },
   "E04": {
     "coverage": {
-      "covered_transactions": 56055,
-      "covered_frauds": 57,
       "rule_order": [
         "R001",
         "R002",
@@ -211,6 +211,2763 @@
         "R020",
         "R021"
       ],
+      "jaccard": [
+        [
+          1.0,
+          0.025424136108040563,
+          0.1314894378804153,
+          0.15946591402518454,
+          0.1975753122703894,
+          0.14003020361401863,
+          0.18448425310603872,
+          0.029425678872173337,
+          0.04917637120617872,
+          0.1795901119797169,
+          0.15174506828528073,
+          0.04901882258710453,
+          0.051971596917963436,
+          0.05500636561072418,
+          0.27652342801650887,
+          0.05916521815661511,
+          0.11519033014613025,
+          0.1905000836260244,
+          0.06609046682538039,
+          0.0,
+          0.07069488917536491
+        ],
+        [
+          0.025424136108040563,
+          1.0,
+          0.2744093075700887,
+          0.15193120096560048,
+          0.23108463895722733,
+          0.09715388326097443,
+          0.07410329231092878,
+          0.2784417884019478,
+          0.2047192839707079,
+          0.08963011273642038,
+          0.04848737742541206,
+          0.2959873067867745,
+          0.2115989754848152,
+          0.7104449807358483,
+          0.19188588631639308,
+          0.38502133908494335,
+          0.030771810673709807,
+          0.080185799601858,
+          0.18106581267316757,
+          0.17164179104477612,
+          0.17966322853237232
+        ],
+        [
+          0.1314894378804153,
+          0.2744093075700887,
+          1.0,
+          0.1152970724432933,
+          0.3699046566256736,
+          0.02125180780973807,
+          0.1857243959154787,
+          0.1461183582564429,
+          0.07222677875743284,
+          0.2668103448275862,
+          0.038685208596713025,
+          0.22873401818047448,
+          0.08553392015648617,
+          0.3423091578813667,
+          0.49071376547705753,
+          0.11560468982791008,
+          0.019960207945574737,
+          0.04811345473601467,
+          0.08240994123188732,
+          0.10346045197740113,
+          0.11821549978992399
+        ],
+        [
+          0.15946591402518454,
+          0.15193120096560048,
+          0.1152970724432933,
+          1.0,
+          0.030509256589191996,
+          0.14779843444227006,
+          0.03288569313735857,
+          0.12538419815584886,
+          0.040278768589145586,
+          0.050482553823311065,
+          0.1900337143327029,
+          0.18704977741804937,
+          0.054564237415477085,
+          0.259325119607096,
+          0.06951542684081015,
+          0.0647089063102429,
+          0.1105619768832204,
+          0.25610469978257233,
+          0.06674366007410615,
+          0.0,
+          0.09242151569686063
+        ],
+        [
+          0.1975753122703894,
+          0.23108463895722733,
+          0.3699046566256736,
+          0.030509256589191996,
+          1.0,
+          0.10189465706707086,
+          0.21273744778119336,
+          0.08458398367150918,
+          0.12337721704150667,
+          0.3481965768015867,
+          0.054150487984048694,
+          0.10479302832244008,
+          0.2031196434693178,
+          0.17841908824313515,
+          0.7127336732216557,
+          0.2694461016015786,
+          0.04350146784093942,
+          0.08155899302396118,
+          0.10758560210467573,
+          0.08283071974266185,
+          0.1681208767822941
+        ],
+        [
+          0.14003020361401863,
+          0.09715388326097443,
+          0.02125180780973807,
+          0.14779843444227006,
+          0.10189465706707086,
+          1.0,
+          0.04041856774449514,
+          0.03201605164442118,
+          0.24558216350123865,
+          0.04503796805446452,
+          0.31149466373895723,
+          0.04701598219704633,
+          0.22126301280423663,
+          0.07963831918595456,
+          0.08639912604826012,
+          0.397778899545684,
+          0.30987236259442563,
+          0.7248703796621508,
+          0.2168349677372316,
+          0.0,
+          0.18811484256946373
+        ],
+        [
+          0.18448425310603872,
+          0.07410329231092878,
+          0.1857243959154787,
+          0.03288569313735857,
+          0.21273744778119336,
+          0.04041856774449514,
+          1.0,
+          0.22595325953259532,
+          0.1959204413472706,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.07225172074729597,
+          0.2211094925952901,
+          0.060616269146116876,
+          0.12552835938267964,
+          0.04858838748953657,
+          0.2270772299445241,
+          0.21703670140462167,
+          0.0
+        ],
+        [
+          0.029425678872173337,
+          0.2784417884019478,
+          0.1461183582564429,
+          0.12538419815584886,
+          0.08458398367150918,
+          0.03201605164442118,
+          0.22595325953259532,
+          1.0,
+          0.356273010478618,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.26775053981963676,
+          0.08763058722511091,
+          0.1121362035922806,
+          0.10883553044569994,
+          0.04807125775482619,
+          0.3941906127282927,
+          0.46148611867174744,
+          0.0
+        ],
+        [
+          0.04917637120617872,
+          0.2047192839707079,
+          0.07222677875743284,
+          0.040278768589145586,
+          0.12337721704150667,
+          0.24558216350123865,
+          0.1959204413472706,
+          0.356273010478618,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.16015786625926987,
+          0.1014318463677703,
+          0.29443348171263367,
+          0.4048737322170036,
+          0.1931168831168831,
+          0.7998504020445054,
+          0.29258787379150114,
+          0.0
+        ],
+        [
+          0.1795901119797169,
+          0.08963011273642038,
+          0.2668103448275862,
+          0.050482553823311065,
+          0.3481965768015867,
+          0.04503796805446452,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.12823414045409973,
+          0.25671864631718644,
+          0.2603966379168269,
+          0.11406353652244416,
+          0.4011896091284292,
+          0.1042858400070404,
+          0.0,
+          0.058974536876431,
+          0.0,
+          0.0,
+          0.3119248737671653
+        ],
+        [
+          0.15174506828528073,
+          0.04848737742541206,
+          0.038685208596713025,
+          0.1900337143327029,
+          0.054150487984048694,
+          0.31149466373895723,
+          0.0,
+          0.0,
+          0.0,
+          0.12823414045409973,
+          1.0,
+          0.158537421966111,
+          0.32831001076426264,
+          0.07792952284606305,
+          0.07351987198892877,
+          0.13310349342119618,
+          0.0,
+          0.34901321291185816,
+          0.0,
+          0.0,
+          0.3938936340899438
+        ],
+        [
+          0.04901882258710453,
+          0.2959873067867745,
+          0.22873401818047448,
+          0.18704977741804937,
+          0.10479302832244008,
+          0.04701598219704633,
+          0.0,
+          0.0,
+          0.0,
+          0.25671864631718644,
+          0.158537421966111,
+          1.0,
+          0.3029176051542612,
+          0.361615648418646,
+          0.14118237387099716,
+          0.12479499352611136,
+          0.0,
+          0.07666025343329132,
+          0.0,
+          0.0,
+          0.40304846397055355
+        ],
+        [
+          0.051971596917963436,
+          0.2115989754848152,
+          0.08553392015648617,
+          0.054564237415477085,
+          0.2031196434693178,
+          0.22126301280423663,
+          0.0,
+          0.0,
+          0.0,
+          0.2603966379168269,
+          0.32831001076426264,
+          0.3029176051542612,
+          1.0,
+          0.16924697825514354,
+          0.16886957141330294,
+          0.37476481116057087,
+          0.0,
+          0.17862894960320946,
+          0.0,
+          0.0,
+          0.7707517342267944
+        ],
+        [
+          0.05500636561072418,
+          0.7104449807358483,
+          0.3423091578813667,
+          0.259325119607096,
+          0.17841908824313515,
+          0.07963831918595456,
+          0.07225172074729597,
+          0.26775053981963676,
+          0.16015786625926987,
+          0.11406353652244416,
+          0.07792952284606305,
+          0.361615648418646,
+          0.16924697825514354,
+          1.0,
+          0.25257731958762886,
+          0.33279784216893754,
+          0.046173308032890575,
+          0.1479111325766723,
+          0.18969344291799148,
+          0.13760499939130788,
+          0.23549036367145496
+        ],
+        [
+          0.27652342801650887,
+          0.19188588631639308,
+          0.49071376547705753,
+          0.06951542684081015,
+          0.7127336732216557,
+          0.08639912604826012,
+          0.2211094925952901,
+          0.08763058722511091,
+          0.1014318463677703,
+          0.4011896091284292,
+          0.07351987198892877,
+          0.14118237387099716,
+          0.16886957141330294,
+          0.25257731958762886,
+          1.0,
+          0.24305081237710857,
+          0.05550725897591933,
+          0.127134724857685,
+          0.12616013298240752,
+          0.0738665570062712,
+          0.21283446565991565
+        ],
+        [
+          0.05916521815661511,
+          0.38502133908494335,
+          0.11560468982791008,
+          0.0647089063102429,
+          0.2694461016015786,
+          0.397778899545684,
+          0.060616269146116876,
+          0.1121362035922806,
+          0.29443348171263367,
+          0.1042858400070404,
+          0.13310349342119618,
+          0.12479499352611136,
+          0.37476481116057087,
+          0.33279784216893754,
+          0.24305081237710857,
+          1.0,
+          0.1308950067120002,
+          0.3456002551732387,
+          0.27422905135383496,
+          0.08854013108656703,
+          0.3371800165152766
+        ],
+        [
+          0.11519033014613025,
+          0.030771810673709807,
+          0.019960207945574737,
+          0.1105619768832204,
+          0.04350146784093942,
+          0.30987236259442563,
+          0.12552835938267964,
+          0.10883553044569994,
+          0.4048737322170036,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.046173308032890575,
+          0.05550725897591933,
+          0.1308950067120002,
+          1.0,
+          0.3264341863187824,
+          0.4866296827276694,
+          0.0,
+          0.0
+        ],
+        [
+          0.1905000836260244,
+          0.080185799601858,
+          0.04811345473601467,
+          0.25610469978257233,
+          0.08155899302396118,
+          0.7248703796621508,
+          0.04858838748953657,
+          0.04807125775482619,
+          0.1931168831168831,
+          0.058974536876431,
+          0.34901321291185816,
+          0.07666025343329132,
+          0.17862894960320946,
+          0.1479111325766723,
+          0.127134724857685,
+          0.3456002551732387,
+          0.3264341863187824,
+          1.0,
+          0.24281537695944264,
+          0.0,
+          0.22706746463547334
+        ],
+        [
+          0.06609046682538039,
+          0.18106581267316757,
+          0.08240994123188732,
+          0.06674366007410615,
+          0.10758560210467573,
+          0.2168349677372316,
+          0.2270772299445241,
+          0.3941906127282927,
+          0.7998504020445054,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.18969344291799148,
+          0.12616013298240752,
+          0.27422905135383496,
+          0.4866296827276694,
+          0.24281537695944264,
+          1.0,
+          0.27519790562862306,
+          0.0
+        ],
+        [
+          0.0,
+          0.17164179104477612,
+          0.10346045197740113,
+          0.0,
+          0.08283071974266185,
+          0.0,
+          0.21703670140462167,
+          0.46148611867174744,
+          0.29258787379150114,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.13760499939130788,
+          0.0738665570062712,
+          0.08854013108656703,
+          0.0,
+          0.0,
+          0.27519790562862306,
+          1.0,
+          0.0
+        ],
+        [
+          0.07069488917536491,
+          0.17966322853237232,
+          0.11821549978992399,
+          0.09242151569686063,
+          0.1681208767822941,
+          0.18811484256946373,
+          0.0,
+          0.0,
+          0.0,
+          0.3119248737671653,
+          0.3938936340899438,
+          0.40304846397055355,
+          0.7707517342267944,
+          0.23549036367145496,
+          0.21283446565991565,
+          0.3371800165152766,
+          0.0,
+          0.22706746463547334,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "pairs": [
+        {
+          "left": "R001",
+          "right": "R002",
+          "intersection": 529,
+          "union": 20807,
+          "jaccard": 0.025424136108040563,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R003",
+          "intersection": 1469,
+          "union": 11172,
+          "jaccard": 0.1314894378804153,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R004",
+          "intersection": 1469,
+          "union": 9212,
+          "jaccard": 0.15946591402518454,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R005",
+          "intersection": 2689,
+          "union": 13610,
+          "jaccard": 0.1975753122703894,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R006",
+          "intersection": 2689,
+          "union": 19203,
+          "jaccard": 0.14003020361401863,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R007",
+          "intersection": 1277,
+          "union": 6922,
+          "jaccard": 0.18448425310603872,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R008",
+          "intersection": 311,
+          "union": 10569,
+          "jaccard": 0.029425678872173337,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R009",
+          "intersection": 815,
+          "union": 16573,
+          "jaccard": 0.04917637120617872,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R010",
+          "intersection": 1700,
+          "union": 9466,
+          "jaccard": 0.1795901119797169,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R011",
+          "intersection": 1700,
+          "union": 11203,
+          "jaccard": 0.15174506828528073,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R012",
+          "intersection": 612,
+          "union": 12485,
+          "jaccard": 0.04901882258710453,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R013",
+          "intersection": 1032,
+          "union": 19857,
+          "jaccard": 0.051971596917963436,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R014",
+          "intersection": 1469,
+          "union": 26706,
+          "jaccard": 0.05500636561072418,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R015",
+          "intersection": 4556,
+          "union": 16476,
+          "jaccard": 0.27652342801650887,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R016",
+          "intersection": 2689,
+          "union": 45449,
+          "jaccard": 0.05916521815661511,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R017",
+          "intersection": 1277,
+          "union": 11086,
+          "jaccard": 0.11519033014613025,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R018",
+          "intersection": 4556,
+          "union": 23916,
+          "jaccard": 0.1905000836260244,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R019",
+          "intersection": 1277,
+          "union": 19322,
+          "jaccard": 0.06609046682538039,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R020",
+          "intersection": 0,
+          "union": 8971,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R001",
+          "right": "R021",
+          "intersection": 1700,
+          "union": 24047,
+          "jaccard": 0.07069488917536491,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R003",
+          "intersection": 5354,
+          "union": 19511,
+          "jaccard": 0.2744093075700887,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R004",
+          "intersection": 3021,
+          "union": 19884,
+          "jaccard": 0.15193120096560048,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R005",
+          "intersection": 5354,
+          "union": 23169,
+          "jaccard": 0.23108463895722733,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R006",
+          "intersection": 3021,
+          "union": 31095,
+          "jaccard": 0.09715388326097443,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R007",
+          "intersection": 1409,
+          "union": 19014,
+          "jaccard": 0.07410329231092878,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R008",
+          "intersection": 5032,
+          "union": 18072,
+          "jaccard": 0.2784417884019478,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R009",
+          "intersection": 5032,
+          "union": 24580,
+          "jaccard": 0.2047192839707079,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R010",
+          "intersection": 1924,
+          "union": 21466,
+          "jaccard": 0.08963011273642038,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R011",
+          "intersection": 1162,
+          "union": 23965,
+          "jaccard": 0.04848737742541206,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R012",
+          "intersection": 5783,
+          "union": 19538,
+          "jaccard": 0.2959873067867745,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R013",
+          "intersection": 5783,
+          "union": 27330,
+          "jaccard": 0.2115989754848152,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R014",
+          "intersection": 16780,
+          "union": 23619,
+          "jaccard": 0.7104449807358483,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R015",
+          "intersection": 5354,
+          "union": 27902,
+          "jaccard": 0.19188588631639308,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R016",
+          "intersection": 16780,
+          "union": 43582,
+          "jaccard": 0.38502133908494335,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R017",
+          "intersection": 734,
+          "union": 23853,
+          "jaccard": 0.030771810673709807,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R018",
+          "intersection": 3021,
+          "union": 37675,
+          "jaccard": 0.080185799601858,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R019",
+          "intersection": 5032,
+          "union": 27791,
+          "jaccard": 0.18106581267316757,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R020",
+          "intersection": 3105,
+          "union": 18090,
+          "jaccard": 0.17164179104477612,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R002",
+          "right": "R021",
+          "intersection": 5783,
+          "union": 32188,
+          "jaccard": 0.17966322853237232,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R004",
+          "intersection": 1469,
+          "union": 12741,
+          "jaccard": 0.1152970724432933,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R005",
+          "intersection": 5354,
+          "union": 14474,
+          "jaccard": 0.3699046566256736,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R006",
+          "intersection": 529,
+          "union": 24892,
+          "jaccard": 0.02125180780973807,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R007",
+          "intersection": 1837,
+          "union": 9891,
+          "jaccard": 0.1857243959154787,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R008",
+          "intersection": 1837,
+          "union": 12572,
+          "jaccard": 0.1461183582564429,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R009",
+          "intersection": 1409,
+          "union": 19508,
+          "jaccard": 0.07222677875743284,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R010",
+          "intersection": 3095,
+          "union": 11600,
+          "jaccard": 0.2668103448275862,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R011",
+          "intersection": 612,
+          "union": 15820,
+          "jaccard": 0.038685208596713025,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R012",
+          "intersection": 3095,
+          "union": 13531,
+          "jaccard": 0.22873401818047448,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R013",
+          "intersection": 1924,
+          "union": 22494,
+          "jaccard": 0.08553392015648617,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R014",
+          "intersection": 8085,
+          "union": 23619,
+          "jaccard": 0.3423091578813667,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R015",
+          "intersection": 8085,
+          "union": 16476,
+          "jaccard": 0.49071376547705753,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R016",
+          "intersection": 5354,
+          "union": 46313,
+          "jaccard": 0.11560468982791008,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R017",
+          "intersection": 311,
+          "union": 15581,
+          "jaccard": 0.019960207945574737,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R018",
+          "intersection": 1469,
+          "union": 30532,
+          "jaccard": 0.04811345473601467,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R019",
+          "intersection": 1837,
+          "union": 22291,
+          "jaccard": 0.08240994123188732,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R020",
+          "intersection": 1172,
+          "union": 11328,
+          "jaccard": 0.10346045197740113,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R003",
+          "right": "R021",
+          "intersection": 3095,
+          "union": 26181,
+          "jaccard": 0.11821549978992399,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R005",
+          "intersection": 529,
+          "union": 17339,
+          "jaccard": 0.030509256589191996,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R006",
+          "intersection": 3021,
+          "union": 20440,
+          "jaccard": 0.14779843444227006,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R007",
+          "intersection": 311,
+          "union": 9457,
+          "jaccard": 0.03288569313735857,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R008",
+          "intersection": 1387,
+          "union": 11062,
+          "jaccard": 0.12538419815584886,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R009",
+          "intersection": 734,
+          "union": 18223,
+          "jaccard": 0.040278768589145586,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R010",
+          "intersection": 612,
+          "union": 12123,
+          "jaccard": 0.050482553823311065,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R011",
+          "intersection": 2311,
+          "union": 12161,
+          "jaccard": 0.1900337143327029,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R012",
+          "intersection": 2311,
+          "union": 12355,
+          "jaccard": 0.18704977741804937,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R013",
+          "intersection": 1162,
+          "union": 21296,
+          "jaccard": 0.054564237415477085,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R014",
+          "intersection": 6125,
+          "union": 23619,
+          "jaccard": 0.259325119607096,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R015",
+          "intersection": 1469,
+          "union": 21132,
+          "jaccard": 0.06951542684081015,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R016",
+          "intersection": 3021,
+          "union": 46686,
+          "jaccard": 0.0647089063102429,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R017",
+          "intersection": 1387,
+          "union": 12545,
+          "jaccard": 0.1105619768832204,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R018",
+          "intersection": 6125,
+          "union": 23916,
+          "jaccard": 0.25610469978257233,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R019",
+          "intersection": 1387,
+          "union": 20781,
+          "jaccard": 0.06674366007410615,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R020",
+          "intersection": 0,
+          "union": 10540,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R004",
+          "right": "R021",
+          "intersection": 2311,
+          "union": 25005,
+          "jaccard": 0.09242151569686063,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R006",
+          "intersection": 2689,
+          "union": 26390,
+          "jaccard": 0.10189465706707086,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R007",
+          "intersection": 2699,
+          "union": 12687,
+          "jaccard": 0.21273744778119336,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R008",
+          "intersection": 1409,
+          "union": 16658,
+          "jaccard": 0.08458398367150918,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R009",
+          "intersection": 2699,
+          "union": 21876,
+          "jaccard": 0.12337721704150667,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R010",
+          "intersection": 4740,
+          "union": 13613,
+          "jaccard": 0.3481965768015867,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R011",
+          "intersection": 1032,
+          "union": 19058,
+          "jaccard": 0.054150487984048694,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R012",
+          "intersection": 1924,
+          "union": 18360,
+          "jaccard": 0.10479302832244008,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R013",
+          "intersection": 4740,
+          "union": 23336,
+          "jaccard": 0.2031196434693178,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R014",
+          "intersection": 5354,
+          "union": 30008,
+          "jaccard": 0.17841908824313515,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R015",
+          "intersection": 11743,
+          "union": 16476,
+          "jaccard": 0.7127336732216557,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R016",
+          "intersection": 11743,
+          "union": 43582,
+          "jaccard": 0.2694461016015786,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R017",
+          "intersection": 815,
+          "union": 18735,
+          "jaccard": 0.04350146784093942,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R018",
+          "intersection": 2689,
+          "union": 32970,
+          "jaccard": 0.08155899302396118,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R019",
+          "intersection": 2699,
+          "union": 25087,
+          "jaccard": 0.10758560210467573,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R020",
+          "intersection": 1236,
+          "union": 14922,
+          "jaccard": 0.08283071974266185,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R005",
+          "right": "R021",
+          "intersection": 4740,
+          "union": 28194,
+          "jaccard": 0.1681208767822941,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R007",
+          "intersection": 815,
+          "union": 20164,
+          "jaccard": 0.04041856774449514,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R008",
+          "intersection": 734,
+          "union": 22926,
+          "jaccard": 0.03201605164442118,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R009",
+          "intersection": 5948,
+          "union": 24220,
+          "jaccard": 0.24558216350123865,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R010",
+          "intersection": 1032,
+          "union": 22914,
+          "jaccard": 0.04503796805446452,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R011",
+          "intersection": 6100,
+          "union": 19583,
+          "jaccard": 0.31149466373895723,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R012",
+          "intersection": 1162,
+          "union": 24715,
+          "jaccard": 0.04701598219704633,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R013",
+          "intersection": 6100,
+          "union": 27569,
+          "jaccard": 0.22126301280423663,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R014",
+          "intersection": 3021,
+          "union": 37934,
+          "jaccard": 0.07963831918595456,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R015",
+          "intersection": 2689,
+          "union": 31123,
+          "jaccard": 0.08639912604826012,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R016",
+          "intersection": 17336,
+          "union": 43582,
+          "jaccard": 0.397778899545684,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R017",
+          "intersection": 5948,
+          "union": 19195,
+          "jaccard": 0.30987236259442563,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R018",
+          "intersection": 17336,
+          "union": 23916,
+          "jaccard": 0.7248703796621508,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R019",
+          "intersection": 5948,
+          "union": 27431,
+          "jaccard": 0.2168349677372316,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R020",
+          "intersection": 0,
+          "union": 21751,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R006",
+          "right": "R021",
+          "intersection": 6100,
+          "union": 32427,
+          "jaccard": 0.18811484256946373,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R008",
+          "intersection": 1837,
+          "union": 8130,
+          "jaccard": 0.22595325953259532,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R009",
+          "intersection": 2699,
+          "union": 13776,
+          "jaccard": 0.1959204413472706,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R010",
+          "intersection": 0,
+          "union": 10253,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R011",
+          "intersection": 0,
+          "union": 11990,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R012",
+          "intersection": 0,
+          "union": 12184,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R013",
+          "intersection": 0,
+          "union": 19976,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R014",
+          "intersection": 1837,
+          "union": 25425,
+          "jaccard": 0.07225172074729597,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R015",
+          "intersection": 3643,
+          "union": 16476,
+          "jaccard": 0.2211094925952901,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R016",
+          "intersection": 2699,
+          "union": 44526,
+          "jaccard": 0.060616269146116876,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R017",
+          "intersection": 1277,
+          "union": 10173,
+          "jaccard": 0.12552835938267964,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R018",
+          "intersection": 1277,
+          "union": 26282,
+          "jaccard": 0.04858838748953657,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R019",
+          "intersection": 3643,
+          "union": 16043,
+          "jaccard": 0.2270772299445241,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R020",
+          "intersection": 1437,
+          "union": 6621,
+          "jaccard": 0.21703670140462167,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R007",
+          "right": "R021",
+          "intersection": 0,
+          "union": 24834,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R009",
+          "intersection": 5032,
+          "union": 14124,
+          "jaccard": 0.356273010478618,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R010",
+          "intersection": 0,
+          "union": 12934,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R011",
+          "intersection": 0,
+          "union": 14671,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R012",
+          "intersection": 0,
+          "union": 14865,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R013",
+          "intersection": 0,
+          "union": 22657,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R014",
+          "intersection": 6324,
+          "union": 23619,
+          "jaccard": 0.26775053981963676,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R015",
+          "intersection": 1837,
+          "union": 20963,
+          "jaccard": 0.08763058722511091,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R016",
+          "intersection": 5032,
+          "union": 44874,
+          "jaccard": 0.1121362035922806,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R017",
+          "intersection": 1387,
+          "union": 12744,
+          "jaccard": 0.10883553044569994,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R018",
+          "intersection": 1387,
+          "union": 28853,
+          "jaccard": 0.04807125775482619,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R019",
+          "intersection": 6324,
+          "union": 16043,
+          "jaccard": 0.3941906127282927,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R020",
+          "intersection": 3391,
+          "union": 7348,
+          "jaccard": 0.46148611867174744,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R008",
+          "right": "R021",
+          "intersection": 0,
+          "union": 27515,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R010",
+          "intersection": 0,
+          "union": 19442,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R011",
+          "intersection": 0,
+          "union": 21179,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R012",
+          "intersection": 0,
+          "union": 21373,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R013",
+          "intersection": 0,
+          "union": 29165,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R014",
+          "intersection": 5032,
+          "union": 31419,
+          "jaccard": 0.16015786625926987,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R015",
+          "intersection": 2699,
+          "union": 26609,
+          "jaccard": 0.1014318463677703,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R016",
+          "intersection": 12832,
+          "union": 43582,
+          "jaccard": 0.29443348171263367,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R017",
+          "intersection": 5948,
+          "union": 14691,
+          "jaccard": 0.4048737322170036,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R018",
+          "intersection": 5948,
+          "union": 30800,
+          "jaccard": 0.1931168831168831,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R019",
+          "intersection": 12832,
+          "union": 16043,
+          "jaccard": 0.7998504020445054,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R020",
+          "intersection": 3904,
+          "union": 13343,
+          "jaccard": 0.29258787379150114,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R009",
+          "right": "R021",
+          "intersection": 0,
+          "union": 34023,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R011",
+          "intersection": 1700,
+          "union": 13257,
+          "jaccard": 0.12823414045409973,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R012",
+          "intersection": 3095,
+          "union": 12056,
+          "jaccard": 0.25671864631718644,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R013",
+          "intersection": 4740,
+          "union": 18203,
+          "jaccard": 0.2603966379168269,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R014",
+          "intersection": 3095,
+          "union": 27134,
+          "jaccard": 0.11406353652244416,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R015",
+          "intersection": 6610,
+          "union": 16476,
+          "jaccard": 0.4011896091284292,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R016",
+          "intersection": 4740,
+          "union": 45452,
+          "jaccard": 0.1042858400070404,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R017",
+          "intersection": 0,
+          "union": 14417,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R018",
+          "intersection": 1700,
+          "union": 28826,
+          "jaccard": 0.058974536876431,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R019",
+          "intersection": 0,
+          "union": 22653,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R020",
+          "intersection": 0,
+          "union": 11025,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R010",
+          "right": "R021",
+          "intersection": 6610,
+          "union": 21191,
+          "jaccard": 0.3119248737671653,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R012",
+          "intersection": 2311,
+          "union": 14577,
+          "jaccard": 0.158537421966111,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R013",
+          "intersection": 6100,
+          "union": 18580,
+          "jaccard": 0.32831001076426264,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R014",
+          "intersection": 2311,
+          "union": 29655,
+          "jaccard": 0.07792952284606305,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R015",
+          "intersection": 1700,
+          "union": 23123,
+          "jaccard": 0.07351987198892877,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R016",
+          "intersection": 6100,
+          "union": 45829,
+          "jaccard": 0.13310349342119618,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R017",
+          "intersection": 0,
+          "union": 16154,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R018",
+          "intersection": 8347,
+          "union": 23916,
+          "jaccard": 0.34901321291185816,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R019",
+          "intersection": 0,
+          "union": 24390,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R020",
+          "intersection": 0,
+          "union": 12762,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R011",
+          "right": "R021",
+          "intersection": 8347,
+          "union": 21191,
+          "jaccard": 0.3938936340899438,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R012",
+          "right": "R013",
+          "intersection": 5783,
+          "union": 19091,
+          "jaccard": 0.3029176051542612,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R012",
+          "right": "R014",
+          "intersection": 8541,
+          "union": 23619,
+          "jaccard": 0.361615648418646,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R012",
+          "right": "R015",
+          "intersection": 3095,
+          "union": 21922,
+          "jaccard": 0.14118237387099716,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R012",
+          "right": "R016",
+          "intersection": 5783,
+          "union": 46340,
+          "jaccard": 0.12479499352611136,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R012",
+          "right": "R017",
+          "intersection": 0,
+          "union": 16348,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R012",
+          "right": "R018",
+          "intersection": 2311,
+          "union": 30146,
+          "jaccard": 0.07666025343329132,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R012",
+          "right": "R019",
+          "intersection": 0,
+          "union": 24584,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R012",
+          "right": "R020",
+          "intersection": 0,
+          "union": 12956,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R012",
+          "right": "R021",
+          "intersection": 8541,
+          "union": 21191,
+          "jaccard": 0.40304846397055355,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R013",
+          "right": "R014",
+          "intersection": 5783,
+          "union": 34169,
+          "jaccard": 0.16924697825514354,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R013",
+          "right": "R015",
+          "intersection": 4740,
+          "union": 28069,
+          "jaccard": 0.16886957141330294,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R013",
+          "right": "R016",
+          "intersection": 16333,
+          "union": 43582,
+          "jaccard": 0.37476481116057087,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R013",
+          "right": "R017",
+          "intersection": 0,
+          "union": 24140,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R013",
+          "right": "R018",
+          "intersection": 6100,
+          "union": 34149,
+          "jaccard": 0.17862894960320946,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R013",
+          "right": "R019",
+          "intersection": 0,
+          "union": 32376,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R013",
+          "right": "R020",
+          "intersection": 0,
+          "union": 20748,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R013",
+          "right": "R021",
+          "intersection": 16333,
+          "union": 21191,
+          "jaccard": 0.7707517342267944,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R014",
+          "right": "R015",
+          "intersection": 8085,
+          "union": 32010,
+          "jaccard": 0.25257731958762886,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R014",
+          "right": "R016",
+          "intersection": 16780,
+          "union": 50421,
+          "jaccard": 0.33279784216893754,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R014",
+          "right": "R017",
+          "intersection": 1387,
+          "union": 30039,
+          "jaccard": 0.046173308032890575,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R014",
+          "right": "R018",
+          "intersection": 6125,
+          "union": 41410,
+          "jaccard": 0.1479111325766723,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R014",
+          "right": "R019",
+          "intersection": 6324,
+          "union": 33338,
+          "jaccard": 0.18969344291799148,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R014",
+          "right": "R020",
+          "intersection": 3391,
+          "union": 24643,
+          "jaccard": 0.13760499939130788,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R014",
+          "right": "R021",
+          "intersection": 8541,
+          "union": 36269,
+          "jaccard": 0.23549036367145496,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R015",
+          "right": "R016",
+          "intersection": 11743,
+          "union": 48315,
+          "jaccard": 0.24305081237710857,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R015",
+          "right": "R017",
+          "intersection": 1277,
+          "union": 23006,
+          "jaccard": 0.05550725897591933,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R015",
+          "right": "R018",
+          "intersection": 4556,
+          "union": 35836,
+          "jaccard": 0.127134724857685,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R015",
+          "right": "R019",
+          "intersection": 3643,
+          "union": 28876,
+          "jaccard": 0.12616013298240752,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R015",
+          "right": "R020",
+          "intersection": 1437,
+          "union": 19454,
+          "jaccard": 0.0738665570062712,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R015",
+          "right": "R021",
+          "intersection": 6610,
+          "union": 31057,
+          "jaccard": 0.21283446565991565,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R016",
+          "right": "R017",
+          "intersection": 5948,
+          "union": 45441,
+          "jaccard": 0.1308950067120002,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R016",
+          "right": "R018",
+          "intersection": 17336,
+          "union": 50162,
+          "jaccard": 0.3456002551732387,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R016",
+          "right": "R019",
+          "intersection": 12832,
+          "union": 46793,
+          "jaccard": 0.27422905135383496,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R016",
+          "right": "R020",
+          "intersection": 3904,
+          "union": 44093,
+          "jaccard": 0.08854013108656703,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R016",
+          "right": "R021",
+          "intersection": 16333,
+          "union": 48440,
+          "jaccard": 0.3371800165152766,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R017",
+          "right": "R018",
+          "intersection": 7807,
+          "union": 23916,
+          "jaccard": 0.3264341863187824,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R017",
+          "right": "R019",
+          "intersection": 7807,
+          "union": 16043,
+          "jaccard": 0.4866296827276694,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R017",
+          "right": "R020",
+          "intersection": 0,
+          "union": 12222,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R017",
+          "right": "R021",
+          "intersection": 0,
+          "union": 28998,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R018",
+          "right": "R019",
+          "intersection": 7807,
+          "union": 32152,
+          "jaccard": 0.24281537695944264,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R018",
+          "right": "R020",
+          "intersection": 0,
+          "union": 28331,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R018",
+          "right": "R021",
+          "intersection": 8347,
+          "union": 36760,
+          "jaccard": 0.22706746463547334,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R019",
+          "right": "R020",
+          "intersection": 4415,
+          "union": 16043,
+          "jaccard": 0.27519790562862306,
+          "identical_coverage": false,
+          "antecedent_contains_other": true,
+          "high_overlap": false
+        },
+        {
+          "left": "R019",
+          "right": "R021",
+          "intersection": 0,
+          "union": 37234,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        },
+        {
+          "left": "R020",
+          "right": "R021",
+          "intersection": 0,
+          "union": 25606,
+          "jaccard": 0.0,
+          "identical_coverage": false,
+          "antecedent_contains_other": false,
+          "high_overlap": false
+        }
+      ],
+      "cumulative": [
+        {
+          "rule_id": "R001",
+          "transactions": 4556,
+          "frauds": 39,
+          "increment_transactions": 4556,
+          "increment_frauds": 39,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R002",
+          "transactions": 20807,
+          "frauds": 53,
+          "increment_transactions": 16251,
+          "increment_frauds": 14,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R003",
+          "transactions": 22598,
+          "frauds": 53,
+          "increment_transactions": 1791,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R004",
+          "transactions": 24762,
+          "frauds": 53,
+          "increment_transactions": 2164,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R005",
+          "transactions": 28991,
+          "frauds": 54,
+          "increment_transactions": 4229,
+          "increment_frauds": 1,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R006",
+          "transactions": 41146,
+          "frauds": 55,
+          "increment_transactions": 12155,
+          "increment_frauds": 1,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R007",
+          "transactions": 41373,
+          "frauds": 55,
+          "increment_transactions": 227,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R008",
+          "transactions": 41757,
+          "frauds": 55,
+          "increment_transactions": 384,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R009",
+          "transactions": 43730,
+          "frauds": 56,
+          "increment_transactions": 1973,
+          "increment_frauds": 1,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R010",
+          "transactions": 44135,
+          "frauds": 56,
+          "increment_transactions": 405,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R011",
+          "transactions": 44939,
+          "frauds": 56,
+          "increment_transactions": 804,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R012",
+          "transactions": 45751,
+          "frauds": 56,
+          "increment_transactions": 812,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R013",
+          "transactions": 49341,
+          "frauds": 57,
+          "increment_transactions": 3590,
+          "increment_frauds": 1,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R014",
+          "transactions": 50089,
+          "frauds": 57,
+          "increment_transactions": 748,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R015",
+          "transactions": 50532,
+          "frauds": 57,
+          "increment_transactions": 443,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R016",
+          "transactions": 53227,
+          "frauds": 57,
+          "increment_transactions": 2695,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R017",
+          "transactions": 54144,
+          "frauds": 57,
+          "increment_transactions": 917,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R018",
+          "transactions": 54972,
+          "frauds": 57,
+          "increment_transactions": 828,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R019",
+          "transactions": 55458,
+          "frauds": 57,
+          "increment_transactions": 486,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        },
+        {
+          "rule_id": "R020",
+          "transactions": 55458,
+          "frauds": 57,
+          "increment_transactions": 0,
+          "increment_frauds": 0,
+          "redundant_given_previous": true
+        },
+        {
+          "rule_id": "R021",
+          "transactions": 56055,
+          "frauds": 57,
+          "increment_transactions": 597,
+          "increment_frauds": 0,
+          "redundant_given_previous": false
+        }
+      ],
       "display_rule_ids": [
         "R001",
         "R002",
@@ -218,6 +2975,10 @@
         "R006",
         "R009"
       ],
+      "n_transactions": 56745,
+      "n_fraud": 57,
+      "covered_transactions": 56055,
+      "covered_frauds": 57,
       "error_associations": {
         "classifier_FN": {
           "total": 8,
@@ -234,6 +2995,134 @@
         "IF_FP": {
           "total": 544,
           "covered_by_any_rule": 538
+        }
+      },
+      "per_rule_errors": {
+        "R001": {
+          "classifier_FN": 1,
+          "classifier_FP": 47,
+          "IF_FN": 18,
+          "IF_FP": 83
+        },
+        "R002": {
+          "classifier_FN": 3,
+          "classifier_FP": 413,
+          "IF_FN": 28,
+          "IF_FP": 213
+        },
+        "R003": {
+          "classifier_FN": 0,
+          "classifier_FP": 352,
+          "IF_FN": 24,
+          "IF_FP": 97
+        },
+        "R004": {
+          "classifier_FN": 0,
+          "classifier_FP": 49,
+          "IF_FN": 17,
+          "IF_FP": 161
+        },
+        "R005": {
+          "classifier_FN": 2,
+          "classifier_FP": 339,
+          "IF_FN": 26,
+          "IF_FP": 130
+        },
+        "R006": {
+          "classifier_FN": 2,
+          "classifier_FP": 51,
+          "IF_FN": 19,
+          "IF_FP": 188
+        },
+        "R007": {
+          "classifier_FN": 1,
+          "classifier_FP": 191,
+          "IF_FN": 10,
+          "IF_FP": 26
+        },
+        "R008": {
+          "classifier_FN": 1,
+          "classifier_FP": 220,
+          "IF_FN": 10,
+          "IF_FP": 55
+        },
+        "R009": {
+          "classifier_FN": 4,
+          "classifier_FP": 215,
+          "IF_FN": 13,
+          "IF_FP": 102
+        },
+        "R010": {
+          "classifier_FN": 1,
+          "classifier_FP": 123,
+          "IF_FN": 12,
+          "IF_FP": 102
+        },
+        "R011": {
+          "classifier_FN": 1,
+          "classifier_FP": 46,
+          "IF_FN": 11,
+          "IF_FP": 157
+        },
+        "R012": {
+          "classifier_FN": 2,
+          "classifier_FP": 144,
+          "IF_FN": 14,
+          "IF_FP": 159
+        },
+        "R013": {
+          "classifier_FN": 4,
+          "classifier_FP": 155,
+          "IF_FN": 16,
+          "IF_FP": 346
+        },
+        "R014": {
+          "classifier_FN": 3,
+          "classifier_FP": 451,
+          "IF_FN": 28,
+          "IF_FP": 237
+        },
+        "R015": {
+          "classifier_FN": 2,
+          "classifier_FP": 389,
+          "IF_FN": 26,
+          "IF_FP": 149
+        },
+        "R016": {
+          "classifier_FN": 8,
+          "classifier_FP": 455,
+          "IF_FN": 33,
+          "IF_FP": 496
+        },
+        "R017": {
+          "classifier_FN": 1,
+          "classifier_FP": 12,
+          "IF_FN": 5,
+          "IF_FP": 35
+        },
+        "R018": {
+          "classifier_FN": 2,
+          "classifier_FP": 67,
+          "IF_FN": 19,
+          "IF_FP": 215
+        },
+        "R019": {
+          "classifier_FN": 4,
+          "classifier_FP": 236,
+          "IF_FN": 13,
+          "IF_FP": 114
+        },
+        "R020": {
+          "classifier_FN": 2,
+          "classifier_FP": 223,
+          "IF_FN": 5,
+          "IF_FP": 63
+        },
+        "R021": {
+          "classifier_FN": 4,
+          "classifier_FP": 181,
+          "IF_FN": 16,
+          "IF_FP": 364
         }
       }
     },
@@ -283,13 +3172,13 @@
       "selection_phase": "validation",
       "review_fraction": 0.01,
       "target_K": 568,
-      "threshold": 0.8042817844979917,
+      "threshold": 0.8042817844288124,
       "strictly_above_threshold": 567,
       "equal_to_threshold": 1,
       "decision_rule": "score >= threshold",
       "overall": {
         "fixed_threshold": {
-          "value": 0.8042817844979917,
+          "value": 0.8042817844288124,
           "K": 568,
           "TP": 49,
           "FP": 519,
@@ -324,7 +3213,7 @@
           "n_positives": 1,
           "status": "ok",
           "fixed_threshold": {
-            "value": 0.8042817844979917,
+            "value": 0.8042817844288124,
             "K": 44,
             "TP": 1,
             "FP": 43,
@@ -358,7 +3247,7 @@
           "n_positives": 6,
           "status": "ok",
           "fixed_threshold": {
-            "value": 0.8042817844979917,
+            "value": 0.8042817844288124,
             "K": 76,
             "TP": 5,
             "FP": 71,
@@ -392,7 +3281,7 @@
           "n_positives": 10,
           "status": "ok",
           "fixed_threshold": {
-            "value": 0.8042817844979917,
+            "value": 0.8042817844288124,
             "K": 83,
             "TP": 8,
             "FP": 75,
@@ -426,7 +3315,7 @@
           "n_positives": 8,
           "status": "ok",
           "fixed_threshold": {
-            "value": 0.8042817844979917,
+            "value": 0.8042817844288124,
             "K": 88,
             "TP": 7,
             "FP": 81,
@@ -460,7 +3349,7 @@
           "n_positives": 8,
           "status": "ok",
           "fixed_threshold": {
-            "value": 0.8042817844979917,
+            "value": 0.8042817844288124,
             "K": 74,
             "TP": 7,
             "FP": 67,
@@ -494,7 +3383,7 @@
           "n_positives": 10,
           "status": "ok",
           "fixed_threshold": {
-            "value": 0.8042817844979917,
+            "value": 0.8042817844288124,
             "K": 90,
             "TP": 9,
             "FP": 81,
@@ -528,7 +3417,7 @@
           "n_positives": 12,
           "status": "ok",
           "fixed_threshold": {
-            "value": 0.8042817844979917,
+            "value": 0.8042817844288124,
             "K": 89,
             "TP": 10,
             "FP": 79,
@@ -562,7 +3451,7 @@
           "n_positives": 2,
           "status": "ok",
           "fixed_threshold": {
-            "value": 0.8042817844979917,
+            "value": 0.8042817844288124,
             "K": 24,
             "TP": 2,
             "FP": 22,
@@ -900,19 +3789,1684 @@
       ]
     }
   },
-  "pending_extensions": [
-    "E03",
-    "E05"
-  ],
+  "E03": {
+    "fractions": [
+      0.05,
+      0.1,
+      0.25,
+      0.5,
+      1.0
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "mask_hash_rule": "SHA256 of selected row_ids in training order, little-endian int64",
+    "sampling": "class-stratified nested permutations; ceil per class; labels used only to simulate annotation",
+    "fitting": "LR sees only labeled rows; IF sees all unlabeled training features; hidden labels never become 0",
+    "pipeline_parameters": {
+      "C": 1.0,
+      "class_weight": "balanced",
+      "dual": false,
+      "fit_intercept": true,
+      "intercept_scaling": 1,
+      "l1_ratio": 0.0,
+      "max_iter": 1000,
+      "n_jobs": null,
+      "penalty": "deprecated",
+      "random_state": 42,
+      "solver": "lbfgs",
+      "tol": 0.0001,
+      "verbose": 0,
+      "warm_start": false
+    },
+    "conditions": [
+      {
+        "fraction": 0.05,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 8513,
+        "labeled_frauds": 18,
+        "mask_sha256": "d70271d45435c3671d86f4089e0191d7243d7245b3f1e15090e0703475c838f5",
+        "reuse_full_fit": false,
+        "train_seconds": 0.05916358297690749,
+        "score_seconds": 0.016053333063609898,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.25622282280117137,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 23,
+              "FP": 34,
+              "FN": 34,
+              "TN": 56654,
+              "precision_at_k": 0.40350877192982454,
+              "recall_at_k": 0.40350877192982454,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 35,
+              "FP": 249,
+              "FN": 22,
+              "TN": 56439,
+              "precision_at_k": 0.12323943661971831,
+              "recall_at_k": 0.6140350877192983,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 39,
+              "FP": 529,
+              "FN": 18,
+              "TN": 56159,
+              "precision_at_k": 0.06866197183098592,
+              "recall_at_k": 0.6842105263157895,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 40,
+              "FP": 1095,
+              "FN": 17,
+              "TN": 55593,
+              "precision_at_k": 0.03524229074889868,
+              "recall_at_k": 0.7017543859649122,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.1,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 17025,
+        "labeled_frauds": 35,
+        "mask_sha256": "9d577074428f92c4d5d70d7074eebb9d669be199733ed4f542dd85bf8cd1c429",
+        "reuse_full_fit": false,
+        "train_seconds": 0.06643520900979638,
+        "score_seconds": 0.014648957992903888,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.28474952601980535,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 25,
+              "FP": 32,
+              "FN": 32,
+              "TN": 56656,
+              "precision_at_k": 0.43859649122807015,
+              "recall_at_k": 0.43859649122807015,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 38,
+              "FP": 246,
+              "FN": 19,
+              "TN": 56442,
+              "precision_at_k": 0.13380281690140844,
+              "recall_at_k": 0.6666666666666666,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 39,
+              "FP": 529,
+              "FN": 18,
+              "TN": 56159,
+              "precision_at_k": 0.06866197183098592,
+              "recall_at_k": 0.6842105263157895,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 39,
+              "FP": 1096,
+              "FN": 18,
+              "TN": 55592,
+              "precision_at_k": 0.03436123348017621,
+              "recall_at_k": 0.6842105263157895,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.25,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 42560,
+        "labeled_frauds": 86,
+        "mask_sha256": "4791e2380c538512c52efb25d2e4100e71c7b28604ea66b091c67bd1ab6cec41",
+        "reuse_full_fit": false,
+        "train_seconds": 0.18730129196774215,
+        "score_seconds": 0.009586667059920728,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7385139774525664,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 40,
+              "FP": 17,
+              "FN": 17,
+              "TN": 56671,
+              "precision_at_k": 0.7017543859649122,
+              "recall_at_k": 0.7017543859649122,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 46,
+              "FP": 238,
+              "FN": 11,
+              "TN": 56450,
+              "precision_at_k": 0.1619718309859155,
+              "recall_at_k": 0.8070175438596491,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 46,
+              "FP": 522,
+              "FN": 11,
+              "TN": 56166,
+              "precision_at_k": 0.08098591549295775,
+              "recall_at_k": 0.8070175438596491,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 47,
+              "FP": 1088,
+              "FN": 10,
+              "TN": 55600,
+              "precision_at_k": 0.04140969162995595,
+              "recall_at_k": 0.8245614035087719,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.5,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 85118,
+        "labeled_frauds": 171,
+        "mask_sha256": "90bbc333da6b26f63754c9ae3b01acfa57db1a2328feb35681a9743c46f05968",
+        "reuse_full_fit": false,
+        "train_seconds": 0.28763241693377495,
+        "score_seconds": 0.01264695799909532,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7725153739096747,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 41,
+              "FP": 16,
+              "FN": 16,
+              "TN": 56672,
+              "precision_at_k": 0.7192982456140351,
+              "recall_at_k": 0.7192982456140351,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 47,
+              "FP": 237,
+              "FN": 10,
+              "TN": 56451,
+              "precision_at_k": 0.16549295774647887,
+              "recall_at_k": 0.8245614035087719,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 48,
+              "FP": 520,
+              "FN": 9,
+              "TN": 56168,
+              "precision_at_k": 0.08450704225352113,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 48,
+              "FP": 1087,
+              "FN": 9,
+              "TN": 55601,
+              "precision_at_k": 0.04229074889867841,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 1.0,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 170235,
+        "labeled_frauds": 342,
+        "mask_sha256": "08309dd6a77b93b0bc3001e33d1b9f41828302c98eda0f3752a56a56fe7c597c",
+        "reuse_full_fit": false,
+        "train_seconds": 0.48162358393892646,
+        "score_seconds": 0.011571082985028625,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7726808523329118,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 42,
+              "FP": 15,
+              "FN": 15,
+              "TN": 56673,
+              "precision_at_k": 0.7368421052631579,
+              "recall_at_k": 0.7368421052631579,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 48,
+              "FP": 236,
+              "FN": 9,
+              "TN": 56452,
+              "precision_at_k": 0.16901408450704225,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 49,
+              "FP": 519,
+              "FN": 8,
+              "TN": 56169,
+              "precision_at_k": 0.08626760563380281,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 49,
+              "FP": 1086,
+              "FN": 8,
+              "TN": 55602,
+              "precision_at_k": 0.04317180616740088,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.05,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 8513,
+        "labeled_frauds": 18,
+        "mask_sha256": "533eb62a9a62583f56d405da17ee500fa44ebbc6293e0734cdab0c272a00e568",
+        "reuse_full_fit": false,
+        "train_seconds": 0.03395000007003546,
+        "score_seconds": 0.0110393330687657,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.2574324418206749,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 23,
+              "FP": 34,
+              "FN": 34,
+              "TN": 56654,
+              "precision_at_k": 0.40350877192982454,
+              "recall_at_k": 0.40350877192982454,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 31,
+              "FP": 253,
+              "FN": 26,
+              "TN": 56435,
+              "precision_at_k": 0.10915492957746478,
+              "recall_at_k": 0.543859649122807,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 34,
+              "FP": 534,
+              "FN": 23,
+              "TN": 56154,
+              "precision_at_k": 0.05985915492957746,
+              "recall_at_k": 0.5964912280701754,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 41,
+              "FP": 1094,
+              "FN": 16,
+              "TN": 55594,
+              "precision_at_k": 0.03612334801762115,
+              "recall_at_k": 0.7192982456140351,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.1,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 17025,
+        "labeled_frauds": 35,
+        "mask_sha256": "9ca0a4045752ef13d677c85fa879268935f5a344f21f12dfe25841afba3e8025",
+        "reuse_full_fit": false,
+        "train_seconds": 0.08378562494181097,
+        "score_seconds": 0.02852849999908358,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.4038917918496662,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 29,
+              "FP": 28,
+              "FN": 28,
+              "TN": 56660,
+              "precision_at_k": 0.5087719298245614,
+              "recall_at_k": 0.5087719298245614,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 37,
+              "FP": 247,
+              "FN": 20,
+              "TN": 56441,
+              "precision_at_k": 0.13028169014084506,
+              "recall_at_k": 0.6491228070175439,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 40,
+              "FP": 528,
+              "FN": 17,
+              "TN": 56160,
+              "precision_at_k": 0.07042253521126761,
+              "recall_at_k": 0.7017543859649122,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 43,
+              "FP": 1092,
+              "FN": 14,
+              "TN": 55596,
+              "precision_at_k": 0.03788546255506608,
+              "recall_at_k": 0.7543859649122807,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.25,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 42560,
+        "labeled_frauds": 86,
+        "mask_sha256": "1f85b0b7b8ffc1c12592aa4e107857646f48532ea6b3b08263933a770647eb99",
+        "reuse_full_fit": false,
+        "train_seconds": 0.1561027499847114,
+        "score_seconds": 0.009270292008295655,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7532766572575122,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 40,
+              "FP": 17,
+              "FN": 17,
+              "TN": 56671,
+              "precision_at_k": 0.7017543859649122,
+              "recall_at_k": 0.7017543859649122,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 46,
+              "FP": 238,
+              "FN": 11,
+              "TN": 56450,
+              "precision_at_k": 0.1619718309859155,
+              "recall_at_k": 0.8070175438596491,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 48,
+              "FP": 520,
+              "FN": 9,
+              "TN": 56168,
+              "precision_at_k": 0.08450704225352113,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 49,
+              "FP": 1086,
+              "FN": 8,
+              "TN": 55602,
+              "precision_at_k": 0.04317180616740088,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.5,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 85118,
+        "labeled_frauds": 171,
+        "mask_sha256": "020864b06d829d60f52f8130af95ddf327ed89e4cd5b0637a49b61d69a2c63b0",
+        "reuse_full_fit": false,
+        "train_seconds": 0.30529050005134195,
+        "score_seconds": 0.01032508397474885,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.748517231008557,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 40,
+              "FP": 17,
+              "FN": 17,
+              "TN": 56671,
+              "precision_at_k": 0.7017543859649122,
+              "recall_at_k": 0.7017543859649122,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 47,
+              "FP": 237,
+              "FN": 10,
+              "TN": 56451,
+              "precision_at_k": 0.16549295774647887,
+              "recall_at_k": 0.8245614035087719,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 48,
+              "FP": 520,
+              "FN": 9,
+              "TN": 56168,
+              "precision_at_k": 0.08450704225352113,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 48,
+              "FP": 1087,
+              "FN": 9,
+              "TN": 55601,
+              "precision_at_k": 0.04229074889867841,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 1.0,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 170235,
+        "labeled_frauds": 342,
+        "mask_sha256": "08309dd6a77b93b0bc3001e33d1b9f41828302c98eda0f3752a56a56fe7c597c",
+        "reuse_full_fit": true,
+        "train_seconds": 0.48162358393892646,
+        "score_seconds": 0.011571082985028625,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7726808523329118,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 42,
+              "FP": 15,
+              "FN": 15,
+              "TN": 56673,
+              "precision_at_k": 0.7368421052631579,
+              "recall_at_k": 0.7368421052631579,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 48,
+              "FP": 236,
+              "FN": 9,
+              "TN": 56452,
+              "precision_at_k": 0.16901408450704225,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 49,
+              "FP": 519,
+              "FN": 8,
+              "TN": 56169,
+              "precision_at_k": 0.08626760563380281,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 49,
+              "FP": 1086,
+              "FN": 8,
+              "TN": 55602,
+              "precision_at_k": 0.04317180616740088,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.05,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 8513,
+        "labeled_frauds": 18,
+        "mask_sha256": "01ed507157d7426401a93661de3dd10044c41c1e8028bee5548056db238a0a9d",
+        "reuse_full_fit": false,
+        "train_seconds": 0.019400542019866407,
+        "score_seconds": 0.009648166014812887,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.6259208412218691,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 38,
+              "FP": 19,
+              "FN": 19,
+              "TN": 56669,
+              "precision_at_k": 0.6666666666666666,
+              "recall_at_k": 0.6666666666666666,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 44,
+              "FP": 240,
+              "FN": 13,
+              "TN": 56448,
+              "precision_at_k": 0.15492957746478872,
+              "recall_at_k": 0.7719298245614035,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 45,
+              "FP": 523,
+              "FN": 12,
+              "TN": 56165,
+              "precision_at_k": 0.07922535211267606,
+              "recall_at_k": 0.7894736842105263,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 45,
+              "FP": 1090,
+              "FN": 12,
+              "TN": 55598,
+              "precision_at_k": 0.039647577092511016,
+              "recall_at_k": 0.7894736842105263,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.1,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 17025,
+        "labeled_frauds": 35,
+        "mask_sha256": "1a491f64cb15fca8e7d8989f833378a3982e32b9a14b2b4933b1cb483c165971",
+        "reuse_full_fit": false,
+        "train_seconds": 0.04059766698628664,
+        "score_seconds": 0.008917708997614682,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.6324070476033087,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 38,
+              "FP": 19,
+              "FN": 19,
+              "TN": 56669,
+              "precision_at_k": 0.6666666666666666,
+              "recall_at_k": 0.6666666666666666,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 42,
+              "FP": 242,
+              "FN": 15,
+              "TN": 56446,
+              "precision_at_k": 0.14788732394366197,
+              "recall_at_k": 0.7368421052631579,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 44,
+              "FP": 524,
+              "FN": 13,
+              "TN": 56164,
+              "precision_at_k": 0.07746478873239436,
+              "recall_at_k": 0.7719298245614035,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 44,
+              "FP": 1091,
+              "FN": 13,
+              "TN": 55597,
+              "precision_at_k": 0.038766519823788544,
+              "recall_at_k": 0.7719298245614035,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.25,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 42560,
+        "labeled_frauds": 86,
+        "mask_sha256": "f5e39d0c8605464c54370717c5b43652b200d368bbd2b88fe1f47b46d15e3304",
+        "reuse_full_fit": false,
+        "train_seconds": 0.13618666701950133,
+        "score_seconds": 0.00890208303462714,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7248116146333152,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 41,
+              "FP": 16,
+              "FN": 16,
+              "TN": 56672,
+              "precision_at_k": 0.7192982456140351,
+              "recall_at_k": 0.7192982456140351,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 45,
+              "FP": 239,
+              "FN": 12,
+              "TN": 56449,
+              "precision_at_k": 0.15845070422535212,
+              "recall_at_k": 0.7894736842105263,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 48,
+              "FP": 520,
+              "FN": 9,
+              "TN": 56168,
+              "precision_at_k": 0.08450704225352113,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 49,
+              "FP": 1086,
+              "FN": 8,
+              "TN": 55602,
+              "precision_at_k": 0.04317180616740088,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.5,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 85118,
+        "labeled_frauds": 171,
+        "mask_sha256": "b3a1556e429d1bb89e2dd9c44aa03a763a8dbeb2629934b441780f6f825de96b",
+        "reuse_full_fit": false,
+        "train_seconds": 0.2815307079581544,
+        "score_seconds": 0.010546208010055125,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7732525315149515,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 42,
+              "FP": 15,
+              "FN": 15,
+              "TN": 56673,
+              "precision_at_k": 0.7368421052631579,
+              "recall_at_k": 0.7368421052631579,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 47,
+              "FP": 237,
+              "FN": 10,
+              "TN": 56451,
+              "precision_at_k": 0.16549295774647887,
+              "recall_at_k": 0.8245614035087719,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 49,
+              "FP": 519,
+              "FN": 8,
+              "TN": 56169,
+              "precision_at_k": 0.08626760563380281,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 49,
+              "FP": 1086,
+              "FN": 8,
+              "TN": 55602,
+              "precision_at_k": 0.04317180616740088,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 1.0,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 170235,
+        "labeled_frauds": 342,
+        "mask_sha256": "08309dd6a77b93b0bc3001e33d1b9f41828302c98eda0f3752a56a56fe7c597c",
+        "reuse_full_fit": true,
+        "train_seconds": 0.48162358393892646,
+        "score_seconds": 0.011571082985028625,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56745,
+          "n_positive": 57,
+          "prevalence": 0.0010044937879989425,
+          "AP": 0.7726808523329118,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044937879989425,
+              "K": 57,
+              "TP": 42,
+              "FP": 15,
+              "FN": 15,
+              "TN": 56673,
+              "precision_at_k": 0.7368421052631579,
+              "recall_at_k": 0.7368421052631579,
+              "random_expected_TP": 0.05725614591593972,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.0010044937879989425
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004846241959644,
+              "K": 284,
+              "TP": 48,
+              "FP": 236,
+              "FN": 9,
+              "TN": 56452,
+              "precision_at_k": 0.16901408450704225,
+              "recall_at_k": 0.8421052631578947,
+              "random_expected_TP": 0.2852762357916997,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.005004846241959644
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.010009692483919287,
+              "K": 568,
+              "TP": 49,
+              "FP": 519,
+              "FN": 8,
+              "TN": 56169,
+              "precision_at_k": 0.08626760563380281,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 0.5705524715833994,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.010009692483919287
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001762269803505,
+              "K": 1135,
+              "TP": 49,
+              "FP": 1086,
+              "FN": 8,
+              "TN": 55602,
+              "precision_at_k": 0.04317180616740088,
+              "recall_at_k": 0.8596491228070176,
+              "random_expected_TP": 1.1401004493787998,
+              "random_expected_precision": 0.0010044937879989425,
+              "random_expected_recall": 0.020001762269803505
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      }
+    ],
+    "IF_reference": {
+      "metrics": {
+        "status": "ok",
+        "n_samples": 56745,
+        "n_positive": 57,
+        "prevalence": 0.0010044937879989425,
+        "AP": 0.016546256917260863,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010044937879989425,
+            "K": 57,
+            "TP": 0,
+            "FP": 57,
+            "FN": 57,
+            "TN": 56631,
+            "precision_at_k": 0.0,
+            "recall_at_k": 0.0,
+            "random_expected_TP": 0.05725614591593972,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.0010044937879989425
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005004846241959644,
+            "K": 284,
+            "TP": 3,
+            "FP": 281,
+            "FN": 54,
+            "TN": 56407,
+            "precision_at_k": 0.01056338028169014,
+            "recall_at_k": 0.05263157894736842,
+            "random_expected_TP": 0.2852762357916997,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.005004846241959644
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.010009692483919287,
+            "K": 568,
+            "TP": 10,
+            "FP": 558,
+            "FN": 47,
+            "TN": 56130,
+            "precision_at_k": 0.017605633802816902,
+            "recall_at_k": 0.17543859649122806,
+            "random_expected_TP": 0.5705524715833994,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.010009692483919287
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020001762269803505,
+            "K": 1135,
+            "TP": 23,
+            "FP": 1112,
+            "FN": 34,
+            "TN": 55576,
+            "precision_at_k": 0.02026431718061674,
+            "recall_at_k": 0.40350877192982454,
+            "random_expected_TP": 1.1401004493787998,
+            "random_expected_precision": 0.0010044937879989425,
+            "random_expected_recall": 0.020001762269803505
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      },
+      "train_seconds": 0.17842433298937976,
+      "score_seconds": 0.16015616699587554,
+      "parameters": {
+        "bootstrap": false,
+        "contamination": "auto",
+        "max_features": 1.0,
+        "max_samples": 256,
+        "n_estimators": 100,
+        "n_jobs": 1,
+        "random_state": 42,
+        "verbose": 0,
+        "warm_start": false
+      }
+    }
+  },
+  "E05": {
+    "scoring": "average_precision",
+    "seed": 42,
+    "repeats": 5,
+    "fitting": "no refit, all original features",
+    "elapsed_seconds": 2.1960234999423847,
+    "importances": [
+      {
+        "feature": "Time",
+        "mean": 1.2302389069773767e-05,
+        "std": 2.4602684483056985e-05,
+        "repeats": [
+          -2.7134962009789376e-05,
+          1.7235059577735967e-05,
+          -2.402578125781929e-06,
+          4.005314234267754e-05,
+          3.3761283564026634e-05
+        ]
+      },
+      {
+        "feature": "V1",
+        "mean": 0.08410173351172212,
+        "std": 0.008368714490433693,
+        "repeats": [
+          0.08889164059029364,
+          0.09591047051434443,
+          0.08644851163967138,
+          0.07581551993566815,
+          0.07344252487863301
+        ]
+      },
+      {
+        "feature": "V2",
+        "mean": 0.16774284371067755,
+        "std": 0.007135690999702962,
+        "repeats": [
+          0.16579495754988505,
+          0.1737561920508316,
+          0.15465299332197524,
+          0.1733890212776864,
+          0.1711210543530095
+        ]
+      },
+      {
+        "feature": "V3",
+        "mean": 0.011475929415102937,
+        "std": 0.003188768274390458,
+        "repeats": [
+          0.006845940880899848,
+          0.013475251653498721,
+          0.009023594494204867,
+          0.012218161415072037,
+          0.01581669863183921
+        ]
+      },
+      {
+        "feature": "V4",
+        "mean": 0.022905645975365107,
+        "std": 0.0024993294799921482,
+        "repeats": [
+          0.02131878710356061,
+          0.023543986237171688,
+          0.027539697002782693,
+          0.02120716482181617,
+          0.020918594711494376
+        ]
+      },
+      {
+        "feature": "V5",
+        "mean": 0.0810679946220465,
+        "std": 0.005235986016715408,
+        "repeats": [
+          0.07989093803800729,
+          0.07682518572132202,
+          0.08980302122952266,
+          0.07517396378964902,
+          0.08364686433173152
+        ]
+      },
+      {
+        "feature": "V6",
+        "mean": 0.08555566556589592,
+        "std": 0.006040216343135749,
+        "repeats": [
+          0.08765026329423076,
+          0.08863711208308522,
+          0.07444282360252741,
+          0.09222679146063051,
+          0.08482133738900566
+        ]
+      },
+      {
+        "feature": "V7",
+        "mean": 0.12309443674893024,
+        "std": 0.0038251528427665255,
+        "repeats": [
+          0.12564816006535307,
+          0.11680369536531576,
+          0.12583270118771928,
+          0.12668146597867336,
+          0.12050616114758972
+        ]
+      },
+      {
+        "feature": "V8",
+        "mean": 0.004308225455635672,
+        "std": 0.002773761864851663,
+        "repeats": [
+          0.005846088032364194,
+          -0.0010623274281329476,
+          0.006790198440311479,
+          0.005290590870115963,
+          0.004676577363519674
+        ]
+      },
+      {
+        "feature": "V9",
+        "mean": 0.004614870379781299,
+        "std": 0.0014828297375714054,
+        "repeats": [
+          0.0029620961071422647,
+          0.004912220965250569,
+          0.0040617824265835045,
+          0.003830344246775974,
+          0.007307908153154186
+        ]
+      },
+      {
+        "feature": "V10",
+        "mean": 0.014067468017226515,
+        "std": 0.003151358134301493,
+        "repeats": [
+          0.01744714756455157,
+          0.016850184143878177,
+          0.013073802853803551,
+          0.014324254778882328,
+          0.008641950745016946
+        ]
+      },
+      {
+        "feature": "V11",
+        "mean": -0.0011767231120118015,
+        "std": 0.002783765806997136,
+        "repeats": [
+          -0.0017463547383996803,
+          -0.005996058827047346,
+          0.002502651553032864,
+          -0.0006358789450978675,
+          -7.97460254697846e-06
+        ]
+      },
+      {
+        "feature": "V12",
+        "mean": 0.013576658358648274,
+        "std": 0.0035906452263827944,
+        "repeats": [
+          0.00879416779076958,
+          0.016341543572855333,
+          0.013266306042520548,
+          0.010794699572853506,
+          0.018686574814242407
+        ]
+      },
+      {
+        "feature": "V13",
+        "mean": 0.00010478207895787683,
+        "std": 0.002524470128481066,
+        "repeats": [
+          0.0029490412760040385,
+          -0.0038275705053266718,
+          0.0022672913366426073,
+          -0.001668934833173541,
+          0.0008040831206429511
+        ]
+      },
+      {
+        "feature": "V14",
+        "mean": 0.10579650896333415,
+        "std": 0.0113334575895889,
+        "repeats": [
+          0.0997238838478618,
+          0.0898184969172694,
+          0.1080928539584497,
+          0.12432447668680058,
+          0.10702283340628926
+        ]
+      },
+      {
+        "feature": "V15",
+        "mean": -0.0002837388618408987,
+        "std": 0.0002601431314570756,
+        "repeats": [
+          -1.5527690713224018e-06,
+          -0.0004973541173740603,
+          -3.4372699817986074e-05,
+          -0.00021866905519085655,
+          -0.0006667456677502681
+        ]
+      },
+      {
+        "feature": "V16",
+        "mean": 0.04216768761375043,
+        "std": 0.004478780817379425,
+        "repeats": [
+          0.03486968041868843,
+          0.047184517756595046,
+          0.042840311273467435,
+          0.039800076090546366,
+          0.046143852529454854
+        ]
+      },
+      {
+        "feature": "V17",
+        "mean": 0.03599554540647594,
+        "std": 0.002088436721547604,
+        "repeats": [
+          0.03918893671318613,
+          0.03640553199382879,
+          0.03489334125753352,
+          0.03662899855769097,
+          0.03286091851014028
+        ]
+      },
+      {
+        "feature": "V18",
+        "mean": -0.00013417179874462005,
+        "std": 0.0007477841211574155,
+        "repeats": [
+          -0.0011992687060763396,
+          -0.00036116591083412697,
+          0.00035871026248668336,
+          -0.0004583240137934208,
+          0.0009891893744941038
+        ]
+      },
+      {
+        "feature": "V19",
+        "mean": -0.002123925586314823,
+        "std": 0.0005783007628879679,
+        "repeats": [
+          -0.0023016229494234874,
+          -0.0012234310127012815,
+          -0.0029859969841768974,
+          -0.001858295779535779,
+          -0.0022502812057366706
+        ]
+      },
+      {
+        "feature": "V20",
+        "mean": 0.10772806850645607,
+        "std": 0.0068895822061923835,
+        "repeats": [
+          0.1123499213111192,
+          0.10456694180887449,
+          0.11341460006485404,
+          0.0955492324623749,
+          0.11275964688505768
+        ]
+      },
+      {
+        "feature": "V21",
+        "mean": 0.0001045431223177129,
+        "std": 0.00018591538640485843,
+        "repeats": [
+          9.25340829236454e-05,
+          0.00045954545966031546,
+          -6.953714130397692e-05,
+          5.235139400461275e-05,
+          -1.2178183696032185e-05
+        ]
+      },
+      {
+        "feature": "V22",
+        "mean": 0.005741758806520614,
+        "std": 0.001860117288660861,
+        "repeats": [
+          0.005402594476606404,
+          0.0023466892472330247,
+          0.006892288195386453,
+          0.006327505704911807,
+          0.00773971640846538
+        ]
+      },
+      {
+        "feature": "V23",
+        "mean": 0.00576100113701925,
+        "std": 0.0013069995507156466,
+        "repeats": [
+          0.007076489197394897,
+          0.006372949261820526,
+          0.005673905896727005,
+          0.006379537395215462,
+          0.0033021239339383612
+        ]
+      },
+      {
+        "feature": "V24",
+        "mean": 0.000873763685582385,
+        "std": 0.003000407434946718,
+        "repeats": [
+          -0.0010167411693150497,
+          0.004934510910965417,
+          0.004049750026965615,
+          -0.001265226488577409,
+          -0.002333474852126649
+        ]
+      },
+      {
+        "feature": "V25",
+        "mean": -0.002747380900963625,
+        "std": 0.0006283210193293926,
+        "repeats": [
+          -0.0018648946159190993,
+          -0.003767855246986085,
+          -0.0024391359212923014,
+          -0.0026837177177360116,
+          -0.0029813010028846287
+        ]
+      },
+      {
+        "feature": "V26",
+        "mean": -5.674134917477147e-07,
+        "std": 0.0007007060353419619,
+        "repeats": [
+          0.00044717258149029604,
+          -0.0008391489806217622,
+          -0.0003452906408341061,
+          0.0011294133532788742,
+          -0.0003949833807720404
+        ]
+      },
+      {
+        "feature": "V27",
+        "mean": 0.002916689291470731,
+        "std": 0.00044629597132822806,
+        "repeats": [
+          0.002252488177213241,
+          0.0033544231508616518,
+          0.0033616731342572814,
+          0.0025416857733375764,
+          0.0030731762216839043
+        ]
+      },
+      {
+        "feature": "V28",
+        "mean": -0.00016433767528980514,
+        "std": 0.0016305877767777918,
+        "repeats": [
+          -0.0004956000057271259,
+          -0.0025753748125233455,
+          -0.00044401853979181283,
+          0.0001789959209501646,
+          0.002514309060643094
+        ]
+      },
+      {
+        "feature": "Amount",
+        "mean": 0.5804316830749712,
+        "std": 0.0052343946488892885,
+        "repeats": [
+          0.5757773555275203,
+          0.5729807726030482,
+          0.5850896619356085,
+          0.5864343479071599,
+          0.5818762774015189
+        ]
+      }
+    ],
+    "case_rule": "two FP closest inside K; two FN closest outside K; two highest-ranked FP; score desc,row_id asc; categories may overlap",
+    "case_counts": {
+      "near_boundary_FP": 2,
+      "near_boundary_FN": 2,
+      "highest_ranked_FP": 2
+    },
+    "private_cases": "data/main_team_e03_e05_20261116/b_extensions/ulb_error_cases.csv"
+  },
+  "pending_extensions": [],
   "verification": {
-    "local_tests_passed": 78,
-    "independent_G1_AP_and_budget_counts_matched": true,
-    "B_C_AP_and_budget_counts_matched": true,
-    "published_B_IF_policy_matched": true,
-    "published_C_extensions_matched": true,
-    "published_D_rule_diagnostics_matched": true,
-    "E08_exact_replay_match": true,
-    "E08_window_confusion_counts_sum_to_overall": true
+    "repository_tests_passed": 91,
+    "classification_tests_passed": 11,
+    "total_tests_passed": 102,
+    "pip_check_passed": true,
+    "existing_G1_B_C_and_D_validation_reproduced": true,
+    "E03_all_15_conditions_masks_and_IF_metrics_match_original_B": true,
+    "E05_all_150_importance_values_case_rules_and_counts_match_original_B": true,
+    "all_15_saved_masks_verified": true,
+    "all_13_saved_LR_models_and_IF_metrics_replayed_exactly": true,
+    "all_LR_scalers_match_their_labeled_training_subset": true,
+    "full_label_reference_matches_shared_classifier": true,
+    "no_models_masks_or_row_cases_in_aggregate": true,
+    "private_case_path_exists_after_staging_rename": true
   },
   "main_integration": {
     "date": "2026-11-16",
@@ -1023,6 +5577,17 @@
     ],
     "group_G2_complete": false,
     "test_scored": false,
-    "note": "Historical A evidence above is retained unchanged; this section records the current main integration acceptance."
+    "note": "Historical A evidence above is retained unchanged; this section records the current main integration acceptance.",
+    "E03_E05_unified_validation_completed": true,
+    "latest_unified_run": {
+      "source_commit": "4589b77c2dfec4a51cec1afe563c689e421b7c9a",
+      "command": "python code/main.py --run-team-validation --output data/main_team_e03_e05_20261116",
+      "private_output": "data/main_team_e03_e05_20261116",
+      "summary_sha256": "a0ebe55c240666a2cba1dd5b0c0b44f5814d98c1e7806d69a6eebee1d0f582f1",
+      "pending_extensions": [],
+      "tests_passed": 102,
+      "test_scored": false,
+      "group_G2_complete": false
+    }
   }
 }

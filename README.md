@@ -2,7 +2,7 @@
 
 AIAA 3111 Course Project · Group 20
 
-更新：2026-11-16。研究有限审核容量下，分类、异常检测与规则解释的能力、上下文价值和可靠性。保留 ULB 主实验，正式新增 Handbook 交易模拟数据及上下文/时间实验；PaySim 用于轻量外部复核。A 已交付 E09 数据和接口、E11 滚动验证及 E16 审计和验证。B/C 新扩展已交付验证；main 已合并各分支最新交付；D-N1、E03/E05 统一入口接入及各线 G2 后正式测试待完成。不开展 LLM、GNN、复杂神经网络或前端。
+更新：2026-11-16。研究有限审核容量下，分类、异常检测与规则解释的能力、上下文价值和可靠性。保留 ULB 主实验，正式新增 Handbook 交易模拟数据及上下文/时间实验；PaySim 用于轻量外部复核。A 已交付 E09 数据和接口、E11 滚动验证及 E16 审计和验证。B/C 新扩展已交付验证；main 已合并各分支最新交付；E03/E05 已接入统一入口；D-N1 及各线 G2 后正式测试待完成。不开展 LLM、GNN、复杂神经网络或前端。
 
 负责人：A 维护公共入口和环境，D 整合材料；每位成员负责自己的实现、分析和来源记录。
 
@@ -12,7 +12,7 @@ AIAA 3111 Course Project · Group 20
 
 2026-11-16 已将全部成员分支最新内容合入 main，无合并冲突，各成员分支保留。main 现在包含 ULB 统一验证、B 标签/重要性扩展、Handbook 数据/历史/关系/压力实验、PaySim 审计与验证代码，以及现有报告和海报稿。
 
-主线验收：88 项公共检查＋11 项分类检查通过，依赖检查通过；完整 ULB 统一入口和 Handbook C 入口运行成功。Handbook 指标、九个压力条件和 v2 指纹与已发布结果一致。证据见 [主线验证摘要](results/tables/a_team_validation.json)的 main_integration。
+主线验收：91 项公共检查＋11 项分类检查通过，依赖检查通过；完整 --run-team-validation 已实际运行 E03 的 15 个条件、固定 IF 参考、E05 的 30×5 次置换和案例分析，既有 C/D/E08 同时复现。新结果与 B 原交付精确一致，pending_extensions 为空。证据见 [主线验证摘要](results/tables/a_team_validation.json)及 [B 扩展汇总](results/tables/b_extensions.json)。
 
 | 保留的成员分支 | 本次合入的最新提交 | 交付 |
 |---|---|---|
@@ -21,7 +21,7 @@ AIAA 3111 Course Project · Group 20
 | codex/c-independent-modules | 304baa3 | 聚类/异常及公共评价、C 全部扩展、指纹修复和 B/C 共同环境验收 |
 | codex/d-pattern-mining | 33e07a3 | ULB 规则/E04、复现说明、报告/海报验证稿 |
 
-上述内容已包含在 main，不需要组员重复拣选提交。B 的 E03/E05 已交付，可用下方独立命令运行；它们仍待 A6 接入 --run-team-validation。D-N1、G2、正式测试及最终 PDF 继续按 [TASKS.md](TASKS.md) 推进。
+上述内容已包含在 main，不需要组员重复拣选提交。B 的 E03/E05 已接入 --run-team-validation，原独立命令仍可使用，两者共用同一实现。A6 和 B-E1/E2 已验收完成。D-N1、G2、正式测试及最终 PDF 继续按 [TASKS.md](TASKS.md) 推进。
 
 查看最新主线：
 
@@ -57,9 +57,9 @@ C 已交付 E01/E02/E06/E07：原验证段 56,745 笔、57 笔欺诈；500＋200
 |---|---|---|---|---|
 | E01 | 检出笔数与欺诈金额覆盖是否一致？ | C | 原预算下金额覆盖、训练边界金额分组 | 验证交付完成 |
 | E02 | 少量欺诈样本下差值是否稳定？ | C | 配对 bootstrap、时间块敏感性、AP/Recall 差值区间 | 验证交付完成 |
-| E03 | 可见标签减少时分类与 IF 如何变化？ | B | 5/10/25/50/100% 标注、种子 42/43/44、固定参考 IF | 已交付，待共同环境复核/统一入口接入 |
+| E03 | 可见标签减少时分类与 IF 如何变化？ | B | 5/10/25/50/100% 标注、种子 42/43/44、固定参考 IF | 统一入口及共同环境验收完成 |
 | E04 | 多条规则提供多少新增覆盖？ | D | Jaccard、固定顺序累计去重覆盖、分类/异常错误关联 | 验证交付完成 |
-| E05 | 模型依赖哪些特征，错误有何特点？ | B | 已选分类器 AP 置换重要性、固定案例规则 | 已交付，待共同环境复核/统一入口接入 |
+| E05 | 模型依赖哪些特征，错误有何特点？ | B | 已选分类器 AP 置换重要性、固定案例规则 | 统一入口及共同环境验收完成 |
 | E06 | 比简单审核参考强多少？ | C | 随机审核期望、Amount 降序、Precision 提升倍数 | 验证交付完成 |
 | E07 | 预算如何影响不同错误代价？ | C | 四档预算，假设漏报/误报成本比 10/50/100 | 验证交付完成 |
 | E08 | 固定分数阈值会产生多少后续审核量？ | A | 验证阈值，测试与固定窗口实际审核率和检出 | 验证交付完成 |
@@ -153,14 +153,16 @@ python code/main.py --prepare-data
 python code/main.py --run-team-validation --output data/team_validation
 ```
 
-数据来源、原始校验值和预期划分见 [数据说明](data/README.md)。输出目录需位于 `data/` 且尚未存在。统一入口使用已交付的配置，仅在训练段重建三个模型，复用同一批验证预测运行总体、分群、时间窗口、等预算组合、C 扩展、D 规则分析与 E08。验证通过后，模型、逐行预测和案例留在本地，汇总与图表位于输出目录的 `aggregate/`。E03/E05 已有独立入口，尚未纳入此统一重放，当前摘要仍明确将二者列为 pending。
+数据来源、原始校验值和预期划分见 [数据说明](data/README.md)。输出目录需位于 data/ 且尚未存在。统一入口在相同训练/验证划分上运行固定主模型、C 的总体/分群/时间/组合及可靠性、D 规则、E08，以及 B 的 E03/E05。E03 按五档比例和三个种子拟合带权 LR（相同完整子集复用拟合），另拟合固定 IF256；E05 对固定完整标签 LR 做 30×5 次置换，不新选参。
+
+输出沿用原布局：aggregate/tables/team_validation.json 同时包含 E03/E05，aggregate/tables/b_extensions.json 保存 B 的完整汇总，aggregate/figures/b_extensions.png 为组合图；全部模型、15 份掩码和逐行错误案例留在 b_extensions/ 私有子目录。统一入口不再把 E03/E05 列为 pending。
 
 ```bash
 python -X utf8 -m unittest discover -s tests
 python -X utf8 -m unittest discover -s code -p test_classification.py
 ```
 
-B 的 ULB 标签/重要性扩展目前使用已有命令，输出完整模型/案例仍保存在 data/：
+只单独复跑 B 的 ULB 标签/重要性扩展时，仍可使用原命令；与统一入口共用相同计算函数，无需日常重复运行两遍：
 
 ```bash
 python code/run_b_validation.py --extensions --output data/b_extensions_main
@@ -189,8 +191,8 @@ python code/main.py --run-paysim-validation --paysim-archive data/paysim_v2.zip 
 
 | 成员 | 现在可独立做 | 交付之后 |
 |---|---|---|
-| A | main 合并及现有入口验收已完成；继续 A6 接入 B E03/E05 | 各数据线具备条件即 A7/A8 |
-| B | Handbook 共同环境复核已完成，剩 ULB E03/E05 复核 | 交 A6/A7；A8 后补 B6/B7 |
+| A | A6 及 E03/E05 接入验收完成，ULB 可进入 A7 冻结整理 | 各数据线具备条件即 A7/A8 |
+| B | 原扩展及 Handbook 共同环境验收完成，推进 B6 | A8 后补正式结果及 B7 核对 |
 | C | C-N1/N2/N3 正式验证、复跑、组合图及解释已完成 | 各线 A7/A8 后补 C7/C8 正式 test 图文 |
 | D | 现有稿件继续；准备语义特征规则与机制解释 | A-N1 后 D-N1，逐线收取证据并做 D5–D7 |
 
