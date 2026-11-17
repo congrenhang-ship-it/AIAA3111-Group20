@@ -29731,7 +29731,7 @@
     "code/classification.py": "d92788dba8c59f3332eee5d72a1bff784e5e3fe6fac6800f6015b4dc3a43d3c0",
     "code/download_data.py": "832e71c0a3db8ee61ef49da9e38a1b6ff43c52663e551dc0dff5730a0eb46d8d",
     "code/evaluation.py": "9d853da03e6e6e8998086a6f7333deeed907e1f4bc09268694fdb1d27e5e8781",
-    "code/finalize.py": "94b95faa70ca5b679674cd5e5db673bbc57753e2c9416a3a3628a2217d2eec0e",
+    "code/finalize.py": "be00ae6fcdf679e537c95e8547ba7209393ff14bb38fc889c292ce7e307dd365",
     "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
     "code/main.py": "1195aaea915ced28313acd79a2617db6a9e5a4db876760c6690744a7989c6dd7",
     "code/pattern_mining.py": "b73698a5a0637b39804da7a5c7d6941425c24de23532ddad5109ee358afb9a0b",
@@ -29762,6 +29762,65 @@
       "failed_log_sha256": "57bdce95c412cc7964662212fb500e86ceace166dff1cb3ea25ace28d59cac94",
       "frozen_model_bundle_unchanged": true,
       "test_informed_model_selection": false
+    },
+    {
+      "revision_type": "reproduction_comparison_only",
+      "source_commit_before": "c464c0085d7b07a7ecee686eb836714843e77226",
+      "previous_freeze_sha256": "4f93531b9a9ea66b89735932aa0875b81fede5e005b878d3af09ecacc1ee2c5e",
+      "changed_source_files": [
+        "code/finalize.py"
+      ],
+      "reason": "Independent Linux rebuild completed all three datasets. Supplementary RF AP and reviewed allocation by amount group differ; core model results, budgets, TP/FP, recalls and amount coverage match. Record all RF differences instead of falsely asserting exact reproduction. No fitting, scoring, selection or reference outputs changed.",
+      "models_unchanged": true,
+      "reference_run": 44054624380,
+      "reference_differences": [
+        [
+          "ulb_test.json.metrics.random_forest_original.AP",
+          0.7845347155910315,
+          0.7840486468845401,
+          -0.00048606870649137157
+        ],
+        [
+          "ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[0].reviewed_from_global_list",
+          154,
+          153
+        ],
+        [
+          "ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[1].reviewed_from_global_list",
+          55,
+          56
+        ],
+        [
+          "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[0].reviewed_from_global_list",
+          281,
+          276
+        ],
+        [
+          "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[1].reviewed_from_global_list",
+          131,
+          132
+        ],
+        [
+          "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[2].reviewed_from_global_list",
+          116,
+          120
+        ],
+        [
+          "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[0].reviewed_from_global_list",
+          535,
+          530
+        ],
+        [
+          "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[1].reviewed_from_global_list",
+          291,
+          295
+        ],
+        [
+          "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[2].reviewed_from_global_list",
+          237,
+          238
+        ]
+      ]
     }
   ]
 }

@@ -392,3 +392,12 @@ class FrozenColdStartRegressionTests(unittest.TestCase):
         other=cold_start_metrics(seen,views,{'LR':pred},entities)['LR']
         self.assertEqual(sum(g['within_group']['n_samples']==0 for g in other['groups']),3)
         self.assertTrue(all(g['history_availability']['customer'] is None for g in other['groups'] if g['within_group']['n_samples']==0))
+
+    def test_reproduction_reports_RF_diagnostics_without_hiding_core_differences(self):
+        from finalize import _compare_numeric
+        differences=[]
+        _compare_numeric(.78,.7795,'ulb_test.json.metrics.random_forest_original.AP',platform_differences=differences)
+        _compare_numeric(154,153,'ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[0].reviewed_from_global_list',platform_differences=differences)
+        self.assertEqual(len(differences),2)
+        for path in ['ulb_test.json.metrics.weighted_lr.AP','ulb_test.json.metrics.random_forest_original.budgets[1].TP','handbook_test.json.metrics.lr.AP']:
+            with self.assertRaises(ValueError):_compare_numeric(10,9,path,platform_differences=differences)
