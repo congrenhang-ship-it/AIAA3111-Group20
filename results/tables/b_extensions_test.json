@@ -1,0 +1,1637 @@
+{
+  "dataset_id": "ulb",
+  "phase": "test",
+  "E03": {
+    "fractions": [
+      0.05,
+      0.1,
+      0.25,
+      0.5,
+      1.0
+    ],
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "mask_hash_rule": "SHA256 of selected row_ids in training order, little-endian int64",
+    "sampling": "class-stratified nested permutations; ceil per class; labels used only to simulate annotation",
+    "fitting": "LR sees only labeled rows; IF sees all unlabeled training features; hidden labels never become 0",
+    "pipeline_parameters": {
+      "C": 1.0,
+      "class_weight": "balanced",
+      "dual": false,
+      "fit_intercept": true,
+      "intercept_scaling": 1,
+      "l1_ratio": 0.0,
+      "max_iter": 1000,
+      "n_jobs": null,
+      "penalty": "deprecated",
+      "random_state": 42,
+      "solver": "lbfgs",
+      "tol": 0.0001,
+      "verbose": 0,
+      "warm_start": false
+    },
+    "conditions": [
+      {
+        "fraction": 0.05,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 8513,
+        "labeled_frauds": 18,
+        "mask_sha256": "d70271d45435c3671d86f4089e0191d7243d7245b3f1e15090e0703475c838f5",
+        "reuse_full_fit": false,
+        "train_seconds": 0.05304158397484571,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.4653310159266764,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 33,
+              "FP": 24,
+              "FN": 41,
+              "TN": 56648,
+              "precision_at_k": 0.5789473684210527,
+              "recall_at_k": 0.44594594594594594,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 55,
+              "FP": 229,
+              "FN": 19,
+              "TN": 56443,
+              "precision_at_k": 0.1936619718309859,
+              "recall_at_k": 0.7432432432432432,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 57,
+              "FP": 511,
+              "FN": 17,
+              "TN": 56161,
+              "precision_at_k": 0.10035211267605634,
+              "recall_at_k": 0.7702702702702703,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 60,
+              "FP": 1075,
+              "FN": 14,
+              "TN": 55597,
+              "precision_at_k": 0.05286343612334802,
+              "recall_at_k": 0.8108108108108109,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.1,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 17025,
+        "labeled_frauds": 35,
+        "mask_sha256": "9d577074428f92c4d5d70d7074eebb9d669be199733ed4f542dd85bf8cd1c429",
+        "reuse_full_fit": false,
+        "train_seconds": 0.05384929105639458,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.5338929825640278,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 37,
+              "FP": 20,
+              "FN": 37,
+              "TN": 56652,
+              "precision_at_k": 0.6491228070175439,
+              "recall_at_k": 0.5,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 55,
+              "FP": 229,
+              "FN": 19,
+              "TN": 56443,
+              "precision_at_k": 0.1936619718309859,
+              "recall_at_k": 0.7432432432432432,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 60,
+              "FP": 508,
+              "FN": 14,
+              "TN": 56164,
+              "precision_at_k": 0.1056338028169014,
+              "recall_at_k": 0.8108108108108109,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 61,
+              "FP": 1074,
+              "FN": 13,
+              "TN": 55598,
+              "precision_at_k": 0.053744493392070485,
+              "recall_at_k": 0.8243243243243243,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.25,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 42560,
+        "labeled_frauds": 86,
+        "mask_sha256": "4791e2380c538512c52efb25d2e4100e71c7b28604ea66b091c67bd1ab6cec41",
+        "reuse_full_fit": false,
+        "train_seconds": 0.1305283330148086,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.7814395908832715,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 50,
+              "FP": 7,
+              "FN": 24,
+              "TN": 56665,
+              "precision_at_k": 0.8771929824561403,
+              "recall_at_k": 0.6756756756756757,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 61,
+              "FP": 223,
+              "FN": 13,
+              "TN": 56449,
+              "precision_at_k": 0.2147887323943662,
+              "recall_at_k": 0.8243243243243243,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 62,
+              "FP": 506,
+              "FN": 12,
+              "TN": 56166,
+              "precision_at_k": 0.10915492957746478,
+              "recall_at_k": 0.8378378378378378,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 63,
+              "FP": 1072,
+              "FN": 11,
+              "TN": 55600,
+              "precision_at_k": 0.055506607929515416,
+              "recall_at_k": 0.8513513513513513,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.5,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 85118,
+        "labeled_frauds": 171,
+        "mask_sha256": "90bbc333da6b26f63754c9ae3b01acfa57db1a2328feb35681a9743c46f05968",
+        "reuse_full_fit": false,
+        "train_seconds": 0.22406424989458174,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.7928326438954673,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 53,
+              "FP": 4,
+              "FN": 21,
+              "TN": 56668,
+              "precision_at_k": 0.9298245614035088,
+              "recall_at_k": 0.7162162162162162,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 62,
+              "FP": 222,
+              "FN": 12,
+              "TN": 56450,
+              "precision_at_k": 0.21830985915492956,
+              "recall_at_k": 0.8378378378378378,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 63,
+              "FP": 505,
+              "FN": 11,
+              "TN": 56167,
+              "precision_at_k": 0.11091549295774648,
+              "recall_at_k": 0.8513513513513513,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 65,
+              "FP": 1070,
+              "FN": 9,
+              "TN": 55602,
+              "precision_at_k": 0.05726872246696035,
+              "recall_at_k": 0.8783783783783784,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 1.0,
+        "mask_seed": 42,
+        "model_seed": 42,
+        "labeled_rows": 170235,
+        "labeled_frauds": 342,
+        "mask_sha256": "08309dd6a77b93b0bc3001e33d1b9f41828302c98eda0f3752a56a56fe7c597c",
+        "reuse_full_fit": false,
+        "train_seconds": 0.39733179099857807,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.7474592161114845,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 50,
+              "FP": 7,
+              "FN": 24,
+              "TN": 56665,
+              "precision_at_k": 0.8771929824561403,
+              "recall_at_k": 0.6756756756756757,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 63,
+              "FP": 221,
+              "FN": 11,
+              "TN": 56451,
+              "precision_at_k": 0.22183098591549297,
+              "recall_at_k": 0.8513513513513513,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 64,
+              "FP": 504,
+              "FN": 10,
+              "TN": 56168,
+              "precision_at_k": 0.11267605633802817,
+              "recall_at_k": 0.8648648648648649,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 65,
+              "FP": 1070,
+              "FN": 9,
+              "TN": 55602,
+              "precision_at_k": 0.05726872246696035,
+              "recall_at_k": 0.8783783783783784,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.05,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 8513,
+        "labeled_frauds": 18,
+        "mask_sha256": "533eb62a9a62583f56d405da17ee500fa44ebbc6293e0734cdab0c272a00e568",
+        "reuse_full_fit": false,
+        "train_seconds": 0.03130966692697257,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.4396887388365919,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 35,
+              "FP": 22,
+              "FN": 39,
+              "TN": 56650,
+              "precision_at_k": 0.6140350877192983,
+              "recall_at_k": 0.47297297297297297,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 52,
+              "FP": 232,
+              "FN": 22,
+              "TN": 56440,
+              "precision_at_k": 0.18309859154929578,
+              "recall_at_k": 0.7027027027027027,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 55,
+              "FP": 513,
+              "FN": 19,
+              "TN": 56159,
+              "precision_at_k": 0.09683098591549295,
+              "recall_at_k": 0.7432432432432432,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 57,
+              "FP": 1078,
+              "FN": 17,
+              "TN": 55594,
+              "precision_at_k": 0.050220264317180616,
+              "recall_at_k": 0.7702702702702703,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.1,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 17025,
+        "labeled_frauds": 35,
+        "mask_sha256": "9ca0a4045752ef13d677c85fa879268935f5a344f21f12dfe25841afba3e8025",
+        "reuse_full_fit": false,
+        "train_seconds": 0.0683247079141438,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.5749825928060714,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 41,
+              "FP": 16,
+              "FN": 33,
+              "TN": 56656,
+              "precision_at_k": 0.7192982456140351,
+              "recall_at_k": 0.5540540540540541,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 54,
+              "FP": 230,
+              "FN": 20,
+              "TN": 56442,
+              "precision_at_k": 0.19014084507042253,
+              "recall_at_k": 0.7297297297297297,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 55,
+              "FP": 513,
+              "FN": 19,
+              "TN": 56159,
+              "precision_at_k": 0.09683098591549295,
+              "recall_at_k": 0.7432432432432432,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 57,
+              "FP": 1078,
+              "FN": 17,
+              "TN": 55594,
+              "precision_at_k": 0.050220264317180616,
+              "recall_at_k": 0.7702702702702703,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.25,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 42560,
+        "labeled_frauds": 86,
+        "mask_sha256": "1f85b0b7b8ffc1c12592aa4e107857646f48532ea6b3b08263933a770647eb99",
+        "reuse_full_fit": false,
+        "train_seconds": 0.1413310409989208,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.7803826899367539,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 53,
+              "FP": 4,
+              "FN": 21,
+              "TN": 56668,
+              "precision_at_k": 0.9298245614035088,
+              "recall_at_k": 0.7162162162162162,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 60,
+              "FP": 224,
+              "FN": 14,
+              "TN": 56448,
+              "precision_at_k": 0.2112676056338028,
+              "recall_at_k": 0.8108108108108109,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 60,
+              "FP": 508,
+              "FN": 14,
+              "TN": 56164,
+              "precision_at_k": 0.1056338028169014,
+              "recall_at_k": 0.8108108108108109,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 62,
+              "FP": 1073,
+              "FN": 12,
+              "TN": 55599,
+              "precision_at_k": 0.05462555066079295,
+              "recall_at_k": 0.8378378378378378,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.5,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 85118,
+        "labeled_frauds": 171,
+        "mask_sha256": "020864b06d829d60f52f8130af95ddf327ed89e4cd5b0637a49b61d69a2c63b0",
+        "reuse_full_fit": false,
+        "train_seconds": 0.23599654203280807,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.752419238438892,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 51,
+              "FP": 6,
+              "FN": 23,
+              "TN": 56666,
+              "precision_at_k": 0.8947368421052632,
+              "recall_at_k": 0.6891891891891891,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 61,
+              "FP": 223,
+              "FN": 13,
+              "TN": 56449,
+              "precision_at_k": 0.2147887323943662,
+              "recall_at_k": 0.8243243243243243,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 63,
+              "FP": 505,
+              "FN": 11,
+              "TN": 56167,
+              "precision_at_k": 0.11091549295774648,
+              "recall_at_k": 0.8513513513513513,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 64,
+              "FP": 1071,
+              "FN": 10,
+              "TN": 55601,
+              "precision_at_k": 0.05638766519823789,
+              "recall_at_k": 0.8648648648648649,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 1.0,
+        "mask_seed": 43,
+        "model_seed": 42,
+        "labeled_rows": 170235,
+        "labeled_frauds": 342,
+        "mask_sha256": "08309dd6a77b93b0bc3001e33d1b9f41828302c98eda0f3752a56a56fe7c597c",
+        "reuse_full_fit": true,
+        "train_seconds": 0.39733179099857807,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.7474592161114845,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 50,
+              "FP": 7,
+              "FN": 24,
+              "TN": 56665,
+              "precision_at_k": 0.8771929824561403,
+              "recall_at_k": 0.6756756756756757,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 63,
+              "FP": 221,
+              "FN": 11,
+              "TN": 56451,
+              "precision_at_k": 0.22183098591549297,
+              "recall_at_k": 0.8513513513513513,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 64,
+              "FP": 504,
+              "FN": 10,
+              "TN": 56168,
+              "precision_at_k": 0.11267605633802817,
+              "recall_at_k": 0.8648648648648649,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 65,
+              "FP": 1070,
+              "FN": 9,
+              "TN": 55602,
+              "precision_at_k": 0.05726872246696035,
+              "recall_at_k": 0.8783783783783784,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.05,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 8513,
+        "labeled_frauds": 18,
+        "mask_sha256": "01ed507157d7426401a93661de3dd10044c41c1e8028bee5548056db238a0a9d",
+        "reuse_full_fit": false,
+        "train_seconds": 0.018839374999515712,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.7058972391097944,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 48,
+              "FP": 9,
+              "FN": 26,
+              "TN": 56663,
+              "precision_at_k": 0.8421052631578947,
+              "recall_at_k": 0.6486486486486487,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 55,
+              "FP": 229,
+              "FN": 19,
+              "TN": 56443,
+              "precision_at_k": 0.1936619718309859,
+              "recall_at_k": 0.7432432432432432,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 58,
+              "FP": 510,
+              "FN": 16,
+              "TN": 56162,
+              "precision_at_k": 0.10211267605633803,
+              "recall_at_k": 0.7837837837837838,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 60,
+              "FP": 1075,
+              "FN": 14,
+              "TN": 55597,
+              "precision_at_k": 0.05286343612334802,
+              "recall_at_k": 0.8108108108108109,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.1,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 17025,
+        "labeled_frauds": 35,
+        "mask_sha256": "1a491f64cb15fca8e7d8989f833378a3982e32b9a14b2b4933b1cb483c165971",
+        "reuse_full_fit": false,
+        "train_seconds": 0.03533566603437066,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.6786385227781151,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 47,
+              "FP": 10,
+              "FN": 27,
+              "TN": 56662,
+              "precision_at_k": 0.8245614035087719,
+              "recall_at_k": 0.6351351351351351,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 54,
+              "FP": 230,
+              "FN": 20,
+              "TN": 56442,
+              "precision_at_k": 0.19014084507042253,
+              "recall_at_k": 0.7297297297297297,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 56,
+              "FP": 512,
+              "FN": 18,
+              "TN": 56160,
+              "precision_at_k": 0.09859154929577464,
+              "recall_at_k": 0.7567567567567568,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 60,
+              "FP": 1075,
+              "FN": 14,
+              "TN": 55597,
+              "precision_at_k": 0.05286343612334802,
+              "recall_at_k": 0.8108108108108109,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.25,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 42560,
+        "labeled_frauds": 86,
+        "mask_sha256": "f5e39d0c8605464c54370717c5b43652b200d368bbd2b88fe1f47b46d15e3304",
+        "reuse_full_fit": false,
+        "train_seconds": 0.14186120801605284,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.7612552804967194,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 51,
+              "FP": 6,
+              "FN": 23,
+              "TN": 56666,
+              "precision_at_k": 0.8947368421052632,
+              "recall_at_k": 0.6891891891891891,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 62,
+              "FP": 222,
+              "FN": 12,
+              "TN": 56450,
+              "precision_at_k": 0.21830985915492956,
+              "recall_at_k": 0.8378378378378378,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 63,
+              "FP": 505,
+              "FN": 11,
+              "TN": 56167,
+              "precision_at_k": 0.11091549295774648,
+              "recall_at_k": 0.8513513513513513,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 64,
+              "FP": 1071,
+              "FN": 10,
+              "TN": 55601,
+              "precision_at_k": 0.05638766519823789,
+              "recall_at_k": 0.8648648648648649,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 0.5,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 85118,
+        "labeled_frauds": 171,
+        "mask_sha256": "b3a1556e429d1bb89e2dd9c44aa03a763a8dbeb2629934b441780f6f825de96b",
+        "reuse_full_fit": false,
+        "train_seconds": 0.32712791592348367,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.7922344968321908,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 51,
+              "FP": 6,
+              "FN": 23,
+              "TN": 56666,
+              "precision_at_k": 0.8947368421052632,
+              "recall_at_k": 0.6891891891891891,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 62,
+              "FP": 222,
+              "FN": 12,
+              "TN": 56450,
+              "precision_at_k": 0.21830985915492956,
+              "recall_at_k": 0.8378378378378378,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 64,
+              "FP": 504,
+              "FN": 10,
+              "TN": 56168,
+              "precision_at_k": 0.11267605633802817,
+              "recall_at_k": 0.8648648648648649,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 65,
+              "FP": 1070,
+              "FN": 9,
+              "TN": 55602,
+              "precision_at_k": 0.05726872246696035,
+              "recall_at_k": 0.8783783783783784,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      },
+      {
+        "fraction": 1.0,
+        "mask_seed": 44,
+        "model_seed": 42,
+        "labeled_rows": 170235,
+        "labeled_frauds": 342,
+        "mask_sha256": "08309dd6a77b93b0bc3001e33d1b9f41828302c98eda0f3752a56a56fe7c597c",
+        "reuse_full_fit": true,
+        "train_seconds": 0.39733179099857807,
+        "metrics": {
+          "status": "ok",
+          "n_samples": 56746,
+          "n_positive": 74,
+          "prevalence": 0.0013040566735981391,
+          "AP": 0.7474592161114845,
+          "budgets": [
+            {
+              "review_fraction": 0.001,
+              "actual_review_fraction": 0.0010044760864201883,
+              "K": 57,
+              "TP": 50,
+              "FP": 7,
+              "FN": 24,
+              "TN": 56665,
+              "precision_at_k": 0.8771929824561403,
+              "recall_at_k": 0.6756756756756757,
+              "random_expected_TP": 0.07433123039509393,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.0010044760864201883
+            },
+            {
+              "review_fraction": 0.005,
+              "actual_review_fraction": 0.005004758044619885,
+              "K": 284,
+              "TP": 63,
+              "FP": 221,
+              "FN": 11,
+              "TN": 56451,
+              "precision_at_k": 0.22183098591549297,
+              "recall_at_k": 0.8513513513513513,
+              "random_expected_TP": 0.3703520953018715,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.005004758044619885
+            },
+            {
+              "review_fraction": 0.01,
+              "actual_review_fraction": 0.01000951608923977,
+              "K": 568,
+              "TP": 64,
+              "FP": 504,
+              "FN": 10,
+              "TN": 56168,
+              "precision_at_k": 0.11267605633802817,
+              "recall_at_k": 0.8648648648648649,
+              "random_expected_TP": 0.740704190603743,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.01000951608923977
+            },
+            {
+              "review_fraction": 0.02,
+              "actual_review_fraction": 0.020001409790998483,
+              "K": 1135,
+              "TP": 65,
+              "FP": 1070,
+              "FN": 9,
+              "TN": 55602,
+              "precision_at_k": 0.05726872246696035,
+              "recall_at_k": 0.8783783783783784,
+              "random_expected_TP": 1.4801043245338878,
+              "random_expected_precision": 0.0013040566735981391,
+              "random_expected_recall": 0.020001409790998483
+            }
+          ],
+          "threshold": null,
+          "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+        }
+      }
+    ],
+    "IF_reference": {
+      "metrics": {
+        "status": "ok",
+        "n_samples": 56746,
+        "n_positive": 74,
+        "prevalence": 0.0013040566735981391,
+        "AP": 0.02821231865563525,
+        "budgets": [
+          {
+            "review_fraction": 0.001,
+            "actual_review_fraction": 0.0010044760864201883,
+            "K": 57,
+            "TP": 0,
+            "FP": 57,
+            "FN": 74,
+            "TN": 56615,
+            "precision_at_k": 0.0,
+            "recall_at_k": 0.0,
+            "random_expected_TP": 0.07433123039509393,
+            "random_expected_precision": 0.0013040566735981391,
+            "random_expected_recall": 0.0010044760864201883
+          },
+          {
+            "review_fraction": 0.005,
+            "actual_review_fraction": 0.005004758044619885,
+            "K": 284,
+            "TP": 2,
+            "FP": 282,
+            "FN": 72,
+            "TN": 56390,
+            "precision_at_k": 0.007042253521126761,
+            "recall_at_k": 0.02702702702702703,
+            "random_expected_TP": 0.3703520953018715,
+            "random_expected_precision": 0.0013040566735981391,
+            "random_expected_recall": 0.005004758044619885
+          },
+          {
+            "review_fraction": 0.01,
+            "actual_review_fraction": 0.01000951608923977,
+            "K": 568,
+            "TP": 26,
+            "FP": 542,
+            "FN": 48,
+            "TN": 56130,
+            "precision_at_k": 0.045774647887323945,
+            "recall_at_k": 0.35135135135135137,
+            "random_expected_TP": 0.740704190603743,
+            "random_expected_precision": 0.0013040566735981391,
+            "random_expected_recall": 0.01000951608923977
+          },
+          {
+            "review_fraction": 0.02,
+            "actual_review_fraction": 0.020001409790998483,
+            "K": 1135,
+            "TP": 41,
+            "FP": 1094,
+            "FN": 33,
+            "TN": 55578,
+            "precision_at_k": 0.03612334801762115,
+            "recall_at_k": 0.5540540540540541,
+            "random_expected_TP": 1.4801043245338878,
+            "random_expected_precision": 0.0013040566735981391,
+            "random_expected_recall": 0.020001409790998483
+          }
+        ],
+        "threshold": null,
+        "ranking_rule": "score descending, row_id ascending; K=ceil(N*q)"
+      }
+    }
+  },
+  "E05": {
+    "scoring": "average_precision",
+    "seed": 42,
+    "repeats": 5,
+    "fitting": "no fit, frozen complete-label LR",
+    "importances": [
+      {
+        "feature": "Time",
+        "mean": 8.600434505967592e-06,
+        "std": 0.00010088988590180671,
+        "repeats": [
+          -3.014314312155264e-06,
+          0.00010976040308263713,
+          -0.00016659135680230364,
+          -4.100024202702279e-06,
+          0.00010694746476436201
+        ]
+      },
+      {
+        "feature": "V1",
+        "mean": 0.033246270242932384,
+        "std": 0.0037728557919109165,
+        "repeats": [
+          0.039232555273108094,
+          0.03419479861709718,
+          0.03435627360983662,
+          0.029873955572741973,
+          0.028573768141878064
+        ]
+      },
+      {
+        "feature": "V2",
+        "mean": 0.08794999493430078,
+        "std": 0.0071028468353508695,
+        "repeats": [
+          0.07432904428224729,
+          0.09502321680534576,
+          0.08981641754088987,
+          0.09135143886655217,
+          0.08922985717646881
+        ]
+      },
+      {
+        "feature": "V3",
+        "mean": 0.004195849887599246,
+        "std": 0.002719533214294191,
+        "repeats": [
+          -0.00039853659349442516,
+          0.006350986374327405,
+          0.0026702431011493832,
+          0.005457589929581452,
+          0.006898966626432412
+        ]
+      },
+      {
+        "feature": "V4",
+        "mean": 0.035194900743241254,
+        "std": 0.008859631335598929,
+        "repeats": [
+          0.028161229571605273,
+          0.03991652641827681,
+          0.030625823822523213,
+          0.050385944305388675,
+          0.026884979598412295
+        ]
+      },
+      {
+        "feature": "V5",
+        "mean": 0.032026782590302914,
+        "std": 0.002458931881813963,
+        "repeats": [
+          0.03057741410670578,
+          0.03610815519988653,
+          0.031212051361274584,
+          0.028978235950841702,
+          0.033258056332805985
+        ]
+      },
+      {
+        "feature": "V6",
+        "mean": 0.04745063817073229,
+        "std": 0.00457881673973407,
+        "repeats": [
+          0.04935738098024156,
+          0.054023138526317016,
+          0.04107043297496593,
+          0.04914742452926546,
+          0.04365481384287151
+        ]
+      },
+      {
+        "feature": "V7",
+        "mean": 0.056513722425553484,
+        "std": 0.0027038916154818455,
+        "repeats": [
+          0.05801350408263373,
+          0.059643263670869584,
+          0.051627079358538386,
+          0.057189825937976724,
+          0.056094939077748984
+        ]
+      },
+      {
+        "feature": "V8",
+        "mean": 0.015173458268411077,
+        "std": 0.0018252243640575982,
+        "repeats": [
+          0.016055156594315445,
+          0.012329111166188955,
+          0.01657192065244284,
+          0.017139990145206063,
+          0.013771112783902084
+        ]
+      },
+      {
+        "feature": "V9",
+        "mean": -0.0007763944344976626,
+        "std": 0.0020085028108750205,
+        "repeats": [
+          -0.0029141970672129647,
+          -0.0011633202545042742,
+          -0.002292090459886431,
+          0.002823478622074327,
+          -0.00033584301295896957
+        ]
+      },
+      {
+        "feature": "V10",
+        "mean": 0.018451414283508848,
+        "std": 0.0035073517497824624,
+        "repeats": [
+          0.014547587378429983,
+          0.015149456905722891,
+          0.019894931198538468,
+          0.024220383728060346,
+          0.018444712206792557
+        ]
+      },
+      {
+        "feature": "V11",
+        "mean": 0.0033670143740421434,
+        "std": 0.0017798309807314397,
+        "repeats": [
+          0.003510203590124439,
+          0.0018820531134341456,
+          0.006238753041377776,
+          0.00115356694574964,
+          0.004050495179524716
+        ]
+      },
+      {
+        "feature": "V12",
+        "mean": 0.02026178180343168,
+        "std": 0.0027216139523555285,
+        "repeats": [
+          0.020036465435854134,
+          0.025379868952205564,
+          0.01885325250664105,
+          0.017349959206140464,
+          0.019689362916317177
+        ]
+      },
+      {
+        "feature": "V13",
+        "mean": 0.0027294325221574045,
+        "std": 0.0019590837872352418,
+        "repeats": [
+          0.0014171324128579021,
+          0.003373064133720405,
+          0.004659656818018165,
+          -0.00040455590046717393,
+          0.004601865146657724
+        ]
+      },
+      {
+        "feature": "V14",
+        "mean": 0.1503127708932768,
+        "std": 0.005289473245555789,
+        "repeats": [
+          0.1435991380572682,
+          0.1471789657670023,
+          0.1481883759064101,
+          0.15839911464696144,
+          0.15419826008874193
+        ]
+      },
+      {
+        "feature": "V15",
+        "mean": 0.00033420607670902046,
+        "std": 0.00017203616499143686,
+        "repeats": [
+          0.00034905358451753354,
+          9.267832932713382e-05,
+          0.00021651933146460411,
+          0.0004161631069273808,
+          0.0005966160313084501
+        ]
+      },
+      {
+        "feature": "V16",
+        "mean": 0.0225944793700364,
+        "std": 0.0027243208962638103,
+        "repeats": [
+          0.02439384750070228,
+          0.020488130247653835,
+          0.018296283736371932,
+          0.024474647362814683,
+          0.02531948800263928
+        ]
+      },
+      {
+        "feature": "V17",
+        "mean": 0.027838506325080004,
+        "std": 0.0024015774948109975,
+        "repeats": [
+          0.03124254626759526,
+          0.027989757409640492,
+          0.029404837724528066,
+          0.02618835566994626,
+          0.024367034553689937
+        ]
+      },
+      {
+        "feature": "V18",
+        "mean": 0.0022842156216215993,
+        "std": 0.0003997048260759127,
+        "repeats": [
+          0.001954114392713757,
+          0.0030304074764321287,
+          0.002155128853344568,
+          0.0019468043924392164,
+          0.0023346229931783258
+        ]
+      },
+      {
+        "feature": "V19",
+        "mean": 0.0017985748122625988,
+        "std": 0.0002596442035190809,
+        "repeats": [
+          0.0022217626094267473,
+          0.001847804343956705,
+          0.0014260579045682897,
+          0.0018254530145671577,
+          0.0016717961887940946
+        ]
+      },
+      {
+        "feature": "V20",
+        "mean": 0.0659537131941885,
+        "std": 0.0015346276093328528,
+        "repeats": [
+          0.06471772460035252,
+          0.06527796886024584,
+          0.06760217209984154,
+          0.0642093121034667,
+          0.06796138830703591
+        ]
+      },
+      {
+        "feature": "V21",
+        "mean": 0.00019580700936185912,
+        "std": 5.62841321471989e-05,
+        "repeats": [
+          0.00018709502107294718,
+          0.00010054191244557309,
+          0.00025182059972728155,
+          0.0002544327281415182,
+          0.00018514478542197566
+        ]
+      },
+      {
+        "feature": "V22",
+        "mean": 0.008642692106172323,
+        "std": 0.004359307691077569,
+        "repeats": [
+          0.006753584658400258,
+          0.01694659502066187,
+          0.005091766222239835,
+          0.008911395141914413,
+          0.0055101194876452375
+        ]
+      },
+      {
+        "feature": "V23",
+        "mean": 0.0078416361537067,
+        "std": 0.0002604241457763347,
+        "repeats": [
+          0.00814013514760814,
+          0.0078611454658013,
+          0.007363212045642831,
+          0.007859133712910693,
+          0.007984554396570531
+        ]
+      },
+      {
+        "feature": "V24",
+        "mean": -0.0015673247662162603,
+        "std": 0.0032216502323736125,
+        "repeats": [
+          -0.003974028688012776,
+          -0.004381711580412673,
+          0.0045756184019386525,
+          -0.0021319270912346644,
+          -0.0019245748733598411
+        ]
+      },
+      {
+        "feature": "V25",
+        "mean": -0.0007766176475803466,
+        "std": 0.0011381373973937256,
+        "repeats": [
+          -0.0011488497127865038,
+          0.0013229480163370333,
+          -0.0011730907503169075,
+          -0.002108105414929118,
+          -0.000775990376206237
+        ]
+      },
+      {
+        "feature": "V26",
+        "mean": 0.0009286099462282538,
+        "std": 0.000789957257054993,
+        "repeats": [
+          0.0024916610128584704,
+          0.0007323364691809164,
+          0.00037796384950106177,
+          0.0004868990327863143,
+          0.0005541893668145059
+        ]
+      },
+      {
+        "feature": "V27",
+        "mean": 0.0007661580744174445,
+        "std": 0.0003083849553793197,
+        "repeats": [
+          0.0004704814622115139,
+          0.0013146853992132002,
+          0.0007468463700988082,
+          0.0004768250423384801,
+          0.0008219520982252204
+        ]
+      },
+      {
+        "feature": "V28",
+        "mean": -0.00045031023672428285,
+        "std": 0.0009071122781029321,
+        "repeats": [
+          -0.0004091892968230981,
+          -0.0006316957213163832,
+          -0.0015951910690165105,
+          0.0011779399749881625,
+          -0.0007934150714535848
+        ]
+      },
+      {
+        "feature": "Amount",
+        "mean": 0.36948650037919395,
+        "std": 0.004979682382279119,
+        "repeats": [
+          0.36904238628985286,
+          0.3664192249978545,
+          0.3763179834349245,
+          0.37340319529240984,
+          0.36224971188092775
+        ]
+      }
+    ],
+    "case_rule": "two FP closest inside K; two FN closest outside K; two highest-ranked FP; score desc,row_id asc; categories may overlap",
+    "case_counts": {
+      "near_boundary_FP": 2,
+      "near_boundary_FN": 2,
+      "highest_ranked_FP": 2
+    }
+  }
+}
