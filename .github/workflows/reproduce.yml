@@ -43,3 +43,12 @@ jobs:
       - name: Reproduction evidence
         if: hashFiles('data/reproduction/reproduction.json') != ''
         run: cat data/reproduction/reproduction.json
+      - name: Retain reproduction diagnostics
+        if: always() && hashFiles('data/reproduction/results/tables/ulb_test.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: reproduction-aggregates
+          path: |
+            data/reproduction/results/tables/*test.json
+            data/reproduction/reproduction.json
+          retention-days: 7
