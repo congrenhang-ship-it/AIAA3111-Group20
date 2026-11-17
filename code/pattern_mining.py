@@ -387,4 +387,3 @@ def rule_training_metrics(path):
     table = pd.read_csv(path)
     return {row.rule_id: {"lift": row.train_lift, "confidence": row.train_confidence}
             for row in table[table.scheme == "equal_frequency"].itertuples()}
-

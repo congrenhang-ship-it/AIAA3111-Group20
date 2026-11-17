@@ -178,5 +178,3 @@ def select_method(results):
         budget = next(row for row in metric["budgets"] if row["review_fraction"] == PRIMARY_REVIEW_FRACTION)
         return (-budget["TP"], -metric["AP"], record["method"])
     return min(results, key=key)
-
-
