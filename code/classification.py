@@ -1,5 +1,7 @@
 """Supervised classifiers, training-only imbalance strategies and ordered risk scores."""
 
+from evaluation import PRIMARY_REVIEW_FRACTION
+
 import numpy as np
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
@@ -159,4 +161,22 @@ def cold_start_groups(train, validation):
     new_terminal = ~validation.TERMINAL_ID.isin(train.TERMINAL_ID)
     names = np.array(["both_seen", "new_customer_only", "new_terminal_only", "both_new"])
     return names[new_customer.to_numpy(int) + 2 * new_terminal.to_numpy(int)]
+
+
+
+# Declared before any validation run. No grid search or test evaluation.
+EXPERIMENTS = [(name, "original") for name in MODEL_NAMES] + [
+    ("logistic_regression", "class_weight"),
+    ("logistic_regression", "random_undersample"),
+]
+SELECTION_RULE = "maximum validation TP at 1%; then AP; then method name ascending"
+
+
+def select_method(results):
+    def key(record):
+        metric = record["metrics"]
+        budget = next(row for row in metric["budgets"] if row["review_fraction"] == PRIMARY_REVIEW_FRACTION)
+        return (-budget["TP"], -metric["AP"], record["method"])
+    return min(results, key=key)
+
 

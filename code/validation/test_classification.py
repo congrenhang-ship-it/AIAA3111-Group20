@@ -1,7 +1,7 @@
 """B1 synthetic interface checks; these are not real-data experiment results.
 
 Run from the repository root:
-    py -3.12 -m unittest discover -s code -p test_classification.py -v
+    py -3.12 -m unittest discover -s code/validation -p test_classification.py -v
 """
 
 import unittest
@@ -10,6 +10,10 @@ from types import SimpleNamespace
 import numpy as np
 import pandas as pd
 from sklearn.datasets import make_classification
+
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from classification import MODEL_NAMES, score_model, train_model
 
@@ -91,7 +95,7 @@ class ClassificationInterfaceTests(unittest.TestCase):
         self.assertEqual(score_model(first, self.validation).shape, (len(self.validation),))
 
     def test_selection_uses_primary_budget_then_ap(self):
-        from run_b_validation import select_method
+        from validation.run_b_validation import select_method
         def record(name, tp, ap):
             return dict(method=name, metrics=dict(AP=ap, budgets=[dict(review_fraction=0.01, TP=tp)]))
         records = [record("a", 2, 0.99), record("b", 3, 0.2), record("c", 3, 0.3)]

@@ -8,7 +8,7 @@
 
 本组固定使用 [Zenodo 7395559 v1，2022-12-04](https://zenodo.org/records/7395559) 存档的 [creditcard.csv](https://zenodo.org/records/7395559/files/creditcard.csv)。原始数据来自 [ULB Machine Learning Group 与 Worldline](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)。原发布页列出 [ODbL](https://opendatacommons.org/licenses/odbl/1-0/) 和 [DbCL](https://opendatacommons.org/licenses/dbcl/1-0/)。
 
-克隆仓库后，在根目录运行 `python code/download_data.py`。脚本使用 Python 标准库，把原始字节下载到 `data/creditcard.csv`，校验大小和 SHA-256 后才安装文件。若网络下载不顺畅，可从上面的直接链接手动下载，保持原始文件名和字节。已有同一文件时可直接复制。Git 已忽略该路径。
+克隆仓库后，在根目录运行 `python code/workflows/download_data.py`。脚本使用 Python 标准库，把原始字节下载到 `data/creditcard.csv`，校验大小和 SHA-256 后才安装文件。若网络下载不顺畅，可从上面的直接链接手动下载，保持原始文件名和字节。已有同一文件时可直接复制。Git 已忽略该路径。
 
 | 检查项 | 预期值 |
 |---|---|

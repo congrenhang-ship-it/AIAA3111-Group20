@@ -26,14 +26,14 @@ from handbook import load_handbook_development, METADATA_COLUMNS, CONTEXT_COLUMN
 from pattern_mining import fit_handbook_rules, evaluate_handbook_rules
 from paysim import load_paysim_sample, run_paysim_validation, _scores as paysim_scores
 from preprocessing import DEFAULT_DATA_PATH, get_features, load_data, split_data, data_sha256, source_commit
-from run_b_validation import run_handbook_b, compact_metrics, save_b_extension_figure
-from run_d_validation import evaluate_rule_extensions, rule_training_metrics
+from validation.run_b_validation import run_handbook_b, compact_metrics, save_b_extension_figure
+from validation.run_d_validation import evaluate_rule_extensions, rule_training_metrics
 from temporal import (handbook_history_builder, run_handbook_rolling,
                       select_review_threshold, evaluate_review_threshold)
 from unsupervised import (run_handbook_c, score_handbook_c, build_relation_features,
                           evaluate_history_missing, fit_configuration, score_configuration)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def read(path):
@@ -47,7 +47,7 @@ def write(path, payload):
 
 
 def source_hashes():
-    paths = [ROOT/"requirements.txt", *sorted((ROOT/"code").glob("*.py"))]
+    paths = [ROOT/"requirements.txt", *sorted((ROOT/"code").rglob("*.py"))]
     paths += [ROOT/p for p in ["results/tables/b_freeze.json", "results/tables/b_validation.json",
                               "results/tables/c_improved.json", "results/tables/c_extensions.json",
                               "results/tables/d_freeze.json", "results/tables/handbook_a.json",

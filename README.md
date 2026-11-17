@@ -12,8 +12,10 @@ E01–E16、测试前 G2 冻结、三套数据正式测试、17 张测试图和 
 README.md                 安装、数据、运行、结果及提交说明
 TASKS.md                  技术完成记录和剩余提交事项
 requirements.txt          固定依赖
-code/                     数据处理、算法、评价和统一入口
-tests/                   自动检查（分类检查另在 code/test_classification.py）
+code/                     核心算法、数据处理、评价和 main.py 入口
+code/validation/          模块验证脚本、规则复核及分类检查
+code/workflows/           下载、冻结、正式评分、独立复现及打包
+tests/                   自动检查（分类检查另在 code/validation/test_classification.py）
 data/README.md            数据来源、许可、下载、规模和划分
 results/tables/            冻结配置、必要开发证据及正式结果
 results/figures/           验证与正式测试图
@@ -22,7 +24,7 @@ poster/Poster.md          海报草稿
 .github/workflows/        Linux 独立重建与检查
 ```
 
-算法代码集中在 classification.py、unsupervised.py、pattern_mining.py；preprocessing.py、handbook.py、paysim.py 和 temporal.py 负责数据及时间接口；evaluation.py 统一指标，finalize.py 负责冻结、正式评分、独立复现和技术打包，main.py 提供统一命令。保留的 run_* 和 check_d_freeze.py 用于模块验证及规则复核，不是另一套正式流程。
+算法代码集中在 classification.py、unsupervised.py、pattern_mining.py；preprocessing.py、handbook.py、paysim.py 和 temporal.py 负责数据及时间接口；evaluation.py 统一指标，main.py 提供统一命令。workflows/finalize.py 负责冻结、正式评分、独立复现和技术打包；validation/ 中的 run_* 与 check_d_freeze.py 用于开发验证及规则复核。共享选择规则和规则诊断保留在核心模块，算法不依赖验证脚本。
 
 ## 安装和获取数据
 
@@ -33,7 +35,7 @@ python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m pip check
-python code/download_data.py
+python code/workflows/download_data.py
 python code/main.py --prepare-handbook --output data/handbook/v1
 curl --fail --location --retry 3 'https://www.kaggle.com/api/v1/datasets/download/ealaxi/paysim1?datasetVersionNumber=2' -o data/paysim_v2.zip
 ```
@@ -62,7 +64,7 @@ python code/main.py --run-team-validation --output data/team_validation
 
 ```bash
 python -m unittest discover -s tests
-python -m unittest discover -s code -p test_classification.py
+python -m unittest discover -s code/validation -p test_classification.py
 ```
 
 当前 98 项公共检查＋11 项分类检查通过。冻结配置、训练规则和部分 validation JSON 是实际重建输入，应保留；重复交接和过程记录从当前目录移除，原版本可在 Git 历史查看。
@@ -113,7 +115,7 @@ python -m unittest discover -s code -p test_classification.py
 本地技术包可由以下命令生成。它已通过无 Git 环境的完整 ULB 验证，但缺少最终 Report.pdf，因此不是完整课程提交包。
 
 ```bash
-python -c "import sys; sys.path.insert(0, 'code'); from finalize import package_technical; print(package_technical('data/Group_20_Code.zip'))"
+python -c "import sys; sys.path.insert(0, 'code'); from workflows.finalize import package_technical; print(package_technical('data/Group_20_Code.zip'))"
 ```
 
 技术包不含原始数据、模型、逐行预测或报告/海报稿；保留必要训练规则及 C 操作说明作为运行依赖。实际报告/海报排版、演练及 Canvas 提交仍见 TASKS.md。

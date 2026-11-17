@@ -247,5 +247,50 @@
       "no_Chinese_in_code_tests_or_requirements": true
     },
     "note": "Provenance/source hashes, file paths and runtime durations are not treated as experiment values. Chinese module comments were removed/replaced and --tasks labels translated as requested; all CLI flags/defaults/help and all numerical functionality retained."
+  },
+  "package_layout_verification": {
+    "date": "2026-11-18",
+    "reference_commit": "ec649b5b0c652027b9103707dd4a44216623f000",
+    "public_tests": 98,
+    "classification_tests": 11,
+    "dependency_check": "passed",
+    "unified_validation": "passed with all published development comparisons",
+    "all_test_numeric_aggregates_exactly_equal": true,
+    "aggregate_tables": [
+      "b_extensions_test.json",
+      "c_extensions_test.json",
+      "c_test.json",
+      "handbook_d_test.json",
+      "handbook_test.json",
+      "paysim_test.json",
+      "project_test.json",
+      "ulb_test.json"
+    ],
+    "byte_identical_prediction_and_case_CSVs": 48,
+    "byte_identical_test_figures": 17,
+    "frozen_model_bundle_unchanged": true,
+    "static_checks": {
+      "reference_commit": "8a02ce6edaa609592819939823a5ddb5c59bd6d3",
+      "core_function_bodies_unchanged_except_imports_and_provenance": true,
+      "checked_core_function_counts": {
+        "classification": 6,
+        "pattern_mining": 8,
+        "preprocessing": 7,
+        "temporal": 7,
+        "handbook": 7,
+        "paysim": 4,
+        "unsupervised": 37,
+        "evaluation": 49
+      },
+      "shared_helpers_moved_without_changing_body": true,
+      "direct_validation_and_download_commands": "passed --help and 11 classification checks",
+      "full_public_checks": 98
+    },
+    "note": "Provenance/source hashes, file paths and runtime durations are not treated as experiment values. Chinese module comments were removed/replaced and --tasks labels translated as requested; all CLI flags/defaults/help and all numerical functionality retained.",
+    "layout": {
+      "core": "code/*.py",
+      "validation": "code/validation/",
+      "workflows": "code/workflows/"
+    }
   }
 }

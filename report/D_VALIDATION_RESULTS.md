@@ -141,7 +141,7 @@ anomalies. Anonymous features do not justify assigning a business cause.
 ### Reproduce and hand off to A7
 
 ```powershell
-.venv-d-common/Scripts/python.exe -X utf8 code/run_d_validation.py --extensions --preprocessing-code ../AIAA3111-C-check/code
+.venv-d-common/Scripts/python.exe -X utf8 code/validation/run_d_validation.py --extensions --preprocessing-code ../AIAA3111-C-check/code
 .venv-d-common/Scripts/python.exe -m unittest discover -s tests -p test_pattern_mining.py -v
 ```
 

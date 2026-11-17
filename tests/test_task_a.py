@@ -11,7 +11,7 @@ from unittest.mock import patch
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "code"))
-import download_data as downloader
+from workflows import download_data as downloader
 from main import REVIEW_FRACTIONS, run_validation, split_summary
 from preprocessing import DEFAULT_DATA_PATH, FEATURE_COLUMNS, ULB_SHA256, audit_data, data_sha256
 from preprocessing import get_features, load_data, split_data
@@ -36,7 +36,7 @@ class BExtensionIntegrationTests(unittest.TestCase):
                         (("train",cls.train),("validation",cls.validation),("test",cls.test))}
 
     def test_standalone_delegates_the_verified_split_to_the_same_implementation(self):
-        import run_b_validation as b
+        import validation.run_b_validation as b
         marker=object()
         with (patch.object(b,"data_sha256",return_value=ULB_SHA256),
               patch.object(b,"load_data",return_value="loaded"),
@@ -50,7 +50,7 @@ class BExtensionIntegrationTests(unittest.TestCase):
 
     def test_actual_shared_split_keeps_models_and_cases_private_and_all_conditions(self):
         import json
-        import run_b_validation as b
+        import validation.run_b_validation as b
         from sklearn.inspection import permutation_importance
         before=data_sha256(b.ROOT/"results/tables/b_extensions.json")
         with TemporaryDirectory(dir=b.ROOT/"data") as folder:
@@ -82,7 +82,7 @@ class BExtensionIntegrationTests(unittest.TestCase):
 
     def test_wrong_partition_identity_stops_before_training(self):
         import copy
-        import run_b_validation as b
+        import validation.run_b_validation as b
         wrong=copy.deepcopy(self.partitions);wrong["validation"]["frauds"]+=1
         with TemporaryDirectory(dir=b.ROOT/"data") as folder,patch.object(b,"train_model") as fit:
             with self.assertRaisesRegex(ValueError,"different validation split"):
@@ -182,7 +182,7 @@ class SplitTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 split_data(bad)
 
-    @unittest.skipUnless(DEFAULT_DATA_PATH.is_file(), "Run code/download_data.py for full-data checks")
+    @unittest.skipUnless(DEFAULT_DATA_PATH.is_file(), "Run code/workflows/download_data.py for full-data checks")
     def test_pinned_ulb_audit_and_ordered_split_fingerprints(self):
         self.assertEqual(data_sha256(DEFAULT_DATA_PATH), ULB_SHA256)
         data = load_data(DEFAULT_DATA_PATH)
@@ -287,7 +287,7 @@ class HandoffTests(unittest.TestCase):
 class FinalWorkflowTests(unittest.TestCase):
     def test_frozen_assessment_never_trains_and_preserves_validation_threshold(self):
         from evaluation import fit_amount_bins, make_prediction_frame
-        from finalize import _assessment
+        from workflows.finalize import _assessment
         from temporal import select_review_threshold
         rows=pd.DataFrame({'row_id':[1,2,3,4], 'Class':[0,1,0,1],
                            'Time':[0.,1.,2.,3.], 'Amount':[10.,20.,30.,40.]})
@@ -303,11 +303,11 @@ class FinalWorkflowTests(unittest.TestCase):
 
     def test_incomplete_freeze_and_changed_models_are_rejected_before_data_load(self):
         from argparse import Namespace
-        import finalize as f
+        import workflows.finalize as f
         with TemporaryDirectory() as folder:
             path=Path(folder)/'freeze.json';f.write(path,{'group_G2_complete':False})
             args=Namespace(freeze=path,output=Path(folder)/'out',results=Path(folder)/'shared')
-            with patch('finalize.load_data',side_effect=AssertionError('do not load test')):
+            with patch('workflows.finalize.load_data',side_effect=AssertionError('do not load test')):
                 with self.assertRaisesRegex(ValueError,'G2'):f.run_final_test(args)
             f.write(path,{'group_G2_complete':True,'provenance':{'source_sha256':{}}})
             with self.assertRaisesRegex(ValueError,'Source differs'):f.run_final_test(args)
@@ -353,8 +353,8 @@ class FinalArtifactTests(unittest.TestCase):
         from sklearn.pipeline import Pipeline
         from classification import train_model
         from unsupervised import fit_isolation_forest
-        from finalize import _b_test
-        from run_b_validation import save_b_extension_figure
+        from workflows.finalize import _b_test
+        from validation.run_b_validation import save_b_extension_figure
         rng=np.random.default_rng(42)
         X=pd.DataFrame(rng.normal(size=(320,len(FEATURE_COLUMNS))),columns=FEATURE_COLUMNS)
         X['Amount']=np.abs(X.Amount)+1;X['Time']=np.arange(len(X))
@@ -374,7 +374,7 @@ class FinalArtifactTests(unittest.TestCase):
 
 class FrozenColdStartRegressionTests(unittest.TestCase):
     def test_all_four_groups_share_the_same_global_capacity_and_empty_groups(self):
-        from finalize import cold_start_metrics
+        from workflows.finalize import cold_start_metrics
         from evaluation import make_prediction_frame
         data=pd.DataFrame({'row_id':[10,11,12,13],'Time':[1.,2.,3.,4.],
                            'Class':[0,1,0,1],'CUSTOMER_ID':[1,2,1,2],'TERMINAL_ID':[10,10,20,20]})
@@ -394,7 +394,7 @@ class FrozenColdStartRegressionTests(unittest.TestCase):
         self.assertTrue(all(g['history_availability']['customer'] is None for g in other['groups'] if g['within_group']['n_samples']==0))
 
     def test_reproduction_reports_RF_diagnostics_without_hiding_core_differences(self):
-        from finalize import _compare_numeric
+        from workflows.finalize import _compare_numeric
         differences=[]
         _compare_numeric(.78,.7795,'ulb_test.json.metrics.random_forest_original.AP',platform_differences=differences)
         _compare_numeric(154,153,'ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[0].reviewed_from_global_list',platform_differences=differences)

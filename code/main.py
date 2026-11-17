@@ -295,8 +295,8 @@ def run_team_validation(data_path, output):
         publish_frozen_c_results,
         save_c_extension_figures,
     )
-    from run_d_validation import evaluate_rule_extensions, rule_training_metrics
-    from run_b_validation import run_ulb_extensions_on_split, compact_metrics
+    from validation.run_d_validation import evaluate_rule_extensions, rule_training_metrics
+    from validation.run_b_validation import run_ulb_extensions_on_split, compact_metrics
     from temporal import evaluate_review_threshold, select_review_threshold
     from unsupervised import fit_configuration, score_improved_bundle
 
@@ -405,7 +405,7 @@ def run_team_validation(data_path, output):
         "source_sha256": {
             path.relative_to(ROOT).as_posix(): source_sha256(path)
             for path in [b_path, c_path, d_path, published_d_path, extension_path,
-                         g1_path, rule_path, lock, *sorted((ROOT / "code").glob("*.py"))]
+                         g1_path, rule_path, lock, *sorted((ROOT / "code").rglob("*.py"))]
         },
     }
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -578,7 +578,7 @@ def main():
     )
     args = parser.parse_args()
     if args.prepare_final or args.run_final_test or args.reproduce_final:
-        from finalize import prepare_final, run_final_test, reproduce_final
+        from workflows.finalize import prepare_final, run_final_test, reproduce_final
         from threadpoolctl import threadpool_limits
         if args.output is None or not args.output.resolve().is_relative_to((ROOT / "data").resolve()):
             parser.error("Final workflow requires a new --output directory inside data/")

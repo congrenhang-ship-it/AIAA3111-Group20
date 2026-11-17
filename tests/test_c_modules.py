@@ -951,7 +951,7 @@ class BCompletionTests(unittest.TestCase):
                 return original_read_text(path, *args, **kwargs)
 
             with patch(
-                "run_b_validation.EXPERIMENTS",
+                "classification.EXPERIMENTS",
                 [
                     ("logistic_regression", "original"),
                     ("logistic_regression", "class_weight"),

@@ -7,6 +7,8 @@ import sys
 from tempfile import NamedTemporaryFile
 from urllib.request import Request, urlopen
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from preprocessing import DEFAULT_DATA_PATH, ULB_DOWNLOAD_URL, ULB_SHA256, ULB_SIZE_BYTES, data_sha256
 
 

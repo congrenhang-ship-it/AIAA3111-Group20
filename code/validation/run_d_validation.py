@@ -1,8 +1,6 @@
-"""D: reproduce A's pinned split, compare two rule schemes on validation only.
+"""ULB rule validation and fixed-rule coverage/error diagnostics.
 
-No test rule evaluation. Until A3 is merged, --preprocessing-code explicitly
-names A's unmodified worktree code directory; this is a dependency-branch check.
-Only aggregate metrics/frozen configuration are exported, never covered IDs.
+Exports aggregate validation evidence; source data and predictions stay local.
 """
 import argparse
 import hashlib
@@ -16,10 +14,13 @@ import sys
 import numpy as np
 import pandas as pd
 
-from pattern_mining import mine_rules, validate_rules
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from pattern_mining import (mine_rules, validate_rules, public_metrics, reliable,
+                            evaluate_rule_extensions, rule_training_metrics)
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 EXPECTED_FINGERPRINTS = {
     "train": "1f69bf9bb0e7e5439a0896426eae142926d5e77b7d759a4e64bfa39c0a946333",
     "validation": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1",
@@ -52,13 +53,8 @@ def select_features(train):
     return ["Amount", *ranked[:4]], {name: float(correlations[name]) for name in ranked}
 
 
-def public_metrics(metrics):
-    return {key: value for key, value in metrics.items() if key != "covered_row_ids"}
 
 
-def reliable(metrics):
-    return (metrics["coverage_count"] >= 20 and metrics["fraud_count"] >= 5
-            and metrics["lift"] is not None and metrics["lift"] > 1)
 
 
 def run(args):
@@ -147,64 +143,8 @@ def run(args):
         "output": str(args.output)}, indent=2))
 
 
-def evaluate_rule_extensions(data, predictions, frozen, training_metrics, review_fraction=0.01):
-    """Evaluate fixed rule coverage on the same B/C predictions as the shared run."""
-    from math import ceil
-    from evaluation import evaluate_scores, make_prediction_frame
-    from pattern_mining import analyze_rule_overlap
-
-    rules, binner = frozen["frozen_rules"], frozen["frozen_binner"]
-    summary = analyze_rule_overlap(data, binner, rules, training_metrics)
-    coverage = {r["rule_id"]: set(r["covered_row_ids"])
-                for r in validate_rules(data, binner, rules)}
-    all_covered = set().union(*coverage.values())
-    ids = data.row_id.to_numpy()
-    labels = data.Class.to_numpy()
-    k = ceil(len(data) * review_fraction)
-    selections, ranks, model_metrics = {}, {}, {}
-    for name in ("classifier", "IF"):
-        frame = predictions[name]
-        frame = make_prediction_frame(frame, frame.score, name).set_index("row_id")
-        if set(frame.index) != set(ids):
-            raise ValueError("D predictions must use the shared evaluation rows")
-        frame = frame.loc[ids]
-        if not np.array_equal(frame.Class, labels) or not np.array_equal(frame.Time, data.Time):
-            raise ValueError("D prediction metadata differs from the shared evaluation data")
-        scores = frame.score.to_numpy()
-        order = np.lexsort((ids, -scores))
-        selections[name] = set(ids[order[:k]])
-        ranks[name] = {int(ids[position]): rank for rank, position in enumerate(order, start=1)}
-        evaluated = evaluate_scores(labels, scores, (review_fraction,), row_ids=ids)
-        model_metrics[name] = {"AP": evaluated["AP"], "budgets": evaluated["budgets"]}
-    positives = set(data.loc[data.Class.eq(1), "row_id"])
-    negatives = set(ids) - positives
-    errors = {}
-    for name, selected in selections.items():
-        errors[name + "_FN"] = positives - selected
-        errors[name + "_FP"] = negatives & selected
-    summary["error_associations"] = {name: {"total": len(values),
-        "covered_by_any_rule": len(values & all_covered)} for name, values in errors.items()}
-    summary["per_rule_errors"] = {rule: {name: len(values & covered) for name, values in errors.items()}
-                                   for rule, covered in coverage.items()}
-    cases, used = [], set()
-    for kind, values in errors.items():
-        # Predeclared: first two covered examples by row_id, skipping prior cases.
-        candidates = sorted((values & all_covered) - used)[:2]
-        for row_id in candidates:
-            used.add(row_id)
-            cases.append({"case_id": f"D-E04-{len(cases)+1}", "source_row_id": int(row_id),
-                          "category": kind, "Class": int(row_id in positives),
-                          "classifier_rank": ranks["classifier"][int(row_id)],
-                          "IF_rank": ranks["IF"][int(row_id)],
-                          "covering_rules": [r for r in summary["rule_order"] if row_id in coverage[r]]})
-    summary["cases"] = cases
-    return summary, model_metrics
 
 
-def rule_training_metrics(path):
-    table = pd.read_csv(path)
-    return {row.rule_id: {"lift": row.train_lift, "confidence": row.train_confidence}
-            for row in table[table.scheme == "equal_frequency"].itertuples()}
 
 
 def run_extensions(args):

@@ -1,7 +1,7 @@
 """B2-B5: bounded classification comparison using A's splits and C's metrics.
 
 Only training and validation are scored. Full predictions/models stay in data/.
-Run: py -3.12 code/run_b_validation.py
+Run: py -3.12 code/validation/run_b_validation.py
 """
 
 import argparse
@@ -20,26 +20,15 @@ import pandas as pd
 from sklearn.exceptions import ConvergenceWarning
 from threadpoolctl import threadpool_limits
 
-from classification import MODEL_NAMES, score_model, train_model
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from classification import MODEL_NAMES, EXPERIMENTS, SELECTION_RULE, select_method, score_model, train_model
 from evaluation import DEFAULT_BUDGETS, PRIMARY_REVIEW_FRACTION, evaluate_scores, make_prediction_frame, save_figures
 from main import split_summary
 from preprocessing import DEFAULT_DATA_PATH, FEATURE_COLUMNS, ULB_SHA256, data_sha256, get_features, load_data, split_data, source_commit, source_dirty
 
-ROOT = Path(__file__).resolve().parents[1]
-# Declared before any validation run. No grid search or test evaluation.
-EXPERIMENTS = [(name, "original") for name in MODEL_NAMES] + [
-    ("logistic_regression", "class_weight"),
-    ("logistic_regression", "random_undersample"),
-]
-SELECTION_RULE = "maximum validation TP at 1%; then AP; then method name ascending"
-
-
-def select_method(results):
-    def key(record):
-        metric = record["metrics"]
-        budget = next(row for row in metric["budgets"] if row["review_fraction"] == PRIMARY_REVIEW_FRACTION)
-        return (-budget["TP"], -metric["AP"], record["method"])
-    return min(results, key=key)
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def write_json(path, value):
@@ -109,7 +98,7 @@ def run(data_path=DEFAULT_DATA_PATH):
     versions = {name: importlib.metadata.version(name) for name in ("numpy", "pandas", "scikit-learn", "scipy")}
     locked = dict(line.split("==", 1) for line in (ROOT / "requirements.txt").read_text(encoding="utf-8").splitlines() if "==" in line and not line.startswith("#"))
     mismatches = {name: dict(actual=version, required=locked.get(name)) for name, version in versions.items() if locked.get(name) != version}
-    code_files = ["code/classification.py", "code/run_b_validation.py", "code/preprocessing.py", "code/evaluation.py"]
+    code_files = ["code/classification.py", "code/validation/run_b_validation.py", "code/preprocessing.py", "code/evaluation.py"]
     metadata = dict(
         owner="B", phase="validation", dataset_sha256=digest, partitions=partitions,
         python=platform.python_version(), versions=versions,
@@ -117,7 +106,7 @@ def run(data_path=DEFAULT_DATA_PATH):
         source_commit=source_commit(ROOT),
         source_dirty=source_dirty(ROOT),
         code_sha256={name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in code_files},
-        command="py -3.12 code/run_b_validation.py",
+        command="py -3.12 code/validation/run_b_validation.py",
     )
     write_json(tables / "b_validation.json", dict(metadata=metadata, selection_rule=SELECTION_RULE, experiments=records, selected=selected["method"]))
     pd.DataFrame(rows).to_csv(tables / "b_validation.csv", index=False)
@@ -147,7 +136,7 @@ def extension_provenance():
         phase="validation", test_scored=False, group_G2_complete=False,
         source_commit=source_commit(ROOT),
         code_sha256={name: data_sha256(ROOT / name) for name in (
-            "code/classification.py", "code/run_b_validation.py", "code/main.py", "code/evaluation.py",
+            "code/classification.py", "code/validation/run_b_validation.py", "code/main.py", "code/evaluation.py",
             "code/handbook.py", "code/temporal.py", "code/unsupervised.py")},
         python=platform.python_version(),
         versions={name: importlib.metadata.version(name) for name in ("numpy", "pandas", "scikit-learn", "scipy")},

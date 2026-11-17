@@ -252,7 +252,6 @@ def fit_handbook_rules(train, validation):
     Mechanism labels never enter this function's feature selection or bins.
     Returned state stores aggregate training metrics, not transaction identities.
     """
-    from run_d_validation import reliable, public_metrics
     schemes = {}
     for scheme in ("equal_frequency", "equal_width"):
         binner, candidates = mine_rules(train, HANDBOOK_RULE_FEATURES,
@@ -280,7 +279,6 @@ def fit_handbook_rules(train, validation):
 def evaluate_handbook_rules(data, predictions, frozen, *, phase):
     """Fixed-rule E15 coverage, model errors and mutually exclusive final scenario codes."""
     from math import ceil
-    from run_d_validation import evaluate_rule_extensions
     summary, metrics = evaluate_rule_extensions(data, predictions, frozen,
                                                 frozen["training_metrics"])
     cases = summary.pop("cases")
@@ -317,3 +315,76 @@ def evaluate_handbook_rules(data, predictions, frozen, *, phase):
             "rule_intervals": descriptions, "model_metrics": metrics,
             "mechanisms": mechanisms,
             "mechanism_note": "Final upstream scenario code is exclusive; later simulator scenarios overwrite earlier codes. Labels are post-hoc diagnostics only; no real-world causal claim."}, cases
+
+
+def public_metrics(metrics):
+    return {key: value for key, value in metrics.items() if key != "covered_row_ids"}
+
+
+
+def reliable(metrics):
+    return (metrics["coverage_count"] >= 20 and metrics["fraud_count"] >= 5
+            and metrics["lift"] is not None and metrics["lift"] > 1)
+
+
+
+def evaluate_rule_extensions(data, predictions, frozen, training_metrics, review_fraction=0.01):
+    """Evaluate fixed rule coverage on the same B/C predictions as the shared run."""
+    from math import ceil
+    from evaluation import evaluate_scores, make_prediction_frame
+    from pattern_mining import analyze_rule_overlap
+
+    rules, binner = frozen["frozen_rules"], frozen["frozen_binner"]
+    summary = analyze_rule_overlap(data, binner, rules, training_metrics)
+    coverage = {r["rule_id"]: set(r["covered_row_ids"])
+                for r in validate_rules(data, binner, rules)}
+    all_covered = set().union(*coverage.values())
+    ids = data.row_id.to_numpy()
+    labels = data.Class.to_numpy()
+    k = ceil(len(data) * review_fraction)
+    selections, ranks, model_metrics = {}, {}, {}
+    for name in ("classifier", "IF"):
+        frame = predictions[name]
+        frame = make_prediction_frame(frame, frame.score, name).set_index("row_id")
+        if set(frame.index) != set(ids):
+            raise ValueError("D predictions must use the shared evaluation rows")
+        frame = frame.loc[ids]
+        if not np.array_equal(frame.Class, labels) or not np.array_equal(frame.Time, data.Time):
+            raise ValueError("D prediction metadata differs from the shared evaluation data")
+        scores = frame.score.to_numpy()
+        order = np.lexsort((ids, -scores))
+        selections[name] = set(ids[order[:k]])
+        ranks[name] = {int(ids[position]): rank for rank, position in enumerate(order, start=1)}
+        evaluated = evaluate_scores(labels, scores, (review_fraction,), row_ids=ids)
+        model_metrics[name] = {"AP": evaluated["AP"], "budgets": evaluated["budgets"]}
+    positives = set(data.loc[data.Class.eq(1), "row_id"])
+    negatives = set(ids) - positives
+    errors = {}
+    for name, selected in selections.items():
+        errors[name + "_FN"] = positives - selected
+        errors[name + "_FP"] = negatives & selected
+    summary["error_associations"] = {name: {"total": len(values),
+        "covered_by_any_rule": len(values & all_covered)} for name, values in errors.items()}
+    summary["per_rule_errors"] = {rule: {name: len(values & covered) for name, values in errors.items()}
+                                   for rule, covered in coverage.items()}
+    cases, used = [], set()
+    for kind, values in errors.items():
+        # Predeclared: first two covered examples by row_id, skipping prior cases.
+        candidates = sorted((values & all_covered) - used)[:2]
+        for row_id in candidates:
+            used.add(row_id)
+            cases.append({"case_id": f"D-E04-{len(cases)+1}", "source_row_id": int(row_id),
+                          "category": kind, "Class": int(row_id in positives),
+                          "classifier_rank": ranks["classifier"][int(row_id)],
+                          "IF_rank": ranks["IF"][int(row_id)],
+                          "covering_rules": [r for r in summary["rule_order"] if row_id in coverage[r]]})
+    summary["cases"] = cases
+    return summary, model_metrics
+
+
+
+def rule_training_metrics(path):
+    table = pd.read_csv(path)
+    return {row.rule_id: {"lift": row.train_lift, "confidence": row.train_confidence}
+            for row in table[table.scheme == "equal_frequency"].itertuples()}
+

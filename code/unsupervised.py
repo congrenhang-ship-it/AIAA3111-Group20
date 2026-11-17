@@ -1218,7 +1218,7 @@ def reproduce_b_for_c(train, validation, freeze_path, output, dataset_digest):
     import warnings
     from sklearn.exceptions import ConvergenceWarning
     from classification import train_model, score_model
-    from run_b_validation import EXPERIMENTS, select_method
+    from classification import EXPERIMENTS, select_method
 
     freeze_path, output = Path(freeze_path), Path(output)
     frozen = json.loads(freeze_path.read_text(encoding="utf-8"))
@@ -1333,7 +1333,7 @@ def reproduce_b_for_c(train, validation, freeze_path, output, dataset_digest):
             name: data_sha256(ROOT / name)
             for name in [
                 "code/classification.py",
-                "code/run_b_validation.py",
+                "code/validation/run_b_validation.py",
                 "requirements.txt",
             ]
         },
