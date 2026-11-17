@@ -1,0 +1,6419 @@
+{
+  "dataset_id": "handbook",
+  "phase": "validation",
+  "E15": {
+    "rule_order": [
+      "R001",
+      "R002",
+      "R003",
+      "R004",
+      "R005",
+      "R006",
+      "R007",
+      "R008",
+      "R009",
+      "R010",
+      "R011",
+      "R012",
+      "R013",
+      "R014",
+      "R015",
+      "R016",
+      "R019",
+      "R022",
+      "R023"
+    ],
+    "jaccard": [
+      [
+        1.0,
+        0.320847922264745,
+        0.31723157019026915,
+        0.2743457261597214,
+        0.2746773876128089,
+        0.344118593180356,
+        0.30323146979755305,
+        0.3408837431621435,
+        0.3044591951965186,
+        0.5882966751918158,
+        0.5931878197722397,
+        0.18561807254386758,
+        0.18565171424256155,
+        0.17995346558902767,
+        0.17905446570001218,
+        0.06463987473903966,
+        0.10085127484606803,
+        0.14265897641819378,
+        0.15058509406459875
+      ],
+      [
+        0.320847922264745,
+        1.0,
+        0.4159248443052672,
+        0.11982837879252221,
+        0.22526605566186592,
+        0.280231873275675,
+        0.0,
+        0.150031751290759,
+        0.0,
+        0.20751338541209516,
+        0.4107732299059251,
+        0.08866060562674494,
+        0.15852636391344102,
+        0.0,
+        0.0,
+        0.1497085701950061,
+        0.0,
+        0.10701242364799132,
+        0.0
+      ],
+      [
+        0.31723157019026915,
+        0.4159248443052672,
+        1.0,
+        0.22311205241908796,
+        0.11845972066531342,
+        0.1497588535207386,
+        0.0,
+        0.28983108004537234,
+        0.0,
+        0.41597953964194373,
+        0.20745147590467164,
+        0.1548689138576779,
+        0.08736597065462753,
+        0.0,
+        0.0,
+        0.14642351274787535,
+        0.0,
+        0.1068615174906088,
+        0.0
+      ],
+      [
+        0.2743457261597214,
+        0.11982837879252221,
+        0.22311205241908796,
+        1.0,
+        0.4167199829387929,
+        0.0,
+        0.22262534121143016,
+        0.0,
+        0.1214117497294889,
+        0.3402352941176471,
+        0.17657371093961793,
+        0.0,
+        0.0,
+        0.14990859232175502,
+        0.08334352202795778,
+        0.0,
+        0.0,
+        0.33592582117894226,
+        0.09777824991653261
+      ],
+      [
+        0.2746773876128089,
+        0.22526605566186592,
+        0.11845972066531342,
+        0.4167199829387929,
+        1.0,
+        0.0,
+        0.12101122882699994,
+        0.0,
+        0.22303308312482625,
+        0.17543229606220034,
+        0.3421769268856247,
+        0.0,
+        0.0,
+        0.08405260994656802,
+        0.1498201984316104,
+        0.0,
+        0.0,
+        0.3350571694072967,
+        0.09742546602708119
+      ],
+      [
+        0.344118593180356,
+        0.280231873275675,
+        0.1497588535207386,
+        0.0,
+        0.0,
+        1.0,
+        0.13842096307639953,
+        0.423761264978708,
+        0.25528843136024104,
+        0.22353985999373105,
+        0.44124442977389006,
+        0.0,
+        0.0,
+        0.08801256325248648,
+        0.15534338481955248,
+        0.0,
+        0.21529910005293806,
+        0.0,
+        0.11794901539978539
+      ],
+      [
+        0.30323146979755305,
+        0.0,
+        0.0,
+        0.22262534121143016,
+        0.12101122882699994,
+        0.13842096307639953,
+        1.0,
+        0.2534666336511081,
+        0.420160401383557,
+        0.3837340153452685,
+        0.1967849322628309,
+        0.16402768936982814,
+        0.08767428890128276,
+        0.0,
+        0.0,
+        0.0,
+        0.23335803032030092,
+        0.10423205099168473,
+        0.3366661879801824
+      ],
+      [
+        0.3408837431621435,
+        0.150031751290759,
+        0.28983108004537234,
+        0.0,
+        0.0,
+        0.423761264978708,
+        0.2534666336511081,
+        1.0,
+        0.13761312695593336,
+        0.44484910485933504,
+        0.22373076319779703,
+        0.0,
+        0.0,
+        0.14942403032954213,
+        0.08644979947211463,
+        0.0,
+        0.21505291630557524,
+        0.0,
+        0.11823392674087871
+      ],
+      [
+        0.3044591951965186,
+        0.0,
+        0.0,
+        0.1214117497294889,
+        0.22303308312482625,
+        0.25528843136024104,
+        0.420160401383557,
+        0.13761312695593336,
+        1.0,
+        0.19589218309734358,
+        0.38389173130879684,
+        0.08813635344247589,
+        0.16191616766467065,
+        0.0,
+        0.0,
+        0.0,
+        0.2324,
+        0.10403293782013875,
+        0.33402742873554964
+      ],
+      [
+        0.5882966751918158,
+        0.20751338541209516,
+        0.41597953964194373,
+        0.3402352941176471,
+        0.17543229606220034,
+        0.22353985999373105,
+        0.3837340153452685,
+        0.44484910485933504,
+        0.19589218309734358,
+        1.0,
+        0.41917660436772897,
+        0.2149156010230179,
+        0.11546771375429764,
+        0.20028644501278772,
+        0.11101038715769594,
+        0.07281980839673147,
+        0.1255750475372631,
+        0.2034178206194647,
+        0.21851843221326372
+      ],
+      [
+        0.5931878197722397,
+        0.4107732299059251,
+        0.20745147590467164,
+        0.17657371093961793,
+        0.3421769268856247,
+        0.44124442977389006,
+        0.1967849322628309,
+        0.22373076319779703,
+        0.38389173130879684,
+        0.41917660436772897,
+        1.0,
+        0.11633541548362673,
+        0.21657864334048524,
+        0.11221197716816525,
+        0.2053350387852781,
+        0.07383550705350013,
+        0.12540083867784904,
+        0.2037892564014351,
+        0.21745430748375638
+      ],
+      [
+        0.18561807254386758,
+        0.08866060562674494,
+        0.1548689138576779,
+        0.0,
+        0.0,
+        0.0,
+        0.16402768936982814,
+        0.0,
+        0.08813635344247589,
+        0.2149156010230179,
+        0.11633541548362673,
+        1.0,
+        0.41370490037695207,
+        0.12445281764282153,
+        0.06847383265434033,
+        0.2245695975669364,
+        0.0,
+        0.0,
+        0.06640467715698432
+      ],
+      [
+        0.18565171424256155,
+        0.15852636391344102,
+        0.08736597065462753,
+        0.0,
+        0.0,
+        0.0,
+        0.08767428890128276,
+        0.0,
+        0.16191616766467065,
+        0.11546771375429764,
+        0.21657864334048524,
+        0.41370490037695207,
+        1.0,
+        0.06908726812816189,
+        0.125536598789213,
+        0.22637506120450465,
+        0.0,
+        0.0,
+        0.0652614641995173
+      ],
+      [
+        0.17995346558902767,
+        0.0,
+        0.0,
+        0.14990859232175502,
+        0.08405260994656802,
+        0.08801256325248648,
+        0.0,
+        0.14942403032954213,
+        0.0,
+        0.20028644501278772,
+        0.11221197716816525,
+        0.12445281764282153,
+        0.06908726812816189,
+        1.0,
+        0.42397576457010966,
+        0.0,
+        0.0,
+        0.06166848711658639,
+        0.0
+      ],
+      [
+        0.17905446570001218,
+        0.0,
+        0.0,
+        0.08334352202795778,
+        0.1498201984316104,
+        0.15534338481955248,
+        0.0,
+        0.08644979947211463,
+        0.0,
+        0.11101038715769594,
+        0.2053350387852781,
+        0.06847383265434033,
+        0.125536598789213,
+        0.42397576457010966,
+        1.0,
+        0.0,
+        0.0,
+        0.06175330821293998,
+        0.0
+      ],
+      [
+        0.06463987473903966,
+        0.1497085701950061,
+        0.14642351274787535,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.07281980839673147,
+        0.07383550705350013,
+        0.2245695975669364,
+        0.22637506120450465,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.10085127484606803,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.21529910005293806,
+        0.23335803032030092,
+        0.21505291630557524,
+        0.2324,
+        0.1255750475372631,
+        0.12540083867784904,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.4402599267609679
+      ],
+      [
+        0.14265897641819378,
+        0.10701242364799132,
+        0.1068615174906088,
+        0.33592582117894226,
+        0.3350571694072967,
+        0.0,
+        0.10423205099168473,
+        0.0,
+        0.10403293782013875,
+        0.2034178206194647,
+        0.2037892564014351,
+        0.0,
+        0.0,
+        0.06166848711658639,
+        0.06175330821293998,
+        0.0,
+        0.0,
+        1.0,
+        0.22274650178978198
+      ],
+      [
+        0.15058509406459875,
+        0.0,
+        0.0,
+        0.09777824991653261,
+        0.09742546602708119,
+        0.11794901539978539,
+        0.3366661879801824,
+        0.11823392674087871,
+        0.33402742873554964,
+        0.21851843221326372,
+        0.21745430748375638,
+        0.06640467715698432,
+        0.0652614641995173,
+        0.0,
+        0.0,
+        0.0,
+        0.4402599267609679,
+        0.22274650178978198,
+        1.0
+      ]
+    ],
+    "pairs": [
+      {
+        "left": "R001",
+        "right": "R002",
+        "intersection": 11821,
+        "union": 36843,
+        "jaccard": 0.320847922264745,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R003",
+        "intersection": 11821,
+        "union": 37263,
+        "jaccard": 0.31723157019026915,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R004",
+        "intersection": 9770,
+        "union": 35612,
+        "jaccard": 0.2743457261597214,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R005",
+        "intersection": 9770,
+        "union": 35569,
+        "jaccard": 0.2746773876128089,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R006",
+        "intersection": 12837,
+        "union": 37304,
+        "jaccard": 0.344118593180356,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R007",
+        "intersection": 11054,
+        "union": 36454,
+        "jaccard": 0.30323146979755305,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R008",
+        "intersection": 12837,
+        "union": 37658,
+        "jaccard": 0.3408837431621435,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R009",
+        "intersection": 11054,
+        "union": 36307,
+        "jaccard": 0.3044591951965186,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R010",
+        "intersection": 28753,
+        "union": 48875,
+        "jaccard": 0.5882966751918158,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R011",
+        "intersection": 28753,
+        "union": 48472,
+        "jaccard": 0.5931878197722397,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R012",
+        "intersection": 6146,
+        "union": 33111,
+        "jaccard": 0.18561807254386758,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R013",
+        "intersection": 6146,
+        "union": 33105,
+        "jaccard": 0.18565171424256155,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R014",
+        "intersection": 5878,
+        "union": 32664,
+        "jaccard": 0.17995346558902767,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R015",
+        "intersection": 5878,
+        "union": 32828,
+        "jaccard": 0.17905446570001218,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R016",
+        "intersection": 2477,
+        "union": 38320,
+        "jaccard": 0.06463987473903966,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R019",
+        "intersection": 4881,
+        "union": 48398,
+        "jaccard": 0.10085127484606803,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R022",
+        "intersection": 9770,
+        "union": 68485,
+        "jaccard": 0.14265897641819378,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R001",
+        "right": "R023",
+        "intersection": 11054,
+        "union": 73407,
+        "jaccard": 0.15058509406459875,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R003",
+        "intersection": 11821,
+        "union": 28421,
+        "jaccard": 0.4159248443052672,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R004",
+        "intersection": 3910,
+        "union": 32630,
+        "jaccard": 0.11982837879252221,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R005",
+        "intersection": 6710,
+        "union": 29787,
+        "jaccard": 0.22526605566186592,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R006",
+        "intersection": 9040,
+        "union": 32259,
+        "jaccard": 0.280231873275675,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R007",
+        "intersection": 0,
+        "union": 38666,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R008",
+        "intersection": 5434,
+        "union": 36219,
+        "jaccard": 0.150031751290759,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R009",
+        "intersection": 0,
+        "union": 38519,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R010",
+        "intersection": 11821,
+        "union": 56965,
+        "jaccard": 0.20751338541209516,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R011",
+        "intersection": 19911,
+        "union": 48472,
+        "jaccard": 0.4107732299059251,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R012",
+        "intersection": 2477,
+        "union": 27938,
+        "jaccard": 0.08866060562674494,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R013",
+        "intersection": 4161,
+        "union": 26248,
+        "jaccard": 0.15852636391344102,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R014",
+        "intersection": 0,
+        "union": 29700,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R015",
+        "intersection": 0,
+        "union": 29864,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R016",
+        "intersection": 4161,
+        "union": 27794,
+        "jaccard": 0.1497085701950061,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R019",
+        "intersection": 0,
+        "union": 44437,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R022",
+        "intersection": 6710,
+        "union": 62703,
+        "jaccard": 0.10701242364799132,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R002",
+        "right": "R023",
+        "intersection": 0,
+        "union": 75619,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R004",
+        "intersection": 6742,
+        "union": 30218,
+        "jaccard": 0.22311205241908796,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R005",
+        "intersection": 3910,
+        "union": 33007,
+        "jaccard": 0.11845972066531342,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R006",
+        "intersection": 5434,
+        "union": 36285,
+        "jaccard": 0.1497588535207386,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R007",
+        "intersection": 0,
+        "union": 39086,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R008",
+        "intersection": 9454,
+        "union": 32619,
+        "jaccard": 0.28983108004537234,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R009",
+        "intersection": 0,
+        "union": 38939,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R010",
+        "intersection": 20331,
+        "union": 48875,
+        "jaccard": 0.41597953964194373,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R011",
+        "intersection": 11821,
+        "union": 56982,
+        "jaccard": 0.20745147590467164,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R012",
+        "intersection": 4135,
+        "union": 26700,
+        "jaccard": 0.1548689138576779,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R013",
+        "intersection": 2477,
+        "union": 28352,
+        "jaccard": 0.08736597065462753,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R014",
+        "intersection": 0,
+        "union": 30120,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R015",
+        "intersection": 0,
+        "union": 30284,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R016",
+        "intersection": 4135,
+        "union": 28240,
+        "jaccard": 0.14642351274787535,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R019",
+        "intersection": 0,
+        "union": 44857,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R022",
+        "intersection": 6742,
+        "union": 63091,
+        "jaccard": 0.1068615174906088,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R003",
+        "right": "R023",
+        "intersection": 0,
+        "union": 76039,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R005",
+        "intersection": 9770,
+        "union": 23445,
+        "jaccard": 0.4167199829387929,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R006",
+        "intersection": 0,
+        "union": 38017,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R007",
+        "intersection": 6443,
+        "union": 28941,
+        "jaccard": 0.22262534121143016,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R008",
+        "intersection": 0,
+        "union": 38371,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R009",
+        "intersection": 3815,
+        "union": 31422,
+        "jaccard": 0.1214117497294889,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R010",
+        "intersection": 16629,
+        "union": 48875,
+        "jaccard": 0.3402352941176471,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R011",
+        "intersection": 9770,
+        "union": 55331,
+        "jaccard": 0.17657371093961793,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R012",
+        "intersection": 0,
+        "union": 27133,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R013",
+        "intersection": 0,
+        "union": 27127,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R014",
+        "intersection": 3444,
+        "union": 22974,
+        "jaccard": 0.14990859232175502,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R015",
+        "intersection": 2045,
+        "union": 24537,
+        "jaccard": 0.08334352202795778,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R016",
+        "intersection": 0,
+        "union": 28673,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R019",
+        "intersection": 0,
+        "union": 41155,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R022",
+        "intersection": 16629,
+        "union": 49502,
+        "jaccard": 0.33592582117894226,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R004",
+        "right": "R023",
+        "intersection": 6443,
+        "union": 65894,
+        "jaccard": 0.09777824991653261,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R006",
+        "intersection": 0,
+        "union": 37974,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R007",
+        "intersection": 3815,
+        "union": 31526,
+        "jaccard": 0.12101122882699994,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R008",
+        "intersection": 0,
+        "union": 38328,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R009",
+        "intersection": 6418,
+        "union": 28776,
+        "jaccard": 0.22303308312482625,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R010",
+        "intersection": 9770,
+        "union": 55691,
+        "jaccard": 0.17543229606220034,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R011",
+        "intersection": 16586,
+        "union": 48472,
+        "jaccard": 0.3421769268856247,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R012",
+        "intersection": 0,
+        "union": 27090,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R013",
+        "intersection": 0,
+        "union": 27084,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R014",
+        "intersection": 2045,
+        "union": 24330,
+        "jaccard": 0.08405260994656802,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R015",
+        "intersection": 3458,
+        "union": 23081,
+        "jaccard": 0.1498201984316104,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R016",
+        "intersection": 0,
+        "union": 28630,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R019",
+        "intersection": 0,
+        "union": 41112,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R022",
+        "intersection": 16586,
+        "union": 49502,
+        "jaccard": 0.3350571694072967,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R005",
+        "right": "R023",
+        "intersection": 6418,
+        "union": 65876,
+        "jaccard": 0.09742546602708119,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R007",
+        "intersection": 4881,
+        "union": 35262,
+        "jaccard": 0.13842096307639953,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R008",
+        "intersection": 12837,
+        "union": 30293,
+        "jaccard": 0.423761264978708,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R009",
+        "intersection": 8134,
+        "union": 31862,
+        "jaccard": 0.25528843136024104,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R010",
+        "intersection": 12837,
+        "union": 57426,
+        "jaccard": 0.22353985999373105,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R011",
+        "intersection": 21388,
+        "union": 48472,
+        "jaccard": 0.44124442977389006,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R012",
+        "intersection": 0,
+        "union": 31892,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R013",
+        "intersection": 0,
+        "union": 31886,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R014",
+        "intersection": 2522,
+        "union": 28655,
+        "jaccard": 0.08801256325248648,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R015",
+        "intersection": 4214,
+        "union": 27127,
+        "jaccard": 0.15534338481955248,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R016",
+        "intersection": 0,
+        "union": 33432,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R019",
+        "intersection": 8134,
+        "union": 37780,
+        "jaccard": 0.21529910005293806,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R022",
+        "intersection": 0,
+        "union": 70890,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R006",
+        "right": "R023",
+        "intersection": 8134,
+        "union": 68962,
+        "jaccard": 0.11794901539978539,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R008",
+        "intersection": 8189,
+        "union": 32308,
+        "jaccard": 0.2534666336511081,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R009",
+        "intersection": 11054,
+        "union": 26309,
+        "jaccard": 0.420160401383557,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R010",
+        "intersection": 18755,
+        "union": 48875,
+        "jaccard": 0.3837340153452685,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R011",
+        "intersection": 11054,
+        "union": 56173,
+        "jaccard": 0.1967849322628309,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R012",
+        "intersection": 4123,
+        "union": 25136,
+        "jaccard": 0.16402768936982814,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R013",
+        "intersection": 2358,
+        "union": 26895,
+        "jaccard": 0.08767428890128276,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R014",
+        "intersection": 0,
+        "union": 28544,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R015",
+        "intersection": 0,
+        "union": 28708,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R016",
+        "intersection": 0,
+        "union": 30799,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R019",
+        "intersection": 8189,
+        "union": 35092,
+        "jaccard": 0.23335803032030092,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R022",
+        "intersection": 6443,
+        "union": 61814,
+        "jaccard": 0.10423205099168473,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R007",
+        "right": "R023",
+        "intersection": 18755,
+        "union": 55708,
+        "jaccard": 0.3366661879801824,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R009",
+        "intersection": 4881,
+        "union": 35469,
+        "jaccard": 0.13761312695593336,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R010",
+        "intersection": 21742,
+        "union": 48875,
+        "jaccard": 0.44484910485933504,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R011",
+        "intersection": 12837,
+        "union": 57377,
+        "jaccard": 0.22373076319779703,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R012",
+        "intersection": 0,
+        "union": 32246,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R013",
+        "intersection": 0,
+        "union": 32240,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R014",
+        "intersection": 4099,
+        "union": 27432,
+        "jaccard": 0.14942403032954213,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R015",
+        "intersection": 2522,
+        "union": 29173,
+        "jaccard": 0.08644979947211463,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R016",
+        "intersection": 0,
+        "union": 33786,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R019",
+        "intersection": 8189,
+        "union": 38079,
+        "jaccard": 0.21505291630557524,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R022",
+        "intersection": 0,
+        "union": 71244,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R008",
+        "right": "R023",
+        "intersection": 8189,
+        "union": 69261,
+        "jaccard": 0.11823392674087871,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R010",
+        "intersection": 11054,
+        "union": 56429,
+        "jaccard": 0.19589218309734358,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R011",
+        "intersection": 18608,
+        "union": 48472,
+        "jaccard": 0.38389173130879684,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R012",
+        "intersection": 2358,
+        "union": 26754,
+        "jaccard": 0.08813635344247589,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R013",
+        "intersection": 4056,
+        "union": 25050,
+        "jaccard": 0.16191616766467065,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R014",
+        "intersection": 0,
+        "union": 28397,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R015",
+        "intersection": 0,
+        "union": 28561,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R016",
+        "intersection": 0,
+        "union": 30652,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R019",
+        "intersection": 8134,
+        "union": 35000,
+        "jaccard": 0.2324,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R022",
+        "intersection": 6418,
+        "union": 61692,
+        "jaccard": 0.10403293782013875,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R009",
+        "right": "R023",
+        "intersection": 18608,
+        "union": 55708,
+        "jaccard": 0.33402742873554964,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R011",
+        "intersection": 28753,
+        "union": 68594,
+        "jaccard": 0.41917660436772897,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R012",
+        "intersection": 10504,
+        "union": 48875,
+        "jaccard": 0.2149156010230179,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R013",
+        "intersection": 6146,
+        "union": 53227,
+        "jaccard": 0.11546771375429764,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R014",
+        "intersection": 9789,
+        "union": 48875,
+        "jaccard": 0.20028644501278772,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R015",
+        "intersection": 5878,
+        "union": 52950,
+        "jaccard": 0.11101038715769594,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R016",
+        "intersection": 4135,
+        "union": 56784,
+        "jaccard": 0.07281980839673147,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R019",
+        "intersection": 8189,
+        "union": 65212,
+        "jaccard": 0.1255750475372631,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R022",
+        "intersection": 16629,
+        "union": 81748,
+        "jaccard": 0.2034178206194647,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R010",
+        "right": "R023",
+        "intersection": 18755,
+        "union": 85828,
+        "jaccard": 0.21851843221326372,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R012",
+        "intersection": 6146,
+        "union": 52830,
+        "jaccard": 0.11633541548362673,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R013",
+        "intersection": 10498,
+        "union": 48472,
+        "jaccard": 0.21657864334048524,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R014",
+        "intersection": 5878,
+        "union": 52383,
+        "jaccard": 0.11221197716816525,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R015",
+        "intersection": 9953,
+        "union": 48472,
+        "jaccard": 0.2053350387852781,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R016",
+        "intersection": 4161,
+        "union": 56355,
+        "jaccard": 0.07383550705350013,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R019",
+        "intersection": 8134,
+        "union": 64864,
+        "jaccard": 0.12540083867784904,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R022",
+        "intersection": 16586,
+        "union": 81388,
+        "jaccard": 0.2037892564014351,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R011",
+        "right": "R023",
+        "intersection": 18608,
+        "union": 85572,
+        "jaccard": 0.21745430748375638,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R013",
+        "intersection": 6146,
+        "union": 14856,
+        "jaccard": 0.41370490037695207,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R014",
+        "intersection": 2246,
+        "union": 18047,
+        "jaccard": 0.12445281764282153,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R015",
+        "intersection": 1311,
+        "union": 19146,
+        "jaccard": 0.06847383265434033,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R016",
+        "intersection": 4135,
+        "union": 18413,
+        "jaccard": 0.2245695975669364,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R019",
+        "intersection": 0,
+        "union": 35030,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R022",
+        "intersection": 0,
+        "union": 60006,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R012",
+        "right": "R023",
+        "intersection": 4123,
+        "union": 62089,
+        "jaccard": 0.06640467715698432,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R014",
+        "intersection": 1311,
+        "union": 18976,
+        "jaccard": 0.06908726812816189,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R015",
+        "intersection": 2281,
+        "union": 18170,
+        "jaccard": 0.125536598789213,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R016",
+        "intersection": 4161,
+        "union": 18381,
+        "jaccard": 0.22637506120450465,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R019",
+        "intersection": 0,
+        "union": 35024,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R022",
+        "intersection": 0,
+        "union": 60000,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R013",
+        "right": "R023",
+        "intersection": 4056,
+        "union": 62150,
+        "jaccard": 0.0652614641995173,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R015",
+        "intersection": 5878,
+        "union": 13864,
+        "jaccard": 0.42397576457010966,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R016",
+        "intersection": 0,
+        "union": 21833,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R019",
+        "intersection": 0,
+        "union": 34315,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R022",
+        "intersection": 3444,
+        "union": 55847,
+        "jaccard": 0.06166848711658639,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R014",
+        "right": "R023",
+        "intersection": 0,
+        "union": 65497,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R016",
+        "intersection": 0,
+        "union": 21997,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R019",
+        "intersection": 0,
+        "union": 34479,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R022",
+        "intersection": 3458,
+        "union": 55997,
+        "jaccard": 0.06175330821293998,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R015",
+        "right": "R023",
+        "intersection": 0,
+        "union": 65661,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R016",
+        "right": "R019",
+        "intersection": 0,
+        "union": 36570,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R016",
+        "right": "R022",
+        "intersection": 0,
+        "union": 61546,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R016",
+        "right": "R023",
+        "intersection": 0,
+        "union": 67752,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R019",
+        "right": "R022",
+        "intersection": 0,
+        "union": 74028,
+        "jaccard": 0.0,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      },
+      {
+        "left": "R019",
+        "right": "R023",
+        "intersection": 24526,
+        "union": 55708,
+        "jaccard": 0.4402599267609679,
+        "identical_coverage": false,
+        "antecedent_contains_other": true,
+        "high_overlap": false
+      },
+      {
+        "left": "R022",
+        "right": "R023",
+        "intersection": 19166,
+        "union": 86044,
+        "jaccard": 0.22274650178978198,
+        "identical_coverage": false,
+        "antecedent_contains_other": false,
+        "high_overlap": false
+      }
+    ],
+    "cumulative": [
+      {
+        "rule_id": "R001",
+        "transactions": 28753,
+        "frauds": 557,
+        "increment_transactions": 28753,
+        "increment_frauds": 557,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R002",
+        "transactions": 36843,
+        "frauds": 608,
+        "increment_transactions": 8090,
+        "increment_frauds": 51,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R003",
+        "transactions": 45353,
+        "frauds": 668,
+        "increment_transactions": 8510,
+        "increment_frauds": 60,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R004",
+        "transactions": 49380,
+        "frauds": 691,
+        "increment_transactions": 4027,
+        "increment_frauds": 23,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R005",
+        "transactions": 53396,
+        "frauds": 717,
+        "increment_transactions": 4016,
+        "increment_frauds": 26,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R006",
+        "transactions": 58341,
+        "frauds": 749,
+        "increment_transactions": 4945,
+        "increment_frauds": 32,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R007",
+        "transactions": 63414,
+        "frauds": 782,
+        "increment_transactions": 5073,
+        "increment_frauds": 33,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R008",
+        "transactions": 64991,
+        "frauds": 796,
+        "increment_transactions": 1577,
+        "increment_frauds": 14,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R009",
+        "transactions": 66689,
+        "frauds": 817,
+        "increment_transactions": 1698,
+        "increment_frauds": 21,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R010",
+        "transactions": 67624,
+        "frauds": 827,
+        "increment_transactions": 935,
+        "increment_frauds": 10,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R011",
+        "transactions": 68594,
+        "frauds": 832,
+        "increment_transactions": 970,
+        "increment_frauds": 5,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R012",
+        "transactions": 68594,
+        "frauds": 832,
+        "increment_transactions": 0,
+        "increment_frauds": 0,
+        "redundant_given_previous": true
+      },
+      {
+        "rule_id": "R013",
+        "transactions": 68594,
+        "frauds": 832,
+        "increment_transactions": 0,
+        "increment_frauds": 0,
+        "redundant_given_previous": true
+      },
+      {
+        "rule_id": "R014",
+        "transactions": 68594,
+        "frauds": 832,
+        "increment_transactions": 0,
+        "increment_frauds": 0,
+        "redundant_given_previous": true
+      },
+      {
+        "rule_id": "R015",
+        "transactions": 68594,
+        "frauds": 832,
+        "increment_transactions": 0,
+        "increment_frauds": 0,
+        "redundant_given_previous": true
+      },
+      {
+        "rule_id": "R016",
+        "transactions": 74819,
+        "frauds": 870,
+        "increment_transactions": 6225,
+        "increment_frauds": 38,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R019",
+        "transactions": 87903,
+        "frauds": 951,
+        "increment_transactions": 13084,
+        "increment_frauds": 81,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R022",
+        "transactions": 113960,
+        "frauds": 1116,
+        "increment_transactions": 26057,
+        "increment_frauds": 165,
+        "redundant_given_previous": false
+      },
+      {
+        "rule_id": "R023",
+        "transactions": 120155,
+        "frauds": 1156,
+        "increment_transactions": 6195,
+        "increment_frauds": 40,
+        "redundant_given_previous": false
+      }
+    ],
+    "display_rule_ids": [
+      "R001",
+      "R002",
+      "R003",
+      "R004",
+      "R005"
+    ],
+    "n_transactions": 145315,
+    "n_fraud": 1291,
+    "covered_transactions": 120155,
+    "covered_frauds": 1156,
+    "error_associations": {
+      "classifier_FN": {
+        "total": 949,
+        "covered_by_any_rule": 814
+      },
+      "classifier_FP": {
+        "total": 1112,
+        "covered_by_any_rule": 1111
+      },
+      "IF_FN": {
+        "total": 1167,
+        "covered_by_any_rule": 1033
+      },
+      "IF_FP": {
+        "total": 1330,
+        "covered_by_any_rule": 1202
+      }
+    },
+    "per_rule_errors": {
+      "R001": {
+        "classifier_FN": 222,
+        "classifier_FP": 1083,
+        "IF_FN": 443,
+        "IF_FP": 474
+      },
+      "R002": {
+        "classifier_FN": 129,
+        "classifier_FP": 782,
+        "IF_FN": 213,
+        "IF_FP": 321
+      },
+      "R003": {
+        "classifier_FN": 139,
+        "classifier_FP": 783,
+        "IF_FN": 221,
+        "IF_FP": 348
+      },
+      "R004": {
+        "classifier_FN": 122,
+        "classifier_FP": 316,
+        "IF_FN": 198,
+        "IF_FP": 120
+      },
+      "R005": {
+        "classifier_FN": 128,
+        "classifier_FP": 318,
+        "IF_FN": 203,
+        "IF_FP": 116
+      },
+      "R006": {
+        "classifier_FN": 131,
+        "classifier_FP": 612,
+        "IF_FN": 236,
+        "IF_FP": 99
+      },
+      "R007": {
+        "classifier_FN": 131,
+        "classifier_FP": 255,
+        "IF_FN": 230,
+        "IF_FP": 126
+      },
+      "R008": {
+        "classifier_FN": 139,
+        "classifier_FP": 608,
+        "IF_FN": 242,
+        "IF_FP": 109
+      },
+      "R009": {
+        "classifier_FN": 144,
+        "classifier_FP": 254,
+        "IF_FN": 242,
+        "IF_FP": 169
+      },
+      "R010": {
+        "classifier_FN": 360,
+        "classifier_FP": 1096,
+        "IF_FN": 580,
+        "IF_FP": 646
+      },
+      "R011": {
+        "classifier_FN": 352,
+        "classifier_FP": 1094,
+        "IF_FN": 574,
+        "IF_FP": 680
+      },
+      "R012": {
+        "classifier_FN": 99,
+        "classifier_FP": 172,
+        "IF_FN": 140,
+        "IF_FP": 417
+      },
+      "R013": {
+        "classifier_FN": 93,
+        "classifier_FP": 164,
+        "IF_FN": 135,
+        "IF_FP": 465
+      },
+      "R014": {
+        "classifier_FN": 90,
+        "classifier_FP": 58,
+        "IF_FN": 129,
+        "IF_FP": 172
+      },
+      "R015": {
+        "classifier_FN": 79,
+        "classifier_FP": 58,
+        "IF_FN": 119,
+        "IF_FP": 190
+      },
+      "R016": {
+        "classifier_FN": 78,
+        "classifier_FP": 121,
+        "IF_FN": 93,
+        "IF_FP": 484
+      },
+      "R019": {
+        "classifier_FN": 157,
+        "classifier_FP": 152,
+        "IF_FN": 200,
+        "IF_FP": 24
+      },
+      "R022": {
+        "classifier_FN": 338,
+        "classifier_FP": 320,
+        "IF_FN": 414,
+        "IF_FP": 186
+      },
+      "R023": {
+        "classifier_FN": 372,
+        "classifier_FP": 257,
+        "IF_FN": 470,
+        "IF_FP": 297
+      }
+    }
+  },
+  "rule_intervals": {
+    "R001": [
+      {
+        "feature": "Amount",
+        "lower_inclusive": 65.22,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "customer_amount_ratio_7d",
+        "lower_inclusive": 1.1988045078094414,
+        "upper_exclusive": null
+      }
+    ],
+    "R002": [
+      {
+        "feature": "Amount",
+        "lower_inclusive": 65.22,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "terminal_count_7d",
+        "lower_inclusive": 8.0,
+        "upper_exclusive": null
+      }
+    ],
+    "R003": [
+      {
+        "feature": "customer_amount_ratio_7d",
+        "lower_inclusive": 1.1988045078094414,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "terminal_count_7d",
+        "lower_inclusive": 8.0,
+        "upper_exclusive": null
+      }
+    ],
+    "R004": [
+      {
+        "feature": "customer_amount_ratio_7d",
+        "lower_inclusive": 1.1988045078094414,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "customer_count_7d",
+        "lower_inclusive": 12.0,
+        "upper_exclusive": 20.0
+      }
+    ],
+    "R005": [
+      {
+        "feature": "Amount",
+        "lower_inclusive": 65.22,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "customer_count_7d",
+        "lower_inclusive": 12.0,
+        "upper_exclusive": 20.0
+      }
+    ],
+    "R006": [
+      {
+        "feature": "Amount",
+        "lower_inclusive": 65.22,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "customer_count_7d",
+        "lower_inclusive": 20.0,
+        "upper_exclusive": null
+      }
+    ],
+    "R007": [
+      {
+        "feature": "customer_amount_ratio_7d",
+        "lower_inclusive": 1.1988045078094414,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "terminal_count_7d",
+        "lower_inclusive": 5.0,
+        "upper_exclusive": 8.0
+      }
+    ],
+    "R008": [
+      {
+        "feature": "customer_amount_ratio_7d",
+        "lower_inclusive": 1.1988045078094414,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "customer_count_7d",
+        "lower_inclusive": 20.0,
+        "upper_exclusive": null
+      }
+    ],
+    "R009": [
+      {
+        "feature": "Amount",
+        "lower_inclusive": 65.22,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "terminal_count_7d",
+        "lower_inclusive": 5.0,
+        "upper_exclusive": 8.0
+      }
+    ],
+    "R010": [
+      {
+        "feature": "customer_amount_ratio_7d",
+        "lower_inclusive": 1.1988045078094414,
+        "upper_exclusive": null
+      }
+    ],
+    "R011": [
+      {
+        "feature": "Amount",
+        "lower_inclusive": 65.22,
+        "upper_exclusive": null
+      }
+    ],
+    "R012": [
+      {
+        "feature": "customer_amount_ratio_7d",
+        "lower_inclusive": 1.1988045078094414,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "customer_count_7d",
+        "lower_inclusive": null,
+        "upper_exclusive": 12.0
+      }
+    ],
+    "R013": [
+      {
+        "feature": "Amount",
+        "lower_inclusive": 65.22,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "customer_count_7d",
+        "lower_inclusive": null,
+        "upper_exclusive": 12.0
+      }
+    ],
+    "R014": [
+      {
+        "feature": "customer_amount_ratio_7d",
+        "lower_inclusive": 1.1988045078094414,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "terminal_count_7d",
+        "lower_inclusive": null,
+        "upper_exclusive": 5.0
+      }
+    ],
+    "R015": [
+      {
+        "feature": "Amount",
+        "lower_inclusive": 65.22,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "terminal_count_7d",
+        "lower_inclusive": null,
+        "upper_exclusive": 5.0
+      }
+    ],
+    "R016": [
+      {
+        "feature": "customer_count_7d",
+        "lower_inclusive": null,
+        "upper_exclusive": 12.0
+      },
+      {
+        "feature": "terminal_count_7d",
+        "lower_inclusive": 8.0,
+        "upper_exclusive": null
+      }
+    ],
+    "R019": [
+      {
+        "feature": "customer_count_7d",
+        "lower_inclusive": 20.0,
+        "upper_exclusive": null
+      },
+      {
+        "feature": "terminal_count_7d",
+        "lower_inclusive": 5.0,
+        "upper_exclusive": 8.0
+      }
+    ],
+    "R022": [
+      {
+        "feature": "customer_count_7d",
+        "lower_inclusive": 12.0,
+        "upper_exclusive": 20.0
+      }
+    ],
+    "R023": [
+      {
+        "feature": "terminal_count_7d",
+        "lower_inclusive": 5.0,
+        "upper_exclusive": 8.0
+      }
+    ]
+  },
+  "model_metrics": {
+    "classifier": {
+      "AP": 0.20831156303349735,
+      "budgets": [
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010005849361731411,
+          "K": 1454,
+          "TP": 342,
+          "FP": 1112,
+          "FN": 949,
+          "TN": 142912,
+          "precision_at_k": 0.23521320495185694,
+          "recall_at_k": 0.26491092176607284,
+          "random_expected_TP": 12.91755152599525,
+          "random_expected_precision": 0.008884148229707876,
+          "random_expected_recall": 0.010005849361731411
+        }
+      ]
+    },
+    "IF": {
+      "AP": 0.027707685969932883,
+      "budgets": [
+        {
+          "review_fraction": 0.01,
+          "actual_review_fraction": 0.010005849361731411,
+          "K": 1454,
+          "TP": 124,
+          "FP": 1330,
+          "FN": 1167,
+          "TN": 142694,
+          "precision_at_k": 0.08528198074277854,
+          "recall_at_k": 0.09604957397366383,
+          "random_expected_TP": 12.91755152599525,
+          "random_expected_precision": 0.008884148229707876,
+          "random_expected_recall": 0.010005849361731411
+        }
+      ]
+    }
+  },
+  "mechanisms": [
+    {
+      "scenario": 0,
+      "rows": 144024,
+      "frauds": 0,
+      "rule_covered_rows": 118999,
+      "rule_covered_frauds": 0,
+      "models": {
+        "classifier": {
+          "global_reviews": 1112,
+          "TP": 0,
+          "recall": null
+        },
+        "IF": {
+          "global_reviews": 1330,
+          "TP": 0,
+          "recall": null
+        }
+      }
+    },
+    {
+      "scenario": 1,
+      "rows": 92,
+      "frauds": 92,
+      "rule_covered_rows": 92,
+      "rule_covered_frauds": 92,
+      "models": {
+        "classifier": {
+          "global_reviews": 87,
+          "TP": 87,
+          "recall": 0.9456521739130435
+        },
+        "IF": {
+          "global_reviews": 12,
+          "TP": 12,
+          "recall": 0.13043478260869565
+        }
+      }
+    },
+    {
+      "scenario": 2,
+      "rows": 801,
+      "frauds": 801,
+      "rule_covered_rows": 675,
+      "rule_covered_frauds": 675,
+      "models": {
+        "classifier": {
+          "global_reviews": 12,
+          "TP": 12,
+          "recall": 0.0149812734082397
+        },
+        "IF": {
+          "global_reviews": 6,
+          "TP": 6,
+          "recall": 0.00749063670411985
+        }
+      }
+    },
+    {
+      "scenario": 3,
+      "rows": 398,
+      "frauds": 398,
+      "rule_covered_rows": 389,
+      "rule_covered_frauds": 389,
+      "models": {
+        "classifier": {
+          "global_reviews": 243,
+          "TP": 243,
+          "recall": 0.6105527638190955
+        },
+        "IF": {
+          "global_reviews": 106,
+          "TP": 106,
+          "recall": 0.2663316582914573
+        }
+      }
+    }
+  ],
+  "mechanism_note": "Final upstream scenario code is exclusive; later simulator scenarios overwrite earlier codes. Labels are post-hoc diagnostics only; no real-world causal claim.",
+  "frozen_rules": {
+    "dataset_id": "handbook",
+    "feature_columns": [
+      "Amount",
+      "customer_amount_ratio_7d",
+      "customer_count_7d",
+      "terminal_count_7d"
+    ],
+    "selection_rule": "most validation-passing rules; equal_frequency on tie; all passing rules retained",
+    "selected_scheme": "equal_frequency",
+    "schemes": {
+      "equal_frequency": {
+        "binner": {
+          "schema_version": 1,
+          "feature_columns": [
+            "Amount",
+            "customer_amount_ratio_7d",
+            "customer_count_7d",
+            "terminal_count_7d"
+          ],
+          "binning": "equal_frequency",
+          "requested_bins": 3,
+          "max_length": 3,
+          "interval_policy": "left_closed_cut_goes_right_outer_bins_unbounded",
+          "missing_policy": "raise",
+          "limits": {
+            "min_coverage": 20,
+            "min_fraud_coverage": 5,
+            "min_lift_exclusive": 1.0,
+            "max_rules": 50
+          },
+          "features": {
+            "Amount": {
+              "cut_points": [
+                28.91,
+                65.22
+              ],
+              "train_min": 0.0,
+              "train_max": 1054.6,
+              "effective_bins": 3
+            },
+            "customer_amount_ratio_7d": {
+              "cut_points": [
+                0.7585921011732168,
+                1.1988045078094414
+              ],
+              "train_min": 0.0,
+              "train_max": 529.8333333333334,
+              "effective_bins": 3
+            },
+            "customer_count_7d": {
+              "cut_points": [
+                12.0,
+                20.0
+              ],
+              "train_min": 0.0,
+              "train_max": 49.0,
+              "effective_bins": 3
+            },
+            "terminal_count_7d": {
+              "cut_points": [
+                5.0,
+                8.0
+              ],
+              "train_min": 0.0,
+              "train_max": 26.0,
+              "effective_bins": 3
+            }
+          }
+        },
+        "rules": [
+          {
+            "rule_id": "R001",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R002",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 2
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R003",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 2
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R004",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R005",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R006",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 2
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R007",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R008",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 2
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R009",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R010",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R011",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R012",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 0
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R013",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 0
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R014",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 0
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R015",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 0
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R016",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 0
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 2
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R019",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R022",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R023",
+            "antecedent": [
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          }
+        ],
+        "training_metrics": {
+          "R001": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 57007,
+            "normal_count": 56145,
+            "fraud_count": 862,
+            "antecedent_support": 0.19513656170521568,
+            "support": 0.002950650204183625,
+            "confidence": 0.015120950058764713,
+            "lift": 2.5213580075442152,
+            "fraud_recall": 0.4920091324200913,
+            "kulczynski": 0.253565041239428,
+            "status": "ok"
+          },
+          "R002": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 33539,
+            "normal_count": 33117,
+            "fraud_count": 422,
+            "antecedent_support": 0.11480493874491253,
+            "support": 0.0014445178493799184,
+            "confidence": 0.012582366796863352,
+            "lift": 2.098059391363506,
+            "fraud_recall": 0.2408675799086758,
+            "kulczynski": 0.12672497335276958,
+            "status": "ok"
+          },
+          "R003": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 34057,
+            "normal_count": 33634,
+            "fraud_count": 423,
+            "antecedent_support": 0.11657806728988598,
+            "support": 0.0014479408774590178,
+            "confidence": 0.012420354112223624,
+            "lift": 2.071044423510786,
+            "fraud_recall": 0.24143835616438356,
+            "kulczynski": 0.12692935513830358,
+            "status": "ok"
+          },
+          "R004": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 30527,
+            "normal_count": 30157,
+            "fraud_count": 370,
+            "antecedent_support": 0.10449477817066534,
+            "support": 0.001266520389266753,
+            "confidence": 0.012120417990631245,
+            "lift": 2.021031273610172,
+            "fraud_recall": 0.21118721461187215,
+            "kulczynski": 0.1116538163012517,
+            "status": "ok"
+          },
+          "R005": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 30407,
+            "normal_count": 30048,
+            "fraud_count": 359,
+            "antecedent_support": 0.10408401480117341,
+            "support": 0.0012288670803966605,
+            "confidence": 0.011806491926201203,
+            "lift": 1.968685356637268,
+            "fraud_recall": 0.20490867579908675,
+            "kulczynski": 0.10835758386264398,
+            "status": "ok"
+          },
+          "R006": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 35737,
+            "normal_count": 35320,
+            "fraud_count": 417,
+            "antecedent_support": 0.12232875446277286,
+            "support": 0.0014274027089844219,
+            "confidence": 0.011668578783893444,
+            "lift": 1.9456888911802779,
+            "fraud_recall": 0.238013698630137,
+            "kulczynski": 0.12484113870701521,
+            "status": "ok"
+          },
+          "R007": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 33996,
+            "normal_count": 33611,
+            "fraud_count": 385,
+            "antecedent_support": 0.11636926257706091,
+            "support": 0.0013178658104532432,
+            "confidence": 0.011324861748440994,
+            "lift": 1.8883754488172395,
+            "fraud_recall": 0.2197488584474886,
+            "kulczynski": 0.1155368600979648,
+            "status": "ok"
+          },
+          "R008": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 35939,
+            "normal_count": 35532,
+            "fraud_count": 407,
+            "antecedent_support": 0.12302020613475093,
+            "support": 0.0013931724281934284,
+            "confidence": 0.011324744706307911,
+            "lift": 1.888355932509182,
+            "fraud_recall": 0.23230593607305935,
+            "kulczynski": 0.12181534038968363,
+            "status": "ok"
+          },
+          "R009": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 33771,
+            "normal_count": 33389,
+            "fraud_count": 382,
+            "antecedent_support": 0.11559908125926358,
+            "support": 0.001307596726215945,
+            "confidence": 0.011311480264131948,
+            "lift": 1.8861441397735408,
+            "fraud_recall": 0.2180365296803653,
+            "kulczynski": 0.11467400497224862,
+            "status": "ok"
+          },
+          "R010": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 97380,
+            "normal_count": 96333,
+            "fraud_count": 1047,
+            "antecedent_support": 0.33333447434269303,
+            "support": 0.0035839103988170016,
+            "confidence": 0.010751694393099198,
+            "lift": 1.7928020823662139,
+            "fraud_recall": 0.5976027397260274,
+            "kulczynski": 0.3041772170595633,
+            "status": "ok"
+          },
+          "R011": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 97390,
+            "normal_count": 96347,
+            "fraud_count": 1043,
+            "antecedent_support": 0.333368704623484,
+            "support": 0.003570218286500604,
+            "confidence": 0.010709518431050415,
+            "lift": 1.7857694092058434,
+            "fraud_recall": 0.5953196347031964,
+            "kulczynski": 0.3030145765671234,
+            "status": "ok"
+          },
+          "R012": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 30914,
+            "normal_count": 30644,
+            "fraud_count": 270,
+            "antecedent_support": 0.10581949003727678,
+            "support": 0.0009242175813568199,
+            "confidence": 0.008733906967716892,
+            "lift": 1.4563440911197747,
+            "fraud_recall": 0.1541095890410959,
+            "kulczynski": 0.0814217480044064,
+            "status": "ok"
+          },
+          "R013": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 31246,
+            "normal_count": 30979,
+            "fraud_count": 267,
+            "antecedent_support": 0.10695593535953775,
+            "support": 0.0009139484971195219,
+            "confidence": 0.008545093772002816,
+            "lift": 1.4248602451250747,
+            "fraud_recall": 0.1523972602739726,
+            "kulczynski": 0.08047117702298771,
+            "status": "ok"
+          },
+          "R014": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 29327,
+            "normal_count": 29088,
+            "fraud_count": 239,
+            "antecedent_support": 0.10038714447574613,
+            "support": 0.0008181037109047406,
+            "confidence": 0.008149486821018175,
+            "lift": 1.3588943666697653,
+            "fraud_recall": 0.13641552511415525,
+            "kulczynski": 0.07228250596758672,
+            "status": "ok"
+          },
+          "R015": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 30080,
+            "normal_count": 29841,
+            "fraud_count": 239,
+            "antecedent_support": 0.10296468461930794,
+            "support": 0.0008181037109047406,
+            "confidence": 0.007945478723404256,
+            "lift": 1.324876831493491,
+            "fraud_recall": 0.13641552511415525,
+            "kulczynski": 0.07218050191877975,
+            "status": "ok"
+          },
+          "R016": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 21099,
+            "normal_count": 20935,
+            "fraud_count": 164,
+            "antecedent_support": 0.07222246944091683,
+            "support": 0.0005613766049722906,
+            "confidence": 0.007772880231290582,
+            "lift": 1.2960967225393834,
+            "fraud_recall": 0.09360730593607305,
+            "kulczynski": 0.05069009308368182,
+            "status": "ok"
+          },
+          "R019": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 40655,
+            "normal_count": 40367,
+            "fraud_count": 288,
+            "antecedent_support": 0.13916320655578338,
+            "support": 0.000985832086780608,
+            "confidence": 0.0070839995080555895,
+            "lift": 1.1812286143172672,
+            "fraud_recall": 0.1643835616438356,
+            "kulczynski": 0.08573378057594559,
+            "status": "ok"
+          },
+          "R022": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 91237,
+            "normal_count": 90640,
+            "fraud_count": 597,
+            "antecedent_support": 0.31230681285278583,
+            "support": 0.002043547763222302,
+            "confidence": 0.006543397963545491,
+            "lift": 1.091085466707886,
+            "fraud_recall": 0.3407534246575342,
+            "kulczynski": 0.17364841131053985,
+            "status": "ok"
+          },
+          "R023": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 101069,
+            "normal_count": 100408,
+            "fraud_count": 661,
+            "antecedent_support": 0.3459620249264905,
+            "support": 0.002262621560284659,
+            "confidence": 0.006540086475576091,
+            "lift": 1.0905332893198196,
+            "fraud_recall": 0.3772831050228311,
+            "kulczynski": 0.19191159574920358,
+            "status": "ok"
+          }
+        },
+        "candidates": [
+          {
+            "rule_id": "R001",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 57007,
+              "normal_count": 56145,
+              "fraud_count": 862,
+              "antecedent_support": 0.19513656170521568,
+              "support": 0.002950650204183625,
+              "confidence": 0.015120950058764713,
+              "lift": 2.5213580075442152,
+              "fraud_recall": 0.4920091324200913,
+              "kulczynski": 0.253565041239428,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R001",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 2
+                },
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 28753,
+              "normal_count": 28196,
+              "fraud_count": 557,
+              "antecedent_support": 0.1978667033685442,
+              "support": 0.003833052334583491,
+              "confidence": 0.019371891628699615,
+              "lift": 2.180500721939957,
+              "fraud_recall": 0.4314484895429899,
+              "kulczynski": 0.22541019058584477,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R002",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 33539,
+              "normal_count": 33117,
+              "fraud_count": 422,
+              "antecedent_support": 0.11480493874491253,
+              "support": 0.0014445178493799184,
+              "confidence": 0.012582366796863352,
+              "lift": 2.098059391363506,
+              "fraud_recall": 0.2408675799086758,
+              "kulczynski": 0.12672497335276958,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R002",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 2
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 19911,
+              "normal_count": 19650,
+              "fraud_count": 261,
+              "antecedent_support": 0.13701957815779514,
+              "support": 0.001796098131645047,
+              "confidence": 0.01310833207774597,
+              "lift": 1.4754742648161547,
+              "fraud_recall": 0.2021688613477924,
+              "kulczynski": 0.1076385967127692,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R003",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 34057,
+              "normal_count": 33634,
+              "fraud_count": 423,
+              "antecedent_support": 0.11657806728988598,
+              "support": 0.0014479408774590178,
+              "confidence": 0.012420354112223624,
+              "lift": 2.071044423510786,
+              "fraud_recall": 0.24143835616438356,
+              "kulczynski": 0.12692935513830358,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R003",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 2
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 20331,
+              "normal_count": 20061,
+              "fraud_count": 270,
+              "antecedent_support": 0.1399098510133159,
+              "support": 0.0018580325499776347,
+              "confidence": 0.013280212483399735,
+              "lift": 1.4948211286020392,
+              "fraud_recall": 0.209140201394268,
+              "kulczynski": 0.11121020693883386,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R004",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 30527,
+              "normal_count": 30157,
+              "fraud_count": 370,
+              "antecedent_support": 0.10449477817066534,
+              "support": 0.001266520389266753,
+              "confidence": 0.012120417990631245,
+              "lift": 2.021031273610172,
+              "fraud_recall": 0.21118721461187215,
+              "kulczynski": 0.1116538163012517,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R004",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 2
+                },
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 16629,
+              "normal_count": 16404,
+              "fraud_count": 225,
+              "antecedent_support": 0.11443416027251144,
+              "support": 0.0015483604583146956,
+              "confidence": 0.013530579108785856,
+              "lift": 1.5230024037127938,
+              "fraud_recall": 0.17428350116189,
+              "kulczynski": 0.09390704013533793,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R005",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 30407,
+              "normal_count": 30048,
+              "fraud_count": 359,
+              "antecedent_support": 0.10408401480117341,
+              "support": 0.0012288670803966605,
+              "confidence": 0.011806491926201203,
+              "lift": 1.968685356637268,
+              "fraud_recall": 0.20490867579908675,
+              "kulczynski": 0.10835758386264398,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R005",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 2
+                },
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 16586,
+              "normal_count": 16356,
+              "fraud_count": 230,
+              "antecedent_support": 0.11413825138492241,
+              "support": 0.0015827684684994667,
+              "confidence": 0.013867116845532377,
+              "lift": 1.5608831017881777,
+              "fraud_recall": 0.17815646785437644,
+              "kulczynski": 0.09601179234995441,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R006",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 35737,
+              "normal_count": 35320,
+              "fraud_count": 417,
+              "antecedent_support": 0.12232875446277286,
+              "support": 0.0014274027089844219,
+              "confidence": 0.011668578783893444,
+              "lift": 1.9456888911802779,
+              "fraud_recall": 0.238013698630137,
+              "kulczynski": 0.12484113870701521,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R006",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 2
+                },
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 21388,
+              "normal_count": 21101,
+              "fraud_count": 287,
+              "antecedent_support": 0.14718370436637648,
+              "support": 0.001975019784605856,
+              "confidence": 0.013418739480082289,
+              "lift": 1.510413731640711,
+              "fraud_recall": 0.22230828814872192,
+              "kulczynski": 0.1178635138144021,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R007",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 33996,
+              "normal_count": 33611,
+              "fraud_count": 385,
+              "antecedent_support": 0.11636926257706091,
+              "support": 0.0013178658104532432,
+              "confidence": 0.011324861748440994,
+              "lift": 1.8883754488172395,
+              "fraud_recall": 0.2197488584474886,
+              "kulczynski": 0.1155368600979648,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R007",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 2
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 18755,
+              "normal_count": 18476,
+              "fraud_count": 279,
+              "antecedent_support": 0.12906444620307608,
+              "support": 0.0019199669683102225,
+              "confidence": 0.01487603305785124,
+              "lift": 1.67444674190678,
+              "fraud_recall": 0.2161115414407436,
+              "kulczynski": 0.11549378724929742,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R008",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 35939,
+              "normal_count": 35532,
+              "fraud_count": 407,
+              "antecedent_support": 0.12302020613475093,
+              "support": 0.0013931724281934284,
+              "confidence": 0.011324744706307911,
+              "lift": 1.888355932509182,
+              "fraud_recall": 0.23230593607305935,
+              "kulczynski": 0.12181534038968363,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R008",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 2
+                },
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 21742,
+              "normal_count": 21448,
+              "fraud_count": 294,
+              "antecedent_support": 0.14961979148745827,
+              "support": 0.0020231909988645356,
+              "confidence": 0.013522215067611075,
+              "lift": 1.5220609469790112,
+              "fraud_recall": 0.22773044151820293,
+              "kulczynski": 0.12062632829290701,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R009",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 33771,
+              "normal_count": 33389,
+              "fraud_count": 382,
+              "antecedent_support": 0.11559908125926358,
+              "support": 0.001307596726215945,
+              "confidence": 0.011311480264131948,
+              "lift": 1.8861441397735408,
+              "fraud_recall": 0.2180365296803653,
+              "kulczynski": 0.11467400497224862,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R009",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 2
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 18608,
+              "normal_count": 18316,
+              "fraud_count": 292,
+              "antecedent_support": 0.1280528507036438,
+              "support": 0.0020094277947906272,
+              "confidence": 0.015692175408426483,
+              "lift": 1.7663117501746666,
+              "fraud_recall": 0.22618125484120838,
+              "kulczynski": 0.12093671512481743,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R010",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 97380,
+              "normal_count": 96333,
+              "fraud_count": 1047,
+              "antecedent_support": 0.33333447434269303,
+              "support": 0.0035839103988170016,
+              "confidence": 0.010751694393099198,
+              "lift": 1.7928020823662139,
+              "fraud_recall": 0.5976027397260274,
+              "kulczynski": 0.3041772170595633,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R010",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 48875,
+              "normal_count": 48178,
+              "fraud_count": 697,
+              "antecedent_support": 0.33633829955613664,
+              "support": 0.004796476619757079,
+              "confidence": 0.014260869565217391,
+              "lift": 1.6052039201158523,
+              "fraud_recall": 0.5398915569326104,
+              "kulczynski": 0.2770762132489139,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R011",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 97390,
+              "normal_count": 96347,
+              "fraud_count": 1043,
+              "antecedent_support": 0.333368704623484,
+              "support": 0.003570218286500604,
+              "confidence": 0.010709518431050415,
+              "lift": 1.7857694092058434,
+              "fraud_recall": 0.5953196347031964,
+              "kulczynski": 0.3030145765671234,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R011",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 48472,
+              "normal_count": 47780,
+              "fraud_count": 692,
+              "antecedent_support": 0.3335650139352441,
+              "support": 0.004762068609572309,
+              "confidence": 0.014276283215051989,
+              "lift": 1.606938881018807,
+              "fraud_recall": 0.5360185902401239,
+              "kulczynski": 0.27514743672758796,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R012",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 0
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 30914,
+              "normal_count": 30644,
+              "fraud_count": 270,
+              "antecedent_support": 0.10581949003727678,
+              "support": 0.0009242175813568199,
+              "confidence": 0.008733906967716892,
+              "lift": 1.4563440911197747,
+              "fraud_recall": 0.1541095890410959,
+              "kulczynski": 0.0814217480044064,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R012",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 2
+                },
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 0
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 10504,
+              "normal_count": 10326,
+              "fraud_count": 178,
+              "antecedent_support": 0.07228434779616695,
+              "support": 0.001224925162577848,
+              "confidence": 0.016945925361766947,
+              "lift": 1.9074338837685236,
+              "fraud_recall": 0.13787761425251743,
+              "kulczynski": 0.07741176980714219,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R013",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 0
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 31246,
+              "normal_count": 30979,
+              "fraud_count": 267,
+              "antecedent_support": 0.10695593535953775,
+              "support": 0.0009139484971195219,
+              "confidence": 0.008545093772002816,
+              "lift": 1.4248602451250747,
+              "fraud_recall": 0.1523972602739726,
+              "kulczynski": 0.08047117702298771,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R013",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 2
+                },
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 0
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 10498,
+              "normal_count": 10323,
+              "fraud_count": 175,
+              "antecedent_support": 0.07224305818394522,
+              "support": 0.0012042803564669856,
+              "confidence": 0.01666984187464279,
+              "lift": 1.8763579179037313,
+              "fraud_recall": 0.13555383423702555,
+              "kulczynski": 0.07611183805583417,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R014",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 0
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 29327,
+              "normal_count": 29088,
+              "fraud_count": 239,
+              "antecedent_support": 0.10038714447574613,
+              "support": 0.0008181037109047406,
+              "confidence": 0.008149486821018175,
+              "lift": 1.3588943666697653,
+              "fraud_recall": 0.13641552511415525,
+              "kulczynski": 0.07228250596758672,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R014",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 2
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 0
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 9789,
+              "normal_count": 9641,
+              "fraud_count": 148,
+              "antecedent_support": 0.0673640023397447,
+              "support": 0.001018477101469222,
+              "confidence": 0.01511901113494739,
+              "lift": 1.7017963617930907,
+              "fraud_recall": 0.11463981409759876,
+              "kulczynski": 0.06487941261627307,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R015",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 0
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 30080,
+              "normal_count": 29841,
+              "fraud_count": 239,
+              "antecedent_support": 0.10296468461930794,
+              "support": 0.0008181037109047406,
+              "confidence": 0.007945478723404256,
+              "lift": 1.324876831493491,
+              "fraud_recall": 0.13641552511415525,
+              "kulczynski": 0.07218050191877975,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R015",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 2
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 0
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 9953,
+              "normal_count": 9814,
+              "fraud_count": 139,
+              "antecedent_support": 0.06849258507380518,
+              "support": 0.0009565426831366342,
+              "confidence": 0.013965638500954487,
+              "lift": 1.5719727023750591,
+              "fraud_recall": 0.10766847405112316,
+              "kulczynski": 0.060817056276038825,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R016",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 0
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 21099,
+              "normal_count": 20935,
+              "fraud_count": 164,
+              "antecedent_support": 0.07222246944091683,
+              "support": 0.0005613766049722906,
+              "confidence": 0.007772880231290582,
+              "lift": 1.2960967225393834,
+              "fraud_recall": 0.09360730593607305,
+              "kulczynski": 0.05069009308368182,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R016",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 0
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 12044,
+              "normal_count": 11935,
+              "fraud_count": 109,
+              "antecedent_support": 0.08288201493307643,
+              "support": 0.0007500946220280081,
+              "confidence": 0.009050149452009298,
+              "lift": 1.0186851027255859,
+              "fraud_recall": 0.0844306738962045,
+              "kulczynski": 0.0467404116741069,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R017",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 34093,
+              "normal_count": 33836,
+              "fraud_count": 257,
+              "antecedent_support": 0.11670129630073356,
+              "support": 0.0008797182163285286,
+              "confidence": 0.007538204323468161,
+              "lift": 1.2569654525420464,
+              "fraud_recall": 0.146689497716895,
+              "kulczynski": 0.07711385102018158,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R017",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 20328,
+              "normal_count": 20148,
+              "fraud_count": 180,
+              "antecedent_support": 0.13988920620720505,
+              "support": 0.0012386883666517564,
+              "confidence": 0.00885478158205431,
+              "lift": 0.9966944892302263,
+              "fraud_recall": 0.139426800929512,
+              "kulczynski": 0.07414079125578316,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R018",
+            "antecedent": [
+              {
+                "feature": "terminal_count_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 100768,
+              "normal_count": 100047,
+              "fraud_count": 721,
+              "antecedent_support": 0.34493169347468156,
+              "support": 0.002468003245030619,
+              "confidence": 0.00715504922197523,
+              "lift": 1.1930758702389395,
+              "fraud_recall": 0.4115296803652968,
+              "kulczynski": 0.20934236479363602,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R018",
+              "antecedent": [
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 60528,
+              "normal_count": 60038,
+              "fraud_count": 490,
+              "antecedent_support": 0.416529608092764,
+              "support": 0.0033719849981075595,
+              "confidence": 0.0080954269098599,
+              "lift": 0.9112215038003807,
+              "fraud_recall": 0.37955073586367155,
+              "kulczynski": 0.19382308138676574,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R019",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 40655,
+              "normal_count": 40367,
+              "fraud_count": 288,
+              "antecedent_support": 0.13916320655578338,
+              "support": 0.000985832086780608,
+              "confidence": 0.0070839995080555895,
+              "lift": 1.1812286143172672,
+              "fraud_recall": 0.1643835616438356,
+              "kulczynski": 0.08573378057594559,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R019",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 2
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 24526,
+              "normal_count": 24307,
+              "fraud_count": 219,
+              "antecedent_support": 0.16877817155833877,
+              "support": 0.0015070708460929705,
+              "confidence": 0.008929299518877925,
+              "lift": 1.0050822305079363,
+              "fraud_recall": 0.16963594113090627,
+              "kulczynski": 0.08928262032489209,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R020",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 45576,
+              "normal_count": 45276,
+              "fraud_count": 300,
+              "antecedent_support": 0.15600792773303118,
+              "support": 0.0010269084237298,
+              "confidence": 0.006582411795681938,
+              "lift": 1.0975908673394552,
+              "fraud_recall": 0.17123287671232876,
+              "kulczynski": 0.08890764425400535,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R020",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 2
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 28156,
+              "normal_count": 27955,
+              "fraud_count": 201,
+              "antecedent_support": 0.19375838695248254,
+              "support": 0.0013832020094277947,
+              "confidence": 0.007138798124733627,
+              "lift": 0.803543338106636,
+              "fraud_recall": 0.15569326103795508,
+              "kulczynski": 0.08141602958134435,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R021",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 2
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 107459,
+              "normal_count": 106753,
+              "fraud_count": 706,
+              "antecedent_support": 0.3678351743519352,
+              "support": 0.002416657823844129,
+              "confidence": 0.006569947607924883,
+              "lift": 1.0955125138308033,
+              "fraud_recall": 0.4029680365296804,
+              "kulczynski": 0.20476899206880264,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R021",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 2
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 65025,
+              "normal_count": 64487,
+              "fraud_count": 538,
+              "antecedent_support": 0.447476172452947,
+              "support": 0.003702301895881361,
+              "confidence": 0.008273740868896578,
+              "lift": 0.9312925285543813,
+              "fraud_recall": 0.41673121611154146,
+              "kulczynski": 0.21250247849021903,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R022",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 91237,
+              "normal_count": 90640,
+              "fraud_count": 597,
+              "antecedent_support": 0.31230681285278583,
+              "support": 0.002043547763222302,
+              "confidence": 0.006543397963545491,
+              "lift": 1.091085466707886,
+              "fraud_recall": 0.3407534246575342,
+              "kulczynski": 0.17364841131053985,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R022",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 49502,
+              "normal_count": 49061,
+              "fraud_count": 441,
+              "antecedent_support": 0.340653064033307,
+              "support": 0.0030347864982968034,
+              "confidence": 0.008908730960365237,
+              "lift": 1.0027670329244573,
+              "fraud_recall": 0.3415956622773044,
+              "kulczynski": 0.17525219661883484,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R023",
+            "antecedent": [
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 101069,
+              "normal_count": 100408,
+              "fraud_count": 661,
+              "antecedent_support": 0.3459620249264905,
+              "support": 0.002262621560284659,
+              "confidence": 0.006540086475576091,
+              "lift": 1.0905332893198196,
+              "fraud_recall": 0.3772831050228311,
+              "kulczynski": 0.19191159574920358,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R023",
+              "antecedent": [
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 55708,
+              "normal_count": 55186,
+              "fraud_count": 522,
+              "antecedent_support": 0.38336028627464475,
+              "support": 0.003592196263290094,
+              "confidence": 0.009370287929920298,
+              "lift": 1.0547198997183334,
+              "fraud_recall": 0.4043377226955848,
+              "kulczynski": 0.20685400531275255,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R024",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 34657,
+              "normal_count": 34437,
+              "fraud_count": 220,
+              "antecedent_support": 0.11863188413734557,
+              "support": 0.0007530661774018532,
+              "confidence": 0.006347923940329515,
+              "lift": 1.0584909543401395,
+              "fraud_recall": 0.12557077625570776,
+              "kulczynski": 0.06595935009801863,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R024",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 19166,
+              "normal_count": 19003,
+              "fraud_count": 163,
+              "antecedent_support": 0.13189278464026424,
+              "support": 0.001121701132023535,
+              "confidence": 0.008504643639778774,
+              "lift": 0.9572829515991113,
+              "fraud_recall": 0.1262587141750581,
+              "kulczynski": 0.06738167890741843,
+              "status": "ok"
+            },
+            "retained": false
+          }
+        ]
+      },
+      "equal_width": {
+        "binner": {
+          "schema_version": 1,
+          "feature_columns": [
+            "Amount",
+            "customer_amount_ratio_7d",
+            "customer_count_7d",
+            "terminal_count_7d"
+          ],
+          "binning": "equal_width",
+          "requested_bins": 3,
+          "max_length": 3,
+          "interval_policy": "left_closed_cut_goes_right_outer_bins_unbounded",
+          "missing_policy": "raise",
+          "limits": {
+            "min_coverage": 20,
+            "min_fraud_coverage": 5,
+            "min_lift_exclusive": 1.0,
+            "max_rules": 50
+          },
+          "features": {
+            "Amount": {
+              "cut_points": [
+                351.5333333333333,
+                703.0666666666666
+              ],
+              "train_min": 0.0,
+              "train_max": 1054.6,
+              "effective_bins": 3
+            },
+            "customer_amount_ratio_7d": {
+              "cut_points": [
+                176.61111111111111,
+                353.22222222222223
+              ],
+              "train_min": 0.0,
+              "train_max": 529.8333333333334,
+              "effective_bins": 3
+            },
+            "customer_count_7d": {
+              "cut_points": [
+                16.333333333333332,
+                32.666666666666664
+              ],
+              "train_min": 0.0,
+              "train_max": 49.0,
+              "effective_bins": 3
+            },
+            "terminal_count_7d": {
+              "cut_points": [
+                8.666666666666666,
+                17.333333333333332
+              ],
+              "train_min": 0.0,
+              "train_max": 26.0,
+              "effective_bins": 3
+            }
+          }
+        },
+        "rules": [
+          {
+            "rule_id": "R001",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R002",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 0
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R003",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 0
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R004",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R005",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 0
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          },
+          {
+            "rule_id": "R006",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "consequent": {
+              "Class": 1
+            }
+          }
+        ],
+        "training_metrics": {
+          "R001": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 164,
+            "normal_count": 0,
+            "fraud_count": 164,
+            "antecedent_support": 0.0005613766049722906,
+            "support": 0.0005613766049722906,
+            "confidence": 1.0,
+            "lift": 166.74600456621005,
+            "fraud_recall": 0.09360730593607305,
+            "kulczynski": 0.5468036529680366,
+            "status": "ok"
+          },
+          "R002": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 164,
+            "normal_count": 0,
+            "fraud_count": 164,
+            "antecedent_support": 0.0005613766049722906,
+            "support": 0.0005613766049722906,
+            "confidence": 1.0,
+            "lift": 166.74600456621005,
+            "fraud_recall": 0.09360730593607305,
+            "kulczynski": 0.5468036529680366,
+            "status": "ok"
+          },
+          "R003": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 113,
+            "normal_count": 0,
+            "fraud_count": 113,
+            "antecedent_support": 0.0003868021729382246,
+            "support": 0.0003868021729382246,
+            "confidence": 1.0,
+            "lift": 166.74600456621005,
+            "fraud_recall": 0.06449771689497717,
+            "kulczynski": 0.5322488584474886,
+            "status": "ok"
+          },
+          "R004": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 93,
+            "normal_count": 0,
+            "fraud_count": 93,
+            "antecedent_support": 0.00031834161135623797,
+            "support": 0.00031834161135623797,
+            "confidence": 1.0,
+            "lift": 166.74600456621005,
+            "fraud_recall": 0.053082191780821915,
+            "kulczynski": 0.526541095890411,
+            "status": "ok"
+          },
+          "R005": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 71,
+            "normal_count": 0,
+            "fraud_count": 71,
+            "antecedent_support": 0.00024303499361605263,
+            "support": 0.00024303499361605263,
+            "confidence": 1.0,
+            "lift": 166.74600456621005,
+            "fraud_recall": 0.04052511415525114,
+            "kulczynski": 0.5202625570776256,
+            "status": "ok"
+          },
+          "R006": {
+            "n_transactions": 292139,
+            "n_fraud": 1752,
+            "coverage_count": 50,
+            "normal_count": 0,
+            "fraud_count": 50,
+            "antecedent_support": 0.00017115140395496665,
+            "support": 0.00017115140395496665,
+            "confidence": 1.0,
+            "lift": 166.74600456621005,
+            "fraud_recall": 0.028538812785388126,
+            "kulczynski": 0.514269406392694,
+            "status": "ok"
+          }
+        },
+        "candidates": [
+          {
+            "rule_id": "R001",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 164,
+              "normal_count": 0,
+              "fraud_count": 164,
+              "antecedent_support": 0.0005613766049722906,
+              "support": 0.0005613766049722906,
+              "confidence": 1.0,
+              "lift": 166.74600456621005,
+              "fraud_recall": 0.09360730593607305,
+              "kulczynski": 0.5468036529680366,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R001",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 89,
+              "normal_count": 0,
+              "fraud_count": 89,
+              "antecedent_support": 0.000612462581288924,
+              "support": 0.000612462581288924,
+              "confidence": 1.0,
+              "lift": 112.56003098373354,
+              "fraud_recall": 0.06893880712625872,
+              "kulczynski": 0.5344694035631293,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R002",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 0
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 164,
+              "normal_count": 0,
+              "fraud_count": 164,
+              "antecedent_support": 0.0005613766049722906,
+              "support": 0.0005613766049722906,
+              "confidence": 1.0,
+              "lift": 166.74600456621005,
+              "fraud_recall": 0.09360730593607305,
+              "kulczynski": 0.5468036529680366,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R002",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 1
+                },
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 0
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 89,
+              "normal_count": 0,
+              "fraud_count": 89,
+              "antecedent_support": 0.000612462581288924,
+              "support": 0.000612462581288924,
+              "confidence": 1.0,
+              "lift": 112.56003098373354,
+              "fraud_recall": 0.06893880712625872,
+              "kulczynski": 0.5344694035631293,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R003",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 0
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 113,
+              "normal_count": 0,
+              "fraud_count": 113,
+              "antecedent_support": 0.0003868021729382246,
+              "support": 0.0003868021729382246,
+              "confidence": 1.0,
+              "lift": 166.74600456621005,
+              "fraud_recall": 0.06449771689497717,
+              "kulczynski": 0.5322488584474886,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R003",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 1
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 0
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 67,
+              "normal_count": 0,
+              "fraud_count": 67,
+              "antecedent_support": 0.0004610673364759316,
+              "support": 0.0004610673364759316,
+              "confidence": 1.0,
+              "lift": 112.56003098373354,
+              "fraud_recall": 0.051897753679318356,
+              "kulczynski": 0.5259488768396592,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R004",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 93,
+              "normal_count": 0,
+              "fraud_count": 93,
+              "antecedent_support": 0.00031834161135623797,
+              "support": 0.00031834161135623797,
+              "confidence": 1.0,
+              "lift": 166.74600456621005,
+              "fraud_recall": 0.053082191780821915,
+              "kulczynski": 0.526541095890411,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R004",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 1
+                },
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 50,
+              "normal_count": 0,
+              "fraud_count": 50,
+              "antecedent_support": 0.00034408010184771014,
+              "support": 0.00034408010184771014,
+              "confidence": 1.0,
+              "lift": 112.56003098373354,
+              "fraud_recall": 0.038729666924864445,
+              "kulczynski": 0.5193648334624322,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R005",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 0
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 71,
+              "normal_count": 0,
+              "fraud_count": 71,
+              "antecedent_support": 0.00024303499361605263,
+              "support": 0.00024303499361605263,
+              "confidence": 1.0,
+              "lift": 166.74600456621005,
+              "fraud_recall": 0.04052511415525114,
+              "kulczynski": 0.5202625570776256,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R005",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 1
+                },
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 0
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 37,
+              "normal_count": 0,
+              "fraud_count": 37,
+              "antecedent_support": 0.0002546192753673055,
+              "support": 0.0002546192753673055,
+              "confidence": 1.0,
+              "lift": 112.56003098373354,
+              "fraud_recall": 0.02865995352439969,
+              "kulczynski": 0.5143299767621998,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R006",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 1
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 50,
+              "normal_count": 0,
+              "fraud_count": 50,
+              "antecedent_support": 0.00017115140395496665,
+              "support": 0.00017115140395496665,
+              "confidence": 1.0,
+              "lift": 166.74600456621005,
+              "fraud_recall": 0.028538812785388126,
+              "kulczynski": 0.514269406392694,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R006",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 1
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 22,
+              "normal_count": 0,
+              "fraud_count": 22,
+              "antecedent_support": 0.00015139524481299247,
+              "support": 0.00015139524481299247,
+              "confidence": 1.0,
+              "lift": 112.56003098373354,
+              "fraud_recall": 0.017041053446940357,
+              "kulczynski": 0.5085205267234701,
+              "status": "ok"
+            },
+            "retained": true
+          },
+          {
+            "rule_id": "R007",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 0
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 28413,
+              "normal_count": 28187,
+              "fraud_count": 226,
+              "antecedent_support": 0.09725849681144934,
+              "support": 0.0007736043458764492,
+              "confidence": 0.007954105515081125,
+              "lift": 1.326315314537834,
+              "fraud_recall": 0.12899543378995434,
+              "kulczynski": 0.06847476965251774,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R007",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 0
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 16879,
+              "normal_count": 16737,
+              "fraud_count": 142,
+              "antecedent_support": 0.11615456078174999,
+              "support": 0.000977187489247497,
+              "confidence": 0.008412820664731323,
+              "lift": 0.9469473546827516,
+              "fraud_recall": 0.10999225406661503,
+              "kulczynski": 0.05920253736567318,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R008",
+            "antecedent": [
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 71280,
+              "normal_count": 70750,
+              "fraud_count": 530,
+              "antecedent_support": 0.24399344147820046,
+              "support": 0.0018142048819226465,
+              "confidence": 0.007435465768799102,
+              "lift": 1.2398342090360737,
+              "fraud_recall": 0.3025114155251142,
+              "kulczynski": 0.15497344064695665,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R008",
+              "antecedent": [
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 43271,
+              "normal_count": 42922,
+              "fraud_count": 349,
+              "antecedent_support": 0.29777380174104534,
+              "support": 0.0024016791108970167,
+              "confidence": 0.008065447990571052,
+              "lift": 0.9078470757163691,
+              "fraud_recall": 0.2703330751355538,
+              "kulczynski": 0.13919926156306245,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R009",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 0
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 71280,
+              "normal_count": 70750,
+              "fraud_count": 530,
+              "antecedent_support": 0.24399344147820046,
+              "support": 0.0018142048819226465,
+              "confidence": 0.007435465768799102,
+              "lift": 1.2398342090360737,
+              "fraud_recall": 0.3025114155251142,
+              "kulczynski": 0.15497344064695665,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R009",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 0
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 43271,
+              "normal_count": 42922,
+              "fraud_count": 349,
+              "antecedent_support": 0.29777380174104534,
+              "support": 0.0024016791108970167,
+              "confidence": 0.008065447990571052,
+              "lift": 0.9078470757163691,
+              "fraud_recall": 0.2703330751355538,
+              "kulczynski": 0.13919926156306245,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R010",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 40885,
+              "normal_count": 40593,
+              "fraud_count": 292,
+              "antecedent_support": 0.1399505030139762,
+              "support": 0.0009995241990970053,
+              "confidence": 0.007141983612571848,
+              "lift": 1.1908972320737028,
+              "fraud_recall": 0.16666666666666666,
+              "kulczynski": 0.08690432513961925,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R010",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 25269,
+              "normal_count": 25069,
+              "fraud_count": 200,
+              "antecedent_support": 0.17389120187179574,
+              "support": 0.0013763204073908406,
+              "confidence": 0.00791483636075824,
+              "lift": 0.8908942259981284,
+              "fraud_recall": 0.15491866769945778,
+              "kulczynski": 0.08141675203010801,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R011",
+            "antecedent": [
+              {
+                "feature": "Amount",
+                "bin": 0
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 71226,
+              "normal_count": 70750,
+              "fraud_count": 476,
+              "antecedent_support": 0.24380859796192908,
+              "support": 0.0016293613656512824,
+              "confidence": 0.00668295285429478,
+              "lift": 1.1143556871580038,
+              "fraud_recall": 0.271689497716895,
+              "kulczynski": 0.13918622528559488,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R011",
+              "antecedent": [
+                {
+                  "feature": "Amount",
+                  "bin": 0
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 43246,
+              "normal_count": 42922,
+              "fraud_count": 324,
+              "antecedent_support": 0.2976017616901215,
+              "support": 0.0022296390599731617,
+              "confidence": 0.0074920223835730475,
+              "lift": 0.8433022716258075,
+              "fraud_recall": 0.2509682416731216,
+              "kulczynski": 0.12923013202834732,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R012",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 137640,
+              "normal_count": 136742,
+              "fraud_count": 898,
+              "antecedent_support": 0.4711455848072322,
+              "support": 0.003073879215031201,
+              "confidence": 0.006524266201685556,
+              "lift": 1.0878953218574297,
+              "fraud_recall": 0.5125570776255708,
+              "kulczynski": 0.2595406719136282,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R012",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 81838,
+              "normal_count": 81143,
+              "fraud_count": 695,
+              "antecedent_support": 0.563176547500258,
+              "support": 0.004782713415683171,
+              "confidence": 0.008492387399496567,
+              "lift": 0.9559033888132019,
+              "fraud_recall": 0.5383423702556158,
+              "kulczynski": 0.2734173788275562,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R013",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 0
+              },
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 137640,
+              "normal_count": 136742,
+              "fraud_count": 898,
+              "antecedent_support": 0.4711455848072322,
+              "support": 0.003073879215031201,
+              "confidence": 0.006524266201685556,
+              "lift": 1.0878953218574297,
+              "fraud_recall": 0.5125570776255708,
+              "kulczynski": 0.2595406719136282,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R013",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 0
+                },
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 81838,
+              "normal_count": 81143,
+              "fraud_count": 695,
+              "antecedent_support": 0.563176547500258,
+              "support": 0.004782713415683171,
+              "confidence": 0.008492387399496567,
+              "lift": 0.9559033888132019,
+              "fraud_recall": 0.5383423702556158,
+              "kulczynski": 0.2734173788275562,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R014",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 1
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 0
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 96460,
+              "normal_count": 95855,
+              "fraud_count": 605,
+              "antecedent_support": 0.3301852885099216,
+              "support": 0.0020709319878550966,
+              "confidence": 0.0062720298569355175,
+              "lift": 1.0458359191639757,
+              "fraud_recall": 0.3453196347031963,
+              "kulczynski": 0.17579583228006593,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R014",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 1
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 0
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 56403,
+              "normal_count": 55910,
+              "fraud_count": 493,
+              "antecedent_support": 0.3881429996903279,
+              "support": 0.003392629804218422,
+              "confidence": 0.008740669822527171,
+              "lift": 0.9838500660422431,
+              "fraud_recall": 0.38187451587916343,
+              "kulczynski": 0.1953075928508453,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R015",
+            "antecedent": [
+              {
+                "feature": "customer_count_7d",
+                "bin": 2
+              },
+              {
+                "feature": "terminal_count_7d",
+                "bin": 1
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 1982,
+              "normal_count": 1970,
+              "fraud_count": 12,
+              "antecedent_support": 0.006784441652774878,
+              "support": 4.1076336949191995e-05,
+              "confidence": 0.006054490413723511,
+              "lift": 1.0095620861728156,
+              "fraud_recall": 0.00684931506849315,
+              "kulczynski": 0.006451902741108331,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R015",
+              "antecedent": [
+                {
+                  "feature": "customer_count_7d",
+                  "bin": 2
+                },
+                {
+                  "feature": "terminal_count_7d",
+                  "bin": 1
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 1123,
+              "normal_count": 1116,
+              "fraud_count": 7,
+              "antecedent_support": 0.00772803908749957,
+              "support": 4.817121425867942e-05,
+              "confidence": 0.006233303650934996,
+              "lift": 0.7016208520802626,
+              "fraud_recall": 0.005422153369481022,
+              "kulczynski": 0.0058277285102080086,
+              "status": "ok"
+            },
+            "retained": false
+          },
+          {
+            "rule_id": "R016",
+            "antecedent": [
+              {
+                "feature": "customer_amount_ratio_7d",
+                "bin": 0
+              }
+            ],
+            "train": {
+              "n_transactions": 292139,
+              "n_fraud": 1752,
+              "coverage_count": 292137,
+              "normal_count": 290385,
+              "fraud_count": 1752,
+              "antecedent_support": 0.9999931539438418,
+              "support": 0.005997145194582031,
+              "confidence": 0.005997186251655901,
+              "lift": 1.000006846103027,
+              "fraud_recall": 1.0,
+              "kulczynski": 0.502998593125828,
+              "status": "ok"
+            },
+            "validation": {
+              "rule_id": "R016",
+              "antecedent": [
+                {
+                  "feature": "customer_amount_ratio_7d",
+                  "bin": 0
+                }
+              ],
+              "consequent": {
+                "Class": 1
+              },
+              "n_transactions": 145315,
+              "n_fraud": 1291,
+              "coverage_count": 145315,
+              "normal_count": 144024,
+              "fraud_count": 1291,
+              "antecedent_support": 1.0,
+              "support": 0.008884148229707876,
+              "confidence": 0.008884148229707876,
+              "lift": 1.0,
+              "fraud_recall": 1.0,
+              "kulczynski": 0.504442074114854,
+              "status": "ok"
+            },
+            "retained": false
+          }
+        ]
+      }
+    },
+    "frozen_binner": {
+      "schema_version": 1,
+      "feature_columns": [
+        "Amount",
+        "customer_amount_ratio_7d",
+        "customer_count_7d",
+        "terminal_count_7d"
+      ],
+      "binning": "equal_frequency",
+      "requested_bins": 3,
+      "max_length": 3,
+      "interval_policy": "left_closed_cut_goes_right_outer_bins_unbounded",
+      "missing_policy": "raise",
+      "limits": {
+        "min_coverage": 20,
+        "min_fraud_coverage": 5,
+        "min_lift_exclusive": 1.0,
+        "max_rules": 50
+      },
+      "features": {
+        "Amount": {
+          "cut_points": [
+            28.91,
+            65.22
+          ],
+          "train_min": 0.0,
+          "train_max": 1054.6,
+          "effective_bins": 3
+        },
+        "customer_amount_ratio_7d": {
+          "cut_points": [
+            0.7585921011732168,
+            1.1988045078094414
+          ],
+          "train_min": 0.0,
+          "train_max": 529.8333333333334,
+          "effective_bins": 3
+        },
+        "customer_count_7d": {
+          "cut_points": [
+            12.0,
+            20.0
+          ],
+          "train_min": 0.0,
+          "train_max": 49.0,
+          "effective_bins": 3
+        },
+        "terminal_count_7d": {
+          "cut_points": [
+            5.0,
+            8.0
+          ],
+          "train_min": 0.0,
+          "train_max": 26.0,
+          "effective_bins": 3
+        }
+      }
+    },
+    "frozen_rules": [
+      {
+        "rule_id": "R001",
+        "antecedent": [
+          {
+            "feature": "Amount",
+            "bin": 2
+          },
+          {
+            "feature": "customer_amount_ratio_7d",
+            "bin": 2
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R002",
+        "antecedent": [
+          {
+            "feature": "Amount",
+            "bin": 2
+          },
+          {
+            "feature": "terminal_count_7d",
+            "bin": 2
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R003",
+        "antecedent": [
+          {
+            "feature": "customer_amount_ratio_7d",
+            "bin": 2
+          },
+          {
+            "feature": "terminal_count_7d",
+            "bin": 2
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R004",
+        "antecedent": [
+          {
+            "feature": "customer_amount_ratio_7d",
+            "bin": 2
+          },
+          {
+            "feature": "customer_count_7d",
+            "bin": 1
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R005",
+        "antecedent": [
+          {
+            "feature": "Amount",
+            "bin": 2
+          },
+          {
+            "feature": "customer_count_7d",
+            "bin": 1
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R006",
+        "antecedent": [
+          {
+            "feature": "Amount",
+            "bin": 2
+          },
+          {
+            "feature": "customer_count_7d",
+            "bin": 2
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R007",
+        "antecedent": [
+          {
+            "feature": "customer_amount_ratio_7d",
+            "bin": 2
+          },
+          {
+            "feature": "terminal_count_7d",
+            "bin": 1
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R008",
+        "antecedent": [
+          {
+            "feature": "customer_amount_ratio_7d",
+            "bin": 2
+          },
+          {
+            "feature": "customer_count_7d",
+            "bin": 2
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R009",
+        "antecedent": [
+          {
+            "feature": "Amount",
+            "bin": 2
+          },
+          {
+            "feature": "terminal_count_7d",
+            "bin": 1
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R010",
+        "antecedent": [
+          {
+            "feature": "customer_amount_ratio_7d",
+            "bin": 2
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R011",
+        "antecedent": [
+          {
+            "feature": "Amount",
+            "bin": 2
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R012",
+        "antecedent": [
+          {
+            "feature": "customer_amount_ratio_7d",
+            "bin": 2
+          },
+          {
+            "feature": "customer_count_7d",
+            "bin": 0
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R013",
+        "antecedent": [
+          {
+            "feature": "Amount",
+            "bin": 2
+          },
+          {
+            "feature": "customer_count_7d",
+            "bin": 0
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R014",
+        "antecedent": [
+          {
+            "feature": "customer_amount_ratio_7d",
+            "bin": 2
+          },
+          {
+            "feature": "terminal_count_7d",
+            "bin": 0
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R015",
+        "antecedent": [
+          {
+            "feature": "Amount",
+            "bin": 2
+          },
+          {
+            "feature": "terminal_count_7d",
+            "bin": 0
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R016",
+        "antecedent": [
+          {
+            "feature": "customer_count_7d",
+            "bin": 0
+          },
+          {
+            "feature": "terminal_count_7d",
+            "bin": 2
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R019",
+        "antecedent": [
+          {
+            "feature": "customer_count_7d",
+            "bin": 2
+          },
+          {
+            "feature": "terminal_count_7d",
+            "bin": 1
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R022",
+        "antecedent": [
+          {
+            "feature": "customer_count_7d",
+            "bin": 1
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      },
+      {
+        "rule_id": "R023",
+        "antecedent": [
+          {
+            "feature": "terminal_count_7d",
+            "bin": 1
+          }
+        ],
+        "consequent": {
+          "Class": 1
+        }
+      }
+    ],
+    "training_metrics": {
+      "R001": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 57007,
+        "normal_count": 56145,
+        "fraud_count": 862,
+        "antecedent_support": 0.19513656170521568,
+        "support": 0.002950650204183625,
+        "confidence": 0.015120950058764713,
+        "lift": 2.5213580075442152,
+        "fraud_recall": 0.4920091324200913,
+        "kulczynski": 0.253565041239428,
+        "status": "ok"
+      },
+      "R002": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 33539,
+        "normal_count": 33117,
+        "fraud_count": 422,
+        "antecedent_support": 0.11480493874491253,
+        "support": 0.0014445178493799184,
+        "confidence": 0.012582366796863352,
+        "lift": 2.098059391363506,
+        "fraud_recall": 0.2408675799086758,
+        "kulczynski": 0.12672497335276958,
+        "status": "ok"
+      },
+      "R003": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 34057,
+        "normal_count": 33634,
+        "fraud_count": 423,
+        "antecedent_support": 0.11657806728988598,
+        "support": 0.0014479408774590178,
+        "confidence": 0.012420354112223624,
+        "lift": 2.071044423510786,
+        "fraud_recall": 0.24143835616438356,
+        "kulczynski": 0.12692935513830358,
+        "status": "ok"
+      },
+      "R004": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 30527,
+        "normal_count": 30157,
+        "fraud_count": 370,
+        "antecedent_support": 0.10449477817066534,
+        "support": 0.001266520389266753,
+        "confidence": 0.012120417990631245,
+        "lift": 2.021031273610172,
+        "fraud_recall": 0.21118721461187215,
+        "kulczynski": 0.1116538163012517,
+        "status": "ok"
+      },
+      "R005": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 30407,
+        "normal_count": 30048,
+        "fraud_count": 359,
+        "antecedent_support": 0.10408401480117341,
+        "support": 0.0012288670803966605,
+        "confidence": 0.011806491926201203,
+        "lift": 1.968685356637268,
+        "fraud_recall": 0.20490867579908675,
+        "kulczynski": 0.10835758386264398,
+        "status": "ok"
+      },
+      "R006": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 35737,
+        "normal_count": 35320,
+        "fraud_count": 417,
+        "antecedent_support": 0.12232875446277286,
+        "support": 0.0014274027089844219,
+        "confidence": 0.011668578783893444,
+        "lift": 1.9456888911802779,
+        "fraud_recall": 0.238013698630137,
+        "kulczynski": 0.12484113870701521,
+        "status": "ok"
+      },
+      "R007": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 33996,
+        "normal_count": 33611,
+        "fraud_count": 385,
+        "antecedent_support": 0.11636926257706091,
+        "support": 0.0013178658104532432,
+        "confidence": 0.011324861748440994,
+        "lift": 1.8883754488172395,
+        "fraud_recall": 0.2197488584474886,
+        "kulczynski": 0.1155368600979648,
+        "status": "ok"
+      },
+      "R008": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 35939,
+        "normal_count": 35532,
+        "fraud_count": 407,
+        "antecedent_support": 0.12302020613475093,
+        "support": 0.0013931724281934284,
+        "confidence": 0.011324744706307911,
+        "lift": 1.888355932509182,
+        "fraud_recall": 0.23230593607305935,
+        "kulczynski": 0.12181534038968363,
+        "status": "ok"
+      },
+      "R009": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 33771,
+        "normal_count": 33389,
+        "fraud_count": 382,
+        "antecedent_support": 0.11559908125926358,
+        "support": 0.001307596726215945,
+        "confidence": 0.011311480264131948,
+        "lift": 1.8861441397735408,
+        "fraud_recall": 0.2180365296803653,
+        "kulczynski": 0.11467400497224862,
+        "status": "ok"
+      },
+      "R010": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 97380,
+        "normal_count": 96333,
+        "fraud_count": 1047,
+        "antecedent_support": 0.33333447434269303,
+        "support": 0.0035839103988170016,
+        "confidence": 0.010751694393099198,
+        "lift": 1.7928020823662139,
+        "fraud_recall": 0.5976027397260274,
+        "kulczynski": 0.3041772170595633,
+        "status": "ok"
+      },
+      "R011": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 97390,
+        "normal_count": 96347,
+        "fraud_count": 1043,
+        "antecedent_support": 0.333368704623484,
+        "support": 0.003570218286500604,
+        "confidence": 0.010709518431050415,
+        "lift": 1.7857694092058434,
+        "fraud_recall": 0.5953196347031964,
+        "kulczynski": 0.3030145765671234,
+        "status": "ok"
+      },
+      "R012": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 30914,
+        "normal_count": 30644,
+        "fraud_count": 270,
+        "antecedent_support": 0.10581949003727678,
+        "support": 0.0009242175813568199,
+        "confidence": 0.008733906967716892,
+        "lift": 1.4563440911197747,
+        "fraud_recall": 0.1541095890410959,
+        "kulczynski": 0.0814217480044064,
+        "status": "ok"
+      },
+      "R013": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 31246,
+        "normal_count": 30979,
+        "fraud_count": 267,
+        "antecedent_support": 0.10695593535953775,
+        "support": 0.0009139484971195219,
+        "confidence": 0.008545093772002816,
+        "lift": 1.4248602451250747,
+        "fraud_recall": 0.1523972602739726,
+        "kulczynski": 0.08047117702298771,
+        "status": "ok"
+      },
+      "R014": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 29327,
+        "normal_count": 29088,
+        "fraud_count": 239,
+        "antecedent_support": 0.10038714447574613,
+        "support": 0.0008181037109047406,
+        "confidence": 0.008149486821018175,
+        "lift": 1.3588943666697653,
+        "fraud_recall": 0.13641552511415525,
+        "kulczynski": 0.07228250596758672,
+        "status": "ok"
+      },
+      "R015": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 30080,
+        "normal_count": 29841,
+        "fraud_count": 239,
+        "antecedent_support": 0.10296468461930794,
+        "support": 0.0008181037109047406,
+        "confidence": 0.007945478723404256,
+        "lift": 1.324876831493491,
+        "fraud_recall": 0.13641552511415525,
+        "kulczynski": 0.07218050191877975,
+        "status": "ok"
+      },
+      "R016": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 21099,
+        "normal_count": 20935,
+        "fraud_count": 164,
+        "antecedent_support": 0.07222246944091683,
+        "support": 0.0005613766049722906,
+        "confidence": 0.007772880231290582,
+        "lift": 1.2960967225393834,
+        "fraud_recall": 0.09360730593607305,
+        "kulczynski": 0.05069009308368182,
+        "status": "ok"
+      },
+      "R019": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 40655,
+        "normal_count": 40367,
+        "fraud_count": 288,
+        "antecedent_support": 0.13916320655578338,
+        "support": 0.000985832086780608,
+        "confidence": 0.0070839995080555895,
+        "lift": 1.1812286143172672,
+        "fraud_recall": 0.1643835616438356,
+        "kulczynski": 0.08573378057594559,
+        "status": "ok"
+      },
+      "R022": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 91237,
+        "normal_count": 90640,
+        "fraud_count": 597,
+        "antecedent_support": 0.31230681285278583,
+        "support": 0.002043547763222302,
+        "confidence": 0.006543397963545491,
+        "lift": 1.091085466707886,
+        "fraud_recall": 0.3407534246575342,
+        "kulczynski": 0.17364841131053985,
+        "status": "ok"
+      },
+      "R023": {
+        "n_transactions": 292139,
+        "n_fraud": 1752,
+        "coverage_count": 101069,
+        "normal_count": 100408,
+        "fraud_count": 661,
+        "antecedent_support": 0.3459620249264905,
+        "support": 0.002262621560284659,
+        "confidence": 0.006540086475576091,
+        "lift": 1.0905332893198196,
+        "fraud_recall": 0.3772831050228311,
+        "kulczynski": 0.19191159574920358,
+        "status": "ok"
+      }
+    }
+  }
+}
