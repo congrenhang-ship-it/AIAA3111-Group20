@@ -1,8 +1,6 @@
-"""负责人 C：K-means、Isolation Forest、特征消融及验证实验。
+"""K-means, Isolation Forest and bounded validation experiments.
 
-基线与改进实验均从 main.py 运行；公共评价和导出在 evaluation.py。
-所有缩放与距离标定仅拟合训练段，冻结模型评分不重新拟合或选参。
-"""
+Scaling and distance calibration use training data; frozen scoring never refits."""
 
 import itertools
 import numpy as np
@@ -27,8 +25,12 @@ from sklearn.utils.validation import check_is_fitted
 from preprocessing import FEATURE_COLUMNS, data_sha256, source_commit, source_dirty
 from evaluation import (
     make_prediction_frame,
+    compact_time_windows,
+    save_prediction_tables,
+    save_error_examples,
     evaluate_scores,
     compare_review_lists,
+    compare_budget_quotas,
     evaluate_groups,
     DEFAULT_BUDGETS,
     save_figures,
@@ -486,14 +488,7 @@ def score_improved_bundle(bundle, data):
 def pair_comparisons(predictions, selected, share, budgets=DEFAULT_BUDGETS):
     first = predictions[selected["kmeans"]]
     second = predictions[selected["isolation_forest"]]
-    rows = []
-    for q in budgets:
-        if not len(first):
-            continue
-        row = compare_review_lists(first, second, math.ceil(len(first) * q), share)
-        row["review_fraction"] = q
-        rows.append(row)
-    return rows
+    return compare_budget_quotas(first, second, budgets, (share,)) if len(first) else []
 
 
 def _read_partition(path):
@@ -627,30 +622,13 @@ def run_validation(
         for name, frame in predictions.items()
     }
     selected_anomaly = choose_anomaly(metrics)
-    anomaly_combos = []
-    for q in DEFAULT_BUDGETS:
-        for share in COMBINATION_SHARES:
-            row = compare_review_lists(
-                predictions["isolation_forest"],
-                predictions["kmeans_distance"],
-                math.ceil(len(validation) * q),
-                share,
-            )
-            row["review_fraction"] = q
-            anomaly_combos.append(row)
-    combos = []
-    if classifier is not None:
-        for q in DEFAULT_BUDGETS:
-            count = math.ceil(len(validation) * q)
-            for share in COMBINATION_SHARES:
-                row = compare_review_lists(
-                    classifier, predictions[selected_anomaly], count, share
-                )
-                row["review_fraction"] = q
-                combos.append(row)
+    anomaly_combos = compare_budget_quotas(
+        predictions["isolation_forest"], predictions["kmeans_distance"],
+    )
+    combos = (compare_budget_quotas(classifier, predictions[selected_anomaly])
+              if classifier is not None else [])
     output.mkdir(parents=True, exist_ok=True)
-    for name, frame in predictions.items():
-        frame.to_csv(output / f"{name}_predictions.csv", index=False)
+    save_prediction_tables(predictions, output)
     pd.DataFrame(candidates).to_csv(
         output / "kmeans_training_structure.csv", index=False
     )
@@ -715,27 +693,12 @@ def run_validation(
         },
         filename="anomaly_complementarity.png",
     )
-    cases = []
-    for name, frame in predictions.items():
-        ranked = frame.sort_values(["score", "row_id"], ascending=[False, True])
-        count = math.ceil(len(ranked) * 0.01)
-        for reason, candidates_ in [
-            ("reviewed_false_positive", ranked.iloc[:count].query("Class == 0")),
-            ("missed_fraud", ranked.iloc[count:].query("Class == 1")),
-        ]:
-            sample = candidates_.head(5).copy()
-            sample["case_type"] = reason
-            cases.append(sample)
-    pd.concat(cases, ignore_index=True).to_csv(
-        output / "private_error_examples.csv", index=False
-    )
+    save_error_examples(predictions, output / "private_error_examples.csv",
+                        false_positive_label="reviewed_false_positive")
     save_diagnostic_figures(candidates, groups, output / "figures", label)
     from temporal import evaluate_time_windows
 
-    windows = evaluate_time_windows(pd.concat(predictions.values(), ignore_index=True))
-    for window in windows:
-        if window["evaluation"] is not None:
-            window["evaluation"].pop("pr_curve", None)
+    windows = compact_time_windows(predictions)
 
     def digest(path):
         h = hashlib.sha256()
@@ -1086,13 +1049,7 @@ def run_experiment(
         c = make_prediction_frame(classifier, classifier.score, name)
         compare_review_lists(c, predictions[overall], 1)
         c = c.set_index("row_id").loc[validation.row_id].reset_index()
-        for q in DEFAULT_BUDGETS:
-            for share in SHARES:
-                row = compare_review_lists(
-                    c, predictions[overall], math.ceil(len(validation) * q), share
-                )
-                row["review_fraction"] = q
-                B_comparisons.append(row)
+        B_comparisons = compare_budget_quotas(c, predictions[overall], shares=SHARES)
         chosen_B = select_combination(B_comparisons)
         config["B_combination"] = {
             "status": "validation_selected_requires_B5_provenance",
@@ -1113,10 +1070,7 @@ def run_experiment(
         name: evaluate_groups(p, group_ids, DEFAULT_BUDGETS, group_values=range(3))
         for name, p in display.items()
     }
-    windows = evaluate_time_windows(pd.concat(display.values(), ignore_index=True))
-    for window in windows:
-        if window["evaluation"] is not None:
-            window["evaluation"].pop("pr_curve", None)
+    windows = compact_time_windows(display)
     figures = public / "figures"
     figures.mkdir()
     save_figures(
@@ -1194,8 +1148,7 @@ def run_experiment(
     pd.DataFrame(timings).to_csv(public / "timings.csv", index=False)
     _dump(stats, public / "training_distance_calibration.json")
     # Only selected and baseline predictions need full standard tables. All scores remain reproducible locally.
-    for name, p in display.items():
-        p.to_csv(private / f"{name}_predictions.csv", index=False)
+    save_prediction_tables(display, private)
     validation[["row_id", "Class", "Time"]].to_csv(
         private / "validation_metadata.csv", index=False
     )
@@ -1203,20 +1156,8 @@ def run_experiment(
         private / "all_candidate_scores.npz",
         **{name: p.score.to_numpy() for name, p in predictions.items()},
     )
-    case_rows = []
-    for name, p in display.items():
-        ordered = p.sort_values(["score", "row_id"], ascending=[False, True])
-        k = math.ceil(len(p) * 0.01)
-        for kind, subset in [
-            ("false_positive", ordered.iloc[:k].query("Class==0")),
-            ("missed_fraud", ordered.iloc[k:].query("Class==1")),
-        ]:
-            sample = subset.head(5).copy()
-            sample["case_type"] = kind
-            case_rows.append(sample)
-    pd.concat(case_rows, ignore_index=True).to_csv(
-        private / "private_error_examples.csv", index=False
-    )
+    save_error_examples(display, private / "private_error_examples.csv",
+                        false_positive_label="false_positive")
     joblib.dump(bundle, private / "improved_models.joblib")
     _dump(config, public / "c_improved_freeze.json")
     result = {

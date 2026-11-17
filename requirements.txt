@@ -1,4 +1,3 @@
-# 负责人 A：统一并验证运行环境；B/C/D 提供各自新增依赖。
 # Resolved with CPython 3.12.14, including transitive dependencies.
 cloudpickle==3.1.2
 contourpy==1.4.0

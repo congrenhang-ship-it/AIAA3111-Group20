@@ -1,10 +1,4 @@
-"""负责人 A：数据获取检查、统一划分与输入准备。
-
-任务：保留稳定 row_id，按 Time 顺序划分约 60/20/20，同时间边界不拆分。
-输入：原始 creditcard.csv；输出：带 row_id 的数据表及三个划分。
-row_id、Class 不作为模型特征。缩放器由各模型流程仅在训练数据上拟合。
-状态：加载、审计、去重、时间划分和特征提取可用。
-"""
+"""Verified data loading, stable row IDs and chronological train/validation/test splits."""
 
 from hashlib import file_digest
 from math import isclose, isfinite

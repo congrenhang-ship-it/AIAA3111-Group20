@@ -29726,22 +29726,22 @@
   },
   "model_fit_count_note": "13 label-subset LR snapshots reused across 15 mask conditions; E11 snapshots retain each declared label-delay policy.",
   "evaluation_source_sha256": {
-    "requirements.txt": "3002c581c4ecbf0108116561a218702ce694cc26175659437c805f2e40be3416",
+    "requirements.txt": "a7342b928446c04f31b418254d672920c3410ff068a800ec1e4500bf20e00a60",
     "code/check_d_freeze.py": "0ea8406e4824f14f2b8b6a990f0734c53fff71fafdd25d87dfa6a1200c685022",
-    "code/classification.py": "d92788dba8c59f3332eee5d72a1bff784e5e3fe6fac6800f6015b4dc3a43d3c0",
+    "code/classification.py": "a8beaff943f2fcb81acf573ce64ab646b5029ccab7e2da26e58fcf4428bfa7e9",
     "code/download_data.py": "832e71c0a3db8ee61ef49da9e38a1b6ff43c52663e551dc0dff5730a0eb46d8d",
-    "code/evaluation.py": "9d853da03e6e6e8998086a6f7333deeed907e1f4bc09268694fdb1d27e5e8781",
+    "code/evaluation.py": "4baf11288aa820b547dbc23ff6477bf3182e628d5a154a7577552d68b61730df",
     "code/finalize.py": "be00ae6fcdf679e537c95e8547ba7209393ff14bb38fc889c292ce7e307dd365",
     "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
-    "code/main.py": "1195aaea915ced28313acd79a2617db6a9e5a4db876760c6690744a7989c6dd7",
-    "code/pattern_mining.py": "b73698a5a0637b39804da7a5c7d6941425c24de23532ddad5109ee358afb9a0b",
+    "code/main.py": "b7a046a5010a1708141ea5b16741cb54e2d2becea3054972b53b14597862d4a5",
+    "code/pattern_mining.py": "93d64e809438ee0705f782fd0869d5691902fe5b55d5c60a1c60e9212504403b",
     "code/paysim.py": "f67e136b489f2e52082ba8de5046935396ec05720dfa5ae8a3cce138bff0c934",
-    "code/preprocessing.py": "2de6452b3906a16c0719a994827e7a8813f456983f3458fcad22c23a195924e9",
+    "code/preprocessing.py": "dfdeafdb9a5aa6675f26685664fbec1c3120436e17c36aa7f228adc919bfe170",
     "code/run_b_validation.py": "2c2346c406165498b66526d6ca90bc7a68592cb70051c0ef72ff68eb9f96f7f5",
     "code/run_d_validation.py": "04a5a6e54ab16cb6b39f7318a2630038f1276fdc337ce411822b3c7b10318930",
-    "code/temporal.py": "c046dddcabc0fad2266ed6031712991f876104e369e9fd2cd84fa2402e98da0d",
+    "code/temporal.py": "d2dd0c67ea047832edf2f2fdc432d4359ca8508baf148d3536d7c273f35c7144",
     "code/test_classification.py": "6505439044dfa916a1eed756377190c95f7e659db79199463abfd5104ecaa5ef",
-    "code/unsupervised.py": "4a14bc93910334086d528017d31b97879ffe2f23d6e021153d2404c19578bdf3",
+    "code/unsupervised.py": "3658129be597e3220c9f5737ec1b6b8035c134815a9502776e1b34d2dcf6dca3",
     "results/tables/b_freeze.json": "470d9a2063a2bd8d45c1d24de84720fa217e6cf83072351a545309d86ade44ff",
     "results/tables/b_validation.json": "9c8789169f47a8caed5c78618ba90047865c8eb249923040ebccc23f0409c3c2",
     "results/tables/c_improved.json": "61d83f78c09708fe87c50d9ed3d693436b8e5e3cc8c02e12c6c8dffbe218cc86",
@@ -29821,6 +29821,53 @@
           238
         ]
       ]
+    },
+    {
+      "revision_type": "structural_refactor_and_English_messages_only",
+      "date": "2026-11-18",
+      "reference_commit": "ec649b5b0c652027b9103707dd4a44216623f000",
+      "previous_freeze_sha256": "705131d773f567f0e79ce42b1a7ef31a27033f1a748cc6b0b7470affd38e6eb5",
+      "reason": "Factor repeated validation/export/quota helpers and argparse declarations; replace Chinese documentation/output labels with English. Training, features, selection, rules, budgets and metric arithmetic unchanged.",
+      "static_verification": {
+        "reference_commit": "ec649b5b0c652027b9103707dd4a44216623f000",
+        "changed_function_bodies": {
+          "unsupervised.py": [
+            "pair_comparisons",
+            "run_validation",
+            "run_experiment"
+          ],
+          "evaluation.py": [
+            "evaluate_frozen_c",
+            "evaluate_improved_frozen"
+          ],
+          "main.py": [
+            "main"
+          ]
+        },
+        "unchanged_function_counts": {
+          "pattern_mining.py": 8,
+          "paysim.py": 4,
+          "handbook.py": 7,
+          "temporal.py": 7,
+          "run_d_validation.py": 9,
+          "unsupervised.py": 35,
+          "classification.py": 6,
+          "evaluation.py": 43,
+          "finalize.py": 16,
+          "download_data.py": 3,
+          "preprocessing.py": 7,
+          "check_d_freeze.py": 1,
+          "main.py": 5,
+          "run_b_validation.py": 9,
+          "test_classification.py": 1
+        },
+        "all_training_feature_selection_and_metric_functions_unchanged": true,
+        "all_CLI_flags_defaults_and_help_unchanged": true,
+        "dependency_pins_unchanged": true,
+        "no_Chinese_in_code_tests_or_requirements": true
+      },
+      "models_unchanged": true,
+      "parameters_or_reference_results_reselected": false
     }
   ]
 }

@@ -1,10 +1,4 @@
-"""负责人 B：监督分类与类别不平衡实验，建议投入 25%。
-
-任务：四种基础模型、有限调参、代表模型的类别权重/训练集重采样。
-输入：A 提供的训练特征和标签；输出：拟合流程及对原始行序的风险分数。
-公共评价交给 C。不得以测试表现调参；GaussianNB 不支持 class_weight。
-状态：训练、打分、类别权重与训练集随机欠采样可用；实验见 run_b_validation.py。
-"""
+"""Supervised classifiers, training-only imbalance strategies and ordered risk scores."""
 
 import numpy as np
 from sklearn.compose import ColumnTransformer

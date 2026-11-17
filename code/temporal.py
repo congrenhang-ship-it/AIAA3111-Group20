@@ -1,11 +1,4 @@
-"""负责人 A：相对时间窗口评价，建议投入 15%。
-
-任务：按测试前确定的窗口分析固定模型，复用 C 的评价函数。
-输入：evaluation.py 约定的预测表；输出：各窗口样本/欺诈数及审核指标。
-窗口以原始 Time 的共同相对起点划分，所有方法使用同样窗口和预算。
-这不是重新训练、调参或构造个人历史；两天数据不支持长期季节性结论。
-状态：窗口划分与计数可用；指标委托 C 的公共评价。
-"""
+"""Relative-time diagnostics, strictly past histories and development-only rolling snapshots."""
 
 from math import isfinite
 

@@ -1,10 +1,4 @@
-"""负责人 A：运行入口与流程整合。
-
-任务：统一数据路径、随机种子、时间划分和审核预算；接入 B/C/D 的模块。
-路线：数据 → 分类/聚类/异常检测/规则 → 验证冻结 → 测试 → 时间分析与图表。
-当前可用：数据审计、划分检查、G1、C 实验与全组统一验证。
-C 负责 --run-c / --run-c-baseline 的接入，A 的原入口与接口保持不变。
-"""
+"""Shared CLI for data preparation, validation, frozen scoring and reproduction."""
 
 import argparse
 from hashlib import sha256
@@ -31,22 +25,22 @@ from preprocessing import (
 ROOT = DEFAULT_DATA_PATH.parents[1]
 SEED = 42
 REVIEW_FRACTIONS = (0.001, 0.005, 0.01, 0.02)
-TIME_WINDOW_SECONDS = 3600  # 初始建议；窗口口径须在最终测试前确定。
+TIME_WINDOW_SECONDS = 3600
 
 TASKS = {
     "A": [
-        "main.py: 流程整合",
-        "preprocessing.py: 数据与时间划分",
-        "temporal.py: 时间窗口分析",
+        "main.py: workflow integration",
+        "preprocessing.py: data and chronological splits",
+        "temporal.py: time-window analysis",
     ],
-    "B": ["classification.py: 分类模型、不平衡处理、风险分数"],
+    "B": ["classification.py: classifiers, imbalance handling and risk scores"],
     "C": [
-        "unsupervised.py: K-means、Isolation Forest、簇距离",
-        "evaluation.py: 评价、等预算组合、图表",
+        "unsupervised.py: K-means, Isolation Forest and cluster distance",
+        "evaluation.py: metrics, equal-budget combinations and figures",
     ],
     "D": [
-        "pattern_mining.py: 分箱、Apriori、规则验证",
-        "report/、poster/: 文档整合，全组提供内容",
+        "pattern_mining.py: binning, Apriori and rule validation",
+        "report/, poster/: document integration with contributions from all members",
     ],
 }
 
@@ -534,31 +528,15 @@ def main():
         help="Path to the original creditcard.csv file.",
     )
     action = parser.add_mutually_exclusive_group()
-    action.add_argument(
-        "--check-data", action="store_true", help="Run a read-only data audit."
-    )
-    action.add_argument(
-        "--prepare-data",
-        action="store_true",
-        help="Verify ULB and report the shared splits.",
-    )
-    action.add_argument(
-        "--run-validation",
-        action="store_true",
-        help="Run the G1 baseline on validation only.",
-    )
-    action.add_argument(
-        "--run-c", action="store_true", help="Run C improvements on A shared split."
-    )
-    action.add_argument(
-        "--run-c-baseline",
-        action="store_true",
-        help="Reproduce C original validation workflow.",
-    )
-    action.add_argument(
-        "--run-team-validation", action="store_true",
-        help="Replay the delivered A/B/C/D candidates and extensions on validation.",
-    )
+    for flag, help_text in [
+        ("--check-data", "Run a read-only data audit."),
+        ("--prepare-data", "Verify ULB and report the shared splits."),
+        ("--run-validation", "Run the G1 baseline on validation only."),
+        ("--run-c", "Run C improvements on A shared split."),
+        ("--run-c-baseline", "Reproduce C original validation workflow."),
+        ("--run-team-validation", "Replay the delivered A/B/C/D candidates and extensions on validation."),
+    ]:
+        action.add_argument(flag, action="store_true", help=help_text)
     parser.add_argument(
         "--output", type=Path, help="New private run folder under data/."
     )
@@ -581,13 +559,16 @@ def main():
         type=Path,
         help="Reproduce B manifest in shared environment and complete C combination.",
     )
-    action.add_argument("--prepare-handbook", action="store_true", help="Generate the pinned Handbook dataset.")
-    action.add_argument("--run-handbook-rolling", action="store_true", help="Run Handbook E11 development validation.")
-    action.add_argument("--run-handbook-c", action="store_true", help="Run C's Handbook validation with the shared data.")
-    action.add_argument("--run-paysim-validation", action="store_true", help="Run the PaySim E16 audit and validation.")
-    action.add_argument("--prepare-final", action="store_true", help="Complete development validation and write G2 snapshots before test scoring.")
-    action.add_argument("--run-final-test", action="store_true", help="Score all frozen dataset protocols without fitting.")
-    action.add_argument("--reproduce-final", action="store_true", help="Rebuild frozen protocols independently and verify test aggregates.")
+    for flag, help_text in [
+        ("--prepare-handbook", "Generate the pinned Handbook dataset."),
+        ("--run-handbook-rolling", "Run Handbook E11 development validation."),
+        ("--run-handbook-c", "Run C's Handbook validation with the shared data."),
+        ("--run-paysim-validation", "Run the PaySim E16 audit and validation."),
+        ("--prepare-final", "Complete development validation and write G2 snapshots before test scoring."),
+        ("--run-final-test", "Score all frozen dataset protocols without fitting."),
+        ("--reproduce-final", "Rebuild frozen protocols independently and verify test aggregates."),
+    ]:
+        action.add_argument(flag, action="store_true", help=help_text)
     parser.add_argument("--freeze", type=Path, default=ROOT / "results/tables/group_freeze.json")
     parser.add_argument("--handbook-pilot", action="store_true", help="Generate a one-day resource/field pilot.")
     parser.add_argument("--handbook-dir", type=Path, default=ROOT / "data/handbook/v1")

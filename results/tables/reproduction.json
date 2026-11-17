@@ -186,5 +186,66 @@
     "test_figures": 17,
     "report_and_poster_unchanged": true
   },
-  "scope": "All technical implementation, pre-test freeze, held-out evaluation, rule/case diagnostics, figures, independent rebuild and portable technical handoff completed. Report/poster writing and real group presentation/submission are outside this run."
+  "scope": "All technical implementation, pre-test freeze, held-out evaluation, rule/case diagnostics, figures, independent rebuild and portable technical handoff completed. Report/poster writing and real group presentation/submission are outside this run.",
+  "structural_refactor_verification": {
+    "date": "2026-11-18",
+    "reference_commit": "ec649b5b0c652027b9103707dd4a44216623f000",
+    "public_tests": 98,
+    "classification_tests": 11,
+    "dependency_check": "passed",
+    "unified_validation": "passed with all published development comparisons",
+    "all_test_numeric_aggregates_exactly_equal": true,
+    "aggregate_tables": [
+      "b_extensions_test.json",
+      "c_extensions_test.json",
+      "c_test.json",
+      "handbook_d_test.json",
+      "handbook_test.json",
+      "paysim_test.json",
+      "project_test.json",
+      "ulb_test.json"
+    ],
+    "byte_identical_prediction_and_case_CSVs": 48,
+    "byte_identical_test_figures": 17,
+    "frozen_model_bundle_unchanged": true,
+    "static_checks": {
+      "reference_commit": "ec649b5b0c652027b9103707dd4a44216623f000",
+      "changed_function_bodies": {
+        "unsupervised.py": [
+          "pair_comparisons",
+          "run_validation",
+          "run_experiment"
+        ],
+        "evaluation.py": [
+          "evaluate_frozen_c",
+          "evaluate_improved_frozen"
+        ],
+        "main.py": [
+          "main"
+        ]
+      },
+      "unchanged_function_counts": {
+        "pattern_mining.py": 8,
+        "paysim.py": 4,
+        "handbook.py": 7,
+        "temporal.py": 7,
+        "run_d_validation.py": 9,
+        "unsupervised.py": 35,
+        "classification.py": 6,
+        "evaluation.py": 43,
+        "finalize.py": 16,
+        "download_data.py": 3,
+        "preprocessing.py": 7,
+        "check_d_freeze.py": 1,
+        "main.py": 5,
+        "run_b_validation.py": 9,
+        "test_classification.py": 1
+      },
+      "all_training_feature_selection_and_metric_functions_unchanged": true,
+      "all_CLI_flags_defaults_and_help_unchanged": true,
+      "dependency_pins_unchanged": true,
+      "no_Chinese_in_code_tests_or_requirements": true
+    },
+    "note": "Provenance/source hashes, file paths and runtime durations are not treated as experiment values. Chinese module comments were removed/replaced and --tasks labels translated as requested; all CLI flags/defaults/help and all numerical functionality retained."
+  }
 }

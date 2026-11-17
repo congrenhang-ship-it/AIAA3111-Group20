@@ -1,12 +1,6 @@
-"""负责人 D：训练分箱、Apriori 短规则、留出覆盖验证。
+"""Training-only discretization, bounded Apriori rules and held-out diagnostics.
 
-输入：A 的划分表（稳定整数 row_id、二元 Class、少量数值特征）。
-输出：mine_rules -> (可 JSON 序列化的训练分箱信息, 规则列表)；
-validate_rules -> 同顺序的留出指标与覆盖 row_id，不修改规则或分箱。
-状态：接口已实现；真实验证记录与候选冻结方案见 report/d_validation。
-统一划分由 A 提供；全组 G2 确认及最终测试另行记录。
-规则不是因果解释，不赋予匿名特征未知的业务含义。
-"""
+Rules describe associations; anonymous features do not imply business causes."""
 
 from itertools import combinations
 from numbers import Integral

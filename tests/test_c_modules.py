@@ -1,4 +1,4 @@
-"""负责人 C：统一指标、训练边界、消融、CLI、模型保存恢复与冻结评价检查。"""
+"""Regression checks for metrics, fitting boundaries, ablations, persistence and frozen scoring."""
 
 from pathlib import Path
 import sys

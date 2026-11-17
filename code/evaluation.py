@@ -1,8 +1,4 @@
-"""负责人 C：公共评价、名单组合、图表与结果导出；A/B/D 复用本模块。
-
-包含 C-E1/E2/E3 的金额、参考、成本和配对区间；原模型及评价口径保留。
-冻结评价不会选择参数；最终测试由 A 在全组冻结后调用。
-"""
+"""Shared review-budget metrics, comparison policies, figures and result exports."""
 
 import math
 import numpy as np
@@ -249,6 +245,18 @@ def compare_review_lists(
         "anomaly_ids": ids[ao[:k]].tolist(),
         "combined_ids": ids[selected].tolist(),
     }
+
+
+def compare_budget_quotas(first, second, budgets=DEFAULT_BUDGETS,
+                          shares=COMBINATION_SHARES):
+    """Evaluate the same budget-major, quota-minor comparison sequence."""
+    rows = []
+    for fraction in budgets:
+        for share in shares:
+            row = compare_review_lists(first, second, math.ceil(len(first) * fraction), share)
+            row["review_fraction"] = fraction
+            rows.append(row)
+    return rows
 
 
 def evaluate_groups(
@@ -826,6 +834,45 @@ def save_diagnostic_figures(candidates, groups, output, label):
     ]
 
 
+def compact_time_windows(predictions, *, window_seconds=3600, origin=0,
+                         review_fractions=DEFAULT_BUDGETS):
+    """Shared window export: retain all metrics, omit only large PR arrays."""
+    from temporal import evaluate_time_windows
+
+    windows = evaluate_time_windows(
+        pd.concat(predictions.values(), ignore_index=True),
+        window_seconds=window_seconds, origin=origin,
+        review_fractions=review_fractions,
+    )
+    for window in windows:
+        if window["evaluation"] is not None:
+            window["evaluation"].pop("pr_curve", None)
+    return windows
+
+
+def save_prediction_tables(predictions, output, *, suffix="_predictions", float_format=None):
+    """Write the existing per-method CSV contract without changing row order."""
+    for name, frame in predictions.items():
+        frame.to_csv(Path(output) / f"{name}{suffix}.csv", index=False,
+                     float_format=float_format)
+
+
+def save_error_examples(predictions, output, *, false_positive_label):
+    """Export the first five errors per existing rank/category convention."""
+    cases = []
+    for frame in predictions.values():
+        ranked = frame.sort_values(["score", "row_id"], ascending=[False, True])
+        count = math.ceil(len(ranked) * 0.01)
+        for reason, subset in [
+            (false_positive_label, ranked.iloc[:count].query("Class == 0")),
+            ("missed_fraud", ranked.iloc[count:].query("Class == 1")),
+        ]:
+            sample = subset.head(5).copy()
+            sample["case_type"] = reason
+            cases.append(sample)
+    pd.concat(cases, ignore_index=True).to_csv(output, index=False)
+
+
 def evaluate_frozen_c(bundle, data, output, classifier=None, phase="test"):
     """A8 hook: score existing models and apply existing quotas, without selecting.
 
@@ -834,15 +881,6 @@ def evaluate_frozen_c(bundle, data, output, classifier=None, phase="test"):
     is supplied, its name and quota must already be present in bundle['config'].
     Use phase='validation_replay' to check persistence before any final test.
     """
-    from evaluation import (
-        make_prediction_frame,
-        evaluate_scores,
-        evaluate_groups,
-        compare_review_lists,
-        save_figures,
-        save_group_figures,
-        save_comparison_figures,
-    )
     from unsupervised import score_frozen_unsupervised
 
     if phase not in {"test", "validation_replay"}:
@@ -917,8 +955,7 @@ def evaluate_frozen_c(bundle, data, output, classifier=None, phase="test"):
                 "combined": "Frozen combination",
             },
         )
-    for name, frame in predictions.items():
-        frame.to_csv(output / f"{name}_predictions.csv", index=False)
+    save_prediction_tables(predictions, output)
     result = {
         "phase": phase,
         "config": config,
@@ -1024,14 +1061,9 @@ def evaluate_improved_frozen(
         n: evaluate_groups(p, groups, DEFAULT_BUDGETS, group_values=range(3))
         for n, p in predictions.items()
     }
-    windows = evaluate_time_windows(
-        pd.concat(predictions.values(), ignore_index=True),
-        window_seconds=window_seconds, origin=window_origin,
-        review_fractions=DEFAULT_BUDGETS,
+    windows = compact_time_windows(
+        predictions, window_seconds=window_seconds, origin=window_origin,
     )
-    for w in windows:
-        if w["evaluation"] is not None:
-            w["evaluation"].pop("pr_curve", None)
     output.mkdir(parents=True, exist_ok=True)
     label = (
         "Final test - frozen improved C"
@@ -1071,8 +1103,7 @@ def evaluate_improved_frozen(
                 "combined": "Frozen policy",
             },
         )
-    for name, p in predictions.items():
-        p.to_csv(output / f"{name}_predictions.csv", index=False)
+    save_prediction_tables(predictions, output)
     result = {
         "phase": phase,
         "config": config,
