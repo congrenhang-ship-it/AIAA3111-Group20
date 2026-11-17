@@ -1,0 +1,190 @@
+{
+  "status": "core_checks_passed_with_platform_differences",
+  "phase": "independent_reproduction",
+  "reference_freeze_sha256": "705131d773f567f0e79ce42b1a7ef31a27033f1a748cc6b0b7470affd38e6eb5",
+  "checks": {
+    "ulb_test.json": true,
+    "handbook_test.json": true,
+    "paysim_test.json": true,
+    "c_extensions_test.json": true
+  },
+  "platform_differences": [
+    {
+      "path": "ulb_test.json.metrics.random_forest_original.AP",
+      "reference": 0.7845347155910315,
+      "rebuilt": 0.7840486468845401,
+      "delta": -0.00048606870649137157
+    },
+    {
+      "path": "ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[0].reviewed_from_global_list",
+      "reference": 154,
+      "rebuilt": 153,
+      "delta": -1
+    },
+    {
+      "path": "ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[1].reviewed_from_global_list",
+      "reference": 55,
+      "rebuilt": 56,
+      "delta": 1
+    },
+    {
+      "path": "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[0].reviewed_from_global_list",
+      "reference": 281,
+      "rebuilt": 276,
+      "delta": -5
+    },
+    {
+      "path": "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[1].reviewed_from_global_list",
+      "reference": 131,
+      "rebuilt": 132,
+      "delta": 1
+    },
+    {
+      "path": "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[2].reviewed_from_global_list",
+      "reference": 116,
+      "rebuilt": 120,
+      "delta": 4
+    },
+    {
+      "path": "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[0].reviewed_from_global_list",
+      "reference": 535,
+      "rebuilt": 530,
+      "delta": -5
+    },
+    {
+      "path": "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[1].reviewed_from_global_list",
+      "reference": 291,
+      "rebuilt": 295,
+      "delta": 4
+    },
+    {
+      "path": "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[2].reviewed_from_global_list",
+      "reference": 237,
+      "rebuilt": 238,
+      "delta": 1
+    }
+  ],
+  "provenance": {
+    "source_commit": "c1234688c43b256293f07bd6ed02051843f7c163",
+    "source_sha256": {
+      "requirements.txt": "3002c581c4ecbf0108116561a218702ce694cc26175659437c805f2e40be3416",
+      "code/check_d_freeze.py": "0ea8406e4824f14f2b8b6a990f0734c53fff71fafdd25d87dfa6a1200c685022",
+      "code/classification.py": "d92788dba8c59f3332eee5d72a1bff784e5e3fe6fac6800f6015b4dc3a43d3c0",
+      "code/download_data.py": "832e71c0a3db8ee61ef49da9e38a1b6ff43c52663e551dc0dff5730a0eb46d8d",
+      "code/evaluation.py": "9d853da03e6e6e8998086a6f7333deeed907e1f4bc09268694fdb1d27e5e8781",
+      "code/finalize.py": "be00ae6fcdf679e537c95e8547ba7209393ff14bb38fc889c292ce7e307dd365",
+      "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
+      "code/main.py": "1195aaea915ced28313acd79a2617db6a9e5a4db876760c6690744a7989c6dd7",
+      "code/pattern_mining.py": "b73698a5a0637b39804da7a5c7d6941425c24de23532ddad5109ee358afb9a0b",
+      "code/paysim.py": "f67e136b489f2e52082ba8de5046935396ec05720dfa5ae8a3cce138bff0c934",
+      "code/preprocessing.py": "2de6452b3906a16c0719a994827e7a8813f456983f3458fcad22c23a195924e9",
+      "code/run_b_validation.py": "2c2346c406165498b66526d6ca90bc7a68592cb70051c0ef72ff68eb9f96f7f5",
+      "code/run_d_validation.py": "04a5a6e54ab16cb6b39f7318a2630038f1276fdc337ce411822b3c7b10318930",
+      "code/temporal.py": "c046dddcabc0fad2266ed6031712991f876104e369e9fd2cd84fa2402e98da0d",
+      "code/test_classification.py": "6505439044dfa916a1eed756377190c95f7e659db79199463abfd5104ecaa5ef",
+      "code/unsupervised.py": "4a14bc93910334086d528017d31b97879ffe2f23d6e021153d2404c19578bdf3",
+      "results/tables/b_freeze.json": "470d9a2063a2bd8d45c1d24de84720fa217e6cf83072351a545309d86ade44ff",
+      "results/tables/b_validation.json": "9c8789169f47a8caed5c78618ba90047865c8eb249923040ebccc23f0409c3c2",
+      "results/tables/c_improved.json": "61d83f78c09708fe87c50d9ed3d693436b8e5e3cc8c02e12c6c8dffbe218cc86",
+      "results/tables/c_extensions.json": "c9da9ae2e7d9f57e15e65095c78b3d45b56023e94adfbaa70e18f1e388191afd",
+      "results/tables/d_freeze.json": "9204aaf587c8e2a1c03ef7f98c297f2bebad21b4f9db8c9a2e6a539847736059",
+      "results/tables/handbook_a.json": "e63b71e06d44f6026a7c9872e5214a76ba63dc5452175c561caf58f9eb223aaf",
+      "report/d_validation/train_validation_rules.csv": "443ead5dc8fbf2dfcaa56c731b4593b95dd76a5ff89cabedf428335c1d6bc9f0"
+    },
+    "python": "3.12.14",
+    "versions": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.1",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "joblib": "1.6.0"
+    }
+  },
+  "model_rebuilt": true,
+  "physical_host": "runnervmccnms",
+  "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
+  "note": "All designated conditions retained; no test-informed selection. Different serialized bundle bytes are allowed across platforms; Primary methods and all other fields must match; the supplementary RF AP and allocation by amount group are separately reported when rebuilding on another platform, never asserted identical.",
+  "ci": {
+    "run_id": 44056208431,
+    "job_id": 133946136673,
+    "url": "https://github.com/congrenhang-ship-it/AIAA3111-Group20/actions/runs/44056208431",
+    "conclusion": "success"
+  },
+  "additional_aggregate_audit": {
+    "source_run": 44054624380,
+    "artifact_id": 14315946953,
+    "artifact_sha256": "273f1ffd71b088073dacb4fcf2e23b79ea75b42b5ca0879cc2f531f413e07cef",
+    "tables": [
+      "ulb_test.json",
+      "handbook_test.json",
+      "paysim_test.json",
+      "c_extensions_test.json",
+      "c_test.json"
+    ],
+    "scope": "All fields except provenance, publication/private paths and runtime durations; includes thresholds, time windows, groups and cross-method complementarity.",
+    "differences": [
+      [
+        "ulb_test.json.metrics.random_forest_original.AP",
+        0.7845347155910315,
+        0.7840486468845401,
+        -0.00048606870649137157
+      ],
+      [
+        "ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[0].reviewed_from_global_list",
+        154,
+        153
+      ],
+      [
+        "ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[1].reviewed_from_global_list",
+        55,
+        56
+      ],
+      [
+        "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[0].reviewed_from_global_list",
+        281,
+        276
+      ],
+      [
+        "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[1].reviewed_from_global_list",
+        131,
+        132
+      ],
+      [
+        "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[2].reviewed_from_global_list",
+        116,
+        120
+      ],
+      [
+        "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[0].reviewed_from_global_list",
+        535,
+        530
+      ],
+      [
+        "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[1].reviewed_from_global_list",
+        291,
+        295
+      ],
+      [
+        "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[2].reviewed_from_global_list",
+        237,
+        238
+      ]
+    ]
+  },
+  "technical_package_validation": {
+    "exit_code": 0,
+    "code_revision": "c1234688c43b256293f07bd6ed02051843f7c163",
+    "command": "python code/main.py --run-team-validation --data <verified CSV> --output data/validation",
+    "no_git_directory": true,
+    "final_archive_policy": "Package generated from the same verified code plus final README/TASKS and aggregate evidence. Raw data, predictions, model binaries, actual report and poster drafts excluded; final Report.pdf still required for course submission."
+  },
+  "local_checks": {
+    "public_tests": 98,
+    "classification_tests": 11,
+    "dependency_check": "passed",
+    "formal_budget_records": 176,
+    "test_figures": 17,
+    "report_and_poster_unchanged": true
+  },
+  "scope": "All technical implementation, pre-test freeze, held-out evaluation, rule/case diagnostics, figures, independent rebuild and portable technical handoff completed. Report/poster writing and real group presentation/submission are outside this run."
+}
