@@ -222,11 +222,25 @@ def _b_test(data, frozen, output):
     return result
 
 
+def cold_start_metrics(data, views, predictions, training_entities):
+    """Use one global budget list per method; do not sum independent group quotas."""
+    groups=cold_start_groups(training_entities,data)
+    results={n:evaluate_groups(pred,groups,DEFAULT_BUDGETS,
+                               group_values=['both_seen','new_customer_only','new_terminal_only','both_new'])
+             for n,pred in predictions.items()}
+    for result in results.values():
+        for group in result['groups']:
+            group['within_group']={k:v for k,v in group['within_group'].items() if k in ['status','n_samples','n_positive','AP','prevalence']}
+            mask=groups==group['cluster_id']
+            group['history_availability']={e:float((views['both_history'].loc[mask,f'{e}_no_history_7d']==0).mean()) if mask.any() else None for e in ['customer','terminal']}
+    return results
+
+
 def run_final_test(args, *, freeze_path=None, destination=None):
     """Read a completed freeze and score fixed snapshots. This function never fits."""
     freeze_path=Path(freeze_path or args.freeze);freeze=read(freeze_path)
     if not freeze.get('group_G2_complete') or freeze.get('test_scored'):raise ValueError('Need an unscored G2 manifest')
-    if freeze['provenance']['source_sha256']!=source_hashes():raise ValueError('Source differs from frozen implementation')
+    if freeze.get('evaluation_source_sha256',freeze['provenance']['source_sha256'])!=source_hashes():raise ValueError('Source differs from frozen implementation')
     model_path=ROOT/freeze['models']['path']
     if data_sha256(model_path)!=freeze['models']['sha256']:raise ValueError('Frozen model bundle hash mismatch')
     output=Path(args.output).resolve();results=Path(destination or args.results).resolve()
@@ -273,13 +287,7 @@ def run_final_test(args, *, freeze_path=None, destination=None):
     handbook=_assessment(data,hp,hb['C']['config']['amount_bins'],fixed,output/'handbook')
     handbook['dataset_id']='handbook';handbook['evidence_kind']='handbook_test'
     handbook['history_missing']=evaluate_history_missing(hb['C'],context,data,handbook_history_builder,views)
-    groups=cold_start_groups(hb['entity_train'],data)
-    handbook['cold_start']={n:evaluate_groups(hp[n],groups,group_values=['both_seen','new_customer_only','new_terminal_only','both_new']) for n in ['lr_'+v for v in hb['B']]}
-    for group_result in handbook['cold_start'].values():
-        for g in group_result['groups']:
-            g['within_group']={k:v for k,v in g['within_group'].items() if k in ['status','n_samples','n_positive','AP','prevalence']}
-            mask=groups==g['cluster_id']
-            g['history_availability']={e:float((views['both_history'].loc[mask,f'{e}_no_history_7d']==0).mean()) if mask.any() else None for e in ['customer','terminal']}
+    handbook['cold_start']=cold_start_metrics(data,views,{n:hp[n] for n in ['lr_'+v for v in hb['B']]},hb['entity_train'])
     dresult,cases=evaluate_handbook_rules(rule_frame(data,views['both_history']),{'classifier':hp['lr_both_history'],'IF':hp['if_both_history']},hb['rules'],phase='test')
     write(output/'handbook_rule_cases.json',cases);handbook['E15']=dresult
     write(results/'tables/handbook_d_test.json',stripped(dresult));save_rule_figure(dresult,results/'figures/handbook_d_test.png')
@@ -317,7 +325,7 @@ def reproduce_final(args):
     base=Path(args.output).resolve()
     if base.exists():raise ValueError('Use a new reproduction directory')
     original=read(args.freeze)
-    if original['provenance']['source_sha256']!=source_hashes():raise ValueError('Reproduce the frozen source revision')
+    if original.get('evaluation_source_sha256',original['provenance']['source_sha256'])!=source_hashes():raise ValueError('Reproduce the frozen source revision')
     reference_results=Path(args.freeze).resolve().parent.parent
     new_args=Namespace(**vars(args));new_args.output=base/'prepared';new_args.results=base/'development'
     replay_freeze=prepare_final(new_args)

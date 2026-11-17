@@ -370,3 +370,25 @@ class FinalArtifactTests(unittest.TestCase):
             self.assertEqual(len(result['E03']['conditions']),15)
             self.assertEqual(len(result['E05']['importances']),30)
             self.assertTrue((Path(folder)/'plot.png').is_file())
+
+
+class FrozenColdStartRegressionTests(unittest.TestCase):
+    def test_all_four_groups_share_the_same_global_capacity_and_empty_groups(self):
+        from finalize import cold_start_metrics
+        from evaluation import make_prediction_frame
+        data=pd.DataFrame({'row_id':[10,11,12,13],'Time':[1.,2.,3.,4.],
+                           'Class':[0,1,0,1],'CUSTOMER_ID':[1,2,1,2],'TERMINAL_ID':[10,10,20,20]})
+        entities=pd.DataFrame({'CUSTOMER_ID':[1],'TERMINAL_ID':[10]})
+        views={'both_history':pd.DataFrame({'customer_no_history_7d':[0,1,0,1],
+                                            'terminal_no_history_7d':[0,0,1,1]},index=data.row_id)}
+        pred=make_prediction_frame(data,[.4,.6,.3,.8],'LR')
+        with patch('classification.train_model',side_effect=AssertionError('no test training')):
+            result=cold_start_metrics(data,views,{'LR':pred},entities)['LR']
+        self.assertEqual(len(result['groups']),4)
+        for i,q in enumerate(REVIEW_FRACTIONS):
+            self.assertEqual(sum(g['global_budget_allocation'][i]['reviewed_in_group'] for g in result['groups']),1)
+        self.assertTrue(all('budgets' not in g['within_group'] for g in result['groups']))
+        seen=data.assign(CUSTOMER_ID=1,TERMINAL_ID=10)
+        other=cold_start_metrics(seen,views,{'LR':pred},entities)['LR']
+        self.assertEqual(sum(g['within_group']['n_samples']==0 for g in other['groups']),3)
+        self.assertTrue(all(g['history_availability']['customer'] is None for g in other['groups'] if g['within_group']['n_samples']==0))
