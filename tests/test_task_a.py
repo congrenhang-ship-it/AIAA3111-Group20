@@ -282,3 +282,91 @@ class HandoffTests(unittest.TestCase):
             assemble.return_value = frame.iloc[::-1]
             with self.assertRaisesRegex(ValueError, "preserve validation rows"):
                 run_validation(train, validation)
+
+
+class FinalWorkflowTests(unittest.TestCase):
+    def test_frozen_assessment_never_trains_and_preserves_validation_threshold(self):
+        from evaluation import fit_amount_bins, make_prediction_frame
+        from finalize import _assessment
+        from temporal import select_review_threshold
+        rows=pd.DataFrame({'row_id':[1,2,3,4], 'Class':[0,1,0,1],
+                           'Time':[0.,1.,2.,3.], 'Amount':[10.,20.,30.,40.]})
+        val=make_prediction_frame(rows,[.1,.9,.2,.8],'fixed')
+        selection=select_review_threshold(val,.5)
+        test=rows.assign(row_id=[10,11,12,13],Time=[10.,11.,12.,13.])
+        pred=make_prediction_frame(test,[.95,.4,.3,.2],'fixed')
+        with TemporaryDirectory() as folder,patch('classification.train_model',side_effect=AssertionError('no fitting')):
+            result=_assessment(test,{'fixed':pred},fit_amount_bins(rows),{'fixed':selection},folder)
+        self.assertEqual(result['threshold_policies']['fixed']['threshold'],selection['threshold'])
+        self.assertEqual(result['threshold_policies']['fixed']['overall']['fixed_threshold']['K'],1)
+        self.assertEqual(result['partition']['rows'],4)
+
+    def test_incomplete_freeze_and_changed_models_are_rejected_before_data_load(self):
+        from argparse import Namespace
+        import finalize as f
+        with TemporaryDirectory() as folder:
+            path=Path(folder)/'freeze.json';f.write(path,{'group_G2_complete':False})
+            args=Namespace(freeze=path,output=Path(folder)/'out',results=Path(folder)/'shared')
+            with patch('finalize.load_data',side_effect=AssertionError('do not load test')):
+                with self.assertRaisesRegex(ValueError,'G2'):f.run_final_test(args)
+            f.write(path,{'group_G2_complete':True,'provenance':{'source_sha256':{}}})
+            with self.assertRaisesRegex(ValueError,'Source differs'):f.run_final_test(args)
+            self.assertFalse(args.output.exists())
+
+    def test_semantic_rules_do_not_use_mechanism_codes_and_global_groups_add_up(self):
+        import numpy as np
+        from pattern_mining import fit_handbook_rules,evaluate_handbook_rules
+        from evaluation import make_prediction_frame
+        n=120
+        rows=pd.DataFrame({'row_id':np.arange(n),'Time':np.arange(n,dtype=float),
+                           'Amount':np.arange(n,dtype=float)+1,
+                           'customer_amount_ratio_7d':np.arange(n)/10,
+                           'customer_count_7d':np.arange(n)%12,
+                           'terminal_count_7d':np.arange(n)%9,
+                           'Class':(np.arange(n)>99).astype(int),
+                           'TX_FRAUD_SCENARIO':(np.arange(n)>99).astype(int)})
+        val=rows.assign(row_id=rows.row_id+1000,Time=rows.Time+1000)
+        frozen=fit_handbook_rules(rows,val)
+        other=fit_handbook_rules(rows.assign(TX_FRAUD_SCENARIO=999),val.assign(TX_FRAUD_SCENARIO=999))
+        self.assertEqual(frozen,other)
+        pred={n:make_prediction_frame(val,val.Amount,n) for n in ['classifier','IF']}
+        with patch('pattern_mining.mine_rules',side_effect=AssertionError('test must not mine')):
+            result,cases=evaluate_handbook_rules(val,pred,frozen,phase='test')
+        self.assertEqual(sum(g['rows'] for g in result['mechanisms']),120)
+        self.assertEqual(sum(g['models']['classifier']['global_reviews'] for g in result['mechanisms']),2)
+        self.assertEqual(sum(g['models']['classifier']['TP'] for g in result['mechanisms']),2)
+        self.assertTrue(frozen['frozen_rules'])
+        self.assertNotIn('TX_FRAUD_SCENARIO',frozen['feature_columns'])
+
+
+class FinalArtifactTests(unittest.TestCase):
+    def test_exported_package_source_commit_does_not_require_git(self):
+        from preprocessing import source_commit
+        with TemporaryDirectory() as folder:
+            marker=Path(folder)/'SOURCE_COMMIT';marker.write_text('a'*40+'\n')
+            (Path(folder)/'code').mkdir()
+            with patch('subprocess.check_output',side_effect=AssertionError('no Git required')):
+                self.assertEqual(source_commit(Path(folder)/'code'),'a'*40)
+
+    def test_B_frozen_test_scoring_and_plot_do_not_refit_models(self):
+        import json,numpy as np
+        from sklearn.pipeline import Pipeline
+        from classification import train_model
+        from unsupervised import fit_isolation_forest
+        from finalize import _b_test
+        from run_b_validation import save_b_extension_figure
+        rng=np.random.default_rng(42)
+        X=pd.DataFrame(rng.normal(size=(320,len(FEATURE_COLUMNS))),columns=FEATURE_COLUMNS)
+        X['Amount']=np.abs(X.Amount)+1;X['Time']=np.arange(len(X))
+        labels=(np.arange(len(X))%17==0).astype(int)
+        lr=train_model(X,labels,'logistic_regression','class_weight',42)
+        iff=fit_isolation_forest(X,seed=42)
+        source=json.loads((Path(__file__).resolve().parents[1]/'results/tables/b_extensions.json').read_text())
+        frozen={'label_summary':source,'label_models':{r['mask_sha256']:lr for r in source['E03']['conditions']},'if256':iff}
+        data=X.iloc[:64].copy().assign(row_id=np.arange(1000,1064),Class=labels[:64])
+        with TemporaryDirectory() as folder,patch.object(Pipeline,'fit',side_effect=AssertionError('no test fit')):
+            result=_b_test(data,frozen,Path(folder)/'private')
+            save_b_extension_figure(result,Path(folder)/'plot.png',phase='test')
+            self.assertEqual(len(result['E03']['conditions']),15)
+            self.assertEqual(len(result['E05']['importances']),30)
+            self.assertTrue((Path(folder)/'plot.png').is_file())

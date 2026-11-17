@@ -33,9 +33,8 @@ def digest(path):
 
 
 def commit_at(directory):
-    return subprocess.check_output(
-        ["git", "-C", str(directory), "rev-parse", "HEAD"], text=True
-    ).strip()
+    from preprocessing import source_commit
+    return source_commit(directory)
 
 
 def select_features(train):

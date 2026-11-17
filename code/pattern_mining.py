@@ -250,3 +250,76 @@ def analyze_rule_overlap(data, fitted_binner, rules, training_metrics):
             "n_transactions": len(data), "n_fraud": len(fraud_ids),
             "covered_transactions": len(seen), "covered_frauds": len(seen & fraud_ids)}
 
+
+
+def fit_handbook_rules(train, validation):
+    """E15: same bounded rule search; choose scheme by validation count, fixed tie.
+
+    Mechanism labels never enter this function's feature selection or bins.
+    Returned state stores aggregate training metrics, not transaction identities.
+    """
+    from run_d_validation import reliable, public_metrics
+    schemes = {}
+    for scheme in ("equal_frequency", "equal_width"):
+        binner, candidates = mine_rules(train, HANDBOOK_RULE_FEATURES,
+                                       binning=scheme, dataset_id="handbook")
+        scored = validate_rules(validation, binner, candidates)
+        retained = [r for r, m in zip(candidates, scored, strict=True) if reliable(m)]
+        schemes[scheme] = {
+            "binner": binner,
+            "rules": [{k: v for k, v in r.items() if k != "train"} for r in retained],
+            "training_metrics": {r["rule_id"]: public_metrics(r["train"]) for r in retained},
+            "candidates": [{"rule_id": r["rule_id"], "antecedent": r["antecedent"],
+                            "train": public_metrics(r["train"]),
+                            "validation": public_metrics(m), "retained": reliable(m)}
+                           for r, m in zip(candidates, scored, strict=True)],
+        }
+    chosen = max(schemes, key=lambda name: len(schemes[name]["rules"]))
+    selected = schemes[chosen]
+    return {"dataset_id": "handbook", "feature_columns": list(HANDBOOK_RULE_FEATURES),
+            "selection_rule": "most validation-passing rules; equal_frequency on tie; all passing rules retained",
+            "selected_scheme": chosen, "schemes": schemes,
+            "frozen_binner": selected["binner"], "frozen_rules": selected["rules"],
+            "training_metrics": selected["training_metrics"]}
+
+
+def evaluate_handbook_rules(data, predictions, frozen, *, phase):
+    """Fixed-rule E15 coverage, model errors and mutually exclusive final scenario codes."""
+    from math import ceil
+    from run_d_validation import evaluate_rule_extensions
+    summary, metrics = evaluate_rule_extensions(data, predictions, frozen,
+                                                frozen["training_metrics"])
+    cases = summary.pop("cases")
+    scored = validate_rules(data, frozen["frozen_binner"], frozen["frozen_rules"])
+    covered = set().union(*(set(r["covered_row_ids"]) for r in scored))
+    ids = data.row_id.to_numpy()
+    selected = {}
+    for name, pred in predictions.items():
+        aligned = pred.set_index("row_id").loc[ids]
+        order = np.lexsort((ids, -aligned.score.to_numpy()))
+        selected[name] = set(ids[order[:ceil(len(data)*.01)]])
+    mechanisms = []
+    for code in sorted(data.TX_FRAUD_SCENARIO.unique()):
+        rows = data.loc[data.TX_FRAUD_SCENARIO.eq(code)]
+        group_ids = set(rows.row_id)
+        fraud_ids = set(rows.loc[rows.Class.eq(1), "row_id"])
+        mechanisms.append({"scenario": int(code), "rows": len(rows), "frauds": len(fraud_ids),
+                           "rule_covered_rows": len(group_ids & covered),
+                           "rule_covered_frauds": len(fraud_ids & covered),
+                           "models": {name: {"global_reviews": len(group_ids & values),
+                                             "TP": len(fraud_ids & values),
+                                             "recall": len(fraud_ids & values)/len(fraud_ids) if fraud_ids else None}
+                                      for name, values in selected.items()}})
+    descriptions = {}
+    for rule in frozen["frozen_rules"]:
+        items = []
+        for item in rule["antecedent"]:
+            cuts = frozen["frozen_binner"]["features"][item["feature"]]["cut_points"]
+            bounds = [None, *cuts, None]; i = item["bin"]
+            items.append({"feature": item["feature"], "lower_inclusive": bounds[i],
+                          "upper_exclusive": bounds[i+1]})
+        descriptions[rule["rule_id"]] = items
+    return {"dataset_id": "handbook", "phase": phase, "E15": summary,
+            "rule_intervals": descriptions, "model_metrics": metrics,
+            "mechanisms": mechanisms,
+            "mechanism_note": "Final upstream scenario code is exclusive; later simulator scenarios overwrite earlier codes. Labels are post-hoc diagnostics only; no real-world causal claim."}, cases

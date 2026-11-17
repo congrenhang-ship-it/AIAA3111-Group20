@@ -121,3 +121,30 @@ def split_data(data, fractions=SPLIT_FRACTIONS):
         ordered.iloc[validation_end:].copy(),
     )
 
+
+
+def source_commit(directory=None):
+    """Git checkout or exported technical package, without requiring .git in ZIPs."""
+    import subprocess
+    root = Path(directory or DEFAULT_DATA_PATH.parents[1]).resolve()
+    for candidate in (root, *root.parents):
+        marker = candidate / 'SOURCE_COMMIT'
+        if marker.is_file():
+            return marker.read_text(encoding='ascii').strip()
+    try:
+        return subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True,stderr=subprocess.DEVNULL).strip()
+    except (OSError,subprocess.CalledProcessError):
+        return 'exported-source-without-git-metadata'
+
+
+def source_dirty(directory=None):
+    """Working-tree metadata; exported payloads do not have a Git worktree."""
+    import subprocess
+    root=Path(directory or DEFAULT_DATA_PATH.parents[1]).resolve()
+    if any((p/'SOURCE_COMMIT').is_file() for p in (root,*root.parents)):
+        return False
+    try:
+        result=subprocess.run(['git','status','--porcelain'],cwd=root,text=True,capture_output=True)
+        return result.returncode==0 and bool(result.stdout.strip())
+    except OSError:
+        return False

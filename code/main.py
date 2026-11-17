@@ -20,6 +20,8 @@ from preprocessing import (
     ULB_SHA256,
     audit_data,
     data_sha256,
+    source_commit,
+    source_dirty,
     get_features,
     load_data,
     split_data,
@@ -401,8 +403,8 @@ def run_team_validation(data_path, output):
     published_d_path = tables / "d_extensions.json"
     provenance = {
         "command": subprocess.list2cmdline(["python", "code/main.py", *sys.argv[1:]]),
-        "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-        "source_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip()),
+        "source_commit": source_commit(ROOT),
+        "source_dirty": source_dirty(ROOT),
         "dataset_sha256": digest,
         "python": platform.python_version(),
         "versions": versions,
@@ -583,6 +585,10 @@ def main():
     action.add_argument("--run-handbook-rolling", action="store_true", help="Run Handbook E11 development validation.")
     action.add_argument("--run-handbook-c", action="store_true", help="Run C's Handbook validation with the shared data.")
     action.add_argument("--run-paysim-validation", action="store_true", help="Run the PaySim E16 audit and validation.")
+    action.add_argument("--prepare-final", action="store_true", help="Complete development validation and write G2 snapshots before test scoring.")
+    action.add_argument("--run-final-test", action="store_true", help="Score all frozen dataset protocols without fitting.")
+    action.add_argument("--reproduce-final", action="store_true", help="Rebuild frozen protocols independently and verify test aggregates.")
+    parser.add_argument("--freeze", type=Path, default=ROOT / "results/tables/group_freeze.json")
     parser.add_argument("--handbook-pilot", action="store_true", help="Generate a one-day resource/field pilot.")
     parser.add_argument("--handbook-dir", type=Path, default=ROOT / "data/handbook/v1")
     parser.add_argument("--paysim-archive", type=Path, default=ROOT / "data/paysim_v2.zip")
@@ -590,6 +596,15 @@ def main():
         "--tasks", action="store_true", help="Show agreed module ownership."
     )
     args = parser.parse_args()
+    if args.prepare_final or args.run_final_test or args.reproduce_final:
+        from finalize import prepare_final, run_final_test, reproduce_final
+        from threadpoolctl import threadpool_limits
+        if args.output is None or not args.output.resolve().is_relative_to((ROOT / "data").resolve()):
+            parser.error("Final workflow requires a new --output directory inside data/")
+        with threadpool_limits(limits=1):
+            result = reproduce_final(args) if args.reproduce_final else (prepare_final(args) if args.prepare_final else run_final_test(args))
+        print(json.dumps({"phase": result.get("phase", "reproduction"), "output": str(args.output)}, indent=2))
+        return 0
     if args.handbook_pilot and not args.prepare_handbook:
         parser.error("--handbook-pilot requires --prepare-handbook")
     if args.prepare_handbook or args.run_handbook_rolling or args.run_handbook_c or args.run_paysim_validation:

@@ -24,7 +24,7 @@ from sklearn.preprocessing import StandardScaler, RobustScaler
 from pathlib import Path
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils.validation import check_is_fitted
-from preprocessing import FEATURE_COLUMNS, data_sha256
+from preprocessing import FEATURE_COLUMNS, data_sha256, source_commit, source_dirty
 from evaluation import (
     make_prediction_frame,
     evaluate_scores,
@@ -744,14 +744,8 @@ def run_validation(
                 h.update(chunk)
         return h.hexdigest()
 
-    commit = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
-    ).stdout.strip()
-    dirty = bool(
-        subprocess.run(
-            ["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True
-        ).stdout.strip()
-    )
+    commit = source_commit(ROOT)
+    dirty = source_dirty(ROOT)
     metadata = {
         "mode": "synthetic_demo" if demo else "validation",
         "label": label,
@@ -859,17 +853,8 @@ def _source():
     ]
     paths.append(ROOT / "report/C_IMPROVEMENTS.md")
     return {
-        "source_commit": subprocess.run(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
-        ).stdout.strip(),
-        "source_dirty": bool(
-            subprocess.run(
-                ["git", "status", "--porcelain"],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-            ).stdout.strip()
-        ),
+        "source_commit": source_commit(ROOT),
+        "source_dirty": source_dirty(ROOT),
         "code_sha256": {
             str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in paths

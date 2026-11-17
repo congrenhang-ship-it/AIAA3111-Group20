@@ -1929,8 +1929,9 @@ def save_handbook_c_figures(result, output):
     import matplotlib.pyplot as plt
     output=Path(output)
     prefix="handbook_c_interface" if result["evidence_kind"]=="synthetic_fixture" else "handbook_c"
+    if result.get("phase") == "test": prefix = "handbook_c_test"
     title=("Synthetic interface check — NOT official Handbook results"
-           if result["evidence_kind"]=="synthetic_fixture" else "Handbook validation — fixed methods and budgets")
+           if result["evidence_kind"]=="synthetic_fixture" else f"Handbook {result.get('phase', 'validation')} — fixed methods and budgets")
     paths=[output/(prefix+"_ablation.png")]
     if result["history_missing"]["status"]=="evaluated":paths.append(output/(prefix+"_missing.png"))
     if any(p.exists() for p in paths):raise ValueError("Handbook C figures already exist")

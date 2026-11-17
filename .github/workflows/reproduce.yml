@@ -1,0 +1,45 @@
+name: Independent project reproduction
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'code/**'
+      - 'tests/**'
+      - 'requirements.txt'
+      - 'results/tables/group_freeze.json'
+      - 'results/tables/project_test.json'
+      - '.github/workflows/reproduce.yml'
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      MPLBACKEND: Agg
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12.14'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pip check
+      - run: python code/download_data.py
+      - run: python -m unittest discover -s tests
+      - run: python -m unittest discover -s code -p test_classification.py
+      - name: Prepare the pinned external data
+        if: hashFiles('results/tables/project_test.json') != ''
+        run: |
+          python code/main.py --prepare-handbook --output data/handbook/v1
+          curl --fail --location --retry 3 'https://www.kaggle.com/api/v1/datasets/download/ealaxi/paysim1?datasetVersionNumber=2' -o data/paysim_v2.zip
+      - name: Rebuild frozen snapshots and verify all held-out aggregates
+        if: hashFiles('results/tables/project_test.json') != ''
+        run: python code/main.py --reproduce-final --output data/reproduction
+      - name: Reproduction evidence
+        if: hashFiles('data/reproduction/reproduction.json') != ''
+        run: cat data/reproduction/reproduction.json

@@ -23,7 +23,7 @@ from threadpoolctl import threadpool_limits
 from classification import MODEL_NAMES, score_model, train_model
 from evaluation import DEFAULT_BUDGETS, PRIMARY_REVIEW_FRACTION, evaluate_scores, make_prediction_frame, save_figures
 from main import split_summary
-from preprocessing import DEFAULT_DATA_PATH, FEATURE_COLUMNS, ULB_SHA256, data_sha256, get_features, load_data, split_data
+from preprocessing import DEFAULT_DATA_PATH, FEATURE_COLUMNS, ULB_SHA256, data_sha256, get_features, load_data, split_data, source_commit, source_dirty
 
 ROOT = Path(__file__).resolve().parents[1]
 # Declared before any validation run. No grid search or test evaluation.
@@ -114,8 +114,8 @@ def run(data_path=DEFAULT_DATA_PATH):
         owner="B", phase="validation", dataset_sha256=digest, partitions=partitions,
         python=platform.python_version(), versions=versions,
         dependency_lock_mismatches=mismatches,
-        source_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-        source_dirty=bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip()),
+        source_commit=source_commit(ROOT),
+        source_dirty=source_dirty(ROOT),
         code_sha256={name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in code_files},
         command="py -3.12 code/run_b_validation.py",
     )
@@ -145,7 +145,7 @@ def run(data_path=DEFAULT_DATA_PATH):
 def extension_provenance():
     return dict(
         phase="validation", test_scored=False, group_G2_complete=False,
-        source_commit=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        source_commit=source_commit(ROOT),
         code_sha256={name: data_sha256(ROOT / name) for name in (
             "code/classification.py", "code/run_b_validation.py", "code/main.py", "code/evaluation.py",
             "code/handbook.py", "code/temporal.py", "code/unsupervised.py")},
@@ -246,6 +246,16 @@ def run_ulb_extensions_on_split(train, validation, partitions, output, *, result
                            private_cases=str((output / 'ulb_error_cases.csv').relative_to(ROOT))))
     write_json(output / "ulb_b_extensions.json", result)
     write_json(results / "tables/b_extensions.json", result)
+    save_b_extension_figure(result, results / "figures/b_extensions.png")
+    print("E03/E05 completed", flush=True)
+    return result
+
+
+def save_b_extension_figure(result, path, *, phase="validation"):
+    """Plot existing aggregate E03/E05 evidence; no training or selection."""
+    rows = result["E03"]["conditions"]
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -253,30 +263,34 @@ def run_ulb_extensions_on_split(train, validation, partitions, output, *, result
     for field, label in (("AP", "AP"), ("recall_at_k", "Recall@1%")):
         matrix = np.array([[next(r for r in rows if r['fraction']==f and r['mask_seed']==s)['metrics']['AP']
                             if field=='AP' else next(b['recall_at_k'] for b in next(r for r in rows if r['fraction']==f and r['mask_seed']==s)['metrics']['budgets'] if b['review_fraction']==.01)
-                            for s in LABEL_SEEDS] for f in LABEL_FRACTIONS])
-        x = np.array(LABEL_FRACTIONS)*100
+                            for s in result['E03']['seeds']] for f in result['E03']['fractions']])
+        x = np.array(result['E03']['fractions'])*100
         axes[0].plot(x, matrix.mean(axis=1), marker='o', label=label)
         axes[0].fill_between(x, matrix.min(axis=1), matrix.max(axis=1), alpha=.15)
     axes[0].axhline(result['E03']['IF_reference']['metrics']['AP'], ls='--', label='IF AP (fixed 256)')
     axes[0].set(xlabel="Labeled training rows (%)", ylabel="Validation metric", title="Mean and three-seed range (not CI)", ylim=(0,1))
     axes[0].legend(fontsize=8)
-    top = sorted(importance_rows, key=lambda r:r['mean'])[-10:]
+    top = sorted(result['E05']['importances'], key=lambda r:r['mean'])[-10:]
     axes[1].barh([r['feature'] for r in top], [r['mean'] for r in top], xerr=[r['std'] for r in top])
     axes[1].set(xlabel="AP decrease after permutation (5 repeats)", title="Fixed weighted LR: model reliance")
-    fig.suptitle("ULB validation only - E03 / E05")
+    fig.suptitle(f"ULB {phase} - E03 / E05")
     fig.tight_layout()
-    fig.savefig(results / "figures/b_extensions.png", dpi=160)
+    fig.savefig(path, dpi=160)
     plt.close(fig)
-    print("E03/E05 completed", flush=True)
-    return result
 
 
-def run_handbook_b(dataset_dir, output):
+
+def run_handbook_b(dataset_dir, output, *, results=None):
     """E10/E13: four fixed LR fits using A's views; no test or view selection."""
     from handbook import load_handbook_development
     from classification import cold_start_groups
     from unsupervised import _checked_handbook_views, _handbook_view_fingerprints, HANDBOOK_FINGERPRINT_VERSION
     from evaluation import evaluate_amounts, evaluate_groups, fit_amount_bins
+    output = Path(output).resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    results = Path(results) if results is not None else ROOT / "results"
+    (results / "tables").mkdir(parents=True, exist_ok=True)
+    (results / "figures").mkdir(parents=True, exist_ok=True)
     development = load_handbook_development(dataset_dir)
     expected = json.loads((ROOT / 'results/tables/handbook_a.json').read_text(encoding='utf-8'))['A_N1']['production']
     if development['manifest']['data_sha256'] != expected['data_sha256']:
@@ -318,7 +332,7 @@ def run_handbook_b(dataset_dir, output):
                   fixed_reference='both_history; all four views retained, no selection', cold_start_rule='initial training entities, not development updates',
                   amount_bins=bins, conditions=conditions)
     write_json(output / 'handbook_b.json', result)
-    write_json(ROOT / 'results/tables/handbook_b.json', result)
+    write_json(results / 'tables/handbook_b.json', result)
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -331,7 +345,7 @@ def run_handbook_b(dataset_dir, output):
         ax.set(title=field, ylim=(0,1))
     fig.suptitle('Handbook validation - fixed weighted LR history ablation')
     fig.tight_layout()
-    fig.savefig(ROOT / 'results/figures/handbook_b_ablation.png', dpi=160)
+    fig.savefig(results / 'figures/handbook_b_ablation.png', dpi=160)
     plt.close(fig)
     return result
 
