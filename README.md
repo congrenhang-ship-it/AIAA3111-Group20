@@ -4,7 +4,7 @@ AIAA 3111 · Group 20
 
 在有限人工审核容量下，比较分类、聚类/异常检测与规则解释，并研究标签不足、历史与关系信息、标签延迟、冷启动和缺失历史对结果的影响。ULB 是真实匿名交易主线，Handbook 用于受控上下文实验，PaySim 用于轻量外部复核。各数据集分别训练和评价，不平均跨数据集 AP。
 
-E01–E16、测试前 G2 冻结、三套数据正式测试、17 张测试图和 Linux 独立重建均已完成。报告与海报目前仍是验证阶段草稿，正式结果整合及 PDF 导出见 [TASKS.md](TASKS.md)。成员分支保留，日常使用 main。
+E01–E16、测试前 G2 冻结、三套数据正式测试、17 张测试图和 Linux 独立重建均已完成。[报告 PDF](report/Report.pdf)已整合正式测试，正文 10 页，披露/参考文献/附录另计；[可编辑正文](report/Report.md)的成员姓名与学号留空待填写。海报暂未更新，剩余事项见 [TASKS.md](TASKS.md)。成员分支保留，日常使用 main。
 
 ## 目录
 
@@ -19,7 +19,7 @@ tests/                   自动检查（分类检查另在 code/validation/test_
 data/README.md            数据来源、许可、下载、规模和划分
 results/tables/            冻结配置、必要开发证据及正式结果
 results/figures/           验证与正式测试图
-report/                   报告草稿、方法与实验协议、必要训练规则
+report/                   Report.md、Report.pdf、构建脚本、方法与实验协议、必要规则
 poster/Poster.md          海报草稿
 .github/workflows/        Linux 独立重建与检查
 ```
@@ -108,6 +108,18 @@ python -m unittest discover -s code/validation -p test_classification.py
 - 测试不回流调参。首次评分的冷启动汇总错误修复后用同一批模型重跑；原模型哈希和 ULB 26 份预测不变，修订已记入 G2。
 - 金额覆盖不等于挽回损失，异常不等于欺诈，规则覆盖不等于有限容量收益，重要性不作因果解释。
 
+## 报告更新与构建
+
+报告正文采用常规 11pt Times 风格字体，5 张矢量图从正式 JSON 重建；10 张表覆盖主要对照、可靠性与机制诊断。正文 10 页，含披露、参考文献及附录的 PDF 共 13 页。
+
+编辑 report/Report.md 后，使用项目 Python 环境及另行安装的 Pandoc、XeLaTeX 重新生成：
+
+```bash
+python report/build_report.py
+```
+
+脚本只绘图和排版，不训练模型或修改正式结果；会检查正文页数是否在 6–10 页。PDF 图保存在 results/figures/report_*.pdf，PNG 预览和 LaTeX 临时文件留在忽略的 data/report_build/。常规实验运行不需要 Pandoc 或 XeLaTeX。
+
 ## 课程提交
 
 课程要求最终提交 **Group_20_Project.zip**，包含 Report.pdf、代码、README 和数据或下载说明；Poster.pdf 单独提交，不要求放入最终 ZIP。报告正文 6–10 页，图表计入；参考文献、Disclosures 和附录不计入正文。组员需核对内容并如实披露外部协作及 AIGC 使用。
@@ -118,4 +130,4 @@ python -m unittest discover -s code/validation -p test_classification.py
 python -c "import sys; sys.path.insert(0, 'code'); from workflows.finalize import package_technical; print(package_technical('data/Group_20_Code.zip'))"
 ```
 
-技术包不含原始数据、模型、逐行预测或报告/海报稿；保留必要训练规则及 C 操作说明作为运行依赖。实际报告/海报排版、演练及 Canvas 提交仍见 TASKS.md。
+技术包不含原始数据、模型、逐行预测或报告/海报；保留必要训练规则及 C 操作说明作为运行依赖。报告已生成，填写成员信息并核对后加入最终课程包；海报、演练和 Canvas 提交仍见 TASKS.md。

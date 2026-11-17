@@ -1,55 +1,40 @@
 # Group 20 完成记录与剩余事项
 
-更新：2026-11-17。按本轮要求统一完成技术工作，不再按 A/B/C/D 分配或等待交接。报告和海报的正文、排版、导出不在本轮范围内。
+更新：2026-11-18。技术实现、正式测试、代码整理及报告结果整合已完成；本轮不处理海报。
 
-## 技术完成记录
+## 已完成
 
-- [x] 原成员分支全部整合至 main，保留四个成员分支和原提交。
-- [x] E01–E08：金额与成本、配对/时间块区间、15 个标签条件、规则增量覆盖、30×5 次置换和固定案例、审核参考、时间阈值。
-- [x] E09–E14：固定 Handbook 数据与过去历史接口，LR/IF 历史消融、四组开发期快照、关系增量、冷启动和九组历史缺失条件。
-- [x] D-N1 / E15：训练发现语义短规则、验证选择分箱、冻结 19 条等频规则，正式测试覆盖、冗余、模型错误及机制诊断；机制标签不入模。
-- [x] E16：作者 v2 PaySim 来源/字段/抽样审计，Amount/LR/IF 固定对照，独立训练和测试。
-- [x] A7 / G2：正式评分前提交数据、模型、阈值、协议和代码冻结记录；为本轮用户授权下的技术冻结，不冒称全体成员逐人签署。
-- [x] A8：三套数据全部预定条件的正式测试完成；测试期只评分，未使用测试结果重新选择模型。
-- [x] C7：17 张正式测试图生成；公共预算、总体/群体、金额/成本/区间和测试来源完整。
-- [x] C8 技术材料：测试汇总、C 测试摘要及跨方法规则/固定案例已产出；报告正文整合另列。
-- [x] 正式结果核对：176 组预算记录、总体/群体计数、阈值统计、机制分组和冻结模型哈希通过检查。
-- [x] 技术包无 Git 环境验证：解压至临时目录后完整 ULB 统一验证通过，无需本地 Git 元数据。
-- [x] D5 / G3 技术复现：GitHub Linux 独立重建并跑完三套数据，核心结果通过；随机森林补充基线的 AP 和八项金额组分配存在平台差异，已逐项保留两端数字。见 results/tables/reproduction.json，不宣称所有值精确一致。
-- [x] A9 技术包：完成环境/路径和无 Git 完整统一验证，最终技术包为本地 data/Group_20_Code.zip；README 提供重建命令。课程最终包仍需之后加入 Report.pdf。
+- [x] E01–E16 全部实现、开发验证、G2 冻结及 ULB/Handbook/PaySim 正式测试。原始方法、参数、切分、规则、审核预算及模型保留。
+- [x] 主线与四个成员分支的交付已整合，成员分支保留。
+- [x] 176 组预算、分组加总、固定阈值、15 个标签条件、150 次置换、9 个历史缺失条件及 17 张测试图核对完成。
+- [x] 代码中的中文注释清理、必要说明及输出改成英语；所有命令参数、默认值和功能保留。
+- [x] 重复验证/导出逻辑共用辅助函数。核心文件留在 code/；模块验证、规则复核及分类检查移入 code/validation/；下载、冻结及复现工具移入 code/workflows/。
+- [x] 共享分类选择与规则诊断函数放在核心模块，算法不依赖验证脚本。AST 核对确认数值逻辑保留。
+- [x] 精简及移动后 98 项公共检查＋11 项分类检查通过；完整 ULB 统一验证通过。三数据集 8 份正式汇总数值一致，48 份预测/案例 CSV、17 张测试图与原版本逐字节相同，原模型文件不变。
+- [x] GitHub Linux 独立重建通过。补充随机森林 AP 和八项金额组分配的原有平台差异逐项保留，见 reproduction.json；其他核心对照通过。
+- [x] 报告已替换旧验证阶段描述，整合正式结果、5 张报告尺寸矢量图、10 张表、结论和局限、引用及实际 AIGC 披露。正文 10 页；加披露、参考文献和附录共 13 页。
+- [x] report/Report.md 为可编辑正文；report/build_report.py 从正式 JSON 绘图并生成 Report.pdf，不触发训练或评分。正文页数已自动核对。
+- [x] README、数据获取说明、CI 命令、复现证据及技术包同步新结构。
 
-98 项公共检查＋11 项分类检查、依赖检查通过。所有技术事项已完成，下面仅保留报告/海报及真实提交过程的待办。
+## 剩余事项
 
-## 证据位置
+- [ ] 填写 report/Report.md 中四位成员姓名和学号；组员核对技术内容并确认个人 AIGC 使用及外部协作者披露，重新构建 PDF。
+- [ ] 海报：根据正式结果更新内容、排版并导出 Poster.pdf。本轮明确暂不处理。
+- [ ] 报告确认后，将 Report.pdf、代码、README 和数据获取说明整理为 Group_20_Project.zip；Poster.pdf 单独提交。
+- [ ] 全组实际演练、Canvas 提交及个人互评。技术验收和已有讲解材料不代表这些人工事项已完成。
+
+## 证据与入口
 
 | 内容 | 位置 |
 |---|---|
-| 原开发/验证交付 | results/tables/*validation*.json、b_extensions.json、c_extensions.json、handbook_*.json |
-| 正式 G2 | results/tables/group_freeze.json |
-| 总体正式测试与核对 | results/tables/project_test.json |
+| 安装、数据、运行和报告构建 | README.md；data/README.md |
+| 正式报告与可编辑正文 | report/Report.pdf；report/Report.md |
+| 模型/协议冻结 | results/tables/group_freeze.json |
+| 正式测试总览 | results/tables/project_test.json |
 | 三数据集正式结果 | results/tables/ulb_test.json、handbook_test.json、paysim_test.json |
-| 标签与解释、金额与可靠性 | results/tables/b_extensions_test.json、c_extensions_test.json |
-| 语义规则与机制诊断 | results/tables/handbook_d.json、handbook_d_test.json |
-| 独立复现与技术核对 | results/tables/reproduction.json |
-| C 技术结果摘要 | results/tables/c_test.json、c_test.md |
-| 测试图 | results/figures/*test*.png |
-| 完整预测、模型、固定案例 | 本地 data/final_preparation_20261117/、data/final_test_20261117_r2/；不推送原始数据和逐行结果 |
+| 标签、重要性、金额、成本和区间 | results/tables/b_extensions_test.json、c_extensions_test.json |
+| 规则及机制 | results/tables/handbook_d_test.json；ULB 在 ulb_test.json 的 E04 中 |
+| 代码精简、目录移动及独立重建 | results/tables/reproduction.json |
+| 完整模型与正式预测 | 本地 data/final_preparation_20261117/、data/final_test_20261117_r2/ |
 
-首次正式运行在 Handbook 冷启动汇总中漏传预算参数，修复后使用原冻结模型重跑。原模型字节未变，ULB 的 26 份逐行预测与首次运行完全一致。中断及修订记入 G2 / project_test.json；未改变模型、阈值、规则或实验条件。
-
-## 本轮之外仍须完成
-
-- [ ] 报告：将所有 *_test.json 和正式测试图整合至正文，更新结论、局限、引用、协作/AIGC 记录，并检查课程页数要求。原 A9/B6/C8/D6 的写作部分保留在这里，不冒称完成。
-- [ ] 海报：选择正式结果和组合图，完成排版并导出 Poster.pdf。
-- [ ] 导出 Report.pdf，加入技术材料形成 Group_20_Project.zip；海报单独提交。
-- [ ] 全组实际核对、口头演练、成员确认及 Canvas 提交。已有讲解材料不代表已举行演练。
-
-报告/海报正文及结果尚未改写，仍有验证阶段描述；仓库整理只维护了报告的来源链接。正式提交前必须由后续写作工作更新，不能直接提交现有稿。
-
-## 仓库整理（2026-11-17）
-
-- [x] 合并 A/B/D 重复交接和旧写作大纲，方法、预声明协议及实际 AIGC 记录归入数据说明和各模块现有说明；旧版本可由 Git 历史恢复。
-- [x] 删除 19 个冗余跟踪文件及 46 项本地重复运行/临时产物，释放约 1.2 GiB；新增忽略 Python 工具缓存。
-- [x] README 收敛为目录、环境、数据、统一复现、结果及课程提交说明；无失效 Markdown 文件链接。
-- [x] 算法代码、依赖、正式配置/结果、训练规则和原模型未变；98＋11 项检查、依赖检查、176 组预算核对及无 Git 解压包完整 ULB 验证通过。
-- [x] 保留原始数据、正式快照/预测、首次中断及重跑证据，重新生成精简技术包。最终 Report.pdf 和 Poster.pdf 仍按上方待办完成。
+历史源码、交接记录和原结果保留在 Git 历史。首次正式运行的冷启动汇总错误用同一批冻结模型修复重跑，记录仍在；后续代码整理没有更换实验方案。海报文件本轮保持不变。

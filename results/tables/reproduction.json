@@ -291,6 +291,139 @@
       "core": "code/*.py",
       "validation": "code/validation/",
       "workflows": "code/workflows/"
+    },
+    "independent_ci": {
+      "status": "core_checks_passed_with_platform_differences",
+      "phase": "independent_reproduction",
+      "reference_freeze_sha256": "9e0a9f5724470cdd90bc7957eaa7d84cdb7dee32e7e19d13545e0c28debbaba3",
+      "checks": {
+        "ulb_test.json": true,
+        "handbook_test.json": true,
+        "paysim_test.json": true,
+        "c_extensions_test.json": true
+      },
+      "platform_differences": [
+        {
+          "path": "ulb_test.json.metrics.random_forest_original.AP",
+          "reference": 0.7845347155910315,
+          "rebuilt": 0.7840486468845401,
+          "delta": -0.00048606870649137157
+        },
+        {
+          "path": "ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[0].reviewed_from_global_list",
+          "reference": 154,
+          "rebuilt": 153,
+          "delta": -1
+        },
+        {
+          "path": "ulb_test.json.metrics.random_forest_original.budgets[1].amount_groups[1].reviewed_from_global_list",
+          "reference": 55,
+          "rebuilt": 56,
+          "delta": 1
+        },
+        {
+          "path": "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[0].reviewed_from_global_list",
+          "reference": 281,
+          "rebuilt": 276,
+          "delta": -5
+        },
+        {
+          "path": "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[1].reviewed_from_global_list",
+          "reference": 131,
+          "rebuilt": 132,
+          "delta": 1
+        },
+        {
+          "path": "ulb_test.json.metrics.random_forest_original.budgets[2].amount_groups[2].reviewed_from_global_list",
+          "reference": 116,
+          "rebuilt": 120,
+          "delta": 4
+        },
+        {
+          "path": "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[0].reviewed_from_global_list",
+          "reference": 535,
+          "rebuilt": 530,
+          "delta": -5
+        },
+        {
+          "path": "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[1].reviewed_from_global_list",
+          "reference": 291,
+          "rebuilt": 295,
+          "delta": 4
+        },
+        {
+          "path": "ulb_test.json.metrics.random_forest_original.budgets[3].amount_groups[2].reviewed_from_global_list",
+          "reference": 237,
+          "rebuilt": 238,
+          "delta": 1
+        }
+      ],
+      "provenance": {
+        "source_commit": "b8ce52af5ff2b564dd96b88539dd4d9267849965",
+        "source_sha256": {
+          "requirements.txt": "a7342b928446c04f31b418254d672920c3410ff068a800ec1e4500bf20e00a60",
+          "code/classification.py": "f270dc197054144fa5287bdddc0705b04bc6a510288f6315f29e48bc57788398",
+          "code/evaluation.py": "4baf11288aa820b547dbc23ff6477bf3182e628d5a154a7577552d68b61730df",
+          "code/handbook.py": "90a885e64f72cf3ddb0add1cfc1881affc0ac3f02269cafd12be81cc5d21da88",
+          "code/main.py": "204b90ea2781827f747c520d6d026fde8858f1eab34e713258dd19f549ec2808",
+          "code/pattern_mining.py": "d8a153921a53242a4ae63d9b8d18284681a53ac810e1805fc64e5315e11caff0",
+          "code/paysim.py": "f67e136b489f2e52082ba8de5046935396ec05720dfa5ae8a3cce138bff0c934",
+          "code/preprocessing.py": "dfdeafdb9a5aa6675f26685664fbec1c3120436e17c36aa7f228adc919bfe170",
+          "code/temporal.py": "d2dd0c67ea047832edf2f2fdc432d4359ca8508baf148d3536d7c273f35c7144",
+          "code/unsupervised.py": "3992c51d12b391e2922b69d410ab57113e5213865c428921527aba20270c1ee3",
+          "code/validation/check_d_freeze.py": "0ea8406e4824f14f2b8b6a990f0734c53fff71fafdd25d87dfa6a1200c685022",
+          "code/validation/run_b_validation.py": "b92d39a2d2534b31c32f42e72223ed9a6e7e8d1e8bf76836330a655796684644",
+          "code/validation/run_d_validation.py": "5e83d388e43a58bca311c6469658edb924164b7d95fefdf9f09e3d401eea0e37",
+          "code/validation/test_classification.py": "8a792349614f221d207ab356d7984170d9a14c4f5fdd5f8e5b06bdabf0799cb2",
+          "code/workflows/download_data.py": "98596ff062e1fd98916b988393e0d01ec8db16347bcd4a8e0639892dd7d1f653",
+          "code/workflows/finalize.py": "e49d0097117777937dbe878895bf156204f01ad54d62c516ad4b349fc54e8306",
+          "results/tables/b_freeze.json": "470d9a2063a2bd8d45c1d24de84720fa217e6cf83072351a545309d86ade44ff",
+          "results/tables/b_validation.json": "9c8789169f47a8caed5c78618ba90047865c8eb249923040ebccc23f0409c3c2",
+          "results/tables/c_improved.json": "61d83f78c09708fe87c50d9ed3d693436b8e5e3cc8c02e12c6c8dffbe218cc86",
+          "results/tables/c_extensions.json": "c9da9ae2e7d9f57e15e65095c78b3d45b56023e94adfbaa70e18f1e388191afd",
+          "results/tables/d_freeze.json": "9204aaf587c8e2a1c03ef7f98c297f2bebad21b4f9db8c9a2e6a539847736059",
+          "results/tables/handbook_a.json": "e63b71e06d44f6026a7c9872e5214a76ba63dc5452175c561caf58f9eb223aaf",
+          "report/d_validation/train_validation_rules.csv": "443ead5dc8fbf2dfcaa56c731b4593b95dd76a5ff89cabedf428335c1d6bc9f0"
+        },
+        "python": "3.12.14",
+        "versions": {
+          "numpy": "2.5.4",
+          "pandas": "3.1.1",
+          "scikit-learn": "1.9.1",
+          "scipy": "1.18.1",
+          "joblib": "1.6.0"
+        }
+      },
+      "model_rebuilt": true,
+      "physical_host": "ip-10-0-134-38",
+      "platform": "Linux-7.0.0-1016-aws-x86_64-with-glibc2.43",
+      "note": "All designated conditions retained; no test-informed selection. Different serialized bundle bytes are allowed across platforms; Primary methods and all other fields must match; the supplementary RF AP and allocation by amount group are separately reported when rebuilding on another platform, never asserted identical.",
+      "run_id": 44124523231,
+      "job_id": 134184555297,
+      "url": "https://github.com/congrenhang-ship-it/AIAA3111-Group20/actions/runs/44124523231",
+      "conclusion": "success",
+      "validated_revision": "b8ce52af"
+    },
+    "no_git_export_validation": {
+      "exit_code": 0,
+      "no_git_directory": true,
+      "command": "python code/main.py --run-team-validation --data <verified CSV> --output data/validation"
     }
+  },
+  "report_build_verification": {
+    "date": "2026-11-18",
+    "main_text_pages": 10,
+    "total_PDF_pages": 13,
+    "result_tables_checked": 10,
+    "test_figures": 5,
+    "formal_result_files_unchanged": 8,
+    "fonts": "Embedded Times-style 11pt main text, vector data figures",
+    "no_LaTeX_overflow_or_missing_glyph_warnings": true,
+    "poster_unchanged": true,
+    "PDF_sha256": "3d046404d8e651a47b2d22030f67b0eba6c48d8b1877b740db955a91f8b6ffbb",
+    "Markdown_sha256": "cd0a06a508733ca0150478b76a11fd8df5b749f911cfc1c714bbb2cbc59d40a3",
+    "source": "report/Report.md",
+    "build_command": "python report/build_report.py",
+    "member_fields": "Names/IDs left blank for group completion as requested previously."
   }
 }

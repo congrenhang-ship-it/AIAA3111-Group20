@@ -1,441 +1,365 @@
-# Credit Card Fraud Detection under a Limited Review Budget
+---
+documentclass: article
+fontsize: 11pt
+papersize: a4
+geometry:
+  - margin=20mm
+mainfont: texgyretermes
+mainfontoptions:
+  - Extension=.otf
+  - UprightFont=*-regular
+  - BoldFont=*-bold
+  - ItalicFont=*-italic
+  - BoldItalicFont=*-bolditalic
+sansfont: texgyreheros-regular.otf
+monofont: lmmono10-regular.otf
+mathfont: latinmodern-math.otf
+linestretch: 1.04
+colorlinks: true
+linkcolor: black
+urlcolor: black
+header-includes: |
+  \usepackage{float}
+  \floatplacement{figure}{H}
+  \usepackage{caption}
+  \captionsetup{font=small,labelfont=bf}
+  \setlength{\parskip}{4pt}
+  \setlength{\emergencystretch}{3em}
+  \setcounter{secnumdepth}{0}
+---
 
-AIAA 3111 · Group 20 · Integrated working draft · 2026-11-16
+\begin{center}
+{\Large\bfseries Credit Card Fraud Detection under a Limited Review Budget\par}
+\vspace{4pt}
+AIAA 3111 Course Project · Group 20
+\end{center}
 
-**Editorial status:** methods and validation evidence only. Formal test results,
-final error cases, Handbook semantic rules/mechanism analysis (D-N1), all authors'
-final disclosures and G3 approval are outstanding.
-This is not the final submission. The planned typeset main text remains 6–10 pages;
-pagination is not established by this Markdown draft.
+| Group member | Student ID |
+|---|---|
+| __________________________ | __________________ |
+| __________________________ | __________________ |
+| __________________________ | __________________ |
+| __________________________ | __________________ |
 
-## Abstract — validation-stage draft
+**Abstract.** We study fraud detection as a ranking problem with limited review capacity. On the chronological ULB test set, the preselected weighted logistic regression detects 64 of 74 frauds from 568 reviews; the selected Isolation Forest detects 41. We then examine label availability, transaction amounts, uncertainty, time, entity histories and interpretable rules. Historical and relationship features reduce performance in the fixed Handbook models, while missing history affects the two model families differently. A PaySim comparison further shows that AP and fixed-budget detection can rank methods differently. The results connect model performance to review capacity, available information and the structure of the data.
 
-Credit-card fraud detection is evaluated as a ranking task with limited human
-review capacity. Using the ULB transaction dataset and a shared chronological
-split, we compare four classification baselines, bounded class-imbalance
-strategies, K-means distance and Isolation Forest. All methods use the same
-validation transactions and deterministic top-K policy. At the primary 1%
-budget, class-weighted logistic regression detects 49 of 57 validation frauds
-from 568 reviews, while the selected Isolation Forest detects 24. The latter
-detections are all covered by the classifier's list, so the predeclared quota
-search selects the pure-classifier endpoint. Training-discovered short rules
-provide additional diagnostic associations; 21 equal-frequency candidates pass
-the declared validation count/lift gates. These observations motivate explicit
-capacity constraints and honest reporting of absent combination gains.
-Controlled Handbook experiments further examine supervision, entity histories,
-relations, delayed labels and incomplete context; PaySim provides a lightweight
-external reference. Added context does not uniformly improve the fixed models.
-Final test generalization remains to be assessed after the group freeze.
+# 1. Introduction
 
-## 1. Research question and review task
+Fraud detection systems produce more alerts than reviewers can investigate. A useful comparison therefore needs an explicit capacity: detecting more fraud by reviewing more transactions is a different decision from improving detection at the same workload. We use a common top-K policy to compare supervised classifiers, clustering distances and Isolation Forest.
 
-A ranking is useful only in relation to the number of transactions that can be
-reviewed. We therefore ask how supervised classification and anomaly detection
-compare at identical review capacities, whether their fraud discoveries are
-complementary, and whether performance varies across transaction groups and
-relative-time windows. We also ask whether short discretized feature patterns
-remain associated with fraud on later data. With semantic simulated data, we
-also examine whether history and relationship features help at the same capacity,
-and how label availability and incomplete context affect those findings.
-Rules supplement the diagnostic analysis; they do not provide causal explanations of model decisions.
+Our project asks four questions: which methods work at a fixed budget; whether their discoveries complement one another; how labels and contextual information change performance; and how rules and cases explain the results. ULB provides the real anonymous-data experiment, the Handbook simulator provides identifiable histories and mechanisms, and PaySim provides a separate transaction domain [1–4].
 
-The narrative follows the shared review task rather than treating each algorithm
-as a separate application. Positive findings, failed changes and a combination
-that yields no additional detected fraud are all retained in the evidence.
+# 2. Problem formulation
 
-## 2. Data and experimental boundaries — A contribution
+Each transaction has features $x_i$, a label $y_i\in\{0,1\}$ and a stable row ID. A method returns a risk score $s_i$. For $N$ transactions and budget $q$, we review $K=\lceil Nq\rceil$ records, ordered by decreasing score and then increasing row ID. The primary budget is 1%; 0.1%, 0.5% and 2% show the workload trade-off. Outputs comprise ranked reviews, comparative metrics, group/time diagnostics and short fraud-associated rules.
 
-The pinned ULB/Worldline CSV is the version archived in Zenodo record 7395559.
-Its SHA-256 is `76274b691b16a6c49d3f159c883398e03ccd6d1ee12d9d8ee38f4b4b98551a89`.
-There are 284,807 original transactions, including 492 frauds. Time is elapsed
-seconds; V1–V28 are anonymous PCA features; Amount is a monetary quantity. The
-data do not support customer-history or local-clock interpretations.
+\clearpage
 
-A's audit finds no missing values. Exact duplicates are defined using all 31
-original fields, including Class, retaining the earliest source row. This removes
-1,081 additional rows, including 19 frauds; it is a reproducible record policy,
-not proof that identical anonymized records represent the same real transaction.
-Extreme amounts and fraud labels alone are not reasons for removing records.
+# 3. Methodology
 
-| Partition | Transactions | Fraud | Relative Time range, seconds |
+## 3.1 Data acquisition and preprocessing
+
+We use the fixed ULB/Worldline CSV archived on Zenodo [1]. It contains 284,807 transactions and 492 frauds. Time records elapsed seconds; V1–V28 are anonymous PCA components. The data have no missing values. Exact duplicates across the 31 original fields are merged, retaining the first source row: 1,081 extra records, including 19 frauds, are removed. This record-based policy produces 283,726 transactions and 473 frauds. Extreme amounts are retained.
+
+Transactions are sorted by Time and original row ID. Boundaries target 60/20/20 by row count; equal timestamps enter the later partition together. The ULB ranges are 0–120,392 seconds for training, 120,393–145,233 for validation, and 145,234–172,792 for test. The 30 numerical inputs exclude the label and row ID. Scaling is fitted within each model's training data.
+
+**Table 1. Chronological partitions; each cell is transactions / frauds.**
+
+| Dataset | Training | Validation | Test |
 |---|---:|---:|---:|
-| Training | 170,235 | 342 | 0–120,392 |
-| Validation | 56,745 | 57 | 120,393–145,233 |
-| Held-out test | 56,746 | 74 | 145,234–172,792 |
-
-The approximately 60/20/20 split is chronological after cleaning. Equal boundary
-timestamps stay together on the later side. Stable original row IDs and ordered
-split fingerprints permit independent alignment checks. Static-model preprocessing is
-fitted on the declared training records; validation/test retain natural class
-prevalence. Rolling development models use only past records whose labels are
-available at their scheduled update time.
-The test counts identify the partition and are not performance measurements.
-
-### Controlled context data and external reference
-
-Handbook uses the pinned public transaction simulator, with 5,000 customers,
-10,000 terminals, 60 days and fixed seeds. The first 30 days train static models,
-the next 15 validate them, and the final 15 are reserved for testing.
-PaySim uses the author's v2 release: a label-independent, seed-42 random sample
-retains 635,359 of 6,362,620 source rows, then splits them chronologically without
-splitting equal time steps. The three datasets are trained and evaluated separately.
-
-| Dataset | Training | Validation | Reserved test | Fraud: train / validation / test |
-|---|---:|---:|---:|---|
-| ULB, after deduplication | 170,235 | 56,745 | 56,746 | 342 / 57 / 74 |
-| Handbook, 60 days | 292,139 | 145,315 | 145,739 | 1,752 / 1,291 / 1,280 |
-| PaySim, fixed approximately 10% sample | 379,109 | 127,377 | 128,873 | 326 / 64 / 413 |
-
-Handbook supplies current amount/time-of-day encoding and strictly past
-customer/terminal histories. Entity IDs identify records and groups but are not
-model inputs; labels and simulator mechanism codes are excluded from features.
-Simulator mechanisms support controlled diagnostics, not claims of real-world
-causality or deployment generalization. PaySim uses only requested amount and
-transaction type; balance fields, entity IDs and system decision markers are
-excluded. Sources and split evidence are recorded in the [data handoff](../data/README.md),
-[Handbook summary](../results/tables/handbook_a.json) and
-[PaySim summary](../results/tables/paysim_a.json).
-
-## 3. Methods and selection — B/C/D contributions
-
-### Classification
-
-We compare logistic regression (LR), a decision tree, Gaussian Naive Bayes and
-a random forest on the shared chronological ULB split. StandardScaler is fitted
-within the training pipeline for LR and Gaussian Naive Bayes; trees use unscaled
-features. Balanced class weights and seeded 1:1 random undersampling are the two
-additional LR strategies. Undersampling retains all minority training rows and
-samples an equal number of majority rows without replacement. Validation keeps
-its natural distribution. The classifier is selected by validation true positives
-at 1% capacity, then AP and a deterministic method-name tie-break. Pipelines
-exclude Class and row_id; thresholds do not substitute for top-K.
-
-### Groups and anomaly scores
-
-C fits K-means and Isolation Forest to mixed training features without filtering
-normal transactions by their labels. Scores increase with suspicion; neither
-cluster ID nor an anomaly score is a fraud probability. Training-only K-means
-structure/stability analysis retains k=3. Candidate improvements are selected
-using a further chronological training-inner development split and declared
-tie rules, then fitted on the original full training partition.
-
-The retained Isolation Forest uses StandardScaler, 100 trees, max_samples=4096,
-contamination=auto, seed=42 and n_jobs=1. Formal validation had already been
-viewed before C's later protocol, which C explicitly discloses; the inner split
-does not turn the formal validation into an untouched independent dataset.
-
-### Diagnostic association rules
-
-D includes Amount and selects four V features by training-only absolute Pearson
-correlation with Class: V17, V14, V12 and V3. This is supervised feature selection;
-Class is used only as the consequent in the resulting rules. Equal-width and
-equal-frequency discretization each request three bins. Apriori considers at
-most two distinct-feature antecedent items, plus consequent Class=1.
-
-Training candidates require antecedent coverage >=20, covered fraud >=5 and
-lift >1, with at most 50 per scheme. Fixed training bins are applied unchanged
-to validation, including unbounded outer intervals for extreme values. The same
-count/lift gate is applied there. Zero-denominator metrics are not applicable.
-The predeclared scheme criterion is the number of passing diagnostic rules,
-with equal-frequency preferred on ties; it is not a top-K fraud-yield objective.
-
-### ULB extensions and shared execution
-
-The main validation entry now runs E01–E08: amount coverage/reference rankings,
-paired uncertainty, label availability, rule overlap, permutation importance,
-assumed costs and fixed-threshold diagnostics. The same fixed protocols and
-shared split are used throughout; model selection and test evaluation remain
-separate stages.
-
-For E03, class-specific permutations define nested 5%, 10%, 25%, 50% and 100%
-labeled subsets, using mask seeds 42/43/44 and model seed 42. Each class count is
-rounded upward. Weighted LR preprocessing and fitting use only the labeled
-subset; hidden labels never become normal labels. Stratification uses true
-training labels, so this is a controlled supervision simulation. The fixed
-IF256 reference sees all unlabeled training features, changing available records
-as well as supervision. It is distinct from the selected IF4096 main comparator.
-E05 uses validation AP, five permutations per original feature and seed 42, with
-no refitting or subsequent feature removal. Error examples follow fixed rank-based
-selection rules. The [B extension summary](../results/tables/b_extensions.json)
-contains all 15 label conditions and all 150 permutation values.
-
-For E08, each fixed model's threshold was its 568th-highest score on the
-56,745-transaction validation segment. The thresholds were 0.804282 for the
-class-weighted logistic regression and 0.531776 for the improved Isolation
-Forest. Applying each threshold with an inclusive comparison flagged 568
-transactions overall and found 49 and 24 of 57 frauds, respectively. The
-validation diagnostic applies each threshold unchanged within fixed one-hour
-windows from elapsed time zero. The first and last observed windows are partial.
-See the [validation summary](../results/tables/a_team_validation.json) for the
-full-precision thresholds, window counts and fixed-capacity comparison.
-
-### Context, update schedules and external reference
-
-On Handbook, B fits fixed weighted LR and C fits fixed IF separately on the same
-four views: current transaction, customer history, terminal history and both
-histories. IF uses 100 trees, max_samples=256 and seed 42. History queries use
-[t-window,t), with all simultaneous transactions queried before insertion.
-E12 adds only three past-seven-day relationship features: customer degree,
-terminal degree and a new-pair flag. Two-history LR/IF are the fixed references;
-view choice is not reselected from the ablation. E14 rebuilds visible history
-with 0/10/30% missing events and seeds 42/43/44 while retaining current queries,
-labels and the full-history-trained models. E13 defines four disjoint novelty
-groups using the initial training customer/terminal sets.
-
-E11 compares static LR with scheduled development updates at days 30/37/44,
-a trailing 30-day window, and 0/1/7-day label delays. Updates see only labels
-available at the decision time; final snapshots and validation-calibrated
-thresholds are saved for subsequent frozen testing. PaySim runs only amount
-ranking, weighted LR and fixed IF256 as a lightweight external check. Handbook
-semantic-rule and mechanism analysis (E15) remains pending D-N1.
-
-## 4. Common evaluation and fair capacity comparison — C contribution
-
-AP summarizes precision–recall ranking behavior. Budgeted outcomes are reported
-at 0.1%, 0.5%, 1% and 2%: K=ceil(N×budget), ordered by score descending and row_id
-ascending. For each list, TP+FP must equal K; precision is TP/K and recall TP/F.
-One extra fraud changes validation recall by about 1.75 percentage points.
-An expected random-review reference has precision equal to prevalence and
-expected TP=K×F/N; it is an expectation, not an observed model result.
-
-Combination lists scan the declared quota order, remove duplicates and refill
-to exactly K. A union that doubles capacity is not a valid equal-budget gain.
-Global-list allocation across clusters is reported separately from budgets
-allocated within each cluster. AP/recall are not applicable for no-fraud groups;
-empty groups/windows remain explicitly identified.
-
-## 5. Validation evidence and implications
-
-### Classification and imbalance strategies
-
-| B original validation run | AP | TP at K=568 | FP |
-|---|---:|---:|---:|
-| Logistic regression, original | 0.642429 | 48 | 520 |
-| Decision tree | 0.301922 | 38 | 530 |
-| Gaussian NB | 0.033763 | 20 | 548 |
-| Random forest | 0.757048 | 47 | 521 |
-| Logistic regression, class weight | 0.772681 | 49 | 519 |
-| Logistic regression, undersampling | 0.157422 | 48 | 520 |
-
-The selected class-weighted logistic regression detects one more fraud than its
-unweighted baseline. Random forest has higher AP than unweighted regression but
-fewer frauds at the primary capacity. Undersampling does not improve primary
-budget yield and substantially reduces AP. None of these findings establishes
-that a strategy universally helps. In C's common-environment reproduction,
-candidate TP values and the selected model agree; random forest AP is 0.755615
-rather than B's original 0.757048. Preserve that version difference explicitly.
-
-### Limited labels and model reliance (E03/E05)
-
-At 5% labeled training data, mean AP is 0.3799, ranging from 0.2562 to 0.6259
-across the three masks; at 25%, mean AP is 0.7389. Full-label AP is 0.7727.
-The seed ranges describe sensitivity to sampled labels, not confidence intervals.
-The fixed IF256 reference has AP 0.016546 and Recall@1% of 17.54%, and must not
-be confused with the selected IF4096. Full-label weighting's one-fraud gain also
-needs interpretation against the small number of validation positives.
-
-Amount has the largest mean permutation AP decrease (0.580432), followed by
-V2 and V7. This is reliance of the fixed model, not a causal effect or a business
-interpretation of anonymous features. Fixed cases include normal transactions
-at ranks 568/567 and 35/37, and missed frauds at ranks 1,405/1,740. Uncalibrated
-scores do not guarantee individual correctness. The [combined validation panel](../results/figures/b_extensions.png)
-and [full table](../results/tables/b_extensions.json) retain all conditions.
-
-### Equal-budget anomaly comparison and complementarity
-
-| Budget | K | Selected classifier TP | Selected IF TP | Frozen endpoint TP |
-|---|---:|---:|---:|---:|
-| 0.1% | 57 | 42 | 0 | 42 |
-| 0.5% | 284 | 48 | 8 | 48 |
-| 1% | 568 | 49 | 24 | 49 |
-| 2% | 1,135 | 49 | 35 | 49 |
-
-At 1%, the classifier reaches recall 85.96% and precision 8.63%, with eight
-frauds missed and 519 normal transactions reviewed. IF detects 24 frauds with
-544 false positives. All 24 are already in the classifier's list. Classification
-quota candidates 0/25/50/75/100% detect 24/45/48/49/49 frauds; the fixed tie rule
-prefers 100% classifier capacity. The chosen endpoint has no mixture benefit.
-
-At 2%, IF finds one fraud outside the classifier list, but the examined equal-K
-policies do not increase total yield: gaining an exclusive case can trade away
-a classifier-exclusive detection. This distinction between exclusivity and net
-benefit is central to the research question.
-
-### Group and time reliability
-
-Using the same global 568-review lists, cluster 0 contains 9,596 transactions and
-14 frauds: classifier recall is 13/14, IF recall 9/14. Cluster 1 contains 47,149
-transactions and 43 frauds: corresponding recall is 36/43 and 15/43. Cluster 2
-is empty on validation. Cluster assignments are transaction groups, not labels.
-Hourly validation windows contain only 1–12 frauds and incomplete edge windows;
-these are exploratory short-term diagnostics. A must freeze the final relative
-window origin/length and publish formal window evidence after G2.
-
-### Rules as diagnostic evidence
-
-Equal-width yields 38 training candidates, of which 15 pass the validation gate;
-equal-frequency yields 25, of which 21 pass. The original rule criterion selects
-the latter. Exact boundaries and all candidate results are retained in D's
-manifest/table, including rejected rules.
-
-Equal-frequency R001 combines low-bin V12 and low-bin V17. It covers 11,722
-training transactions with 269 frauds and lift 11.42; validation coverage is
-4,556 transactions with 39 frauds, confidence 0.856% and lift 8.52. This shows a
-persistent association but a broad review burden. Some equal-width rules are
-more concentrated despite fewer passing candidates: validation R023 covers
-46 transactions with 31 frauds. Rule-count selection must not be presented as
-proof of greater review efficiency. Overlapping rule counts are never added.
-
-### Fixed-rule overlap and validation error linkage (E04)
-
-Ordering the unchanged 21 rules by training lift/confidence/length/ID gives a
-union of 56,055 validation transactions, including all 57 frauds. This covers
-98.78% of the validation population and 55,998 normal transactions. Fifteen
-rules add no new fraud at their position, and R020 adds no new transactions.
-There are no identical-coverage pairs or pairs with Jaccard >=0.9, illustrating
-that cumulative redundancy can occur without near-identical pairs. The compact
-validation display uses R001/R002/R005/R006/R009, while all 21 remain fixed for
-eventual test evaluation. The display omits a later novel fraud covered by R013.
-
-The union covers all eight classifier false negatives and all 33 IF false
-negatives, but also 516/519 classifier false positives and 538/544 IF false
-positives. Given its broad scope, this is diagnostic association and not an
-equal-budget improvement. Validation example source row 176049 is missed at
-K=568 by both models (ranks 11,505/867); normal row 170937 is ranked 321 by IF
-and 56,714 by the classifier. Both match R013/R016/R021. The shared rule match
-does not identify a business or causal explanation.
-
-Figure candidates: the validation Jaccard heatmap and two-panel cumulative
-transactions/fraud figure in results/figures/d_validation_rule_*.png. Full pair
-counts, increments, per-rule error counts and deterministic cases are in
-results/tables/d_extensions.json. Do not sum overlapping rule fraud counts.
-
-### Amount coverage, references and assumed costs (C E01/E06/E07)
-
-C's training-only Amount boundaries are 21.94, 200.0 and 1008.6402000000035.
-At the common validation K=568, the classifier covers 73.48% of fraud amount,
-IF 37.78%, cluster distance 28.80%, and the fixed Amount-descending reference
-28.30%. The latter finds only two frauds, compared with 49 for the classifier
-and 24 for IF. Quantity and amount therefore answer different questions.
-Classifier-covered fraud amount is 8,987.38 of 12,231.09; this is coverage of
-transaction amounts, not actual money recovered. The classifier's precision
-improvement over validation prevalence is 85.88-fold; this ratio does not
-change the absolute precision of 8.63% or the number of false positives.
-
-With assumed loss L=FP+c_FN*FN and c_FN=10/50/100, classifier losses at 0.1%
-are 165/765/1515, at 0.5% 326/686/1136, at 1% 599/919/1319 and at 2%
-1166/1486/1886. These are hypothetical units. No budget was reselected from
-this table; the primary review capacity remains 1%. Higher review capacity
-does not necessarily minimize a particular assumed loss.
-
-### Paired uncertainty and limits (C E02)
-
-C uses seed 42 for 500 paired row resamples and 200 paired 1800-second block
-resamples, reporting empirical 2.5/97.5 percentiles. Per-replicate N determines
-K; methods share the same sample and preserve repeated transaction instances.
-All observed replicates contain fraud. Classifier Recall@1% is 0.8596 with
-row interval [0.7692, 0.9465] and block interval [0.7954, 0.9153]; IF recall
-is 0.4211 with intervals [0.3129, 0.5569] and [0.2496, 0.5714]. The paired
-classifier-minus-IF recall difference is 0.4386, with corresponding intervals
-[0.3056, 0.5641] and [0.3098, 0.5882]. The pure-classifier policy has exactly
-zero difference from the classifier in every replicate, as expected from its
-identical ranking. These intervals condition on chosen models/current data,
-exclude full selection uncertainty and do not constitute significance tests
-or proof of long-term stability. C's full evidence is c_extensions.json; its
-three extension figures should form a compact panel during later typesetting.
-
-### Handbook: history value, relations and incomplete context
-
-The four static views share 145,315 validation transactions and 1,291 frauds;
-every 1% list contains K=1,454 records.
-
-| View | LR AP | LR TP@1% | IF AP | IF TP@1% |
-|---|---:|---:|---:|---:|
-| Current transaction | 0.255353 | 331 | 0.153913 | 324 |
-| Customer history | 0.218989 | 348 | 0.051731 | 225 |
-| Terminal history | 0.235494 | 325 | 0.019456 | 42 |
-| Both histories | 0.208312 | 342 | 0.027708 | 124 |
-
-History does not uniformly improve AP: customer history raises LR's budgeted
-detection from 331 to 348, while both-history LR detects 342 with lower AP
-than transaction-only LR. Both-history remains the predeclared reference.
-Adding relationship features reduces LR detections from 342 to 334 and IF
-detections from 124 to 82. These negative increments are retained.
-
-With 30% missing history, fixed IF detects 74–82 frauds across seeds, compared
-with 124 using full history. LR AP falls to 0.178961–0.195633, while its
-TP@1% is 349–351 rather than 342. Whole-ranking quality and local review yield
-therefore respond differently; this does not establish that losing data improves
-the model. Of all validation transactions, 145,296 involve seen customers and
-terminals; only 19 involve new customers and none are fraudulent. New-terminal
-groups are empty, so this experiment cannot estimate cold-start fraud detection
-or support demographic-fairness claims.
-
-For the scheduled E11 comparison, pooled validation AP is 0.208312 for static
-LR, 0.212765 for weekly zero-delay updates, 0.210970 with one-day delay, and
-0.204373 with seven-day delay. These are development-time diagnostics using
-only legally available past labels; test-time updating is not performed.
-The [B context results](../results/tables/handbook_b.json),
-[C ablation/stress results](../results/tables/handbook_c.json) and
-[A rolling results](../results/tables/handbook_a.json) preserve the full conditions.
-Data and partitions match A's handoff; B/C use the same feature definitions.
-Full Handbook rule/mechanism diagnosis remains pending D-N1.
-
-### PaySim lightweight external validation
-
-The fixed sample has 127,377 validation records, 64 frauds and K=1,274 at 1%.
-
-| Reference | AP | TP@1% |
-|---|---:|---:|
-| Amount descending | 0.002458 | 6 |
-| Weighted LR | 0.002751 | 6 |
-| IF256 | 0.002367 | 4 |
-
-These low detection counts are retained rather than interpreted as external
-confirmation of strong performance. This check uses limited decision-time
-fields and simulated fraud. Different class prevalences and mechanisms prevent
-a pooled AP across datasets. The [PaySim audit/results](../results/tables/paysim_a.json)
-record sampling, exclusions and all budgets; held-out scores remain pending.
-
-## 6. Final test and error analysis — pending A7/A8
-
-No formal test scores are inserted into this draft. After the group freeze, A
-must publish the common overall, group, combination, time-window and fixed-rule
-tables. B/C/D then attach traceable cases and update this section together.
-The new E04 validation cases have traceable row IDs and fixed-model ranks;
-they do not substitute for the final cases or justify selection on test errors.
-
-## 7. Limitations and validation-stage conclusion
-
-ULB's short observation period, few frauds and one chronological split limit
-generalization. Handbook's designed mechanisms, insufficient cold-start positives,
-and the sampled PaySim reference further limit transfer to real deployments.
-Validation choices, including supervised feature selection and
-label-based quota selection, must be disclosed. Cluster stability is imperfect;
-anomaly scores need not prioritize known fraud. Probabilities are not calibrated.
-Rule count/lift gates are not multiple-testing corrections. Anonymous features
-prevent concrete business narratives; observed associations are not causal.
-
-The ULB evidence favors the selected classifier under the declared review
-task and provides no same-budget combination gain. Context and relationship
-features show negative as well as positive local changes on Handbook, and the
-PaySim check does not establish strong external detection. Rules add associations but
-do not yet explain which final-test errors they cover. These are validation
-conclusions, awaiting frozen held-out evaluation.
-
-## Sources and disclosures — outside planned main-text page count
-
-- A: [data provenance/splits](../data/README.md), [shared validation](../results/tables/a_team_validation.json), [Handbook/E11](../results/tables/handbook_a.json), [PaySim](../results/tables/paysim_a.json).
-- B: [classification methods, validation prose and review notes](B_CLASSIFICATION.md), [ULB extensions](../results/tables/b_extensions.json), [Handbook classification](../results/tables/handbook_b.json).
-- C: [methods, caveats and figures](C_IMPROVEMENTS.md), [ULB reliability](../results/tables/c_extensions.json), [Handbook ablation/stress](../results/tables/handbook_c.json).
-- D: [methods, protocol and validation findings](D_VALIDATION_RESULTS.md), [rule manifest](d_validation/manifest.json), [common-environment freeze](../results/tables/d_freeze.json), [baseline reproduction](../results/tables/d_g1_reproduction.json).
-- Data attribution: [ULB/Worldline Zenodo archive](https://zenodo.org/records/7395559), [Fraud Detection Handbook simulator](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/SimulatedDataset.html), [author's PaySim release](https://www.kaggle.com/datasets/ealaxi/paysim1). Pinned versions and licenses are recorded in the linked data/results handoffs.
-
-Figure plan: C's validation PR/budget figure, exactly-K complementarity figure
-and group figure; final versions must come from A8/C7 with split-labelled
-captions. Do not use current validation figures as final test evidence.
-
-A/B/C/D source records disclose Codex assistance in implementation/checks and
-analysis. This integration used Codex to compile their existing material; authors
-must review their technical content and confirm the complete final disclosures.
-No member names, student IDs or unreported collaboration details are invented.
+| ULB, cleaned | 170,235 / 342 | 56,745 / 57 | 56,746 / 74 |
+| Handbook | 292,139 / 1,752 | 145,315 / 1,291 | 145,739 / 1,280 |
+| PaySim sample | 379,109 / 326 | 127,377 / 64 | 128,873 / 413 |
+
+The Handbook data are generated with the pinned public simulator [2]: 5,000 customers, 10,000 terminals, 60 days and fixed seeds. Days 0–29 train the static models, days 30–44 support development, and days 45–59 form the test. Current features are Amount and sine/cosine time encodings. Customer and terminal histories use preceding 1-day and 7-day counts, mean amounts and availability indicators; customer features also compare the current amount with previous spending. The four views have 3, 13, 9 and 19 features. Histories use $[t-w,t)$, so transactions at the same timestamp cannot enter one another's history. IDs support joins and grouping; they are excluded from model features.
+
+PaySim is a synthetic mobile-money dataset [3,4]. We stream the author's v2 ZIP and retain a fixed, label-independent approximately 10% sample: 635,359 of 6,362,620 source records. Time steps remain intact across the chronological split. Models use requested Amount and one-hot transaction type; balance fields, IDs and the system flag are excluded. The three datasets are fitted and evaluated separately.
+
+## 3.2 Experimental sequence
+
+The pipeline is acquisition and audit → chronological partitioning → training and bounded development → frozen models and policies → test scoring → interpretation. Configuration files record the source data, seeds, parameters, feature views, quotas, rule bins and thresholds. Static models keep their original training fit. Development-only rolling models are saved before testing; test transactions update past-event context, while labels remain outside model fitting.
+
+\clearpage
+
+## 3.3 Classification, clustering and anomaly detection
+
+**Classification.** ULB compares logistic regression (LR), a decision tree, Gaussian naive Bayes and a 100-tree random forest, plus weighted and randomly undersampled LR. LR learns linear log-odds; tree methods learn feature splits, and naive Bayes models class-conditional feature distributions. LR and naive Bayes use StandardScaler; trees use unscaled inputs. The weighted LR uses balanced class weights, $w_c=N/(2N_c)$. Undersampling retains all 342 training frauds and 342 randomly chosen normal transactions; its scaler is fitted on those 684 records. Model seeds are 42. Selection uses validation TP at 1%, then AP, then method name. Weighted LR is the selected classifier.
+
+**Clustering and anomaly scores.** K-means defines transaction groups and ranks Euclidean distance to the assigned centroid after scaling. Training silhouettes select $k=3$ from 3/5/8, with 10 initializations. Isolation Forest isolates points through randomized tree splits and ranks $-\mathrm{score\_samples}(x)$ [6]. Shorter isolation paths indicate greater abnormality. A bounded second round compares six K-means representations, each with raw and within-cluster relative distance, and eight IF settings. An inner chronological 80/20 split of the original training data evaluates seeds 42/43/44. Mean TP at 1%, then AP, selects the family representatives. The retained IF uses 100 trees and 4,096 sampled training records per tree. All 20 scores remain in the test output.
+
+**Review combinations.** Quotas are 0/25/50/75/100%. The first ranking contributes $\lfloor K\alpha\rfloor$ transactions; the second fills the list while skipping duplicates. Inner training data choose the anomaly-pair quota. Validation chooses the classifier/IF quota, preferring a pure method on a tie. The frozen policies are pure IF for the anomaly pair and pure weighted LR for the classifier comparison.
+
+## 3.4 Context, rules and evaluation
+
+Handbook compares the same LR and IF256 across four historical views and a view with three 7-day relation features: customer terminal degree, terminal customer degree and a new-pair indicator. Development LR updates occur on days 30, 37 and 44 using a 30-day window, with label delays of 0/1/7 days [5]. The final snapshots are held fixed in test. History stress tests omit 0/10/30% of source events from subsequent histories with seeds 42/43/44; the current transactions and labels remain present.
+
+A bounded Apriori search builds short feature-bin antecedents. Rules use three training-fitted bins, equal-width or equal-frequency, and at most two antecedent items followed by Class=1. Candidate rules need coverage at least 20, at least 5 frauds and lift greater than 1 in both training and validation. The binning scheme retaining more rules wins, with equal-frequency preferred on a tie. ULB uses Amount plus four V features selected by training-label correlation; Handbook uses amount, relative customer amount and customer/terminal 7-day counts. The frozen sets have 21 and 19 rules, respectively.
+
+With $F=\sum_i y_i$, we report $P@K=TP/K$, $R@K=TP/F$ and non-interpolated AP [7], plus fraud-amount coverage and hypothetical loss $L=FP+rFN$ for $r=10,50,100$. Paired row bootstrap uses 500 draws; a 200-draw, 30-minute-block analysis tests temporal sensitivity. Intervals condition on the fitted models. Rule confidence is covered frauds / covered rows; lift divides confidence by prevalence. Overlapping coverage is counted once.
+
+\clearpage
+
+# 4. Experiments and results
+
+## 4.1 ULB: detection at the same review capacity
+
+**Table 2. Formal ULB test, 56,746 transactions and 74 frauds; K=568.**
+
+| Method | AP | TP | FP | Recall (%) | Precision (%) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| LR | 0.6909 | 64 | 504 | 86.49 | 11.27 |
+| Decision tree | 0.3012 | 45 | 523 | 60.81 | 7.92 |
+| Gaussian NB | 0.0578 | 44 | 524 | 59.46 | 7.75 |
+| Random forest | 0.7845 | 64 | 504 | 86.49 | 11.27 |
+| Weighted LR (selected) | 0.7475 | 64 | 504 | 86.49 | 11.27 |
+| Undersampled LR | 0.3545 | 63 | 505 | 85.14 | 11.09 |
+| Cluster distance | 0.0460 | 37 | 531 | 50.00 | 6.51 |
+| IF4096 (selected) | 0.0660 | 41 | 527 | 55.41 | 7.22 |
+
+Weighted LR detects 64 frauds, leaving 10 missed frauds and 504 normal transactions in the review list. IF4096 detects 41; centroid distance detects 37. Relative to the original IF256 test result of 26 detections, the frozen larger-sample IF gains 15 at this budget. Classification retains the larger advantage: the weighted LR recall is 86.49%, compared with 55.41% for IF4096.
+
+Random forest has the highest test AP in this bounded comparison, but ties weighted LR in TP at 1%. We retain the classifier selected before test. The original LR also reaches 64 detections; class weighting improves AP from 0.6909 to 0.7475 without improving TP at this capacity. Undersampling loses one detection and substantially lowers AP. Thus the imbalance strategy affects the ranking beyond the single operating point.
+
+![ULB test recall and precision across the four fixed budgets. The methods and models are frozen; each curve uses the same transactions at each budget.](../results/figures/report_budget.pdf){width=100%}
+
+The smallest budget separates the methods sharply: weighted LR finds 50 frauds within 57 reviews, whereas IF4096 finds none. At 0.5%, LR already finds 63; increasing to 1% adds one fraud at 284 additional reviews. Accuracy alone would obscure this decision because normal transactions dominate the test set. A random list of 568 transactions has an expected 0.74 frauds, so the useful comparison concerns the concentration of fraud within the review capacity.
+
+\clearpage
+
+## 4.2 Complementarity, groups and time
+
+At 1%, the classifier and IF lists share 100 transactions and 40 detected frauds. The classifier contributes 24 additional frauds and IF contributes one. Their union would detect 65 frauds while reviewing 1,036 transactions. The frozen 100% classifier quota reviews 568 and detects 64. This distinguishes useful complementary information from an improvement already achieved under the same capacity. The anomaly-only policy likewise remains the preselected pure IF endpoint.
+
+K-means groups provide a second view of the ranking. Table 3 allocates each method's single global list across the same groups; its review counts sum to 568 for each method.
+
+**Table 3. ULB test groups and allocation of the global 1% review list.**
+
+| Cluster | Rows | Frauds | LR reviews / TP | IF reviews / TP |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 8411 | 16 | 54 / 15 | 208 / 13 |
+| 1 | 48335 | 58 | 514 / 49 | 360 / 28 |
+| 2 | 0 | 0 | 0 / 0 | 0 / 0 |
+
+The classifier spends only 54 reviews in cluster 0 and finds 15 of its 16 frauds. IF spends 208 reviews there and finds 13. In cluster 1, the classifier finds 49 of 58 frauds, compared with IF's 28. This supports the overall comparison within both occupied groups. Cluster 2 is empty in the test partition and remains explicitly empty in the output. The groups describe anonymous feature geometry rather than customer categories.
+
+A separate question is how many alerts a fixed validation threshold produces later. Table 4 applies the original thresholds without changing them.
+
+**Table 4. Frozen validation thresholds on the ULB test segment.**
+
+| Method | Frozen threshold | Reviews | TP | Review rate (%) |
+| --- | ---: | ---: | ---: | ---: |
+| Weighted LR | 0.8043 | 453 | 63 | 0.80 |
+| IF4096 | 0.5318 | 374 | 36 | 0.66 |
+
+The LR threshold produces 453 reviews and detects 63 frauds, compared with 568 and 64 under test top-K. The IF threshold produces 374 reviews and detects 36, compared with 568 and 41. Both review rates fall below 1%. A score threshold therefore carries a different workload interpretation from a capacity rule, even when calibrated to 1% on validation.
+
+Hourly diagnostics use the same relative-time origin and frozen models. Window-specific top-K allocates a separate capacity inside each hour, whereas the whole-segment list can allocate more reviews to a busier or higher-scoring interval. We keep those two allocations separate in the result files. ULB covers about two days, with fewer than eight hours in the final segment, so these windows describe short-run variation.
+
+\clearpage
+
+## 4.3 Label availability and model interpretation
+
+For the label experiment, each training class is randomly permuted, then nested 5/10/25/50/100% subsets are selected using the ceiling of each class count. Hidden labels are excluded from LR fitting. This stratified annotation simulation uses the original training labels to construct its subsets. LR sees the labeled subset; the fixed IF256 reference sees all training features. Table 5 retains every predeclared condition.
+
+**Table 5. ULB label experiment on the formal test set; three mask seeds.**
+
+| Labels visible | Mean test AP | Three-seed AP range | TP range at 1% |
+| --- | ---: | ---: | ---: |
+| 5% | 0.5370 | 0.4397–0.7059 | 55–58 |
+| 10% | 0.5958 | 0.5339–0.6786 | 55–60 |
+| 25% | 0.7744 | 0.7613–0.7814 | 60–63 |
+| 50% | 0.7792 | 0.7524–0.7928 | 63–64 |
+| 100% | 0.7475 | 0.7475–0.7475 | 64–64 |
+
+![ULB formal test: label-availability curves and the fixed LR's eight largest permutation effects. Shading is the three-seed range; error bars on importance are standard deviations over five permutations.](../results/figures/report_supervision.pdf){width=100%}
+
+The 5% setting has an AP range of 0.4397–0.7059, showing sensitivity to the few sampled frauds. By 25%, all three fits have AP above 0.76, and TP ranges from 60 to 63. Full labels recover 64 frauds, while the mean AP at 25% and 50% exceeds the full-label fit on this segment. More labels increase TP here, while AP is not monotonic across the fitted subsets.
+
+Amount has the largest permutation effect: shuffling it lowers test AP by 0.3695 on average; V14 and V2 follow at approximately 0.1503 and 0.0879. This identifies the fitted model's dependence on inputs. The deterministic error samples include a false positive at rank 568 (score 0.7573), a missed fraud at rank 783 (0.6875), and a normal transaction ranked third (score approximately 1.0000). Raising capacity could include the rank-783 fraud, while the high-ranked false positive remains a confident error. Scores are used for ranking; this experiment does not calibrate them as event probabilities.
+
+\clearpage
+
+## 4.4 Fraud counts, amounts, costs and uncertainty
+
+At 1%, weighted LR covers 86.49% of fraud transactions and 69.59% of their amount. IF4096 covers 55.41% and 47.51%; cluster distance covers 50.00% and 10.71%. The descending-Amount reference finds only 3 frauds but covers 46.56% of fraud amount. The test fraud amount totals 7,727.67 units. Amount coverage therefore changes the interpretation of a count-based ranking without replacing the transaction-review task.
+
+![ULB formal test: count and amount coverage at 1%, and loss across budgets for the fixed FN:FP cost ratio of 50:1.](../results/figures/report_amount.pdf){width=100%}
+
+Under the 50:1 cost scenario, weighted LR has loss 771 at a 0.5% budget and 1,004 at 1%. The larger list gains one detected fraud but adds many normal reviews. With a different assumed error cost, the balance changes. These calculations compare the declared scenarios; the primary experimental budget stays at 1%. Fraud amount is a transaction quantity rather than a measured recovery amount.
+
+**Table 6. Paired test differences, weighted LR minus IF4096 at 1%.**
+
+| Resampling | AP gap | 95% interval | Recall gap (pp) | 95% interval (pp) |
+| --- | ---: | ---: | ---: | ---: |
+| Paired rows (500) | 0.6815 | [0.5763, 0.7710] | 31.08 | [20.83, 41.78] |
+| Time blocks (200) | 0.6815 | [0.5469, 0.7926] | 31.08 | [18.69, 44.24] |
+
+Both resampling schemes retain a positive LR advantage in AP and recall. The block analysis gives wider recall limits, consistent with less independent information when transactions are grouped in time. The intervals describe this fixed-model comparison on the observed test segment. The small test fraud count also makes individual detections visible: one of 74 frauds corresponds to about 1.35 recall percentage points.
+
+The frozen classifier/IF policy equals LR, so its paired AP and recall differences are zero in every resampling draw. The extra anomaly scores leave the selected review list unchanged.
+
+\clearpage
+
+## 4.5 Historical and relationship context
+
+The Handbook test compares identical model families across controlled input views. Each method reviews 1,458 of 145,739 transactions, containing 1,280 frauds. The first four views add histories to current Amount and cyclical time; the fifth adds 7-day customer/terminal degrees and a new-pair flag.
+
+**Table 7. Handbook formal test, static models and the same 1% budget.**
+
+| Input view | LR AP | LR TP | IF AP | IF TP |
+| --- | ---: | ---: | ---: | ---: |
+| Current transaction | 0.2692 | 346 | 0.1596 | 334 |
+| + Customer history | 0.2233 | 339 | 0.0529 | 222 |
+| + Terminal history | 0.2500 | 338 | 0.0205 | 55 |
+| + Both histories | 0.2130 | 334 | 0.0294 | 139 |
+| Both + relations | 0.2064 | 333 | 0.0229 | 104 |
+
+![Handbook formal test: AP and recall for the same LR and IF settings across feature views. “+Relation” extends the both-history view.](../results/figures/report_context.pdf){width=100%}
+
+Current-transaction LR has AP 0.2692 and detects 346 frauds. Adding both histories lowers AP to 0.2130 and detections to 334. The relational extension lowers them further to 0.2064 and 333. Customer-only and terminal-only LR also remain below the current-only model. The descending-Amount reference detects the same 346 frauds as current LR, suggesting a strong amount-driven component in this simulator setting.
+
+The IF results change more sharply. Current-only IF detects 334 frauds, customer-history IF 222, terminal-history IF 55 and both-history IF 139. Additional relational features reduce both-history IF to 104. Adding dimensions alters what is unusual: atypical entity activity need not coincide with the labeled fraud patterns. Historical counts and amounts describe behavior, while some simulator fraud comes from compromised terminals whose activity may otherwise look ordinary.
+
+The controlled comparison supports a practical finding: the value of context depends on the information it encodes and the model using it. Here, a compact current-transaction view preserves useful amount structure; the tested historical and relational summaries do not improve detection. The mechanism breakdown in Section 4.7 helps explain which fraud types remain missed.
+
+\clearpage
+
+## 4.6 Reliability: delayed labels, missing history and new entities
+
+Weekly LR models are fitted during development using only labels available at each cutoff. The saved day-44 snapshots then score the test without further updates. Table 8 compares them with the static both-history LR.
+
+**Table 8. Handbook test using pre-test rolling snapshots, K=1,458.**
+
+| History LR snapshot | AP | TP at 1% | Recall (%) |
+| --- | ---: | ---: | ---: |
+| Static | 0.2130 | 334 | 26.09 |
+| Weekly, delay 0 days | 0.2134 | 341 | 26.64 |
+| Weekly, delay 1 day | 0.2138 | 339 | 26.48 |
+| Weekly, delay 7 days | 0.2156 | 340 | 26.56 |
+
+The 0-day model adds seven detections over static, the 1-day model adds five and the 7-day model adds six. AP changes are small and are not ordered monotonically by delay. The tested update policy offers a modest improvement over static history LR, but it still detects fewer than the 346 frauds found by current-only LR.
+
+![Handbook formal test under missing event histories. Each condition rebuilds past-only features for the same test transactions and scores the same frozen models. Shading is the range across seeds 42/43/44.](../results/figures/report_stress.pdf){width=100%}
+
+At 30% missing history, both-history IF falls from 139 detections to 77–82; AP falls from 0.0294 to approximately 0.0204–0.0209. LR AP also falls, from 0.2130 to 0.1927–0.1989, while its fixed-budget detections remain 334–337. AP and Recall@K thus respond differently to the same information loss. The IF ordering is more sensitive to incomplete event histories in this experiment.
+
+The cold-start partition is defined by whether a customer and terminal appeared in initial training. Of the test transactions, 145,713 involve entities seen in training; all 1,280 frauds occur there. Only 26 transactions involve new customers, with no fraud, and the new-terminal groups are empty. The group output therefore documents exposure and history availability, but provides no fraud-positive new-entity test. A fraud-positive new-entity dataset is the next useful cold-start test.
+
+\clearpage
+
+## 4.7 Rules, mechanism diagnostics and PaySim
+
+The 21 ULB rules jointly cover 56,053 of 56,746 test transactions and all 74 frauds. They also cover all 10 LR false negatives and all 504 LR false positives. Their broad reach makes them useful for inspecting errors, but a separate capacity-aware ordering would be needed to turn that coverage into alerts. The first training-ordered rule alone covers 3,846 transactions and 52 frauds; later rules add coverage with substantial overlap.
+
+Handbook's 19 rules cover 120,751 transactions and 1,122 frauds. One rule combines Amount at least 65.22 with spending at least about 1.20 times the customer’s preceding 7-day mean; it covers 28,997 transactions and 514 frauds. Table 9 separates the mutually exclusive final simulator scenario codes. Later simulator scenarios can overwrite earlier codes, so the table follows the stored final labels.
+
+**Table 9. Handbook fraud mechanisms; TP from the global 1% history-model lists.**
+
+| Final scenario | Frauds | History LR TP | History IF TP | Covered by rules |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | 73 | 70 | 7 | 73 |
+| 2 | 800 | 4 | 9 | 650 |
+| 3 | 407 | 260 | 123 | 399 |
+
+History LR finds 70/73 scenario-1 frauds but only 4/800 in scenario 2; history IF finds 7 and 9, respectively. In scenario 3, LR finds 260/407 and IF 123. The main blind spot is the terminal-compromise scenario, which the selected unlabeled activity summaries capture poorly. Mechanism labels enter this analysis after scoring.
+
+PaySim uses three separately fitted, fixed comparisons on its declared sample. Its 128,873 test transactions contain 413 frauds; K=1,289.
+
+**Table 10. PaySim formal test.**
+
+| PaySim method | AP | TP | Precision (%) | Recall (%) |
+| --- | ---: | ---: | ---: | ---: |
+| Amount | 0.0798 | 94 | 7.29 | 22.76 |
+| Weighted LR | 0.0634 | 80 | 6.21 | 19.37 |
+| Fixed IF | 0.0447 | 102 | 7.91 | 24.70 |
+
+The amount ranking leads AP, while IF detects the most fraud at 1%. LR detects fewer than either. This repeats the broader lesson that whole-ranking quality and the chosen review capacity answer different questions across data sources.
+
+# 5. Conclusion and limitations
+
+The strongest ULB fixed-budget result comes from supervised ranking: weighted LR detects 64/74 frauds at 1%. Its amount coverage is lower than its count recall, and its development-selected combination yields no additional same-capacity detections. On Handbook, the tested histories and relations reduce static performance; weekly updating gives a small recovery, and incomplete history harms IF more strongly. Rules reveal broad associations and mechanism-specific blind spots.
+
+The evidence comes from one chronological split with only 74 ULB test frauds and from two simulated sources. Label masks use known class proportions, costs are assumed, and the new-entity groups contain no test fraud. These settings define the scope of the findings. Future work should prioritize fraud-positive new-entity evaluation, calibrated review costs and additional time periods.
+
+\label{maintextend}
+\clearpage
+
+# 6. Disclosures
+
+The project used OpenAI Codex/ChatGPT assistance for implementation and refactoring, automated checks, experiment execution, numerical verification, figure generation, repository organization and preparation of this report. The report's tables and plots are based on the stored experiment outputs. Assistance also included locating and checking the data and documentation references listed below.
+
+Each member should complete the name/ID fields and confirm their individual AIGC use and any external collaborators before submission. Sources for the datasets, simulator and software are credited below.
+
+# References
+
+[1] L. Liu. *Credit Card Fraud Detection*, Zenodo, v1, 2022. Archive of the ULB/Worldline dataset. DOI: [10.5281/zenodo.7395559](https://doi.org/10.5281/zenodo.7395559).
+
+[2] Fraud Detection Handbook authors. *Transaction data simulator*, in *Reproducible Machine Learning for Credit Card Fraud Detection—Practical Handbook*. [Online chapter](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/SimulatedDataset.html).
+
+[3] E. A. Lopez-Rojas, A. Elmir and S. Axelsson. “PaySim: A financial mobile money simulator for fraud detection.” *28th European Modeling and Simulation Symposium*, 2016. Citation and simulator provided by the [author's repository](https://github.com/EdgarLopezPhD/PaySim).
+
+[4] E. Lopez-Rojas. *Synthetic Financial Datasets for Fraud Detection*, PaySim1 v2, Kaggle. [Dataset page](https://www.kaggle.com/datasets/ealaxi/paysim1).
+
+[5] Fraud Detection Handbook authors. *Validation strategies*. [Online chapter](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_5_ModelValidationAndSelection/ValidationStrategies.html).
+
+[6] Scikit-learn developers. *IsolationForest API documentation*. [Software documentation](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html).
+
+[7] Scikit-learn developers. *average_precision_score API documentation*. [Software documentation](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html).
+
+Online sources checked 18 November 2026. Main-text pages: 1–\pageref{maintextend}. Disclosures, references and appendices are outside the main-text page count.
+
+\clearpage
+
+# Appendix A. Parameters and numerical sources
+
+## A.1 Reproduction
+
+The environment is Python 3.12.14 with the exact dependency pins in requirements.txt. A fresh clone can download ULB, generate the pinned Handbook data, obtain the author's PaySim v2 ZIP, and run:
+
+```bash
+python code/main.py --reproduce-final --output data/reproduction
+```
+
+The independent Linux run rebuilds all snapshots and compares the published tests. The supplementary ULB random forest has AP 0.7840486 on Linux versus 0.7845347 in the original run; eight amount-group allocation entries differ by 1–5 reviews, while overall budget/TP/FP and amount coverage match. The output records those differences. Following the structural refactor and directory reorganization, local scoring of the original snapshots reproduced all eight aggregate tables numerically, all 48 prediction/case CSVs byte-for-byte, and all 17 test PNGs byte-for-byte. The 98 public checks and 11 classification checks pass.
+
+The first formal run stopped at a cold-start aggregation call. The missing budget argument was corrected and the same frozen models were used for the successful run. The ULB prediction files match across those runs. These records are retained with the freeze and reproduction evidence.
+
+## A.2 Bounded settings
+
+| Component | Fixed settings and selection |
+|---|---|
+| ULB LR | max_iter=1000, C=1, lbfgs; original / balanced / 1:1 undersampling; seed 42 |
+| ULB tree / naive Bayes | DecisionTreeClassifier seed 42; GaussianNB defaults |
+| ULB random forest | 100 trees, seed 42, one job |
+| K-means structure | k=3/5/8, seeds 42/43, 1,000-row silhouette/ARI sample; selected k=3, n_init=10 |
+| K-means representations | Standard / no Time / log Amount / both changes / Robust / both changes + Robust; raw and training-IQR relative distances |
+| IF variants | Base; no Time; log Amount; both changes; samples 1,024/4,096; 300 trees; combined transform + 300 trees + 1,024 samples |
+| IF selection | Inner chronological train split; seeds 42/43/44; retained base transform, 100 trees, 4,096 samples, contamination=auto |
+| E03 labels | 5/10/25/50/100%; class-stratified nested masks, seeds 42/43/44; LR seed 42, fixed IF256 reference |
+| E05 permutation | Fixed full-label weighted LR, AP, 30 features × 5 repeats, seed 42 |
+| Rules | Three bins; maximum 2 antecedents; coverage >=20, frauds >=5, lift >1 in training and validation; at most 50 candidates per scheme |
+| Handbook | Fixed LR and 100-tree IF256; four views plus 3 relation features; seed 42 |
+| E11 / E14 | Updates every 7 days in development, 30-day window, 0/1/7-day delay; missing history 0/10/30%, three seeds |
+| PaySim | Fixed label-independent sample, one-hot type and Amount, weighted LR and IF256; separate amount ranking |
+
+\clearpage
+
+## A.3 Result-to-source map
+
+| Report content | Canonical source in results/tables/ |
+|---|---|
+| Dataset versions, parameters, frozen thresholds | group_freeze.json; handbook_a.json; paysim_a.json |
+| ULB methods and fixed-threshold test | ulb_test.json |
+| Cluster allocation and same-budget overlap | c_test.json |
+| All label masks and test importance repeats | b_extensions_test.json |
+| Amount, costs, 500 row / 200 block draws | c_extensions_test.json |
+| History, relation, rolling, cold-start and missing-history tests | handbook_test.json |
+| Semantic rule intervals, union and mechanism counts | handbook_d_test.json |
+| PaySim formal comparison | paysim_test.json |
+| Test consistency and independent reconstruction | project_test.json; reproduction.json |
+
+Figures 1–5 are rebuilt directly from these formal JSON files by report/build_report.py. Their PDF versions are stored in results/figures/ with the prefix report_. The underlying scientific outputs are unchanged. Every reported method uses the original split and its predeclared fit policy; all conditions, including unsuccessful changes, remain available in the JSON tables.
+
+The main text emphasizes the primary comparison and the most informative controlled contrasts. Full 20-score ULB ablations, all budgets, three-seed conditions, time windows, individual rule metrics and error associations are supplied by the same source files. Row-level predictions and fitted models remain in the local data/ directory; a fresh clone rebuilds them from the documented sources.
+
+The original ULB validation had been examined before the second C protocol. Its inner training split limits further use of that validation segment for the anomaly selection, and this development history remains part of the method record.
