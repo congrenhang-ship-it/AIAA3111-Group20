@@ -1,4 +1,3 @@
-# 负责人 A：维护本地数据、环境和临时文件的排除规则。
 # Python environments and caches
 .venv/
 venv/
@@ -6,6 +5,8 @@ __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Local source and processed data; keep data/README.md tracked
 /data/*

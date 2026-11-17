@@ -428,7 +428,7 @@ conclusions, awaiting frozen held-out evaluation.
 - A: [data provenance/splits](../data/README.md), [shared validation](../results/tables/a_team_validation.json), [Handbook/E11](../results/tables/handbook_a.json), [PaySim](../results/tables/paysim_a.json).
 - B: [classification methods, validation prose and review notes](B_CLASSIFICATION.md), [ULB extensions](../results/tables/b_extensions.json), [Handbook classification](../results/tables/handbook_b.json).
 - C: [methods, caveats and figures](C_IMPROVEMENTS.md), [ULB reliability](../results/tables/c_extensions.json), [Handbook ablation/stress](../results/tables/handbook_c.json).
-- D: [protocol](D_VALIDATION_PROTOCOL.md), [validation findings](D_VALIDATION_RESULTS.md), [rule manifest](d_validation/manifest.json), [common-environment record](D_COMMON_ENVIRONMENT.md).
+- D: [methods, protocol and validation findings](D_VALIDATION_RESULTS.md), [rule manifest](d_validation/manifest.json), [common-environment freeze](../results/tables/d_freeze.json), [baseline reproduction](../results/tables/d_g1_reproduction.json).
 - Data attribution: [ULB/Worldline Zenodo archive](https://zenodo.org/records/7395559), [Fraud Detection Handbook simulator](https://fraud-detection-handbook.github.io/fraud-detection-handbook/Chapter_3_GettingStarted/SimulatedDataset.html), [author's PaySim release](https://www.kaggle.com/datasets/ealaxi/paysim1). Pinned versions and licenses are recorded in the linked data/results handoffs.
 
 Figure plan: C's validation PR/budget figure, exactly-K complementarity figure

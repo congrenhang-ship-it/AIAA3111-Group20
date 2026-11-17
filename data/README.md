@@ -1,8 +1,8 @@
 # Data preparation
 
-交接文档 / Handoff guide · [中文](../docs/TASK_A.zh-CN.md) · [English](../docs/TASK_A.en.md)
+数据来源、下载、规模和划分。执行入口统一见 [README](../README.md)。
 
-负责人 A：维护数据获取、版本、格式、校验值与划分说明。B/C/D 按此获取同一份数据。
+三套数据各自训练和评价，不混合记录或平均跨数据集 AP。
 
 ## 每位组员独立准备 ULB 数据
 
@@ -56,6 +56,40 @@ python -m unittest discover -s tests -v
 分段统计仅核对输入与标签计数。模型、分箱、缩放及重采样由各模块在训练阶段拟合。参数和方法在验证阶段确定，冻结后才评分测试集。
 
 
-## Handbook / PaySim
+## Handbook
 
-Handbook 可运行 python code/main.py --prepare-handbook --output data/handbook/v1 自动获取并校验上游生成器，生成本地 CSV 和 manifest。PaySim 使用作者 Kaggle v2 ZIP，保存至 data/paysim_v2.zip。完整生成与下载命令、字段规则和 B/C/D 调用见上方中英文交接文档。已验证的数据和划分指纹见 [Handbook](../results/tables/handbook_a.json) 与 [PaySim](../results/tables/paysim_a.json)。
+使用固定版本的公开模拟生成器，60 天、5,000 客户、10,000 终端，主种子 42（客户/终端种子 42/43）。生成器来源、版本、许可、配置和校验值见 [handbook_a.json](../results/tables/handbook_a.json)。
+
+```bash
+python code/main.py --prepare-handbook --output data/handbook/v1
+```
+
+入口自动下载并校验上游源码，生成 transactions.csv 和 manifest.json。重复运行使用新目录，后续命令传 --handbook-dir。训练/验证/测试为 30/15/15 天，共 583,193 笔：
+
+| 划分 | 笔数 | 欺诈数 |
+|---|---:|---:|
+| 训练 | 292,139 | 1,752 |
+| 验证 | 145,315 | 1,291 |
+| 测试 | 145,739 | 1,280 |
+
+历史只读取 [t−窗口, t)，同时间交易不可互见。实体 ID、标签及生成机制不作为模型输入。E11 开发期更新日为第 30、37、44 天，最终快照和阈值在测试前冻结；测试期不更新模型。模拟机制只用于事后解释，不能推断现实泛化。
+
+## PaySim
+
+使用[作者 Kaggle v2 ZIP](https://www.kaggle.com/datasets/ealaxi/paysim1)，保留 ZIP 原始字节：
+
+```bash
+curl --fail --location --retry 3 'https://www.kaggle.com/api/v1/datasets/download/ealaxi/paysim1?datasetVersionNumber=2' -o data/paysim_v2.zip
+```
+
+Windows PowerShell 使用 curl.exe。也可从作者页面手动下载相同 ZIP，再用 --paysim-archive 指定路径。
+
+- ZIP：186,385,561 字节。
+- SHA-256：f7eef9ffad5cfa64a034143a5c9b30491d189420b273d5ad5723ca40b596613d。
+- 流式读取完整文件后按固定、与标签无关的规则取样；不反复抽样选好结果。
+- 排除作者说明不宜用于欺诈检测的余额字段，固定对照仅使用交易类型与金额。
+- 完整抽样、切分、许可和指纹见 [paysim_a.json](../results/tables/paysim_a.json)；这是声明过的抽样实验，不声称用全部原始记录训练。
+
+## 本地文件
+
+原始数据、模型、逐行预测及运行日志不提交 Git。当前正式模型保存在 final_preparation_20261117/，正式预测在 final_test_20261117_r2/，首次中断及重跑证据保留在 final_test_20261117/ 和 final_test_failed_20261117/。这些本地文件不替代新克隆后的独立重建；重建命令见根 README。

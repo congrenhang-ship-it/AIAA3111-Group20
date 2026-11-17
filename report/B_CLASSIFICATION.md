@@ -1,8 +1,6 @@
 # B 分类方法与验证材料
 
-更新：2026-11-16。本文供 D 整合方法与验证部分；全部为 validation，尚无正式 test 结论。
-
-当前状态：main@2750902 已验收 B 的 E03/E05/E10/E13，主线记录 91 项公共检查和 11 项分类检查通过；历史段落中的依赖待复核事项已解除。下文保留原始运行记录，末尾提供 B6 可排版英文正文和 B7 讲解准备。正式测试仍待 A7/G2、A8。
+整理：2026-11-17。本文保存分类方法、历史验证发现及讲解材料；正式测试已完成，结果以 [正式总览](../results/tables/project_test.json)、[ULB](../results/tables/ulb_test.json)、[Handbook](../results/tables/handbook_test.json)及 [标签与解释测试](../results/tables/b_extensions_test.json)为准。下文 validation 数字不能当作 test。
 
 ## 已有 ULB 基线与不平衡对照
 
@@ -75,37 +73,6 @@
 
 新客户组只有 19 笔且无欺诈，新终端相关两组为空；AP/Recall 如实记为 N/A。该样本无法支持冷启动检出能力比较，也不是人口公平性结论，没有重新生成数据来凑群体。四个静态模型的组内 AP、历史可用率和全局名单分配保存在同一汇总。
 
-## 运行、来源与剩余验收
-
-使用现有脚本：
-
-```powershell
-python -X utf8 code/run_b_validation.py --extensions --output data/b_extensions_20261115_r2
-python -X utf8 code/run_b_validation.py --handbook --output data/handbook_b_20261115
-python -X utf8 -m unittest discover -s code -p test_classification.py -v
-```
-
-B 的 11 项检查通过。全仓 85 项中 84 项通过，test_B_reproduction_checks_identity_parameters_and_persistence 在共同依赖版本门槛处拒绝运行；本机仍为 NumPy 2.4.4、pandas 3.0.2、scikit-learn 1.8.0、SciPy 1.17.1，与 A 锁定版本不同。没有绕过该门槛，也没有把全仓检查写成通过。模型环境、代码指纹、模型/掩码哈希和运行命令均保留，最终冻结前需共同环境复核。
-
-本轮修复：Handbook 首次生成遇到 Windows 相对目标重命名失败，使用绝对输出路径后成功，未改 A 的算法；ULB 首次导出遇到相对路径与绝对根目录比较错误，规范输出路径后完整重跑相同条件。结果没有用于调整模型、参数或生成配置。
-
-B-E1/E2/N1/N2 已实现并完成本机正式数据验证，供 A7/D 接入；正式验收还包括共同依赖复核。B6 现有方法和验证稿已可整合，正式 test 数字及 B7 最终核对等待 A7/G2 和 A8。未评分任何测试段。Codex 辅助实现、检查和文字整理，应按实际情况纳入 Disclosures。
-
-## 2026-11-16 指纹修复与 Handbook 共同环境复核
-
-上面的运行环境限制是 11 月 15 日的原始交付记录。此次在共同锁定环境重新运行 Handbook 四个 LR 及冷启动评价，四组指标、金额统计和冷启动汇总与原结果完全一致；新 handbook_b.json 已记录实际环境。B/C 使用同一 `handbook-view-v2-time12` 指纹函数，八个视图指纹完全匹配。该函数仅在计算指纹时规范两列时间编码，不改变模型输入。
-
-88 项公共检查及 11 项 B 检查均通过。Handbook 的 B-N1/N2 共同环境复核已完成；ULB 的 E03/E05 本次未重跑，仍保留其原依赖复核事项。最小修复和跨架构排查证据见 C_IMPROVEMENTS.md 及 handbook_c_readiness.json；无新增模型搜索或正式测试。
-
-
-## 2026-11-16 ULB 统一入口接入与完整验收
-
-E03/E05 已接入 python code/main.py --run-team-validation --output data/team_validation。原独立命令继续复用同一函数；统一入口直接传入 A 的训练/验证划分，不重新加载或划分测试数据。所有模型、15 份掩码及逐行案例保存在运行目录的 b_extensions/；聚合表和组合图位于 aggregate/ 原布局。
-
-在锁定环境完整运行后，15 个条件、掩码哈希及 IF 指标与原交付精确一致；E05 全部 150 个置换数值、案例规则和计数一致。错误案例排名仍为 568/567、1405/1740、35/37。13 个独立 LR 模型及 IF 保存后复评分一致，LR 缩放均值核对为各自的已标注训练子集。91 项公共检查＋11 项 B 检查通过。此前 ULB 待共同环境复核的事项现已完成，A6 和 B-E1/E2 不再列为剩余任务。
-
-统一摘要和 B 汇总已写回原 results/tables/a_team_validation.json、b_extensions.json，pending_extensions=[]；没有增加模型搜索或评分正式测试。B6 正式结果补充、B7 及全组 A7/A8/G3 继续保留。Codex 协助接口接入、验证和记录整理，组员按课程要求核对并披露实际协助。
-
 ## B6 可排版英文正文：方法与验证结果
 
 本节可由 D 分配至报告的 Methods、Validation Results 和 Limitations，而非独立按成员分章。预算表使用本稿已有的六模型对照来源和四视图表；详细条件保留补充材料。以下内容只报告验证结论。
@@ -137,7 +104,7 @@ Cold-start groups are anchored to entities observed in the initial training segm
 | 历史消融、冷启动 | [组合图](../results/figures/handbook_b_ablation.png)、[完整汇总](../results/tables/handbook_b.json) | 四组静态模型，不与 A 的滚动快照混比 |
 | 统一接入与共同环境验收 | [主线记录](../results/tables/a_team_validation.json) | 102 项通过为远程主线验收记录，不是本机新运行的检查 |
 
-2026-11-16 整合更新：本稿的方法、标签/重要性及历史/冷启动验证正文已整合到 Report.md，Poster.md 已同步核心发现；旧的待交付和仅 ULB 范围描述已替换。讲解要点和 A8 后核对清单保留在本稿。B6 的正式测试补充与 B7 的最终核对仍待 A7/A8/G3。
+2026-11-16 整合更新：本稿的方法、标签/重要性及历史/冷启动验证正文已整合到 Report.md，Poster.md 已同步核心发现；旧的待交付和仅 ULB 范围描述已替换。讲解要点和 A8 后核对清单保留在本稿。技术测试及独立复现已完成；最终正文和海报整合仍见 TASKS.md。
 
 ## B7 讲解准备：可核查的回答要点
 
@@ -154,10 +121,48 @@ Cold-start groups are anchored to entities observed in the initial training segm
 | 85.96% recall 意味着模型很准确吗？ | 这是验证段的 49/57，审核了 568 笔，其中 519 笔正常，precision 只有 8.63%；概率也未校准，不能省略误报代价。 |
 | 现在可以报告最终泛化结论吗？ | 尚无 A8 正式测试结果。验证已经用于选择和诊断，不能把验证优势当作独立测试结论。 |
 
-## A8 交付后 B6/B7 的最终核对
+## 报告与海报的最终核对
 
 1. 按 dataset_id、phase=test、数据/特征指纹和冻结版本核对输入；ULB 保持原训练政策，Handbook 明确区分 B 的初始静态模型与 A 的开发期滚动快照。
 2. 对每个预定条件核对 N、欺诈数、K、TP+FP=K、Precision=TP/K、Recall=TP/F；冷启动全局审核分配和 TP 分配必须分别可加总。
 3. 完整报告 E03 五档三种子及固定 IF256，不只选择表现最好的比例；E05 沿用既定置换协议和案例规则，不重新选特征或个案。
 4. 正式图注、正文和海报明确写 test；保留验证材料的历史来源，解释负结果、零正类、空群体和金额覆盖分母的适用边界。
 5. 先与公共汇总逐项对数，再补正式测试讨论与案例；完成后才勾选 B6/B7，并参加全组 G3 和演练。当前两项仍保留未完成状态。
+
+
+## 首次比较前固定的分类协议
+
+### 候选与训练策略
+
+1. 四种原始基线：逻辑回归、决策树、Gaussian NB、随机森林。
+2. 只对逻辑回归比较 `class_weight='balanced'` 和一次训练集随机欠采样。
+3. 欠采样保留全部少数类，从多数类无放回抽取同样数量，seed=42；保持抽取后的训练行原顺序。缩放器在该抽样训练部分拟合，验证集保持自然比例。此处比较的是完整训练策略。
+4. 不额外扩大参数搜索。逻辑回归 max_iter=1000，随机森林 100 棵树；其余参数完整记录在结果 JSON 中。
+5. 只使用 A 的原始数据校验、去重和时间划分。标签及 row_id 不进入特征。测试部分只核对分段身份，不打分。
+
+逻辑回归和 Gaussian NB 用 StandardScaler，树模型不缩放。所有方法输出按验证行序排列的 Class=1 概率。
+
+### 验证选择
+
+沿用 C 的主要审核预算 1%，并报告 0.1%、0.5%、1%、2%。复用 `evaluate_scores`，K=ceil(N×q)，按 score 降序、row_id 升序稳定排名。选择验证集 1% 预算下 TP 最大的配置；并列时 AP 较高者优先，仍并列按方法名称升序。
+
+操作决策直接使用 top-K，固定概率阈值记为 null。只用概率阈值无法保证在分数并列时恰好审核 K 笔，因此不另选阈值来替代预算排名。模型仅在训练段拟合，冻结后不合并训练和验证段重训。
+
+### 六方案原验证比较
+
+| 方法 | AP | TP | FP | Recall@568 | Precision@568 | 训练秒数 |
+|---|---:|---:|---:|---:|---:|---:|
+| logistic_regression_original | 0.642429 | 48 | 520 | 84.21% | 8.45% | 0.58 |
+| decision_tree_original | 0.301922 | 38 | 530 | 66.67% | 6.69% | 11.34 |
+| gaussian_nb_original | 0.033763 | 20 | 548 | 35.09% | 3.52% | 0.24 |
+| random_forest_original | 0.757048 | 47 | 521 | 82.46% | 8.27% | 121.47 |
+| logistic_regression_class_weight | 0.772681 | 49 | 519 | 85.96% | 8.63% | 0.94 |
+| logistic_regression_random_undersample | 0.157422 | 48 | 520 | 84.21% | 8.45% | 0.05 |
+
+按最大 TP、然后 AP、然后名称的既定规则，选中 **logistic_regression_class_weight**。这只代表限定候选在该验证窗口的选择，不能据此宣称测试表现或普遍优于其他算法。
+
+类别权重版比原始逻辑回归多检出 1 笔欺诈，Recall 增加约 1.75 个百分点。随机森林的 AP 高于原始逻辑回归，但在主要预算下少检出 1 笔，说明模型选择必须遵守事先约定的审核任务。欠采样在该预算下与原始逻辑回归同为 48 笔，AP 明显下降，没有证据将它当作整体改进。
+
+原始逻辑回归通过 A 的 `main.py --run-validation`，其 AP 与全部预算指标和独立 B 比较入口逐项一致。原始文件哈希和三段有序 row_id 指纹均与 A 的记录一致。选中模型保存后重新加载的验证风险分数在数值容差内一致，全部审核排序完全一致。
+
+实际使用 Codex 辅助实现、合成检查、真实运行核对与材料整理；成员需核对并按实际使用情况完善 Disclosures。原逐次交接记录保存在 Git 历史中。

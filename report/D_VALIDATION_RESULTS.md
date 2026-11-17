@@ -1,3 +1,83 @@
+# 规则方法与开发验证证据
+
+整理：2026-11-17。本文合并原规则方法、预声明协议和验证发现。以下带日期的记录属于历史开发证据；正式冻结和测试现已完成，见 [G2](../results/tables/group_freeze.json)、[ULB 正式规则诊断](../results/tables/ulb_test.json)、[Handbook 正式规则与机制](../results/tables/handbook_d_test.json)及 [独立复现](../results/tables/reproduction.json)。历史段落的“待 G2/A8”不是当前任务状态。
+
+## 原预声明协议（2026-11-11）
+
+Selection, declared before observing validation rule performance:
+
+1. Verify A's raw SHA-256 and all ordered split fingerprints. Test counts/IDs are
+   checked for dataset identity only; do not apply/evaluate any rule on test.
+2. Always include Amount. Select four V features by descending absolute Pearson
+   correlation with Class in training only; lexical name tie break. This is
+   supervised training feature selection, not unsupervised selection. Class is
+   never discretized as an input or placed in an antecedent.
+3. Compare only equal-width vs equal-frequency, three requested bins each,
+   maximum rule length three including Class=1. Reuse exactly the same features.
+4. Keep the existing training limits: antecedent coverage >=20, fraud coverage
+   >=5, lift >1, at most 50 rules per scheme in deterministic training order.
+5. Validate every candidate with its fixed training bins. Retain rules with
+   validation coverage >=20, fraud coverage >=5 and lift >1. No threshold changes
+   after seeing results; retain zero rules if none pass.
+6. Choose the scheme with more validation-passing candidates, preferring
+   equal-frequency on a tie. Freeze all passing rules from that scheme. This
+   criterion targets diagnostic rule availability; redundant rules may overlap
+   and their counts must not be interpreted as additional detected fraud.
+7. Export all candidates' aggregate training/validation metrics and the matching
+   bins, configuration and surviving rule IDs. Keep full covered-ID lists local.
+   A must confirm this candidate freeze for G2; final test evaluation remains A's.
+
+## 方法与统计定义
+
+## Transaction and search design
+
+An item is `feature=bin_index`, bin indices start at zero. Use one or two distinct
+feature items in an antecedent, with `Class=1` only as consequent; `max_length=3`
+counts the consequent. `Class` and `row_id` cannot be supplied as feature inputs.
+Feature choice is supplied explicitly and must use training information only.
+The implementation supports Time, but the proposed small rule experiment should
+focus on Amount and a recorded small subset of V1–V28; no subset is selected yet.
+
+Equal-width bins use training min/max; equal-frequency bins use training
+quantiles (numpy default linear interpolation). Repeated/endpoint quantiles are
+removed; constant columns have one effective bin. This can produce fewer bins
+than requested, which must be recorded, not corrected by random jitter.
+Interior intervals are left-closed/right-open; a value equal to a cut goes into
+the higher bin. Outer bins are unbounded so held-out extremes use the same end
+bins, with no refit. Missing/nonfinite values fail explicitly; A must document
+any upstream processing decision before real experiments.
+
+Apriori first retains feature items covering at least 20 transactions, joins
+frequent itemsets and prunes candidates with infrequent subsets. This is safe
+because joint antecedent coverage cannot exceed subset coverage. Itemsets never
+contain two bins of the same feature. Fraud-associated output additionally
+requires at least 5 covered frauds and training lift strictly greater than 1.
+At most 50 candidates survive, ranked by descending training lift, descending
+fraud count, shorter length, then lexical items. These limits are development
+defaults, not a statistical guarantee or an already selected final protocol.
+
+## Metrics and zero-count policy
+
+Let N be split size, F total fraud, A antecedent coverage and J covered fraud.
+
+| Field | Definition |
+|---|---|
+| antecedent_support | A/N |
+| support | J/N (joint support, not A/N) |
+| confidence | J/A |
+| lift | (J/A)/(F/N) |
+| fraud_recall | J/F |
+| kulczynski | ((J/A) + (J/F))/2 |
+| normal_count | A − J |
+
+Zero denominators are `None`/JSON null. If F=0, lift, fraud recall and Kulczynski
+are not applicable. If A=0, confidence/lift/Kulczynski are not applicable, while
+support is zero for a nonempty split. Empty splits retain zero counts with null
+metrics and an explicit `empty` status. Neither NaN nor infinite lift is exported.
+
+Hand example: N=12, F=4, A=6, J=4 gives support=1/3, confidence=2/3, lift=2,
+Kulczynski=5/6, normal_count=2. These are synthetic arithmetic checks only.
+
 # D training / validation analysis — 2026-11-11
 
 ## E04 extension update — 2026-11-14
@@ -111,7 +191,7 @@ Training-only selection chose Amount plus V17, V14, V12 and V3 by the declared
 absolute Pearson correlation criterion. Training labels are used in this
 supervised selector; Class is never a rule antecedent or numeric input item.
 Both schemes used the same features, three requested bins and one or two
-antecedent items. See D_VALIDATION_PROTOCOL.md for all thresholds and tie breaks.
+antecedent items. See 本文件的“原预声明协议” for all thresholds and tie breaks.
 
 | Scheme | Training candidates | Pass validation gate | Rejected |
 |---|---:|---:|---:|
@@ -154,7 +234,7 @@ have no inferred business meaning; no causal explanation is claimed.
 
 ## Reproduction and handoff
 
-Use the command in D_VALIDATION_PROTOCOL.md and A's pinned worktree. The manifest
+Use the command in 本文件的“原预声明协议” and A's pinned worktree. The manifest
 records actual commits, source hashes, data identity, environment, selected
 features, exact boundaries, out-of-range validation counts and surviving rules.
 It contains aggregate information only. The raw CSV and full coverage IDs are
@@ -165,3 +245,17 @@ Remaining: merge/confirm A3 through the group process, reproduce the pinned
 environment, obtain A's G2 confirmation, then let A evaluate frozen rules on
 test. D5 still needs the common final workflow and classification/anomaly errors;
 D6/D7 still need the other authors' evidence, integration checks and G3.
+
+
+## 实际 AIGC 使用记录
+
+## Actual AIGC assistance record (D draft)
+
+On 2026-11-09 Codex assisted with reading TASKS/README and existing interfaces,
+implementing the rule module, writing/running synthetic checks, drafting the
+methods/outline documents and recording local progress. No real experimental
+results were generated. D should review the implementation and update this
+record with their own actual validation and subsequent tool use before inclusion
+in the report's Disclosures. Other members supply their own records.
+
+后续验证中 Codex 协助依赖检查、下载、规则固定重放、图表、错误关联及材料整理。2026-11-17 又协助统一冻结、正式测试、独立复现与仓库整理。成员须核对并补充各自实际使用情况，不能把这些记录当作已经完成的最终报告披露。
