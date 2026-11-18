@@ -420,13 +420,14 @@
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
     "poster_unchanged": true,
-    "PDF_sha256": "49652d6b07da9f6018e5b35c403677a65865e21d0ea6af53dc07de51794d8427",
+    "PDF_sha256": "8a435885d5a8767e6c9aa4e7d8096625c0a144ac441fe6e750c25a238df4bbd6",
     "Markdown_sha256": "133a016fddd1a1bd8ea4083c1a31dec38c1a2a301283885625d8a1f2f3a4227d",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
     "member_fields": "Names/IDs left blank for group completion as requested previously.",
     "main_text_numerical_tables": 10,
-    "appendix_numerical_tables": 3
+    "appendix_numerical_tables": 3,
+    "numeric_figure_values_match_previous_release": true
   },
   "course_report_review": {
     "date": "2026-11-18",
@@ -496,12 +497,13 @@
   "poster_build_verification": {
     "pages": 1,
     "layout": "A0 portrait, pending the separate course formatting notice",
-    "source": "poster/Poster.tex",
-    "PDF_sha256": "226fd950fa4b86812a0877e8543250278e5dae17d75fd04f014e2351ac56b07b",
+    "source": "poster/Poster.html",
+    "PDF_sha256": "163f28f5fede29e295cb739c441cc233836ca0634b13be691734e74b7ce54cdb",
     "formal_results_reviewed_against_report_sections": [
       "4.1",
       "4.2",
       "4.3",
+      "4.4",
       "4.5",
       "4.6",
       "4.7"
@@ -510,6 +512,14 @@
       "report_budget.pdf",
       "report_context.pdf"
     ],
-    "rendered_page_reviewed": true
+    "rendered_page_reviewed": true,
+    "figure_manifest": "poster/FIGURE_MANIFEST.json",
+    "skill_gate_status": "All five checks passed",
+    "column_bottom_spread_px": 3.47,
+    "footer_gap_px": [
+      45.34,
+      48.81
+    ],
+    "independent_review": "Print-ready; final copy clarifies that model choices precede test and mechanism labels are used after scoring."
   }
 }

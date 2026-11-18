@@ -20,7 +20,7 @@ data/README.md            数据来源、许可、下载、规模和划分
 results/tables/            冻结配置、必要开发证据及正式结果
 results/figures/           验证与正式测试图
 report/                   Report.md、Report.pdf、构建脚本、方法与实验协议、必要规则
-poster/                   Poster.pdf、可编辑 XeLaTeX 源文件及构建说明
+poster/                   Poster.pdf、可编辑 HTML、图源清单及构建说明
 .github/workflows/        Linux 独立重建与检查
 ```
 
@@ -118,7 +118,7 @@ python -m unittest discover -s code/validation -p test_classification.py
 python report/build_report.py
 ```
 
-脚本只绘图和排版，不训练模型或修改正式结果；会先将 13 张数值表与原始汇总逐项比对，再检查正文页数是否在 6–10 页。PDF 图保存在 results/figures/report_*.pdf，PNG 预览和 LaTeX 临时文件留在忽略的 data/report_build/。常规实验运行不需要 Pandoc 或 XeLaTeX。
+脚本只绘图和排版，不训练模型或修改正式结果；会先将 13 张数值表与原始汇总逐项比对，再检查正文页数是否在 6–10 页。PDF 图保存在 results/figures/report_*.pdf，PNG 预览和 LaTeX 临时文件留在忽略的 data/report_build/。常规实验运行不需要 Pandoc 或 XeLaTeX。报告图使用统一的色盲友好配色、线型和面板标题。海报通过 Playwright Chromium 输出，构建与查验方法见 [海报说明](poster/Poster.md)。
 
 ## 课程提交
 

@@ -17,7 +17,10 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / 'data/report_build'
 FIGURES = ROOT / 'results/figures'
-COLORS = ['#C35136', '#236B8E', '#50866A', '#777777']
+COLORS = ['#0072B2', '#D55E00', '#555555', '#777777']
+MARKERS = ['o', 's', '^']
+LINESTYLES = ['-', '--', ':']
+BUDGET_TICKS = [0.1, 0.5, 1, 2]
 
 
 def read(name):
@@ -29,19 +32,41 @@ def budget(metric, fraction=.01):
 
 
 def finish(fig, name):
-    fig.tight_layout(pad=.7)
+    for ax in fig.axes:
+        ax.set_axisbelow(True)
+        ax.spines[['left', 'bottom']].set_color('#68737D')
+    fig.tight_layout(pad=.65, w_pad=1.55)
     fig.savefig(FIGURES / (name + '.pdf'), metadata={'CreationDate': None, 'ModDate': None})
     fig.savefig(BUILD / (name + '.png'), dpi=300)
     plt.close(fig)
 
 
 def figures():
-    plt.rcParams.update({'font.family': 'serif', 'font.serif': ['Times New Roman', 'DejaVu Serif'],
-                         'font.size': 9, 'axes.labelsize': 9, 'axes.titlesize': 10,
-                         'legend.fontsize': 8, 'legend.frameon': False,
-                         'axes.spines.top': False, 'axes.spines.right': False,
-                         'axes.grid': True, 'grid.alpha': .15, 'lines.linewidth': 1.6,
-                         'lines.markersize': 4, 'pdf.fonttype': 42})
+    plt.rcParams.update({
+        'font.family': 'DejaVu Sans',
+        'font.size': 9,
+        'axes.labelsize': 9,
+        'axes.titlesize': 10,
+        'axes.titleweight': 'bold',
+        'legend.fontsize': 8,
+        'legend.frameon': False,
+        'axes.spines.top': False,
+        'axes.spines.right': False,
+        'axes.grid': True,
+        'axes.grid.axis': 'y',
+        'grid.color': '#DCE2E8',
+        'grid.linewidth': .55,
+        'axes.labelcolor': '#18232C',
+        'text.color': '#18232C',
+        'xtick.color': '#34414A',
+        'ytick.color': '#34414A',
+        'xtick.labelsize': 8,
+        'ytick.labelsize': 8,
+        'lines.linewidth': 1.65,
+        'lines.markersize': 4.4,
+        'pdf.fonttype': 42,
+        'savefig.facecolor': 'white',
+    })
     u, b, c, h = (read(n) for n in ['ulb_test', 'b_extensions_test', 'c_extensions_test', 'handbook_test'])
     fig, axes = plt.subplots(1, 2, figsize=(6.6, 2.65))
     for i, (name, label) in enumerate([('logistic_regression_class_weight', 'Weighted LR'),
@@ -49,9 +74,14 @@ def figures():
         values = u['metrics'][name]['budgets']
         for ax, key in zip(axes, ['recall_at_k', 'precision_at_k']):
             ax.plot([r['review_fraction']*100 for r in values], [r[key]*100 for r in values],
-                    marker=['o','s','^'][i], color=COLORS[i], label=label)
+                    marker=MARKERS[i], linestyle=LINESTYLES[i], color=COLORS[i], label=label)
             ax.set(xlabel='Review budget (%)', ylabel=key.split('_')[0].title()+' (%)', ylim=(0,100))
-    axes[0].legend(loc='lower right');finish(fig, 'report_budget')
+    for ax, title in zip(axes, ['a  Fraud recall', 'b  Review precision']):
+        ax.set_title(title, loc='left')
+        ax.set_xticks(BUDGET_TICKS, ['0.1', '0.5', '1', '2'])
+        ax.set_yticks([0, 25, 50, 75, 100])
+    axes[0].legend(loc='lower right')
+    finish(fig, 'report_budget')
 
     fig, axes = plt.subplots(1, 2, figsize=(6.6, 2.65))
     fractions = b['E03']['fractions']
@@ -59,44 +89,60 @@ def figures():
         values = [[r['metrics']['AP'] if key=='AP' else budget(r['metrics'])['recall_at_k']
                    for r in b['E03']['conditions'] if r['fraction']==f] for f in fractions]
         x = np.array(fractions)*100
-        axes[0].plot(x, [np.mean(v) for v in values], marker=['o','s'][i], color=COLORS[i], label=label)
+        axes[0].plot(x, [np.mean(v) for v in values], marker=MARKERS[i], linestyle=LINESTYLES[i], color=COLORS[i], label=label)
         axes[0].fill_between(x, [min(v) for v in values], [max(v) for v in values], color=COLORS[i], alpha=.12)
-    axes[0].axhline(b['E03']['IF_reference']['metrics']['AP'], color=COLORS[2], ls='--', label='Fixed IF256 AP')
+    axes[0].axhline(b['E03']['IF_reference']['metrics']['AP'], color=COLORS[2], ls=':', label='Fixed IF256 AP')
     axes[0].set(xlabel='Labeled training rows (%)', ylabel='Test metric', ylim=(0,1));axes[0].legend(loc='lower right')
     rows=sorted(b['E05']['importances'], key=lambda r:-r['mean'])[:8][::-1]
     axes[1].barh([r['feature'] for r in rows], [r['mean'] for r in rows], xerr=[r['std'] for r in rows], color=COLORS[0], capsize=2)
-    axes[1].set(xlabel='Test AP decrease after permutation', title='Fixed LR; 5 repeats')
+    axes[1].set(xlabel='Test AP decrease after permutation')
+    axes[0].set_title('a  Label availability', loc='left')
+    axes[0].set_xticks([5, 25, 50, 100])
+    axes[1].set_title('b  Permutation importance', loc='left')
+    axes[1].grid(axis='y', visible=False)
+    axes[1].grid(axis='x', visible=True)
+    axes[1].axvline(0, color='#68737D', lw=.7)
     finish(fig, 'report_supervision')
 
     fig, axes = plt.subplots(1, 2, figsize=(6.6, 2.65))
     names=['logistic_regression_class_weight','if_sample4096','km_base_raw','amount_descending']
     labels=['LR','IF4096','Distance','Amount'];x=np.arange(4)
     axes[0].bar(x-.17,[budget(c['metrics'][n])['recall_at_k']*100 for n in names], .34,label='Fraud count',color=COLORS[0])
-    axes[0].bar(x+.17,[budget(c['metrics'][n])['amount_coverage']*100 for n in names],.34,label='Fraud amount',color=COLORS[1])
+    axes[0].bar(x+.17,[budget(c['metrics'][n])['amount_coverage']*100 for n in names],.34,label='Fraud amount',color=COLORS[1],hatch='//',edgecolor='white',linewidth=.5)
     axes[0].set(xticks=x,xticklabels=labels,ylabel='Coverage at 1% (%)',ylim=(0,100));axes[0].legend()
     for i,n in enumerate(names[:2]):
         rows=[r for r in c['cost_sensitivity'] if r['method']==n and r['c_FN']==50]
-        axes[1].plot([r['review_fraction']*100 for r in rows],[r['hypothetical_loss'] for r in rows],marker=['o','s'][i],color=COLORS[i],label=['LR','IF4096'][i])
-    axes[1].set(xlabel='Review budget (%)',ylabel='Hypothetical loss',title='FN:FP cost = 50:1');axes[1].legend()
+        axes[1].plot([r['review_fraction']*100 for r in rows],[r['hypothetical_loss'] for r in rows],marker=MARKERS[i], linestyle=LINESTYLES[i],color=COLORS[i],label=['LR','IF4096'][i])
+    axes[1].set(xlabel='Review budget (%)',ylabel='Hypothetical loss');axes[1].legend()
+    axes[0].set_title('a  Count vs. amount coverage', loc='left')
+    axes[1].set_title('b  Loss at 50:1 FN:FP cost', loc='left')
+    axes[1].set_xticks(BUDGET_TICKS, ['0.1', '0.5', '1', '2'])
     finish(fig,'report_amount')
 
     fig,axes=plt.subplots(1,2,figsize=(6.6,2.65));views=['transaction_only','customer_history','terminal_history','both_history','both_history_graph'];x=np.arange(5)
     for i,family in enumerate(['lr','if']):
         for ax,key in zip(axes,['AP','recall']):
             vals=[h['metrics'][family+'_'+v]['AP'] if key=='AP' else budget(h['metrics'][family+'_'+v])['recall_at_k'] for v in views]
-            ax.bar(x+(i-.5)*.36,vals,.36,color=COLORS[i],label=family.upper())
+            ax.bar(x+(i-.5)*.36,vals,.36,color=COLORS[i],label=family.upper(), hatch='//' if i else None, edgecolor='white', linewidth=.5)
             ax.set(xticks=x,xticklabels=['Current','Customer','Terminal','Both','+Relation'],ylabel='AP' if key=='AP' else 'Recall at 1%',ylim=(0,.35))
-            ax.tick_params(axis='x',rotation=25)
-    axes[0].legend();finish(fig,'report_context')
+            ax.tick_params(axis='x',rotation=0, labelsize=7)
+    axes[0].set_title('a  Overall ranking', loc='left')
+    axes[1].set_title('b  Fixed review capacity', loc='left')
+    axes[0].legend(loc='upper right', ncol=2)
+    finish(fig,'report_context')
 
     fig,axes=plt.subplots(1,2,figsize=(6.6,2.65));rates=h['history_missing']['rates']
     for i,name in enumerate(['lr_both_history','if_both_history']):
         for ax,key in zip(axes,['AP','recall']):
             values=[[r['metrics'][name]['AP'] if key=='AP' else budget(r['metrics'][name])['recall_at_k'] for r in h['history_missing']['records'] if r['missing_fraction']==rate] for rate in rates]
-            x=np.array(rates)*100;ax.plot(x,[np.mean(v) for v in values],marker=['o','s'][i],color=COLORS[i],label=['LR','IF'][i])
+            x=np.array(rates)*100;ax.plot(x,[np.mean(v) for v in values],marker=MARKERS[i], linestyle=LINESTYLES[i],color=COLORS[i],label=['LR','IF'][i])
             ax.fill_between(x,[min(v) for v in values],[max(v) for v in values],color=COLORS[i],alpha=.14)
             ax.set(xlabel='History events omitted (%)',ylabel='AP' if key=='AP' else 'Recall at 1%',ylim=(0,.30))
-    axes[0].legend();finish(fig,'report_stress')
+    for ax, title in zip(axes, ['a  Overall ranking', 'b  Fixed review capacity']):
+        ax.set_title(title, loc='left')
+        ax.set_xticks([0, 10, 30])
+    axes[0].legend(loc='upper right')
+    finish(fig,'report_stress')
 
 
 def audit_tables():

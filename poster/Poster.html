@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Credit Card Fraud Detection under a Limited Review Budget</title>
+<style>
+@page { size: 841mm 1189mm; margin: 0; }
+:root {
+/* ===== DESIGN TOKENS ===== */
+    /* The ONLY place color / font-size literals are allowed (style_check
+       rule 1 + 8 locate this block by the comment pair). Override token
+       VALUES here only — never restyle component rules with new literals.
+       To rebrand, edit these or load a tokens/*.json palette. */
+
+    /* Primary accent (header underline, card-highlight bar, section nums, .keyword) */
+    --accent:        #2D5F8B;
+    --accent-deep:   #1F4566;
+    --accent-light:  #E8F1F8;
+    --accent-soft:   #D7E5F0;
+
+    /* Secondary accent for "ours / best" emphasis (table .ours row, "★" callouts) */
+    --gold:          #C9A24A;
+    --gold-soft:     #FFF7E0;
+
+    /* Text */
+    --text-primary:   #1A1A1A;
+    --text-secondary: #555555;
+    --text-muted:     #888888;
+
+    /* Backgrounds */
+    --bg-page:        #FFFFFF;
+    --bg-card:        #FFFFFF;
+    --bg-card-tint:   #FAFAFB;
+    --bg-emphasis:    var(--accent-light);
+
+    /* Borders */
+    --border-soft:    #D8D8D8;
+    --border-strong:  var(--accent);
+
+    /* Screen-preview backdrop only — @media print overrides body to white.
+       Tokenized so no color literal escapes the token block (style_check rule 1). */
+    --bg-screen:      #2b2b2b;
+
+    /* Base unit. Print: 1mm; screen preview: 1.6px (~3.78px = 1mm at 96dpi). */
+    --u: 1.6px;
+
+    /* Font-size scale (9 steps). Every font-size in this template references
+       one of these. Off-scale px drift is forbidden (style_check rule 8);
+       `calc(var(--fs-N) * k)` is allowed ONLY for COMPONENTS.md variants.
+       The posterly portrait original used a few off-scale sizes (28u title,
+       17u section title, 14u subtitle/eqn/callout); they are snapped to the
+       nearest scale token here so the template stays at exactly 9 steps. */
+    --fs-1: calc(9 * var(--u));    /* micro label                */
+    --fs-2: calc(11 * var(--u));   /* small caption              */
+    --fs-3: calc(11 * var(--u));   /* caption / table            */
+    --fs-4: calc(16 * var(--u));   /* body text                  */
+    --fs-5: calc(13 * var(--u));   /* equation / emphasis        */
+    --fs-6: calc(15 * var(--u));   /* subtitle                   */
+    --fs-7: calc(18 * var(--u));   /* section title              */
+    --fs-8: calc(22 * var(--u));   /* banner number              */
+    --fs-9: calc(32 * var(--u));   /* main title                 */
+
+    /* Fonts. Override at :root if your venue mandates a specific family.
+       Whitelist (style_check rule 7): serif body, sans heads, mono code. */
+    --font-serif: "Charter", "Source Serif Pro", "Georgia", serif;
+    --font-sans:  "Inter", "Helvetica Neue", sans-serif;
+
+    /* Shadows & watermark ink — tokenized so rules 1/3 stay literal-free
+       (the faint radial page tint is the ONE allowed literal outside this
+       block; rule 5 validates it). */
+    --shadow-screen: 0 0 60px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 calc(2 * var(--u)) calc(6 * var(--u)) rgba(45, 95, 139, 0.05);
+    --ornament-ink: rgba(45, 95, 139, 0.06);
+    /* ===== END DESIGN TOKENS ===== */
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { color:var(--text-primary); background:var(--bg-screen); font-family:var(--font-serif); }
+.poster { position:relative; width:calc(841 * var(--u)); height:calc(1189 * var(--u)); margin:0 auto; padding:calc(25 * var(--u)) calc(25 * var(--u)) calc(20 * var(--u)); background:var(--bg-page); display:grid; grid-template-rows:auto 1fr auto; gap:calc(12 * var(--u)); }
+.header { border-top:calc(3 * var(--u)) solid var(--accent); padding-top:calc(7 * var(--u)); }
+.course { font-family:var(--font-sans); font-size:var(--fs-3); letter-spacing:.08em; font-weight:700; color:var(--accent); margin-bottom:calc(6 * var(--u)); }
+.title { font-family:var(--font-sans); font-size:var(--fs-9); font-weight:800; color:var(--accent-deep); line-height:1.02; }
+.subtitle { font-size:var(--fs-6); line-height:1.2; margin-top:calc(7 * var(--u)); }
+.highlight { background:var(--accent-light); border-left:calc(2 * var(--u)) solid var(--accent); }
+.hero { margin-top:calc(9 * var(--u)); padding:calc(8 * var(--u)) calc(10 * var(--u)); display:grid; grid-template-columns:auto 1fr; gap:calc(13 * var(--u)); align-items:center; }
+.hero-number { font-family:var(--font-sans); font-size:var(--fs-8); color:var(--accent-deep); line-height:1; font-weight:800; }
+.hero p { font-size:var(--fs-5); line-height:1.25; }
+.body-grid { display:grid; grid-template-columns:1fr 1fr; gap:calc(12 * var(--u)); align-items:start; }
+.column { display:grid; gap:calc(8 * var(--u)); align-content:start; min-width:0; }
+.card { padding:calc(8 * var(--u)); border-top:1px solid var(--border-soft); min-width:0; }
+.section-title { font-family:var(--font-sans); font-size:var(--fs-7); font-weight:750; line-height:1.13; color:var(--accent-deep); margin-bottom:calc(4 * var(--u)); }
+.body-text { font-size:var(--fs-4); line-height:1.23; }
+.body-text + .body-text { margin-top:calc(4 * var(--u)); }
+.figure { margin-top:calc(4 * var(--u)); }
+.figure img { display:block; width:100%; }
+.caption { font-size:var(--fs-2); color:var(--text-secondary); line-height:1.24; margin-top:calc(3 * var(--u)); }
+.flow-strip { display:grid; grid-template-columns:repeat(3, 1fr); gap:calc(4 * var(--u)); margin-top:calc(5 * var(--u)); }
+.flow-strip span { padding:calc(4 * var(--u)); background:var(--accent-light); font:600 var(--fs-2)/1.2 var(--font-sans); color:var(--accent-deep); }
+.result-table { border-collapse:collapse; width:100%; font:var(--fs-3)/1.22 var(--font-sans); margin-top:calc(4 * var(--u)); }
+.result-table th, .result-table td { border-bottom:1px solid var(--border-soft); text-align:right; padding:calc(3 * var(--u)); }
+.result-table th:first-child, .result-table td:first-child { text-align:left; }
+.result-table tbody tr:first-child { background:var(--gold-soft); }
+.footer { border-top:1px solid var(--border-soft); padding-top:calc(5 * var(--u)); display:flex; justify-content:space-between; align-items:center; gap:calc(8 * var(--u)); color:var(--text-secondary); font:var(--fs-2)/1.2 var(--font-sans); }
+.footer a { color:var(--accent); font-weight:700; }
+@media print {
+  :root { --u:1mm; }
+  html, body { margin:0; background:var(--bg-page); print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  .poster { width:841mm; height:1189mm; margin:0; }
+}
+</style>
+</head>
+<body>
+<main class="poster" data-measure-role="poster">
+  <header class="header" data-measure-role="header">
+    <p class="course">AIAA 3111 &nbsp; / &nbsp; GROUP 20</p>
+    <h1 class="title">Credit Card Fraud Detection<br>under a Limited Review Budget</h1>
+    <p class="subtitle">When reviewers can inspect only a fraction of transactions, which ranking finds the most fraud at the same workload?</p>
+    <div class="hero highlight">
+      <strong class="hero-number">64 of 74 frauds</strong>
+      <p>The preselected weighted logistic regression found 64 frauds in 568 ULB test reviews. Isolation Forest found 41 at the same 1% budget.</p>
+    </div>
+  </header>
+
+  <div class="body-grid" data-measure-role="body">
+    <div class="column" data-measure-role="column">
+      <section class="card" data-measure-role="card">
+        <h2 class="section-title">Compare at the same workload</h2>
+        <p class="body-text">We removed exact duplicates from ULB and split the data chronologically. We fit preprocessing on training data and froze model choices before testing. Each method reviewed its highest scoring transactions at the same budget, with 1% as the primary comparison.</p>
+        <div class="flow-strip"><span>Fit on past data</span><span>Select before testing</span><span>Rank held-out transactions</span></div>
+      </section>
+      <section class="card" data-measure-role="card">
+        <h2 class="section-title">More reviews, one extra detection</h2>
+        <figure class="figure"><img src="assets/budget.png" data-source="paper" data-asset-id="budget" alt="ULB test curves for fraud recall and review precision across four review budgets">
+          <figcaption class="caption">ULB formal test. Recall counts the share of frauds found. Precision counts the share of reviews that are fraud.</figcaption></figure>
+        <p class="body-text">Weighted logistic regression (LR) found 63 frauds at 0.5% and 64 at 1%. At 1%, K-means distance found 37.</p>
+        <p class="body-text">Isolation Forest (IF) found one fraud outside the LR list. Combining both lists found 65 frauds but required 1,036 reviews. The quota chosen before testing used LR alone.</p>
+      </section>
+      <section class="card" data-measure-role="card">
+        <h2 class="section-title">Labels and rules</h2>
+        <p class="body-text">At the same 1% budget, LR found 55–58 frauds with 5% of training labels visible, and 60–63 with 25% visible. Each range comes from three label masks.</p>
+        <p class="body-text">The first training-ordered Apriori rule (R001) covered 3,846 transactions and 52 frauds. Its lift was 10.37, while its confidence was 1.35%. The rule highlights a concentration of fraud and covers more rows than the review team can handle.</p>
+      </section>
+      <section class="card" data-measure-role="card">
+        <h2 class="section-title">How much is a missed fraud worth?</h2>
+        <p class="body-text">In a scenario where missing a fraud costs 50 times as much as reviewing a normal transaction, weighted LR's loss was 771 at a 0.5% budget and 1,004 at 1%. This is an assumed cost comparison. The primary results still use 1%.</p>
+      </section>
+    </div>
+    <div class="column" data-measure-role="column">
+      <section class="card" data-measure-role="card">
+        <h2 class="section-title">Extra context can cost detections</h2>
+        <p class="body-text">The Handbook simulator lets us add past customer and terminal activity and features from their interactions. Every ranking had the same 1,458 reviews and 1,280 test frauds.</p>
+        <figure class="figure"><img src="assets/context.png" data-source="paper" data-asset-id="context" alt="Handbook test average precision and recall at 1 percent for five feature views">
+          <figcaption class="caption">Handbook formal test. Average precision (AP) summarizes the full ranking. Recall at 1% measures the share of frauds found at that workload.</figcaption></figure>
+        <p class="body-text">Adding both histories changed detections from 346 to 334 for LR and from 334 to 139 for IF. With 30% of history events omitted, IF found 77–82 frauds across three removal seeds.</p>
+      </section>
+      <section class="card" data-measure-role="card">
+        <h2 class="section-title">PaySim tests a different setting</h2>
+        <p class="body-text">At 1,289 reviews, IF found the most of 413 frauds. Amount ranking had the highest AP of the three methods.</p>
+        <table class="result-table">
+          <thead><tr><th scope="col">Method</th><th scope="col">Frauds found</th><th scope="col">AP</th></tr></thead>
+          <tbody><tr><td>Fixed IF</td><td>102</td><td>0.0447</td></tr><tr><td>Amount</td><td>94</td><td>0.0798</td></tr><tr><td>Weighted LR</td><td>80</td><td>0.0634</td></tr></tbody>
+        </table>
+      </section>
+      <section class="card" data-measure-role="card">
+        <h2 class="section-title">A blind spot in the simulator</h2>
+        <p class="body-text">In the terminal-compromise scenario, history LR found 4 of 800 frauds and history IF found 9. We use these mechanism labels only after scoring to see which types of fraud the models missed.</p>
+        <p class="caption">Counts use the final simulator mechanism code.</p>
+      </section>
+      <section class="card highlight" data-measure-role="card">
+        <h2 class="section-title">Set capacity first</h2>
+        <p class="body-text">Compare detections at the available review capacity. Use AP to examine the rest of the ranking and test whether extra history improves the actual review list.</p>
+        <p class="body-text">The evidence comes from one chronological ULB split with 74 test frauds and two simulated datasets. The simulated datasets were fitted and evaluated separately.</p>
+      </section>
+    </div>
+  </div>
+  <footer class="footer" data-measure-role="footer"><p>Data sources: ULB/Worldline via Zenodo, Fraud Detection Handbook and PaySim.</p><p><a href="https://github.com/congrenhang-ship-it/AIAA3111-Group20">Report, code and data instructions</a></p></footer>
+</main>
+</body>
+</html>
