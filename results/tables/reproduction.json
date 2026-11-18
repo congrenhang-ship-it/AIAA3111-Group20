@@ -498,7 +498,7 @@
     "pages": 1,
     "layout": "80 cm wide × 100 cm high, portrait",
     "source": "poster/Poster.html",
-    "PDF_sha256": "137c82ae060d41a853423e94788b3e2c0811e802a2bb4cd83a4d728dd19b5d7f",
+    "PDF_sha256": "c35e7f6caf208673a79a49cd6f66163f15dd807cf9eaa5ad197283be65694648",
     "formal_results_reviewed_against_report_sections": [
       "4.1",
       "4.2",
@@ -528,6 +528,7 @@
       "offline_mobile_and_keyboard_close_verified": true,
       "print_hides_controls": true
     },
-    "independent_review": "Poster claims were independently checked before resizing. The resized 80 × 100 cm PDF was visually inspected and the browser interactions were retested."
+    "independent_review": "Poster claims were independently checked before resizing. The resized 80 × 100 cm PDF was visually inspected and the browser interactions were retested.",
+    "narrative_revision": "Added the review-team decision, moved the equal-budget table ahead of the budget curve, and scoped the practical conclusion to the reported tests. Interactive data and source figures match the previous release."
   }
 }
