@@ -413,15 +413,15 @@
   "report_build_verification": {
     "date": "2026-11-18",
     "main_text_pages": 10,
-    "total_PDF_pages": 15,
+    "total_PDF_pages": 14,
     "result_tables_checked": 13,
     "test_figures": 5,
     "formal_result_files_unchanged": 8,
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
     "poster_unchanged": true,
-    "PDF_sha256": "ab76f3388d50527dac98c2fd61aef5a34642a666ab7fb36b9be424051ae97f9a",
-    "Markdown_sha256": "9d34a1cc5493fe6a01701fe126a80ec424edb2ac816edb5803310b143182817c",
+    "PDF_sha256": "49652d6b07da9f6018e5b35c403677a65865e21d0ea6af53dc07de51794d8427",
+    "Markdown_sha256": "133a016fddd1a1bd8ea4083c1a31dec38c1a2a301283885625d8a1f2f3a4227d",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
     "member_fields": "Names/IDs left blank for group completion as requested previously.",
@@ -435,7 +435,7 @@
       "02. Project_Assessment_Rubrics(2).pdf"
     ],
     "main_text_pages": 10,
-    "total_PDF_pages": 15,
+    "total_PDF_pages": 14,
     "numerical_tables_automatically_checked": 13,
     "unchanged_report_figures": {
       "results/figures/report_amount.pdf": "b4cf65f1ec6ea5b8741ffe5d1a5090097264223484d09f8b41695460fc85c29d",
@@ -489,8 +489,27 @@
       "L6 Classification Advanced (1019)",
       "L7 Clustering Basic (1029)"
     ],
-    "course_mapping": "Report Appendix B.1 provides slide numbers and links to the applied experiments. Later anomaly-detection lecture slides were not available.",
+    "course_mapping": "Lecture citations remain in the report methods and analysis. The standalone course mapping table was removed.",
     "member_fields": "Names and IDs remain blank for members; personal disclosures need member confirmation.",
     "visual_review": "Changed main-text pages 3, 5, 10 and new appendix pages 14, 15 checked after rendering; no overflow or missing glyph warnings in the build."
+  },
+  "poster_build_verification": {
+    "pages": 1,
+    "layout": "A0 portrait, pending the separate course formatting notice",
+    "source": "poster/Poster.tex",
+    "PDF_sha256": "226fd950fa4b86812a0877e8543250278e5dae17d75fd04f014e2351ac56b07b",
+    "formal_results_reviewed_against_report_sections": [
+      "4.1",
+      "4.2",
+      "4.3",
+      "4.5",
+      "4.6",
+      "4.7"
+    ],
+    "report_figures_reused": [
+      "report_budget.pdf",
+      "report_context.pdf"
+    ],
+    "rendered_page_reviewed": true
   }
 }

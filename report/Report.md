@@ -288,7 +288,7 @@ The evidence comes from one chronological split with only 74 ULB test frauds and
 
 # 6. Disclosures
 
-The project used OpenAI Codex/ChatGPT assistance for implementation and refactoring, automated checks, experiment execution, numerical verification, figure generation, repository organization and preparation of this report. The report's tables and plots are based on the stored experiment outputs. Assistance also included locating and checking the data and documentation references listed below.
+The project used OpenAI Codex/ChatGPT assistance for implementation and refactoring, automated checks, experiment execution, numerical verification, figure generation, repository organization and preparation of the report and poster. The report's tables and plots are based on the stored experiment outputs. Assistance also included locating and checking the data and documentation references listed below.
 
 Each member should complete the name/ID fields and confirm their individual AIGC use and any external collaborators before submission. Sources for the datasets, simulator and software are credited below.
 
@@ -379,22 +379,9 @@ The original ULB validation had been examined before the second C protocol. Its 
 
 \clearpage
 
-# Appendix B. Course concepts and supporting calculations
+# Appendix B. Supporting calculations
 
-## B.1 Course concepts used in the project
-
-| Course material | Concept applied | Project evidence |
-|---|---|---|
-| L3, slides 9–21, 28–35 | Transaction/item representation; support versus confidence; support-based Apriori pruning | Section 3.4; train-fitted feature bins and fixed short rules |
-| L3, slides 83–89; L4, slides 14–15, 45 | Base rates, lift and null-invariant Kulczynski | Section 4.7 and Table B2 |
-| L5, slides 19–36, 53–68, 73–83 | Gini/naive Bayes/logistic models; ensembles; PR/F1; class imbalance | Sections 3.3, 4.1 and 4.4: six supervised settings, equal-K comparisons and costs |
-| L6, slides 4–5, 47–67 | Feature selection; rule coverage/accuracy; label availability | Training-correlation filter, rule diagnosis and fixed label-budget experiment |
-| L6, slides 75–83 | Streams, sequence-to-vector and graph feature engineering | Sections 4.5–4.6: sliding-window fits, past-history summaries and degree/new-edge features |
-| L7, slides 22–35, 84–90 | Scaling, SSE, silhouette and stability | Section 4.2 and Table B1; cluster diagnostics on a shared training sample |
-
-The label experiment compares reduced-label supervised fits with an independent unsupervised reference. Historical and relation features feed ordinary LR/IF models.
-
-## B.2 Why SSE alone does not select k
+## B.1 Why SSE alone does not select k
 
 **Table B1. Original training-structure experiment; mean across seeds 42/43.**
 
@@ -406,9 +393,7 @@ The label experiment compares reduced-label supervised fits with an independent 
 
 SSE falls as k grows, but silhouette and agreement deteriorate. The selected k=3 is supported by cohesion/separation and initialization stability within the declared range. Here ARI compares the two seeded cluster assignments on the same unlabeled sample.
 
-\clearpage
-
-## B.3 Reading an association rule under a rare consequent
+## B.2 Reading an association rule under a rare consequent
 
 **Table B2. Individual R001 test metrics, derived from the frozen rules’ stored counts.**
 
@@ -421,7 +406,7 @@ Coverage is A/N; rule support is J/N, where A is the antecedent count and J the 
 
 Lecture 4’s null-invariance point is visible algebraically: holding A, J and F fixed while adding transactions with neither antecedent nor fraud leaves confidence and Kulczynski unchanged. Lift JN/(AF) rises with N. This explains why lift should be read alongside conditional precision and coverage in this rare-class task.
 
-## B.4 Comparing the declared discretizations
+## B.3 Comparing the declared discretizations
 
 **Table B3. Development-only rule comparison. “Retained” means passing the same validation count/lift gates.**
 
