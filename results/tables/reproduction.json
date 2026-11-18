@@ -420,8 +420,8 @@
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
     "poster_unchanged": true,
-    "PDF_sha256": "8a435885d5a8767e6c9aa4e7d8096625c0a144ac441fe6e750c25a238df4bbd6",
-    "Markdown_sha256": "133a016fddd1a1bd8ea4083c1a31dec38c1a2a301283885625d8a1f2f3a4227d",
+    "PDF_sha256": "52d2aabcbb4612d2416fffeb93df81e28de36a7ced30dd82b42fa026c281d53b",
+    "Markdown_sha256": "40b5823e2b54c21e8f54af69cc0fc03e48f953b7538d9f5d3957cd3a9080c130",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
     "member_fields": "Names/IDs left blank for group completion as requested previously.",
@@ -490,7 +490,7 @@
       "L6 Classification Advanced (1019)",
       "L7 Clustering Basic (1029)"
     ],
-    "course_mapping": "Lecture citations remain in the report methods and analysis. The standalone course mapping table was removed.",
+    "course_mapping": "The report retains the applied course concepts in methods and analysis.",
     "member_fields": "Names and IDs remain blank for members; personal disclosures need member confirmation.",
     "visual_review": "Changed main-text pages 3, 5, 10 and new appendix pages 14, 15 checked after rendering; no overflow or missing glyph warnings in the build."
   },
