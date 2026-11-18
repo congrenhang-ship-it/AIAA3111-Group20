@@ -39,6 +39,26 @@
       ],
       "source": "results/figures/report_context.pdf",
       "source_sha256": "1eb39ace0d77b408aa9906681e43326585da316bc883388eb94e0e0227fa116f"
+    },
+    {
+      "asset_id": "stress",
+      "file": "assets/stress.png",
+      "from_paper": true,
+      "page": 9,
+      "bbox": [
+        0,
+        0,
+        475.2,
+        190.8
+      ],
+      "dpi": 750,
+      "sha256": "cef4b7431698cd560b5cb03dec2389e3ab79cf07b8134195c5053848d03a7080",
+      "natural_px": [
+        4950,
+        1988
+      ],
+      "source": "results/figures/report_stress.pdf",
+      "source_sha256": "a3b7e1570ad30bd589a3ca658c197da8ff6a39bd94c9a6a35e340352084d163c"
     }
   ]
 }

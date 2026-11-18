@@ -498,28 +498,36 @@
     "pages": 1,
     "layout": "A0 portrait, pending the separate course formatting notice",
     "source": "poster/Poster.html",
-    "PDF_sha256": "163f28f5fede29e295cb739c441cc233836ca0634b13be691734e74b7ce54cdb",
+    "PDF_sha256": "60c7605c79f7b63257b1249c70af384105109c4aef43c3aa41792344ddf86649",
     "formal_results_reviewed_against_report_sections": [
       "4.1",
       "4.2",
       "4.3",
-      "4.4",
       "4.5",
       "4.6",
       "4.7"
     ],
     "report_figures_reused": [
       "report_budget.pdf",
-      "report_context.pdf"
+      "report_context.pdf",
+      "report_stress.pdf"
     ],
     "rendered_page_reviewed": true,
     "figure_manifest": "poster/FIGURE_MANIFEST.json",
     "skill_gate_status": "All five checks passed",
-    "column_bottom_spread_px": 3.47,
+    "column_bottom_spread_px": 0.67,
     "footer_gap_px": [
       45.34,
-      48.81
+      46.02
     ],
-    "independent_review": "Print-ready; final copy clarifies that model choices precede test and mechanism labels are used after scoring."
+    "interactive_verification": {
+      "ULB_budgets": 4,
+      "ULB_display_metrics": 2,
+      "Handbook_feature_sets": 5,
+      "figure_zoom_controls": 3,
+      "offline_mobile_and_keyboard_close_verified": true,
+      "print_hides_controls": true
+    },
+    "independent_review": "Print-ready. Poster claims were checked against the report and the A0 rendering was inspected."
   }
 }

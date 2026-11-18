@@ -4,7 +4,9 @@
 
 The print layout is one A0 portrait page (841 × 1189 mm). The course guide says the final formatting specifications will be released separately.
 
-The poster uses Figures 1 and 4 from the report. Its ULB budget, overlap, labels, cost and rule results come from Sections 4.1–4.4 and 4.7. The Handbook comparisons come from Sections 4.5–4.7. The PaySim results come from Table 10.
+Open `Poster.html` in a browser with the `assets/` folder beside it. Use the link below the headline to compare four ULB review budgets or five Handbook feature sets. The ULB control switches the bars between recall and precision. Each report chart can be enlarged, and the metric explanations can be expanded. These controls run offline. Use `Poster.pdf` for printing.
+
+The poster uses Figures 1, 4 and 5 from the report. Its ULB results come from Sections 4.1–4.3 and 4.7. The Handbook comparisons come from Sections 4.5–4.6. The PaySim results come from Table 10. The HTML controls use aggregate values embedded from `ulb_test.json` and `handbook_test.json` in `results/tables/`.
 
 ## Rebuild the poster
 
@@ -21,6 +23,6 @@ python "$POSTER_SKILL/scripts/poster_check.py" verify-final poster/Poster.pdf \
   --from-html poster/Poster.html --max-size-mb 20
 ```
 
-After editing the report figures, re-export the two poster images with `pdftoppm -r 750 -png -singlefile` and update their source and image hashes in the manifest.
+After editing the report figures, re-export the three poster images with `pdftoppm -r 750 -png -singlefile` and update their source and image hashes in the manifest.
 
 The HTML adapts ARIS's portrait template and generic design tokens, originally derived from posterly (MIT, © 2026 Ruishuo Chen). [License](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/blob/9f30e834d24a337dbdd06fb20a1150d4376dfa59/skills/paper-poster-html/LICENSES/posterly-MIT.txt)

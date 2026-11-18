@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Credit Card Fraud Detection under a Limited Review Budget</title>
 <style>
 @page { size: 841mm 1189mm; margin: 0; }
@@ -92,6 +93,7 @@ html, body { color:var(--text-primary); background:var(--bg-screen); font-family
 .body-text + .body-text { margin-top:calc(4 * var(--u)); }
 .figure { margin-top:calc(4 * var(--u)); }
 .figure img { display:block; width:100%; }
+.figure .figure-inset { width:96%; margin-inline:auto; }
 .caption { font-size:var(--fs-2); color:var(--text-secondary); line-height:1.24; margin-top:calc(3 * var(--u)); }
 .flow-strip { display:grid; grid-template-columns:repeat(3, 1fr); gap:calc(4 * var(--u)); margin-top:calc(5 * var(--u)); }
 .flow-strip span { padding:calc(4 * var(--u)); background:var(--accent-light); font:600 var(--fs-2)/1.2 var(--font-sans); color:var(--accent-deep); }
@@ -100,8 +102,37 @@ html, body { color:var(--text-primary); background:var(--bg-screen); font-family
 .result-table th:first-child, .result-table td:first-child { text-align:left; }
 .result-table tbody tr:first-child { background:var(--gold-soft); }
 .footer { border-top:1px solid var(--border-soft); padding-top:calc(5 * var(--u)); display:flex; justify-content:space-between; align-items:center; gap:calc(8 * var(--u)); color:var(--text-secondary); font:var(--fs-2)/1.2 var(--font-sans); }
-.footer a { color:var(--accent); font-weight:700; }
+a { color:var(--accent); }
+.footer a { font-weight:700; }
+[hidden] { display:none !important; }
+.explorer, .zoom-button, dialog { font-family:var(--font-sans); font-size:var(--fs-3); }
+.explorer { margin:0 auto; width:min(calc(841 * var(--u)), 100%); padding:calc(18 * var(--u)); background:var(--bg-card); }
+.explorer h2, .explorer h3 { color:var(--accent-deep); margin-bottom:calc(4 * var(--u)); }
+.explorer h2 { font-size:var(--fs-7); }
+.explorer h3 { font-size:var(--fs-6); }
+.explorer section + section { margin-top:calc(15 * var(--u)); }
+.explorer-controls { display:flex; flex-wrap:wrap; gap:calc(8 * var(--u)); margin:calc(5 * var(--u)) 0; }
+.explorer-controls label { display:grid; gap:calc(2 * var(--u)); font-weight:700; }
+.explorer select, .zoom-button, dialog button { font:inherit; color:var(--accent-deep); background:var(--accent-light); padding:calc(3 * var(--u)); border:1px solid var(--border-strong); }
+.explorer-table { overflow-x:auto; }
+.explorer .result-table tbody tr:first-child { background:var(--bg-card); }
+.explorer meter { width:100%; min-width:calc(62 * var(--u)); accent-color:var(--accent); }
+.explorer details { margin-top:calc(5 * var(--u)); }
+.explorer summary { cursor:pointer; font-weight:700; color:var(--accent-deep); }
+.explorer details p { margin-top:calc(3 * var(--u)); }
+.zoom-button { margin-top:calc(2 * var(--u)); cursor:pointer; }
+dialog { margin:auto; padding:calc(8 * var(--u)); border:1px solid var(--border-strong); max-width:96vw; max-height:94vh; }
+dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain; margin-top:calc(4 * var(--u)); }
+.explore-link { color:var(--accent-deep); font-weight:700; }
+@media screen and (max-width:1360px) {
+  .poster { width:100%; height:auto; }
+}
+@media screen and (max-width:820px) {
+  .poster { padding:calc(11 * var(--u)); }
+  .body-grid, .hero { grid-template-columns:1fr; }
+}
 @media print {
+  .screen-only, dialog { display:none !important; }
   :root { --u:1mm; }
   html, body { margin:0; background:var(--bg-page); print-color-adjust:exact; -webkit-print-color-adjust:exact; }
   .poster { width:841mm; height:1189mm; margin:0; }
@@ -116,8 +147,9 @@ html, body { color:var(--text-primary); background:var(--bg-screen); font-family
     <p class="subtitle">When reviewers can inspect only a fraction of transactions, which ranking finds the most fraud at the same workload?</p>
     <div class="hero highlight">
       <strong class="hero-number">64 of 74 frauds</strong>
-      <p>The preselected weighted logistic regression found 64 frauds in 568 ULB test reviews. Isolation Forest found 41 at the same 1% budget.</p>
+      <p>At the same 1% budget on the ULB test set, weighted logistic regression found 64 frauds and Isolation Forest found 41. Each reviewed 568 transactions.</p>
     </div>
+    <p class="caption screen-only"><a class="explore-link" href="#explore">Explore the results by review budget and feature set ↓</a></p>
   </header>
 
   <div class="body-grid" data-measure-role="body">
@@ -128,11 +160,11 @@ html, body { color:var(--text-primary); background:var(--bg-screen); font-family
         <div class="flow-strip"><span>Fit on past data</span><span>Select before testing</span><span>Rank held-out transactions</span></div>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">More reviews, one extra detection</h2>
+        <h2 class="section-title">Doubling reviews finds one more fraud</h2>
         <figure class="figure"><img src="assets/budget.png" data-source="paper" data-asset-id="budget" alt="ULB test curves for fraud recall and review precision across four review budgets">
           <figcaption class="caption">ULB formal test. Recall counts the share of frauds found. Precision counts the share of reviews that are fraud.</figcaption></figure>
-        <p class="body-text">Weighted logistic regression (LR) found 63 frauds at 0.5% and 64 at 1%. At 1%, K-means distance found 37.</p>
-        <p class="body-text">Isolation Forest (IF) found one fraud outside the LR list. Combining both lists found 65 frauds but required 1,036 reviews. The quota chosen before testing used LR alone.</p>
+        <p class="body-text">At 0.5%, weighted logistic regression (LR) found 63 frauds in 284 reviews. At 1%, it found 64 in 568.</p>
+        <p class="body-text">At 1%, the two methods shared 40 detections. Taking both lists would find 65 frauds across 1,036 reviews. The quota selected before testing used LR alone.</p>
       </section>
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Labels and rules</h2>
@@ -140,39 +172,156 @@ html, body { color:var(--text-primary); background:var(--bg-screen); font-family
         <p class="body-text">The first training-ordered Apriori rule (R001) covered 3,846 transactions and 52 frauds. Its lift was 10.37, while its confidence was 1.35%. The rule highlights a concentration of fraud and covers more rows than the review team can handle.</p>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">How much is a missed fraud worth?</h2>
-        <p class="body-text">In a scenario where missing a fraud costs 50 times as much as reviewing a normal transaction, weighted LR's loss was 771 at a 0.5% budget and 1,004 at 1%. This is an assumed cost comparison. The primary results still use 1%.</p>
+        <h2 class="section-title">Same budget, different yield</h2>
+        <p class="body-text">On ULB, each ranking sends 568 transactions to review. Count the frauds found out of 74.</p>
+        <table class="result-table">
+          <thead><tr><th scope="col">Method</th><th scope="col">Found</th><th scope="col">Recall</th></tr></thead>
+          <tbody><tr><td>Weighted LR</td><td>64</td><td>86.49%</td></tr><tr><td>Isolation Forest</td><td>41</td><td>55.41%</td></tr><tr><td>K-means distance</td><td>37</td><td>50.00%</td></tr></tbody>
+        </table>
+        <p class="caption">The 1% review list contains 568 of 56,746 test transactions.</p>
       </section>
     </div>
     <div class="column" data-measure-role="column">
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Extra context can cost detections</h2>
-        <p class="body-text">The Handbook simulator lets us add past customer and terminal activity and features from their interactions. Every ranking had the same 1,458 reviews and 1,280 test frauds.</p>
+        <p class="body-text">On Handbook, we compared past activity and customer–terminal connections. Each ranking reviewed 1,458 transactions, with 1,280 frauds in the test set.</p>
         <figure class="figure"><img src="assets/context.png" data-source="paper" data-asset-id="context" alt="Handbook test average precision and recall at 1 percent for five feature views">
-          <figcaption class="caption">Handbook formal test. Average precision (AP) summarizes the full ranking. Recall at 1% measures the share of frauds found at that workload.</figcaption></figure>
-        <p class="body-text">Adding both histories changed detections from 346 to 334 for LR and from 334 to 139 for IF. With 30% of history events omitted, IF found 77–82 frauds across three removal seeds.</p>
+          <figcaption class="caption">Handbook formal test. AP measures the full ranking. Recall at 1% measures the share of frauds found at the chosen workload.</figcaption></figure>
+        <p class="body-text">Adding both histories lowered detections from 346 to 334 for LR and from 334 to 139 for Isolation Forest (IF).</p>
       </section>
       <section class="card" data-measure-role="card">
         <h2 class="section-title">PaySim tests a different setting</h2>
-        <p class="body-text">At 1,289 reviews, IF found the most of 413 frauds. Amount ranking had the highest AP of the three methods.</p>
+        <p class="body-text">At 1,289 reviews, IF led in detections. Amount ranking led in AP.</p>
         <table class="result-table">
           <thead><tr><th scope="col">Method</th><th scope="col">Frauds found</th><th scope="col">AP</th></tr></thead>
           <tbody><tr><td>Fixed IF</td><td>102</td><td>0.0447</td></tr><tr><td>Amount</td><td>94</td><td>0.0798</td></tr><tr><td>Weighted LR</td><td>80</td><td>0.0634</td></tr></tbody>
         </table>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">A blind spot in the simulator</h2>
-        <p class="body-text">In the terminal-compromise scenario, history LR found 4 of 800 frauds and history IF found 9. We use these mechanism labels only after scoring to see which types of fraud the models missed.</p>
-        <p class="caption">Counts use the final simulator mechanism code.</p>
+        <h2 class="section-title">Missing history hurts IF more</h2>
+        <figure class="figure"><img class="figure-inset" src="assets/stress.png" data-source="paper" data-asset-id="stress" alt="Handbook test AP and recall when zero, ten, or thirty percent of history is removed">
+          <figcaption class="caption">With 30% of history omitted, IF fell from 139 to 77–82 detections. LR found 334–337. Shading shows the range over three removal seeds.</figcaption></figure>
       </section>
       <section class="card highlight" data-measure-role="card">
         <h2 class="section-title">Set capacity first</h2>
         <p class="body-text">Compare detections at the available review capacity. Use AP to examine the rest of the ranking and test whether extra history improves the actual review list.</p>
-        <p class="body-text">The evidence comes from one chronological ULB split with 74 test frauds and two simulated datasets. The simulated datasets were fitted and evaluated separately.</p>
+        <p class="body-text">Evidence comes from one ULB time split and two simulators.</p>
       </section>
     </div>
   </div>
   <footer class="footer" data-measure-role="footer"><p>Data sources: ULB/Worldline via Zenodo, Fraud Detection Handbook and PaySim.</p><p><a href="https://github.com/congrenhang-ship-it/AIAA3111-Group20">Report, code and data instructions</a></p></footer>
 </main>
+<section id="explore" class="explorer screen-only" hidden>
+  <h2>Explore the formal test results</h2>
+  <section aria-labelledby="ulb-title">
+    <h3 id="ulb-title">ULB · Compare review budgets</h3>
+    <div class="explorer-controls">
+      <label>Review budget <select id="budget-select"><option value="0.001">0.1%</option><option value="0.005">0.5%</option><option value="0.01" selected>1%</option><option value="0.02">2%</option></select></label>
+      <label>Bar shows <select id="ulb-metric"><option value="recall_at_k">Recall</option><option value="precision_at_k">Precision</option></select></label>
+    </div>
+    <p id="ulb-status" aria-live="polite"></p>
+    <div class="explorer-table"><table class="result-table">
+      <thead><tr><th scope="col">Method</th><th scope="col">Found</th><th scope="col">Normal reviews</th><th scope="col">Recall</th><th scope="col">Precision</th><th scope="col" id="ulb-bar-label">Recall</th></tr></thead>
+      <tbody id="ulb-rows"></tbody>
+    </table></div>
+    <details><summary>How to read recall and precision</summary><p>Recall divides frauds found by all test frauds. Precision divides frauds found by transactions reviewed. With a larger budget, a method can find more fraud while sending more normal transactions to review.</p></details>
+  </section>
+  <section aria-labelledby="hb-title">
+    <h3 id="hb-title">Handbook · Compare feature sets</h3>
+    <div class="explorer-controls">
+      <label>Feature set <select id="feature-select">
+        <option>Current transaction</option><option>Customer history</option><option>Terminal history</option><option>Both histories</option><option>Both histories + relations</option>
+      </select></label>
+    </div>
+    <p id="hb-status" aria-live="polite"></p>
+    <div class="explorer-table"><table class="result-table">
+      <thead><tr><th scope="col">Method</th><th scope="col">Found</th><th scope="col">Difference vs. current only</th><th scope="col">AP</th><th scope="col">Recall</th><th scope="col">Recall bar</th></tr></thead>
+      <tbody id="hb-rows"></tbody>
+    </table></div>
+    <details><summary>What are history and relation features?</summary><p>Histories summarize earlier spending and activity for each customer or terminal. Relation features describe past customer–terminal connections. All rankings use the same 1% review capacity.</p></details>
+  </section>
+  <p><a href="Poster.pdf">Open the print PDF</a></p>
+</section>
+<dialog id="figure-dialog" aria-label="Enlarged report figure">
+  <form method="dialog"><button>Close figure</button></form>
+  <img id="dialog-image" alt="">
+</dialog>
+<script type="application/json" id="formal-results">{"ulb":{"Weighted LR":[{"review_fraction":0.001,"K":57,"TP":50,"FP":7,"recall_at_k":0.6756756756756757,"precision_at_k":0.8771929824561403},{"review_fraction":0.005,"K":284,"TP":63,"FP":221,"recall_at_k":0.8513513513513513,"precision_at_k":0.22183098591549297},{"review_fraction":0.01,"K":568,"TP":64,"FP":504,"recall_at_k":0.8648648648648649,"precision_at_k":0.11267605633802817},{"review_fraction":0.02,"K":1135,"TP":65,"FP":1070,"recall_at_k":0.8783783783783784,"precision_at_k":0.05726872246696035}],"Isolation Forest":[{"review_fraction":0.001,"K":57,"TP":0,"FP":57,"recall_at_k":0.0,"precision_at_k":0.0},{"review_fraction":0.005,"K":284,"TP":27,"FP":257,"recall_at_k":0.36486486486486486,"precision_at_k":0.09507042253521127},{"review_fraction":0.01,"K":568,"TP":41,"FP":527,"recall_at_k":0.5540540540540541,"precision_at_k":0.0721830985915493},{"review_fraction":0.02,"K":1135,"TP":50,"FP":1085,"recall_at_k":0.6756756756756757,"precision_at_k":0.04405286343612335}],"K-means distance":[{"review_fraction":0.001,"K":57,"TP":0,"FP":57,"recall_at_k":0.0,"precision_at_k":0.0},{"review_fraction":0.005,"K":284,"TP":20,"FP":264,"recall_at_k":0.2702702702702703,"precision_at_k":0.07042253521126761},{"review_fraction":0.01,"K":568,"TP":37,"FP":531,"recall_at_k":0.5,"precision_at_k":0.06514084507042253},{"review_fraction":0.02,"K":1135,"TP":49,"FP":1086,"recall_at_k":0.6621621621621622,"precision_at_k":0.04317180616740088}]},"handbook":{"Current transaction":{"Logistic regression":{"review_fraction":0.01,"K":1458,"TP":346,"FP":1112,"recall_at_k":0.2703125,"precision_at_k":0.23731138545953362,"AP":0.2691673019609699},"Isolation Forest":{"review_fraction":0.01,"K":1458,"TP":334,"FP":1124,"recall_at_k":0.2609375,"precision_at_k":0.22908093278463648,"AP":0.1596128365094767}},"Customer history":{"Logistic regression":{"review_fraction":0.01,"K":1458,"TP":339,"FP":1119,"recall_at_k":0.26484375,"precision_at_k":0.23251028806584362,"AP":0.22327814218343492},"Isolation Forest":{"review_fraction":0.01,"K":1458,"TP":222,"FP":1236,"recall_at_k":0.1734375,"precision_at_k":0.1522633744855967,"AP":0.052920400475978575}},"Terminal history":{"Logistic regression":{"review_fraction":0.01,"K":1458,"TP":338,"FP":1120,"recall_at_k":0.2640625,"precision_at_k":0.23182441700960219,"AP":0.24995818480146623},"Isolation Forest":{"review_fraction":0.01,"K":1458,"TP":55,"FP":1403,"recall_at_k":0.04296875,"precision_at_k":0.03772290809327846,"AP":0.020509344183992032}},"Both histories":{"Logistic regression":{"review_fraction":0.01,"K":1458,"TP":334,"FP":1124,"recall_at_k":0.2609375,"precision_at_k":0.22908093278463648,"AP":0.21298377642655464},"Isolation Forest":{"review_fraction":0.01,"K":1458,"TP":139,"FP":1319,"recall_at_k":0.10859375,"precision_at_k":0.0953360768175583,"AP":0.029398513163219304}},"Both histories + relations":{"Logistic regression":{"review_fraction":0.01,"K":1458,"TP":333,"FP":1125,"recall_at_k":0.26015625,"precision_at_k":0.22839506172839505,"AP":0.2063524954593222},"Isolation Forest":{"review_fraction":0.01,"K":1458,"TP":104,"FP":1354,"recall_at_k":0.08125,"precision_at_k":0.07133058984910837,"AP":0.022910175180857063}}},"fraud_totals":{"ulb":74,"handbook":1280}}</script>
+<script>
+(() => {
+  const data = JSON.parse(document.getElementById('formal-results').textContent);
+  const byId = id => document.getElementById(id);
+  const integer = new Intl.NumberFormat('en-US');
+  const percent = v => (100 * v).toFixed(2) + '%';
+  function addRow(table, name, cells, barValue, barName) {
+    const row = table.insertRow();
+    const label = document.createElement('th');
+    label.scope = 'row';
+    label.textContent = name;
+    row.append(label);
+    cells.forEach(value => { row.insertCell().textContent = value; });
+    const bar = document.createElement('meter');
+    bar.min = 0;
+    bar.max = 1;
+    bar.value = barValue;
+    bar.setAttribute('aria-label', name + ' ' + barName + ' ' + percent(barValue));
+    row.insertCell().append(bar);
+  }
+
+  function showBudget() {
+    const budget = Number(byId('budget-select').value);
+    const metric = byId('ulb-metric');
+    const label = metric.selectedOptions[0].textContent;
+    const table = byId('ulb-rows');
+    table.replaceChildren();
+    byId('ulb-bar-label').textContent = label + ' bar';
+    for (const [name, values] of Object.entries(data.ulb)) {
+      const row = values.find(value => value.review_fraction === budget);
+      addRow(table, name, [row.TP, integer.format(row.FP), percent(row.recall_at_k),
+        percent(row.precision_at_k)], row[metric.value], label);
+    }
+    const first = Object.values(data.ulb)[0].find(row => row.review_fraction === budget);
+    byId('ulb-status').textContent = integer.format(first.K) + ' reviews per method, ' +
+      integer.format(data.fraud_totals.ulb) + ' test frauds.';
+  }
+
+  function showFeatures() {
+    const selection = byId('feature-select').value;
+    const table = byId('hb-rows');
+    table.replaceChildren();
+    const values = data.handbook[selection];
+    for (const [name, row] of Object.entries(values)) {
+      const delta = row.TP - data.handbook['Current transaction'][name].TP;
+      const signedDelta = delta > 0 ? '+' + delta : String(delta);
+      addRow(table, name, [integer.format(row.TP), signedDelta, row.AP.toFixed(4),
+        percent(row.recall_at_k)], row.recall_at_k, 'recall');
+    }
+    const first = Object.values(values)[0];
+    byId('hb-status').textContent = selection + ' · ' + integer.format(first.K) +
+      ' reviews per method, ' + integer.format(data.fraud_totals.handbook) + ' test frauds.';
+  }
+
+  for (const id of ['budget-select', 'ulb-metric']) byId(id).addEventListener('change', showBudget);
+  byId('feature-select').addEventListener('change', showFeatures);
+  showBudget();
+  showFeatures();
+  byId('explore').hidden = false;
+
+  const dialog = byId('figure-dialog');
+  for (const figure of document.querySelectorAll('main figure')) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'zoom-button screen-only';
+    button.textContent = 'Enlarge chart';
+    button.addEventListener('click', () => {
+      const image = figure.querySelector('img');
+      byId('dialog-image').src = image.src;
+      byId('dialog-image').alt = image.alt;
+      dialog.showModal();
+    });
+    figure.append(button);
+  }
+})();
+</script>
 </body>
 </html>
