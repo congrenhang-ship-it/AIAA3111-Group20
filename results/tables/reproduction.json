@@ -413,17 +413,84 @@
   "report_build_verification": {
     "date": "2026-11-18",
     "main_text_pages": 10,
-    "total_PDF_pages": 13,
-    "result_tables_checked": 10,
+    "total_PDF_pages": 15,
+    "result_tables_checked": 13,
     "test_figures": 5,
     "formal_result_files_unchanged": 8,
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
     "poster_unchanged": true,
-    "PDF_sha256": "3d046404d8e651a47b2d22030f67b0eba6c48d8b1877b740db955a91f8b6ffbb",
-    "Markdown_sha256": "cd0a06a508733ca0150478b76a11fd8df5b749f911cfc1c714bbb2cbc59d40a3",
+    "PDF_sha256": "ab76f3388d50527dac98c2fd61aef5a34642a666ab7fb36b9be424051ae97f9a",
+    "Markdown_sha256": "9d34a1cc5493fe6a01701fe126a80ec424edb2ac816edb5803310b143182817c",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
-    "member_fields": "Names/IDs left blank for group completion as requested previously."
+    "member_fields": "Names/IDs left blank for group completion as requested previously.",
+    "main_text_numerical_tables": 10,
+    "appendix_numerical_tables": 3
+  },
+  "course_report_review": {
+    "date": "2026-11-18",
+    "requirements_checked": [
+      "03. Project(2).pdf",
+      "02. Project_Assessment_Rubrics(2).pdf"
+    ],
+    "main_text_pages": 10,
+    "total_PDF_pages": 15,
+    "numerical_tables_automatically_checked": 13,
+    "unchanged_report_figures": {
+      "results/figures/report_amount.pdf": "b4cf65f1ec6ea5b8741ffe5d1a5090097264223484d09f8b41695460fc85c29d",
+      "results/figures/report_budget.pdf": "67f2a3c19aa0715db986646ba3009c56314ad1e7d0276662cae8783bbe40c771",
+      "results/figures/report_context.pdf": "9a6de12fd363595ac53a2218ef306ab6487f521005d42bc628a8f0521cf084f0",
+      "results/figures/report_stress.pdf": "86b5a03f4c851cad725c66ee5c22efd9af9124f0ad548fa485a743657e78fa8f",
+      "results/figures/report_supervision.pdf": "61e28454e3337e19a1d461cee8eca7aa70dd1dfb9e650b312eebcb2796aea7b8"
+    },
+    "formal_test_JSON_files_byte_identical_to_previous_commit": [
+      "ulb_test",
+      "c_test",
+      "b_extensions_test",
+      "c_extensions_test",
+      "handbook_test",
+      "handbook_d_test",
+      "paysim_test",
+      "project_test"
+    ],
+    "core_code_tests_requirements_and_poster_unchanged": true,
+    "frozen_evaluation_sources_match": true,
+    "original_model_SHA256_unchanged": true,
+    "independent_frozen_R001_reapplication": {
+      "ULB": {
+        "n_transactions": 56746,
+        "n_fraud": 74,
+        "coverage_count": 3846,
+        "fraud_count": 52,
+        "support": 0.0009163641490149085,
+        "confidence": 0.013520540821632865,
+        "lift": 10.36806229005917,
+        "kulczynski": 0.3581116217621678,
+        "fraud_recall": 0.7027027027027027
+      },
+      "Handbook": {
+        "n_transactions": 145739,
+        "n_fraud": 1280,
+        "coverage_count": 28997,
+        "fraud_count": 514,
+        "support": 0.0035268527984959413,
+        "confidence": 0.017725971652239887,
+        "lift": 2.0182542051763974,
+        "kulczynski": 0.20964423582611993,
+        "fraud_recall": 0.4015625
+      }
+    },
+    "incorrect_AP_mutation_detected": true,
+    "course_materials_used": [
+      "L3 Pattern Mining I (0917)",
+      "L4 Pattern Mining II (0927)",
+      "L5 Classification Basic (1010)",
+      "L6 Classification Advanced (1019)",
+      "L7 Clustering Basic (1029)"
+    ],
+    "course_mapping": "Report Appendix B.1 provides slide numbers and links to the applied experiments. Later anomaly-detection lecture slides were not available.",
+    "member_fields": "Names and IDs remain blank for members; personal disclosures need member confirmation.",
+    "visual_review": "Changed main-text pages 3, 5, 10 and new appendix pages 14, 15 checked after rendering; no overflow or missing glyph warnings in the build."
   }
 }

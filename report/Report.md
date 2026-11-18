@@ -49,6 +49,8 @@ Fraud detection systems produce more alerts than reviewers can investigate. A us
 
 Our project asks four questions: which methods work at a fixed budget; whether their discoveries complement one another; how labels and contextual information change performance; and how rules and cases explain the results. ULB provides the real anonymous-data experiment, the Handbook simulator provides identifiable histories and mechanisms, and PaySim provides a separate transaction domain [1–4].
 
+The study contributes an equal-capacity comparison, controlled changes to available information, and a rule-based explanation of model errors. It applies association mining, classifier evaluation, cluster validation and richer-data feature engineering from Lectures 3–7 [8–12].
+
 # 2. Problem formulation
 
 Each transaction has features $x_i$, a label $y_i\in\{0,1\}$ and a stable row ID. A method returns a risk score $s_i$. For $N$ transactions and budget $q$, we review $K=\lceil Nq\rceil$ records, ordered by decreasing score and then increasing row ID. The primary budget is 1%; 0.1%, 0.5% and 2% show the workload trade-off. Outputs comprise ranked reviews, comparative metrics, group/time diagnostics and short fraud-associated rules.
@@ -83,19 +85,19 @@ The pipeline is acquisition and audit → chronological partitioning → trainin
 
 ## 3.3 Classification, clustering and anomaly detection
 
-**Classification.** ULB compares logistic regression (LR), a decision tree, Gaussian naive Bayes and a 100-tree random forest, plus weighted and randomly undersampled LR. LR learns linear log-odds; tree methods learn feature splits, and naive Bayes models class-conditional feature distributions. LR and naive Bayes use StandardScaler; trees use unscaled inputs. The weighted LR uses balanced class weights, $w_c=N/(2N_c)$. Undersampling retains all 342 training frauds and 342 randomly chosen normal transactions; its scaler is fitted on those 684 records. Model seeds are 42. Selection uses validation TP at 1%, then AP, then method name. Weighted LR is the selected classifier.
+**Classification.** Following Lecture 5 [10], LR uses $p_i=\sigma(\beta^\top z_i+b)$ and regularized log loss. Balanced weights $w_c=N/(2N_c)$ raise the contribution of the rare fraud class. Gaussian naive Bayes assumes conditional independence and Gaussian feature likelihoods. Trees choose splits by Gini reduction, $G=1-\sum_c p_c^2$; the 100-tree random forest combines bootstrap sampling with random feature subsets. LR and naive Bayes use StandardScaler; trees use unscaled inputs. Original, weighted and 1:1 undersampled LR compare ordinary fitting, cost-sensitive learning and data-level balancing. Undersampling retains 342 frauds and 342 normal records, fitting its scaler on those 684 rows. Seeds are 42. Validation TP at 1%, then AP, then method name selects weighted LR.
 
-**Clustering and anomaly scores.** K-means defines transaction groups and ranks Euclidean distance to the assigned centroid after scaling. Training silhouettes select $k=3$ from 3/5/8, with 10 initializations. Isolation Forest isolates points through randomized tree splits and ranks $-\mathrm{score\_samples}(x)$ [6]. Shorter isolation paths indicate greater abnormality. A bounded second round compares six K-means representations, each with raw and within-cluster relative distance, and eight IF settings. An inner chronological 80/20 split of the original training data evaluates seeds 42/43/44. Mean TP at 1%, then AP, selects the family representatives. The retained IF uses 100 trees and 4,096 sampled training records per tree. All 20 scores remain in the test output.
+**Clustering and anomaly scores.** K-means minimizes $\mathrm{SSE}=\sum_i\|z_i-\mu_{c_i}\|_2^2$ on standardized features. It ranks distance to the assigned centroid. Because SSE favors larger k, training silhouette selects $k=3$ from 3/5/8 [12]. Ten initializations reduce local-optimum sensitivity. Isolation Forest ranks $-\mathrm{score\_samples}(x)$: shorter isolation paths imply greater abnormality [6]. A bounded second round compares six K-means representations with raw and within-cluster relative distances, and eight IF settings. An inner chronological 80/20 training split with seeds 42/43/44 selects family representatives by mean TP at 1%, then AP. The retained IF has 100 trees and 4,096 training samples per tree. All 20 scores remain in the test output.
 
 **Review combinations.** Quotas are 0/25/50/75/100%. The first ranking contributes $\lfloor K\alpha\rfloor$ transactions; the second fills the list while skipping duplicates. Inner training data choose the anomaly-pair quota. Validation chooses the classifier/IF quota, preferring a pure method on a tie. The frozen policies are pure IF for the anomaly pair and pure weighted LR for the classifier comparison.
 
 ## 3.4 Context, rules and evaluation
 
-Handbook compares the same LR and IF256 across four historical views and a view with three 7-day relation features: customer terminal degree, terminal customer degree and a new-pair indicator. Development LR updates occur on days 30, 37 and 44 using a 30-day window, with label delays of 0/1/7 days [5]. The final snapshots are held fixed in test. History stress tests omit 0/10/30% of source events from subsequent histories with seeds 42/43/44; the current transactions and labels remain present.
+Handbook applies the richer-data approach in Lecture 6 [11]: summarize a customer’s transaction sequence into 1/7-day features, extract degree and new-pair features from customer–terminal edges, then fit the same LR and IF256. Development LR updates on days 30/37/44 use a 30-day sliding window and 0/1/7-day label delays [5]. Saved snapshots stay fixed in test. History stress tests omit 0/10/30% of source events from later histories with seeds 42/43/44; current transactions and labels stay present.
 
-A bounded Apriori search builds short feature-bin antecedents. Rules use three training-fitted bins, equal-width or equal-frequency, and at most two antecedent items followed by Class=1. Candidate rules need coverage at least 20, at least 5 frauds and lift greater than 1 in both training and validation. The binning scheme retaining more rules wins, with equal-frequency preferred on a tie. ULB uses Amount plus four V features selected by training-label correlation; Handbook uses amount, relative customer amount and customer/terminal 7-day counts. The frozen sets have 21 and 19 rules, respectively.
+Each transaction contains one bin item per selected feature. Apriori joins antecedents only when their subsets cover at least 20 rows: support is downward-closed, while confidence and lift are assessed after counting [8]. We compare three-bin equal-width/equal-frequency discretization and at most two antecedents followed by Class=1. Rules require coverage at least 20, at least 5 frauds and lift above 1 in both training and validation. The scheme retaining more rules wins; ties prefer equal-frequency. ULB uses Amount and four V features chosen by a training-correlation filter [11]; Handbook uses amount, relative amount and 7-day counts. The retained sets contain 21 and 19 rules.
 
-With $F=\sum_i y_i$, we report $P@K=TP/K$, $R@K=TP/F$ and non-interpolated AP [7], plus fraud-amount coverage and hypothetical loss $L=FP+rFN$ for $r=10,50,100$. Paired row bootstrap uses 500 draws; a 200-draw, 30-minute-block analysis tests temporal sensitivity. Intervals condition on the fitted models. Rule confidence is covered frauds / covered rows; lift divides confidence by prevalence. Overlapping coverage is counted once.
+With $F=\sum_i y_i$, evaluation uses $P@K=TP/K$, $R@K=TP/F$, non-interpolated AP [7], fraud-amount coverage and loss $L=FP+rFN$ for $r=10,50,100$. We use 500 paired row draws and 200 draws of 30-minute blocks; intervals condition on the fitted models. For antecedent count A and covered-fraud count J, rule support is $J/N$, confidence $J/A$, lift $JN/(AF)$ and Kulczynski $\tfrac12(J/A+J/F)$ [8,9]. Overlapping coverage is counted once.
 
 \clearpage
 
@@ -122,7 +124,7 @@ Random forest has the highest test AP in this bounded comparison, but ties weigh
 
 ![ULB test recall and precision across the four fixed budgets. The methods and models are frozen; each curve uses the same transactions at each budget.](../results/figures/report_budget.pdf){width=100%}
 
-The smallest budget separates the methods sharply: weighted LR finds 50 frauds within 57 reviews, whereas IF4096 finds none. At 0.5%, LR already finds 63; increasing to 1% adds one fraud at 284 additional reviews. Accuracy alone would obscure this decision because normal transactions dominate the test set. A random list of 568 transactions has an expected 0.74 frauds, so the useful comparison concerns the concentration of fraud within the review capacity.
+The smallest budget separates the methods sharply: weighted LR finds 50 frauds within 57 reviews, whereas IF4096 finds none. At 0.5%, LR already finds 63; increasing to 1% adds one fraud at 284 additional reviews. An always-normal classifier has 99.87% accuracy and zero recall. Following Lecture 5’s positive-class evaluation [10], $F_1=2TP/(K+F)$ gives 0.1994 for LR and 0.1277 for IF at K=568; with the same K and F, this is the TP ordering. A random list has only 0.74 expected frauds.
 
 \clearpage
 
@@ -140,7 +142,7 @@ K-means groups provide a second view of the ranking. Table 3 allocates each meth
 | 1 | 48335 | 58 | 514 / 49 | 360 / 28 |
 | 2 | 0 | 0 | 0 / 0 | 0 / 0 |
 
-The classifier spends only 54 reviews in cluster 0 and finds 15 of its 16 frauds. IF spends 208 reviews there and finds 13. In cluster 1, the classifier finds 49 of 58 frauds, compared with IF's 28. This supports the overall comparison within both occupied groups. Cluster 2 is empty in the test partition and remains explicitly empty in the output. The groups describe anonymous feature geometry rather than customer categories.
+Training k=3 had mean silhouette 0.1537 and seed-agreement ARI 0.5558 on the fixed 1,000-row sample; k=5 gave 0.0669 and 0.1530. Silhouette measures cohesion/separation, while this ARI measures agreement between seeded partitions [12]. These favor k=3 within the tested choices, with limited separation. In test cluster 0, LR finds 15/16 frauds in 54 reviews versus IF’s 13 in 208; in cluster 1, it finds 49/58 versus 28. The third test group is empty. Scaling also changes the ranking: raw RobustScaler distance detects 10 frauds at 1%, versus 37 with StandardScaler [12]. These groups supply geometric diagnostics, while fraud detection remains a separate evaluation.
 
 A separate question is how many alerts a fixed validation threshold produces later. Table 4 applies the original thresholds without changing them.
 
@@ -153,13 +155,13 @@ A separate question is how many alerts a fixed validation threshold produces lat
 
 The LR threshold produces 453 reviews and detects 63 frauds, compared with 568 and 64 under test top-K. The IF threshold produces 374 reviews and detects 36, compared with 568 and 41. Both review rates fall below 1%. A score threshold therefore carries a different workload interpretation from a capacity rule, even when calibrated to 1% on validation.
 
-Hourly diagnostics use the same relative-time origin and frozen models. Window-specific top-K allocates a separate capacity inside each hour, whereas the whole-segment list can allocate more reviews to a busier or higher-scoring interval. We keep those two allocations separate in the result files. ULB covers about two days, with fewer than eight hours in the final segment, so these windows describe short-run variation.
+Hourly diagnostics use the same relative-time origin and frozen models. Each window has its own top-K capacity; the whole-segment list allocates reviews across hours. The final ULB segment spans fewer than eight hours, so the windows describe short-run variation.
 
 \clearpage
 
 ## 4.3 Label availability and model interpretation
 
-For the label experiment, each training class is randomly permuted, then nested 5/10/25/50/100% subsets are selected using the ceiling of each class count. Hidden labels are excluded from LR fitting. This stratified annotation simulation uses the original training labels to construct its subsets. LR sees the labeled subset; the fixed IF256 reference sees all training features. Table 5 retains every predeclared condition.
+Lecture 6 distinguishes learning settings by which labels are available [11]. Here LR is supervised training on reduced labeled subsets, with a separate unlabeled-data IF reference. Within each training class, random permutations give nested 5/10/25/50/100% subsets using ceiling counts. The masks use the original labels to control class composition; hidden labels are excluded from fitting. LR sees its labeled subset, while fixed IF256 sees all training features. Table 5 retains every predeclared condition.
 
 **Table 5. ULB label experiment on the formal test set; three mask seeds.**
 
@@ -249,9 +251,9 @@ The cold-start partition is defined by whether a customer and terminal appeared 
 
 ## 4.7 Rules, mechanism diagnostics and PaySim
 
-The 21 ULB rules jointly cover 56,053 of 56,746 test transactions and all 74 frauds. They also cover all 10 LR false negatives and all 504 LR false positives. Their broad reach makes them useful for inspecting errors, but a separate capacity-aware ordering would be needed to turn that coverage into alerts. The first training-ordered rule alone covers 3,846 transactions and 52 frauds; later rules add coverage with substantial overlap.
+The ULB rule union covers 56,053/56,746 test rows and all 74 frauds, including all 10 LR false negatives and 504 false positives. The first training-ordered rule, R001, covers 3,846 rows and 52 frauds: support 0.0916%, confidence 1.35%, lift 10.37 and Kulczynski 0.3581. High lift coexists with low conditional precision because fraud prevalence is only 0.1304%. This illustrates the base-rate issue in Lectures 3–4 [8,9]; the union’s broad coverage does not specify a 568-review ranking.
 
-Handbook's 19 rules cover 120,751 transactions and 1,122 frauds. One rule combines Amount at least 65.22 with spending at least about 1.20 times the customer’s preceding 7-day mean; it covers 28,997 transactions and 514 frauds. Table 9 separates the mutually exclusive final simulator scenario codes. Later simulator scenarios can overwrite earlier codes, so the table follows the stored final labels.
+Handbook’s 19 rules cover 120,751 transactions and 1,122 frauds. R001 combines Amount at least 65.22 with spending at least about 1.20 times the customer’s preceding 7-day mean. It covers 28,997 rows and 514 frauds: confidence 1.77%, lift 2.02 and Kulczynski 0.2096. This is the rule coverage/accuracy distinction in Lecture 6 [11]. Table 9 uses the simulator’s final mutually exclusive mechanism codes.
 
 **Table 9. Handbook fraud mechanisms; TP from the global 1% history-model lists.**
 
@@ -305,6 +307,16 @@ Each member should complete the name/ID fields and confirm their individual AIGC
 [6] Scikit-learn developers. *IsolationForest API documentation*. [Software documentation](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html).
 
 [7] Scikit-learn developers. *average_precision_score API documentation*. [Software documentation](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html).
+
+[8] Z. Liu. *Lecture 3: Pattern Mining—Basic Concepts and Methods*. AIAA 3111, course slides updated 17 September 2026.
+
+[9] Z. Liu. *Lecture 4: Pattern Mining—Advanced Methods*. AIAA 3111, course slides updated 27 September 2026.
+
+[10] Z. Liu. *Lecture 5: Classification—Basic Concepts*. AIAA 3111, course slides updated 10 October 2026.
+
+[11] Z. Liu. *Lecture 6: Classification—Advanced Methods*. AIAA 3111, course slides updated 19 October 2026.
+
+[12] Z. Liu. *Lecture 7: Cluster Analysis—Basic Concepts and Methods*. AIAA 3111, course slides updated 29 October 2026.
 
 Online sources checked 18 November 2026. Main-text pages: 1–\pageref{maintextend}. Disclosures, references and appendices are outside the main-text page count.
 
@@ -363,3 +375,61 @@ Figures 1–5 are rebuilt directly from these formal JSON files by report/build_
 The main text emphasizes the primary comparison and the most informative controlled contrasts. Full 20-score ULB ablations, all budgets, three-seed conditions, time windows, individual rule metrics and error associations are supplied by the same source files. Row-level predictions and fitted models remain in the local data/ directory; a fresh clone rebuilds them from the documented sources.
 
 The original ULB validation had been examined before the second C protocol. Its inner training split limits further use of that validation segment for the anomaly selection, and this development history remains part of the method record.
+
+
+\clearpage
+
+# Appendix B. Course concepts and supporting calculations
+
+## B.1 Course concepts used in the project
+
+| Course material | Concept applied | Project evidence |
+|---|---|---|
+| L3, slides 9–21, 28–35 | Transaction/item representation; support versus confidence; support-based Apriori pruning | Section 3.4; train-fitted feature bins and fixed short rules |
+| L3, slides 83–89; L4, slides 14–15, 45 | Base rates, lift and null-invariant Kulczynski | Section 4.7 and Table B2 |
+| L5, slides 19–36, 53–68, 73–83 | Gini/naive Bayes/logistic models; ensembles; PR/F1; class imbalance | Sections 3.3, 4.1 and 4.4: six supervised settings, equal-K comparisons and costs |
+| L6, slides 4–5, 47–67 | Feature selection; rule coverage/accuracy; label availability | Training-correlation filter, rule diagnosis and fixed label-budget experiment |
+| L6, slides 75–83 | Streams, sequence-to-vector and graph feature engineering | Sections 4.5–4.6: sliding-window fits, past-history summaries and degree/new-edge features |
+| L7, slides 22–35, 84–90 | Scaling, SSE, silhouette and stability | Section 4.2 and Table B1; cluster diagnostics on a shared training sample |
+
+The label experiment compares reduced-label supervised fits with an independent unsupervised reference. Historical and relation features feed ordinary LR/IF models.
+
+## B.2 Why SSE alone does not select k
+
+**Table B1. Original training-structure experiment; mean across seeds 42/43.**
+
+| k | Mean training SSE | Mean sample silhouette | Seed ARI |
+| --- | ---: | ---: | ---: |
+| 3 | 4,699,495 | 0.1537 | 0.5558 |
+| 5 | 4,409,757 | 0.0669 | 0.1530 |
+| 8 | 3,994,957 | 0.0614 | 0.1317 |
+
+SSE falls as k grows, but silhouette and agreement deteriorate. The selected k=3 is supported by cohesion/separation and initialization stability within the declared range. Here ARI compares the two seeded cluster assignments on the same unlabeled sample.
+
+\clearpage
+
+## B.3 Reading an association rule under a rare consequent
+
+**Table B2. Individual R001 test metrics, derived from the frozen rules’ stored counts.**
+
+| Rule | Coverage (%) | Support (%) | Confidence (%) | Lift | Kulczynski |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| ULB R001 | 6.7776 | 0.0916 | 1.3521 | 10.3681 | 0.3581 |
+| Handbook R001 | 19.8965 | 0.3527 | 1.7726 | 2.0183 | 0.2096 |
+
+Coverage is A/N; rule support is J/N, where A is the antecedent count and J the covered-fraud count. The two differ because many covered transactions are normal. Confidence J/A answers how often a fired rule is correct, whereas J/F measures the share of frauds it covers. Their average is Kulczynski. Each rule in Table B2 is first in the fixed training order, so its individual counts equal the first cumulative step.
+
+Lecture 4’s null-invariance point is visible algebraically: holding A, J and F fixed while adding transactions with neither antecedent nor fraud leaves confidence and Kulczynski unchanged. Lift JN/(AF) rises with N. This explains why lift should be read alongside conditional precision and coverage in this rare-class task.
+
+## B.4 Comparing the declared discretizations
+
+**Table B3. Development-only rule comparison. “Retained” means passing the same validation count/lift gates.**
+
+| Dataset | Binning | Training candidates | Validation retained |
+| --- | ---: | ---: | ---: |
+| ULB | equal-width | 38 | 15 |
+| ULB | equal-frequency | 25 | 21 |
+| Handbook | equal-width | 16 | 6 |
+| Handbook | equal-frequency | 24 | 19 |
+
+Equal-frequency retains more rules for both datasets under the fixed gates, so it supplies the frozen 21-rule ULB and 19-rule Handbook sets. Equal-width and equal-frequency create different interval occupancies from the same training values. For ULB, 21/25 equal-frequency candidates (84.0%) survive validation, versus 15/38 equal-width candidates (39.5%). This makes the representation comparison concrete: fewer training candidates can yield more patterns that persist into the next time segment. The formal test then applies the selected bins and rules.

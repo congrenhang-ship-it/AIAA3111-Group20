@@ -110,7 +110,7 @@ python -m unittest discover -s code/validation -p test_classification.py
 
 ## 报告更新与构建
 
-报告正文采用常规 11pt Times 风格字体，5 张矢量图从正式 JSON 重建；10 张表覆盖主要对照、可靠性与机制诊断。正文 10 页，含披露、参考文献及附录的 PDF 共 13 页。
+报告正文采用常规 11pt Times 风格字体，5 张矢量图从正式 JSON 重建；正文 10 张表覆盖主要对照、可靠性与机制诊断，附录另有 3 张计算表。正文 10 页，含披露、参考文献及附录的 PDF 共 15 页。结合 L3–L7 课件补充了不平衡分类指标、K-means 目标与质量评价、Apriori 剪枝、规则基率效应，以及滑动窗口和序列/关系特征的分析。
 
 编辑 report/Report.md 后，使用项目 Python 环境及另行安装的 Pandoc、XeLaTeX 重新生成：
 
@@ -118,7 +118,7 @@ python -m unittest discover -s code/validation -p test_classification.py
 python report/build_report.py
 ```
 
-脚本只绘图和排版，不训练模型或修改正式结果；会检查正文页数是否在 6–10 页。PDF 图保存在 results/figures/report_*.pdf，PNG 预览和 LaTeX 临时文件留在忽略的 data/report_build/。常规实验运行不需要 Pandoc 或 XeLaTeX。
+脚本只绘图和排版，不训练模型或修改正式结果；会先将 13 张数值表与原始汇总逐项比对，再检查正文页数是否在 6–10 页。PDF 图保存在 results/figures/report_*.pdf，PNG 预览和 LaTeX 临时文件留在忽略的 data/report_build/。常规实验运行不需要 Pandoc 或 XeLaTeX。
 
 ## 课程提交
 
