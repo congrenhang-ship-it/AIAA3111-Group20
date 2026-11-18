@@ -420,8 +420,8 @@
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
     "poster_unchanged": true,
-    "PDF_sha256": "52d2aabcbb4612d2416fffeb93df81e28de36a7ced30dd82b42fa026c281d53b",
-    "Markdown_sha256": "40b5823e2b54c21e8f54af69cc0fc03e48f953b7538d9f5d3957cd3a9080c130",
+    "PDF_sha256": "c4fdcdea9e20c2d25e4706d02fea6e1c272ae279b90df6ab85d7b2e45f7cf794",
+    "Markdown_sha256": "40b443d7eb12e3f99580667ea0f6ea7b3f00f47b00b22d762e2023be022c2ecd",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
     "member_fields": "Names/IDs left blank for group completion as requested previously.",
@@ -498,7 +498,7 @@
     "pages": 1,
     "layout": "80 cm wide × 100 cm high, portrait",
     "source": "poster/Poster.html",
-    "PDF_sha256": "c35e7f6caf208673a79a49cd6f66163f15dd807cf9eaa5ad197283be65694648",
+    "PDF_sha256": "4c8d6af7f2d2d38c8d8aa53d1d7c4936a04ef0630c115468ca9fdda505283e4d",
     "formal_results_reviewed_against_report_sections": [
       "4.1",
       "4.2",
@@ -515,10 +515,10 @@
     "rendered_page_reviewed": true,
     "figure_manifest": "poster/FIGURE_MANIFEST.json",
     "skill_gate_status": "All five checks passed",
-    "column_bottom_spread_px": 0.23,
+    "column_bottom_spread_px": 0.12,
     "footer_gap_px": [
-      44.03,
-      44.27
+      46.7,
+      46.83
     ],
     "interactive_verification": {
       "ULB_budgets": 4,
@@ -529,6 +529,6 @@
       "print_hides_controls": true
     },
     "independent_review": "Poster claims were independently checked before resizing. The resized 80 × 100 cm PDF was visually inspected and the browser interactions were retested.",
-    "narrative_revision": "Added the review-team decision, moved the equal-budget table ahead of the budget curve, and scoped the practical conclusion to the reported tests. Interactive data and source figures match the previous release."
+    "narrative_revision": "The hypothetical six-transaction example introduces equal-capacity ranking before ULB. Follow-up experiments examine capacity, information and setting. The report follows the same decision and states its limits."
   }
 }

@@ -76,12 +76,18 @@
 }
 * { box-sizing:border-box; margin:0; padding:0; }
 html, body { color:var(--text-primary); background:var(--bg-screen); font-family:var(--font-serif); }
-.poster { position:relative; width:calc(800 * var(--u)); margin:0 auto; padding:calc(25 * var(--u)) calc(25 * var(--u)) calc(20 * var(--u)); background:var(--bg-page); display:grid; grid-template-rows:auto 1fr auto; gap:calc(12 * var(--u)); }
+.poster { position:relative; width:calc(800 * var(--u)); margin:0 auto; padding:calc(25 * var(--u)) calc(25 * var(--u)) calc(20 * var(--u)); background:var(--bg-page); display:grid; grid-template-rows:auto 1fr auto auto; gap:calc(12 * var(--u)); }
 .header { border-top:calc(3 * var(--u)) solid var(--accent); padding-top:calc(7 * var(--u)); }
 .course { font-family:var(--font-sans); font-size:var(--fs-3); letter-spacing:.08em; font-weight:700; color:var(--accent); margin-bottom:calc(6 * var(--u)); }
 .title { font-family:var(--font-sans); font-size:var(--fs-9); font-weight:800; color:var(--accent-deep); line-height:1.02; }
 .subtitle { font-size:var(--fs-6); line-height:1.2; margin-top:calc(7 * var(--u)); }
 .highlight { background:var(--accent-light); border-left:calc(2 * var(--u)) solid var(--accent); }
+.toy-example { margin-top:calc(6 * var(--u)); }
+.toy-table { border-collapse:collapse; width:100%; font:var(--fs-3)/1.08 var(--font-sans); }
+.toy-table th, .toy-table td { padding:calc(1.7 * var(--u)) calc(3 * var(--u)); text-align:center; border-bottom:1px solid var(--border-soft); }
+.toy-table th:first-child { text-align:left; }
+.toy-table .reviewed { background:var(--accent-light); color:var(--accent-deep); font-weight:700; }
+.toy-table .hit { background:var(--gold-soft); }
 .hero { margin-top:calc(9 * var(--u)); padding:calc(8 * var(--u)) calc(10 * var(--u)); display:grid; grid-template-columns:auto 1fr; gap:calc(13 * var(--u)); align-items:center; }
 .hero-number { font-family:var(--font-sans); font-size:var(--fs-8); color:var(--accent-deep); line-height:1; font-weight:800; }
 .hero p { font-size:var(--fs-5); line-height:1.25; }
@@ -95,8 +101,8 @@ html, body { color:var(--text-primary); background:var(--bg-screen); font-family
 .figure img { display:block; width:100%; }
 .figure .figure-inset { width:96%; margin-inline:auto; }
 .caption { font-size:var(--fs-2); color:var(--text-secondary); line-height:1.24; margin-top:calc(3 * var(--u)); }
-.flow-strip { display:grid; grid-template-columns:repeat(3, 1fr); gap:calc(4 * var(--u)); margin-top:calc(5 * var(--u)); }
-.flow-strip span { padding:calc(4 * var(--u)); background:var(--accent-light); font:600 var(--fs-2)/1.2 var(--font-sans); color:var(--accent-deep); }
+.takeaway { padding:calc(5 * var(--u)) calc(8 * var(--u)); }
+.takeaway .section-title, .takeaway .body-text { display:inline; }
 .result-table { border-collapse:collapse; width:100%; font:var(--fs-3)/1.22 var(--font-sans); margin-top:calc(4 * var(--u)); }
 .result-table th, .result-table td { border-bottom:1px solid var(--border-soft); text-align:right; padding:calc(3 * var(--u)); }
 .result-table th:first-child, .result-table td:first-child { text-align:left; }
@@ -133,12 +139,12 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
 }
 @media print {
   .screen-only, dialog { display:none !important; }
-  :root { --u:.849mm; }
+  :root { --u:.846mm; }
   html, body { margin:0; background:var(--bg-page); print-color-adjust:exact; -webkit-print-color-adjust:exact; }
   .poster { width:800mm; height:1000mm; margin:0; }
-  .body-grid { grid-template-columns:1.021fr .979fr; }
-  .column + .column { gap:calc(9.4 * var(--u)); }
-  .figure .figure-inset { width:100%; }
+  .body-grid { grid-template-columns:.98fr 1.02fr; }
+  .column + .column { gap:calc(12.65 * var(--u)); }
+  .figure img, .figure .figure-inset { width:90%; margin-inline:auto; }
 }
 </style>
 </head>
@@ -147,10 +153,20 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
   <header class="header" data-measure-role="header">
     <p class="course">AIAA 3111 &nbsp; / &nbsp; GROUP 20</p>
     <h1 class="title">Credit Card Fraud Detection<br>under a Limited Review Budget</h1>
-    <p class="subtitle">Missed fraud can mean losses. Checking alerts takes staff time. With limited capacity, which transactions should a team review first?</p>
+    <p class="subtitle">Six transactions, two review slots. Each model scores every transaction. Staff check only the first two in its ranking.</p>
+    <div class="toy-example">
+      <table class="toy-table" aria-label="Toy rankings of six transactions with two review slots">
+        <thead><tr><th scope="col">Toy example</th><th scope="colgroup" colspan="2" class="reviewed">Review these two</th><th scope="colgroup" colspan="4">Rest of ranking</th><th scope="col">Frauds found</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Model A</th><td class="reviewed hit">B*</td><td class="reviewed hit">E*</td><td>C</td><td>A</td><td>D</td><td>F</td><td><strong>2</strong></td></tr>
+          <tr><th scope="row">Model B</th><td class="reviewed hit">B*</td><td class="reviewed">C</td><td>E*</td><td>A</td><td>D</td><td>F</td><td><strong>1</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="caption">* B and E are known frauds in this example. Model B ranks E third, outside the two review slots.</p>
+    </div>
     <div class="hero highlight">
       <strong class="hero-number">64 of 74 frauds</strong>
-      <p>On ULB, weighted logistic regression found 23 more frauds than Isolation Forest with the same 568 reviews. Both reviewed just 1% of the test set.</p>
+      <p>We apply the same idea on the ULB test set. With 568 review slots each, weighted logistic regression found 64 frauds and Isolation Forest found 41.</p>
     </div>
     <p class="caption screen-only"><a class="explore-link" href="#explore">Explore the results by review budget and feature set ↓</a></p>
   </header>
@@ -159,12 +175,10 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
     <div class="column" data-measure-role="column">
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Give each model the same review slots</h2>
-        <p class="body-text">A long alert list can find more fraud simply by asking staff to do more work. We compare the highest-scoring 1% from each method on later ULB transactions, after removing duplicates. We fit preprocessing on training data and chose the models before looking at test results.</p>
-        <div class="flow-strip"><span>Fit on past data</span><span>Select before testing</span><span>Rank held-out transactions</span></div>
+        <p class="body-text">On ULB, we remove duplicates and choose models on earlier data. On the held-out test set, every model gets the same 1% review budget.</p>
       </section>
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Which list finds the most fraud?</h2>
-        <p class="body-text">Weighted LR leads the three main ULB rankings at the 1% budget.</p>
         <table class="result-table">
           <thead><tr><th scope="col">Method</th><th scope="col">Found</th><th scope="col">Recall</th></tr></thead>
           <tbody><tr><td>Weighted LR</td><td>64</td><td>86.49%</td></tr><tr><td>Isolation Forest</td><td>41</td><td>55.41%</td></tr><tr><td>K-means distance</td><td>37</td><td>50.00%</td></tr></tbody>
@@ -172,25 +186,25 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
         <p class="caption">The 1% review list contains 568 of 56,746 test transactions.</p>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">Doubling reviews finds one more fraud</h2>
+        <h2 class="section-title">What if we can review more?</h2>
         <figure class="figure"><img src="assets/budget.png" data-source="paper" data-asset-id="budget" alt="ULB test curves for fraud recall and review precision across four review budgets">
           <figcaption class="caption">ULB formal test. Recall counts the share of frauds found. Precision counts the share of reviews that are fraud.</figcaption></figure>
-        <p class="body-text">At 0.5%, weighted logistic regression (LR) found 63 frauds in 284 reviews. At 1%, it found 64 in 568.</p>
+        <p class="body-text">At 0.5%, weighted logistic regression (LR) found 63 frauds in 284 reviews. At 1%, it found 64 in 568. That is one extra detection for 284 more reviews.</p>
         <p class="body-text">Could we combine the lists? They shared 40 detections. Their union found 65 frauds but needed 1,036 reviews. The policy selected before testing used LR alone.</p>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">Can fewer labels and simple rules help?</h2>
+        <h2 class="section-title">What if training labels are scarce?</h2>
         <p class="body-text">At the same 1% budget, LR found 55–58 frauds with 5% of training labels visible, and 60–63 with 25% visible. Each range comes from three label masks.</p>
-        <p class="body-text">The first training-ordered Apriori rule (R001) covered 3,846 transactions and 52 frauds. Its lift was 10.37, while its confidence was 1.35%. The rule highlights a concentration of fraud and covers more rows than the review team can handle.</p>
+        <p class="body-text">An Apriori rule flagged 3,846 transactions, including 52 frauds. Its 10.37 lift signals concentrated risk, but its 1.35% confidence makes it too broad for the 568 review slots.</p>
       </section>
     </div>
     <div class="column" data-measure-role="column">
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">Is more data worth collecting?</h2>
-        <p class="body-text">On Handbook, we compared past activity and customer–terminal connections. Each ranking reviewed 1,458 transactions, with 1,280 frauds in the test set.</p>
+        <h2 class="section-title">What if we add customer history?</h2>
+        <p class="body-text">On Handbook, each model gets 1,458 reviews to find 1,280 frauds. We vary which transaction histories and connections it sees.</p>
         <figure class="figure"><img src="assets/context.png" data-source="paper" data-asset-id="context" alt="Handbook test average precision and recall at 1 percent for five feature views">
           <figcaption class="caption">Handbook formal test. AP measures the full ranking. Recall at 1% measures the share of frauds found at the chosen workload.</figcaption></figure>
-        <p class="body-text">Adding both histories lowered detections from 346 to 334 for LR and from 334 to 139 for Isolation Forest (IF).</p>
+        <p class="body-text">Adding both histories lowered detections from 346 to 334 for LR and from 334 to 139 for Isolation Forest (IF). A larger feature set did not improve the review list.</p>
       </section>
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Missing history hurts IF more</h2>
@@ -198,20 +212,20 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
           <figcaption class="caption">With 30% of history omitted, IF fell from 139 to 77–82 detections. LR found 334–337. Shading shows the range over three removal seeds.</figcaption></figure>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">Would the same model win elsewhere?</h2>
-        <p class="body-text">At 1,289 PaySim reviews, IF found the most fraud. Amount led in AP.</p>
+        <h2 class="section-title">What if we change the dataset?</h2>
+        <p class="body-text">At 1,289 PaySim reviews, IF found the most fraud. Amount led in AP, which summarizes the full ranking.</p>
         <table class="result-table">
           <thead><tr><th scope="col">Method</th><th scope="col">Frauds found</th><th scope="col">AP</th></tr></thead>
           <tbody><tr><td>Fixed IF</td><td>102</td><td>0.0447</td></tr><tr><td>Amount</td><td>94</td><td>0.0798</td></tr><tr><td>Weighted LR</td><td>80</td><td>0.0634</td></tr></tbody>
         </table>
       </section>
-      <section class="card highlight" data-measure-role="card">
-        <h2 class="section-title">What should a review team do?</h2>
-        <p class="body-text">Set capacity first. At ULB’s 1%, weighted LR leads this comparison. Test whether more reviews or extra history find enough additional fraud to justify the work.</p>
-        <p class="body-text">Retest on new data. We used one ULB split and two simulators.</p>
-      </section>
     </div>
   </div>
+  <section class="takeaway highlight" data-measure-role="footer-strip">
+    <h2 class="section-title">Set the review budget first.</h2>
+    <p class="body-text">At ULB’s 1%, weighted LR leads the three rankings shown. Recheck the shortlist when staffing, available information or transaction types change.</p>
+    <p class="caption">Evidence comes from one ULB time split and two simulators.</p>
+  </section>
   <footer class="footer" data-measure-role="footer"><p>Data sources: ULB/Worldline via Zenodo, Fraud Detection Handbook and PaySim.</p><p><a href="https://github.com/congrenhang-ship-it/AIAA3111-Group20">Report, code and data instructions</a></p></footer>
 </main>
 <section id="explore" class="explorer screen-only" hidden>

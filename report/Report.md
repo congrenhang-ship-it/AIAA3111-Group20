@@ -41,15 +41,15 @@ AIAA 3111 Course Project · Group 20
 | __________________________ | __________________ |
 | __________________________ | __________________ |
 
-**Abstract.** We study fraud detection as a ranking problem with limited review capacity. On the chronological ULB test set, the preselected weighted logistic regression detects 64 of 74 frauds from 568 reviews; the selected Isolation Forest detects 41. We then examine label availability, transaction amounts, uncertainty, time, entity histories and interpretable rules. Historical and relationship features reduce performance in the fixed Handbook models, while missing history affects the two model families differently. A PaySim comparison further shows that AP and fixed-budget detection can rank methods differently. The results connect model performance to review capacity, available information and the structure of the data.
+**Abstract.** Fraud teams must decide which transactions to inspect when they can review only a fraction of all alerts. We compare the lists produced by different rankings at the same review capacity. On the chronological ULB test set, weighted logistic regression finds 64 of 74 frauds from 568 reviews, compared with 41 for Isolation Forest. Doubling the weighted model’s reviews from 284 to 568 finds one additional fraud. In Handbook, the tested histories reduce detections and missing history affects Isolation Forest more strongly. In PaySim, the method with the most detections at 1% differs from the method with the highest average precision. These results motivate choosing a ranking at the available review capacity and retesting it when the available information or transaction setting changes.
 
 # 1. Introduction
 
-Fraud detection systems produce more alerts than reviewers can investigate. A useful comparison therefore needs an explicit capacity: detecting more fraud by reviewing more transactions is a different decision from improving detection at the same workload. We use a common top-K policy to compare supervised classifiers, clustering distances and Isolation Forest.
+Missing fraud can mean financial losses, and manually checking alerts takes staff time. A review team therefore needs a shortlist. Suppose B and E are the two frauds among six transactions and staff can check only two. A ranking that puts B and E first finds both. A ranking that puts B and C first finds one, even if E is third. We use known labels after ranking to measure what the team would find.
 
-Our project asks four questions: which methods work at a fixed budget; whether their discoveries complement one another; how labels and contextual information change performance; and how rules and cases explain the results. ULB provides the real anonymous-data experiment, the Handbook simulator provides identifiable histories and mechanisms, and PaySim provides a separate transaction domain [1–4].
+The first question is which ranking produces the strongest shortlist at the same capacity. On the real ULB data, we compare classification, cluster distance and Isolation Forest, then ask whether their discoveries complement one another. We vary review capacity and label availability to see when the result changes. We use mined rules and error cases to explain which parts of the data the models miss.
 
-The study contributes an equal-capacity comparison, controlled changes to available information, and a rule-based explanation of model errors. It applies association mining, classifier evaluation, cluster validation and richer-data feature engineering.
+The second question is whether that decision carries over to other settings. The Handbook simulator lets us test customer and terminal histories and diagnose fraud mechanisms. PaySim provides a separate transaction setting in which to compare the shortlist and overall ranking [1–4].
 
 # 2. Problem formulation
 
@@ -130,7 +130,7 @@ The smallest budget separates the methods sharply: weighted LR finds 50 frauds w
 
 ## 4.2 Complementarity, groups and time
 
-At 1%, the classifier and IF lists share 100 transactions and 40 detected frauds. The classifier contributes 24 additional frauds and IF contributes one. Their union would detect 65 frauds while reviewing 1,036 transactions. The frozen 100% classifier quota reviews 568 and detects 64. This distinguishes useful complementary information from an improvement already achieved under the same capacity. The anomaly-only policy likewise remains the preselected pure IF endpoint.
+To see whether anomaly scores can improve the shortlist, we first examine which frauds the rankings find in common. At 1%, the classifier and IF lists share 100 transactions and 40 detected frauds. The classifier contributes 24 additional frauds and IF contributes one. Their union would detect 65 frauds while reviewing 1,036 transactions. The frozen 100% classifier quota reviews 568 and detects 64. This distinguishes useful complementary information from an improvement already achieved under the same capacity. The anomaly-only policy likewise remains the preselected pure IF endpoint.
 
 K-means groups provide a second view of the ranking. Table 3 allocates each method's single global list across the same groups; its review counts sum to 568 for each method.
 
@@ -161,7 +161,7 @@ Hourly diagnostics use the same relative-time origin and frozen models. Each win
 
 ## 4.3 Label availability and model interpretation
 
-This experiment fits LR on reduced labeled subsets and uses a separate IF reference fitted without labels. Within each training class, random permutations give nested 5/10/25/50/100% subsets using ceiling counts. The masks use the original labels to control class composition; hidden labels are excluded from fitting. LR sees its labeled subset, while fixed IF256 sees all training features. Table 5 retains every predeclared condition.
+To see whether the supervised shortlist remains useful with fewer labels, we fit LR on reduced labeled subsets and use a separate IF reference fitted without labels. Within each training class, random permutations give nested 5/10/25/50/100% subsets using ceiling counts. The masks use the original labels to control class composition; hidden labels are excluded from fitting. LR sees its labeled subset, while fixed IF256 sees all training features. Table 5 retains every predeclared condition.
 
 **Table 5. ULB label experiment on the formal test set; three mask seeds.**
 
@@ -183,7 +183,7 @@ Amount has the largest permutation effect: shuffling it lowers test AP by 0.3695
 
 ## 4.4 Fraud counts, amounts, costs and uncertainty
 
-At 1%, weighted LR covers 86.49% of fraud transactions and 69.59% of their amount. IF4096 covers 55.41% and 47.51%; cluster distance covers 50.00% and 10.71%. The descending-Amount reference finds only 3 frauds but covers 46.56% of fraud amount. The test fraud amount totals 7,727.67 units. Amount coverage therefore changes the interpretation of a count-based ranking without replacing the transaction-review task.
+At 1%, weighted LR covers 86.49% of fraud transactions and 69.59% of their amount. IF4096 covers 55.41% and 47.51%; cluster distance covers 50.00% and 10.71%. The descending-Amount reference finds only 3 frauds but covers 46.56% of fraud amount. The test fraud amount totals 7,727.67 units. The count-based advantage therefore answers how many incidents staff find. Amount coverage answers how much of the fraudulent spend is in that same shortlist.
 
 ![ULB formal test: count and amount coverage at 1%, and loss across budgets for the fixed FN:FP cost ratio of 50:1.](../results/figures/report_amount.pdf){width=100%}
 
@@ -204,7 +204,7 @@ The frozen classifier/IF policy equals LR, so its paired AP and recall differenc
 
 ## 4.5 Historical and relationship context
 
-The Handbook test compares identical model families across controlled input views. Each method reviews 1,458 of 145,739 transactions, containing 1,280 frauds. The first four views add histories to current Amount and cyclical time; the fifth adds 7-day customer/terminal degrees and a new-pair flag.
+Handbook tests whether additional information improves the shortlist for the same model family. Each method reviews 1,458 of 145,739 transactions, containing 1,280 frauds. The first four views add histories to current Amount and cyclical time; the fifth adds 7-day customer/terminal degrees and a new-pair flag.
 
 **Table 7. Handbook formal test, static models and the same 1% budget.**
 
@@ -275,11 +275,11 @@ PaySim uses three separately fitted, fixed comparisons on its declared sample. I
 | Weighted LR | 0.0634 | 80 | 6.21 | 19.37 |
 | Fixed IF | 0.0447 | 102 | 7.91 | 24.70 |
 
-The amount ranking leads AP, while IF detects the most fraud at 1%. LR detects fewer than either. This repeats the broader lesson that whole-ranking quality and the chosen review capacity answer different questions across data sources.
+On PaySim, IF finds the most fraud at 1%, while the amount ranking leads AP. The ULB method choice therefore does not carry over to this setting. For a team working through the top 1% of alerts, the relevant difference is in the shortlist.
 
 # 5. Conclusion and limitations
 
-The strongest ULB fixed-budget result comes from supervised ranking: weighted LR detects 64/74 frauds at 1%. Its amount coverage is lower than its count recall, and its development-selected combination yields no additional same-capacity detections. On Handbook, the tested histories and relations reduce static performance; weekly updating gives a small recovery, and incomplete history harms IF more strongly. Rules reveal broad associations and mechanism-specific blind spots.
+Set the review capacity first and compare how many frauds each shortlist finds. At the ULB 1% budget, the selected weighted LR finds 64/74, and the selected combination adds no detections at the same workload. Expanding from 284 to 568 reviews adds only one. The Handbook results show that adding or losing history can change shortlist quality. PaySim shows that a new transaction setting can change the preferred method. Use rules to diagnose missed cases and retest each ranking at the capacity and with the information available in the new setting.
 
 The evidence comes from one chronological split with only 74 ULB test frauds and from two simulated sources. Label masks use known class proportions, costs are assumed, and the new-entity groups contain no test fraud. These settings define the scope of the findings. Future work should prioritize fraud-positive new-entity evaluation, calibrated review costs and additional time periods.
 
