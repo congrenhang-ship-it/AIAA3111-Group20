@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Credit Card Fraud Detection under a Limited Review Budget</title>
 <style>
-@page { size: 841mm 1189mm; margin: 0; }
+@page { size: 800mm 1000mm; margin: 0; }
 :root {
 /* ===== DESIGN TOKENS ===== */
     /* The ONLY place color / font-size literals are allowed (style_check
@@ -76,7 +76,7 @@
 }
 * { box-sizing:border-box; margin:0; padding:0; }
 html, body { color:var(--text-primary); background:var(--bg-screen); font-family:var(--font-serif); }
-.poster { position:relative; width:calc(841 * var(--u)); height:calc(1189 * var(--u)); margin:0 auto; padding:calc(25 * var(--u)) calc(25 * var(--u)) calc(20 * var(--u)); background:var(--bg-page); display:grid; grid-template-rows:auto 1fr auto; gap:calc(12 * var(--u)); }
+.poster { position:relative; width:calc(800 * var(--u)); margin:0 auto; padding:calc(25 * var(--u)) calc(25 * var(--u)) calc(20 * var(--u)); background:var(--bg-page); display:grid; grid-template-rows:auto 1fr auto; gap:calc(12 * var(--u)); }
 .header { border-top:calc(3 * var(--u)) solid var(--accent); padding-top:calc(7 * var(--u)); }
 .course { font-family:var(--font-sans); font-size:var(--fs-3); letter-spacing:.08em; font-weight:700; color:var(--accent); margin-bottom:calc(6 * var(--u)); }
 .title { font-family:var(--font-sans); font-size:var(--fs-9); font-weight:800; color:var(--accent-deep); line-height:1.02; }
@@ -106,7 +106,7 @@ a { color:var(--accent); }
 .footer a { font-weight:700; }
 [hidden] { display:none !important; }
 .explorer, .zoom-button, dialog { font-family:var(--font-sans); font-size:var(--fs-3); }
-.explorer { margin:0 auto; width:min(calc(841 * var(--u)), 100%); padding:calc(18 * var(--u)); background:var(--bg-card); }
+.explorer { margin:0 auto; width:min(calc(800 * var(--u)), 100%); padding:calc(18 * var(--u)); background:var(--bg-card); }
 .explorer h2, .explorer h3 { color:var(--accent-deep); margin-bottom:calc(4 * var(--u)); }
 .explorer h2 { font-size:var(--fs-7); }
 .explorer h3 { font-size:var(--fs-6); }
@@ -125,7 +125,7 @@ dialog { margin:auto; padding:calc(8 * var(--u)); border:1px solid var(--border-
 dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain; margin-top:calc(4 * var(--u)); }
 .explore-link { color:var(--accent-deep); font-weight:700; }
 @media screen and (max-width:1360px) {
-  .poster { width:100%; height:auto; }
+  .poster { width:100%; }
 }
 @media screen and (max-width:820px) {
   .poster { padding:calc(11 * var(--u)); }
@@ -133,9 +133,12 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
 }
 @media print {
   .screen-only, dialog { display:none !important; }
-  :root { --u:1mm; }
+  :root { --u:.849mm; }
   html, body { margin:0; background:var(--bg-page); print-color-adjust:exact; -webkit-print-color-adjust:exact; }
-  .poster { width:841mm; height:1189mm; margin:0; }
+  .poster { width:800mm; height:1000mm; margin:0; }
+  .body-grid { grid-template-columns:1.021fr .979fr; }
+  .column + .column { gap:calc(9.4 * var(--u)); }
+  .figure .figure-inset { width:100%; }
 }
 </style>
 </head>

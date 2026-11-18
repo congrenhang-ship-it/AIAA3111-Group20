@@ -2,7 +2,7 @@
 
 [Poster PDF](Poster.pdf) · [HTML source](Poster.html) · [Figure sources and checksums](FIGURE_MANIFEST.json)
 
-The print layout is one A0 portrait page (841 × 1189 mm). The course guide says the final formatting specifications will be released separately.
+The course requires one portrait page, 80 cm wide × 100 cm high. The PDF page size is 800 × 1000 mm.
 
 Open `Poster.html` in a browser with the `assets/` folder beside it. Use the link below the headline to compare four ULB review budgets or five Handbook feature sets. The ULB control switches the bars between recall and precision. Each report chart can be enlarged, and the metric explanations can be expanded. These controls run offline. Use `Poster.pdf` for printing.
 
@@ -19,6 +19,14 @@ python "$POSTER_SKILL/scripts/run_gates.py" poster/Poster.html \
   --manifest poster/FIGURE_MANIFEST.json --report data/poster_build/GATE_REPORT.json
 python "$POSTER_SKILL/scripts/render_preview.py" poster/Poster.html \
   --pdf poster/Poster.pdf --png data/poster_build/html_preview.png
+# Set the exact page bounds after Chromium rounds them to device units.
+python - <<'PYTHON'
+import pymupdf
+
+with pymupdf.open("poster/Poster.pdf") as pdf:
+    pdf[0].set_mediabox(pymupdf.Rect(0, 0, 800 * 72 / 25.4, 1000 * 72 / 25.4))
+    pdf.saveIncr()
+PYTHON
 python "$POSTER_SKILL/scripts/poster_check.py" verify-final poster/Poster.pdf \
   --from-html poster/Poster.html --max-size-mb 20
 ```
