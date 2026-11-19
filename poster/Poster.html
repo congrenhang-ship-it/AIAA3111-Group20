@@ -140,11 +140,11 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
 }
 @media print {
   .screen-only, dialog { display:none !important; }
-  :root { --u:.827mm; }
+  :root { --u:.821mm; }
   html, body { margin:0; background:var(--bg-page); print-color-adjust:exact; -webkit-print-color-adjust:exact; }
   .poster { width:800mm; height:1000mm; margin:0; }
-  .body-grid { grid-template-columns:1.013fr .987fr; }
-  .column + .column { gap:calc(14 * var(--u)); }
+  .body-grid { grid-template-columns:1.003fr .997fr; }
+  .column + .column { gap:calc(11 * var(--u)); }
   .figure img, .figure .figure-inset { width:90%; margin-inline:auto; }
   .column + .column .figure img { width:92%; }
 }
@@ -168,7 +168,7 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
     </div>
     <div class="hero highlight">
       <strong class="hero-number">64 of 74 frauds</strong>
-      <p>We apply the same idea on the ULB test set. With 568 review slots each, weighted logistic regression found 64 frauds and Isolation Forest found 41.</p>
+      <p>Weighted LR found these in 568 ULB reviews. Every method had the same 1% budget.</p>
     </div>
     <p class="caption screen-only"><a class="explore-link" href="#explore">Explore the results by review budget and feature set ↓</a></p>
   </header>
@@ -185,7 +185,7 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
           <thead><tr><th scope="col">Method</th><th scope="col">Found</th><th scope="col">Recall</th></tr></thead>
           <tbody><tr><td>Weighted LR</td><td>64</td><td>86.49%</td></tr><tr><td>Isolation Forest</td><td>41</td><td>55.41%</td></tr><tr><td>K-means distance</td><td>37</td><td>50.00%</td></tr></tbody>
         </table>
-        <p class="caption">Each method gets 568 of 56,746 test transactions. LR learns from fraud labels. IF scores how unusual a transaction is without labels.</p>
+        <p class="caption">Each ranking sends its 568 highest-scoring transactions to review. Recall is the share of all test frauds that appear in that list.</p>
       </section>
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Capacity: what if we can review more?</h2>
@@ -196,26 +196,26 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
       </section>
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Fewer labels and missed cases</h2>
-        <p class="body-text">At 1%, LR found 55–58 frauds with 5% of labels and 60–63 with 25%. IF provides a reference that fits without labels.</p>
+        <p class="body-text">At 1%, LR found 55–58 frauds with 5% of labels and 60–63 with 25%. With all labels, it found 64.</p>
         <p class="body-text"><strong>Diagnose misses:</strong> An Apriori rule flagged 3,846 transactions, including 52 frauds. Its 10.37 lift signals concentrated risk, but its 1.35% confidence makes it too broad for the 568 review slots.</p>
       </section>
     </div>
     <div class="column" data-measure-role="column">
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Information: adding past activity</h2>
-        <p class="body-text">On Handbook, each model gets 1,458 reviews out of 145,739 transactions. We vary its input to see how LR and IF respond to the same history features.</p>
+        <p class="body-text">On Handbook, each model gets 1,458 reviews out of 145,739 transactions. We test whether customer and terminal histories improve the review list.</p>
         <figure class="figure"><img src="assets/context.png" data-source="paper" data-asset-id="context" alt="Handbook test average precision and recall at 1 percent for five feature views">
           <figcaption class="caption">Handbook formal test. AP measures the full ranking. Recall at 1% measures the share of frauds found at the chosen workload.</figcaption></figure>
-        <p class="body-text">Adding both histories lowered detections from 346 to 334 for LR and from 334 to 139 for Isolation Forest (IF). Adding context can change which transactions look unusual to IF. Here the extra features led to fewer frauds in its review list.</p>
+        <p class="body-text">Adding both histories lowered detections from 346 to 334 for LR and from 334 to 139 for Isolation Forest (IF). Extra history did not pay off at this review capacity. The team would spend the same number of reviews and find fewer frauds.</p>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">Missing history hurts IF more</h2>
+        <h2 class="section-title">What if history is incomplete?</h2>
         <figure class="figure"><img class="figure-inset" src="assets/stress.png" data-source="paper" data-asset-id="stress" alt="Handbook test AP and recall when zero, ten, or thirty percent of history is removed">
           <figcaption class="caption">With 30% of history omitted, IF fell from 139 to 77–82 detections. LR found 334–337. Shading shows the range over three removal seeds.</figcaption></figure>
       </section>
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Setting: a different dataset</h2>
-        <p class="body-text">At 1,289 PaySim reviews, IF found the most fraud. Amount led in AP, which summarizes the full ranking.</p>
+        <p class="body-text">At 1,289 reviews on PaySim, the method that found the most fraud differed from the leader in AP, which summarizes the full ranking.</p>
         <table class="result-table">
           <thead><tr><th scope="col">Method</th><th scope="col">Frauds found</th><th scope="col">AP</th></tr></thead>
           <tbody><tr><td>Fixed IF</td><td>102</td><td>0.0447</td></tr><tr><td>Amount</td><td>94</td><td>0.0798</td></tr><tr><td>Weighted LR</td><td>80</td><td>0.0634</td></tr></tbody>

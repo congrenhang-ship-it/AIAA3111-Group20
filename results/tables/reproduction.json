@@ -420,8 +420,8 @@
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
     "poster_unchanged": true,
-    "PDF_sha256": "7f449fb82e95d729cec8104908cad347eccf7051c0976728ad5756ab279f2989",
-    "Markdown_sha256": "1bb20d6504b893b2082907dc52a9688878176a7e2abd86dce419c5a8a041bee5",
+    "PDF_sha256": "a66e05204abf96e92f9bd9d3c4f4e078d1eb9c5329974ba37a7fdd3748256d90",
+    "Markdown_sha256": "5ee6820c7da1e1c9f6ba439fe7202001ca3c8a86cdc1f5bb9e04069054f449f4",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
     "member_fields": "Names/IDs left blank for group completion as requested previously.",
@@ -498,7 +498,7 @@
     "pages": 1,
     "layout": "80 cm wide × 100 cm high, portrait",
     "source": "poster/Poster.html",
-    "PDF_sha256": "a9f05ee3cb64def9014efeeacdcaf86b0b1190e35c57b81e920fc3f3ef759b41",
+    "PDF_sha256": "145077f6a4fcb2067d169dbba2976ea8437d7e5ef537682383b690bac0a86ea2",
     "formal_results_reviewed_against_report_sections": [
       "4.1",
       "4.2",
@@ -515,10 +515,10 @@
     "rendered_page_reviewed": true,
     "figure_manifest": "poster/FIGURE_MANIFEST.json",
     "skill_gate_status": "All five checks passed",
-    "column_bottom_spread_px": 1.12,
+    "column_bottom_spread_px": 0.0,
     "footer_gap_px": [
-      42.67,
-      43.8
+      44.5,
+      44.5
     ],
     "interactive_verification": {
       "ULB_budgets": 4,
@@ -529,6 +529,6 @@
       "print_hides_controls": true
     },
     "independent_review": "Poster claims were independently checked before resizing. The resized 80 × 100 cm PDF was visually inspected and the browser interactions were retested.",
-    "narrative_revision": "Added the build, compare and recheck roadmap and explained the recurring unlabeled Isolation Forest comparison. The report introduction connects each decision to the relevant experiment sections."
+    "narrative_revision": "The toy ranking and experiment roadmap lead into the review-budget decision. Model names appear where needed to read the comparisons."
   }
 }

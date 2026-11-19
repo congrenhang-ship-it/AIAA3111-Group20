@@ -41,7 +41,7 @@ AIAA 3111 Course Project · Group 20
 | __________________________ | __________________ |
 | __________________________ | __________________ |
 
-**Abstract.** Fraud teams must decide which transactions to inspect when they can review only a fraction of all alerts. We compare the lists produced by different rankings at the same review capacity. On the chronological ULB test set, weighted logistic regression finds 64 of 74 frauds from 568 reviews, compared with 41 for Isolation Forest. Doubling the weighted model’s reviews from 284 to 568 finds one additional fraud. In Handbook, the tested histories reduce detections and missing history affects Isolation Forest more strongly. In PaySim, the method with the most detections at 1% differs from the method with the highest average precision. These results motivate choosing a ranking at the available review capacity and retesting it when the available information or transaction setting changes.
+**Abstract.** Fraud teams must decide which transactions to inspect when they can review only a fraction of all alerts. We compare the lists produced by different rankings at the same review capacity. On the chronological ULB test set, weighted logistic regression finds 64 of 74 frauds from 568 reviews, leaving 10 frauds outside the list. Doubling the weighted model’s reviews from 284 to 568 finds one additional fraud. In Handbook, the tested histories reduce detections and missing history affects Isolation Forest more strongly. In PaySim, the method with the most detections at 1% differs from the method with the highest average precision. These results motivate choosing a ranking at the available review capacity and retesting it when the available information or transaction setting changes.
 
 # 1. Introduction
 
@@ -52,8 +52,6 @@ The experiments follow the decisions a review team faces:
 - **Build and compare the lists (Sections 3 and 4.1).** Fit the models on earlier transactions and rank later ones. On ULB [1], give each method the same review capacity and count the frauds its list finds.
 - **Check when the choice changes (Sections 4.2–4.6).** Compare overlap and vary review capacity, access to labels and the information available at review time. Handbook [2] tests customer and terminal histories under controlled changes in the inputs.
 - **Explain misses and check another setting (Section 4.7).** Use rules and fraud mechanisms to investigate missed cases. On PaySim [3,4], ask whether the same method would lead in a different transaction setting.
-
-Isolation Forest (IF) is a recurring comparison because it can score transactions without fraud labels. Weighted logistic regression learns from known frauds, while IF scores how unusual a transaction is. Comparing them shows when the two signals overlap and how they respond to changing inputs.
 
 # 2. Problem formulation
 
