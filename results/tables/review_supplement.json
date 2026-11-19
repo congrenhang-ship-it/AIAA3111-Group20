@@ -1392,6 +1392,32 @@
       }
     ]
   },
+  "context_anomaly": {
+    "eligible_rows": 145352,
+    "total_rows": 145739,
+    "eligible_frauds": 1277,
+    "ratio_reviews_without_history": 0,
+    "methods": {
+      "amount": {
+        "reviews": 1458,
+        "found": 346,
+        "total_frauds": 1280,
+        "AP": 0.26934468126687505
+      },
+      "customer_ratio": {
+        "reviews": 1458,
+        "found": 255,
+        "total_frauds": 1280,
+        "AP": 0.10335364325060963
+      }
+    },
+    "overlap": {
+      "shared_reviews": 390,
+      "shared_frauds": 209,
+      "amount_only_frauds": 137,
+      "ratio_only_frauds": 46
+    }
+  },
   "sequence": {
     "training_amount_cut": 45.34,
     "eligible_test_rows": 143440,

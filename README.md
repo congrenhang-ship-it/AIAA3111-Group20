@@ -110,7 +110,7 @@ python -m unittest discover -s code/validation -p test_classification.py
 
 ## 审核名单补充分析
 
-报告正文和附录 C 增加边际审核工作量、日批次审核反馈、顺序与无序历史模式对照以及 GMM 分群漏检诊断。新增 Handbook 实验复用既有时间划分，作为探索性结果单独记录。原正式测试见上方结果表。
+报告正文和附录 C 增加边际审核工作量、日批次审核反馈、顺序与无序历史模式对照、GMM 分群漏检诊断及客户历史金额偏离基线。新增 Handbook 实验复用既有时间划分，作为探索性结果单独记录。原正式测试见上方结果表。
 
 ```bash
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python report/build_supplement.py data/handbook/c_acceptance_20261116/transactions.csv
@@ -120,7 +120,7 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python report/build_supplement.py data/
 
 ## 报告更新与构建
 
-报告正文采用常规 11pt Times 风格字体，5 张矢量图从正式 JSON 重建；正文 10 页，正文和附录合计 18 张数值表。结合 L3–L7 课件补充了不平衡分类指标、K-means 目标与质量评价、Apriori 剪枝、规则基率效应，以及滑动窗口和序列/关系特征的分析。
+报告正文采用常规 11pt Times 风格字体，5 张矢量图从正式 JSON 重建；正文 10 页，正文和附录合计 19 张数值表。结合 L3–L7 课件补充了不平衡分类指标、K-means 目标与质量评价、Apriori 剪枝、规则基率效应，以及滑动窗口和序列/关系特征的分析。
 
 编辑 report/Report.md 后，使用项目 Python 环境及另行安装的 Pandoc、XeLaTeX 重新生成：
 
@@ -128,7 +128,7 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python report/build_supplement.py data/
 python report/build_report.py
 ```
 
-脚本只绘图和排版，不训练模型或修改正式结果；会先将 18 张数值表与原始汇总逐项比对，再检查正文页数是否在 6–10 页。PDF 图保存在 results/figures/report_*.pdf，PNG 预览和 LaTeX 临时文件留在忽略的 data/report_build/。常规实验运行不需要 Pandoc 或 XeLaTeX。报告图使用统一的色盲友好配色、线型和面板标题。海报通过 Playwright Chromium 输出，构建与查验方法见 [海报说明](poster/Poster.md)。
+脚本只绘图和排版，不训练模型或修改正式结果；会先将 19 张数值表与原始汇总逐项比对，再检查正文页数是否在 6–10 页。PDF 图保存在 results/figures/report_*.pdf，PNG 预览和 LaTeX 临时文件留在忽略的 data/report_build/。常规实验运行不需要 Pandoc 或 XeLaTeX。报告图使用统一的色盲友好配色、线型和面板标题。海报通过 Playwright Chromium 输出，构建与查验方法见 [海报说明](poster/Poster.md)。
 
 ## 课程提交
 

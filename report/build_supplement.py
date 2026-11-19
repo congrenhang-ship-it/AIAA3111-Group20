@@ -1,4 +1,4 @@
-"""Run four supplemental review-list analyses without changing the frozen protocol."""
+"""Run supplemental review-list analyses without changing the frozen protocol."""
 
 import argparse
 import hashlib
@@ -137,6 +137,41 @@ def sequence_experiment(data, history, labels, train, test):
             "eligible_test_frauds": int(labels[test][eligible[test]].sum()), "results": results}
 
 
+def context_anomaly(views, labels, test, ids):
+    """Rank increases over a customer's strictly earlier seven-day mean."""
+    history = views["customer_history"].iloc[test]
+    amounts = history["Amount"].to_numpy()
+    eligible = history["customer_amount_ratio_unavailable_7d"].to_numpy() == 0
+    # Amount ratios are nonnegative. The sentinel puts unscorable rows last.
+    ratios = np.where(eligible, history["customer_amount_ratio_7d"], -1.0)
+    y, row_ids = labels[test], ids[test]
+    summary = {
+        name: detection_summary(y, scores, row_ids)
+        for name, scores in (("amount", amounts), ("customer_ratio", ratios))
+    }
+    k = summary["amount"]["reviews"]
+    amount_rows = rank(amounts, row_ids)[:k]
+    ratio_rows = rank(ratios, row_ids)[:k]
+    shared = np.intersect1d(amount_rows, ratio_rows)
+    amount_only = np.setdiff1d(amount_rows, ratio_rows)
+    ratio_only = np.setdiff1d(ratio_rows, amount_rows)
+    official = json.loads((ROOT / "results/tables/handbook_test.json").read_text())
+    reference = official["metrics"]["amount_descending"]
+    reference_budget = next(r for r in reference["budgets"] if r["review_fraction"] == .01)
+    assert (k, summary["amount"]["found"]) == (reference_budget["K"], reference_budget["TP"])
+    assert np.isclose(summary["amount"]["AP"], reference["AP"])
+    return {
+        "eligible_rows": int(eligible.sum()),
+        "total_rows": len(test),
+        "eligible_frauds": int(y[eligible].sum()),
+        "ratio_reviews_without_history": int((~eligible[ratio_rows]).sum()),
+        "methods": summary,
+        "overlap": {"shared_reviews": len(shared), "shared_frauds": int(y[shared].sum()),
+                    "amount_only_frauds": int(y[amount_only].sum()),
+                    "ratio_only_frauds": int(y[ratio_only].sum())},
+    }
+
+
 def cluster_diagnostics(history, labels, train, test, ids):
     columns = ["Amount", "customer_count_1d", "terminal_count_1d"]
     values = np.log1p(history[columns].to_numpy())
@@ -195,6 +230,7 @@ def main():
         "review_feedback": {"daily_budget": DAILY_BUDGET, "exploration_slots": EXPLORATION,
                             "initial_labeled_days": [0, 29], "first_replay_day": 30, "test_days": [45, 59],
                             "label_arrival_days_after_review": 2, "refit_interval_days": 3, "runs": runs},
+        "context_anomaly": context_anomaly(views, labels, test, ids),
         "sequence": sequence_experiment(data, views["both_history"], labels, train, test),
         "probabilistic_groups": cluster_diagnostics(views["both_history"], labels, train, test, ids),
     }

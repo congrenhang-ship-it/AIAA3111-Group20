@@ -414,19 +414,19 @@
     "date": "2026-11-19",
     "main_text_pages": 10,
     "total_PDF_pages": 18,
-    "result_tables_checked": 18,
+    "result_tables_checked": 19,
     "test_figures": 5,
     "formal_result_files_unchanged": 8,
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
-    "poster_unchanged": false,
-    "PDF_sha256": "626ce69a0a894fea3683979fedaa321084ef6ce0ad0ee5aca732d11ebf782821",
-    "Markdown_sha256": "119a100fbb81a10d0c51f6370ec68e65836b8d06ce17297b5efcf40a919d28de",
+    "poster_unchanged": true,
+    "PDF_sha256": "f309d7d5eacdab2a5799e74164013d4031731b15e3d82cb9e8912a2c1a09a4bf",
+    "Markdown_sha256": "a73a64a323ff3f5d749be90678c51799767313b3896dff55bf2ec11dcb4da3b3",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
     "member_fields": "Names/IDs left blank for group completion as requested previously.",
     "main_text_numerical_tables": 10,
-    "appendix_numerical_tables": 8,
+    "appendix_numerical_tables": 9,
     "numeric_figure_values_match_previous_release": true
   },
   "course_report_review": {
@@ -534,9 +534,10 @@
   },
   "review_supplement_verification": {
     "source": "results/tables/review_supplement.json",
-    "sha256": "9af8fa1f9489eba79ca5d232fd6d1d38b37bfeb6ff2289a8d596eb0c5e0ca50a",
+    "sha256": "ed1733e5f06fafa2359d654729e56c43aeec5773cf1483b290fc44225b3ab000",
     "same_environment_repeat_byte_identical": true,
     "frozen_test_files_unchanged": true,
-    "scope": "Exploratory Handbook analyses and a workload table from the frozen ULB ranking."
+    "scope": "Exploratory Handbook analyses and a workload table from the frozen ULB ranking.",
+    "context_amount_baseline_matches_frozen": true
   }
 }

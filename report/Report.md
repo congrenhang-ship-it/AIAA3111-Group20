@@ -218,7 +218,7 @@ Handbook tests whether additional information improves the shortlist for the sam
 
 ![Handbook formal test: AP and recall for the same LR and IF settings across feature views. “+Relation” extends the both-history view.](../results/figures/report_context.pdf){width=100%}
 
-The current-transaction LR finds 346 frauds. Adding both histories reduces that to 334, and adding relationships reduces it to 333. An amount-only ranking also finds 346, suggesting a strong amount-driven component in this simulator. The parallel IF comparison shows a larger decline with the tested histories.
+The current-transaction LR finds 346 frauds. Adding both histories reduces that to 334, and adding relationships reduces it to 333. An amount-only ranking also finds 346, suggesting a strong amount-driven component in this simulator. The parallel IF comparison shows a larger decline with the tested histories. A supplemental ranking based only on the ratio to a customer’s past mean finds 255 frauds. It identifies 46 frauds outside the amount ranking’s list (Appendix C.4).
 
 We then test whether the order of a customer's last three transactions helps beyond the same information in an unordered representation. Both representations raise the both-history LR from 334 to 351 detections. This experiment finds a gain from the recent amount pattern and no additional detections from preserving its order. Appendix C gives the matched comparison. Its probabilistic grouping also identifies a lower-amount component with 141 frauds and no detections in the original both-history LR list, a specific group to inspect for misses.
 
@@ -454,6 +454,19 @@ A three-component Gaussian mixture with diagonal covariances fits only on the tr
 | Max membership ≥ 0.8 | 127591 | 1147 | 1454 | 334 |
 
 The lowest-amount component contains 141 frauds but receives only two reviews, with no detections. Separately, the low-membership-confidence group contains 133 frauds and receives four reviews, also with no detections. These are overlapping views of the same test set. The groups identify where to inspect misses. They do not establish that assigning extra reviews to either group would improve detection.
+
+### C.4 Does unusual spending help prioritize reviews?
+
+We compare absolute amount with the current amount divided by the customer’s mean amount over the preceding seven days. The mean uses only transactions strictly earlier than the one being scored. Rows without a positive historical mean are placed last, and row ID breaks ties for both rankings. The ratio is available for 145,352 of 145,739 transactions and 1,277 of 1,280 frauds. Every reviewed row in the ratio list has a usable baseline.
+
+**Table C6. Absolute amount versus customer-relative amount on Handbook.**
+
+| Ranking | Reviews | Frauds found | AP |
+| --- | ---: | ---: | ---: |
+| Absolute amount | 1458 | 346 | 0.2693 |
+| Customer-relative amount | 1458 | 255 | 0.1034 |
+
+The lists share 390 transactions and 209 frauds. Absolute amount finds 137 frauds unique to its list, and the ratio finds 46 unique to its list. Their union yields 392 frauds at a cost of 2,526 reviews. Unusual spending provides a different signal, with lower yield at the original budget. The overlap identifies cases for investigation and does not establish a benefit from mixing the lists at 1%.
 
 \clearpage
 

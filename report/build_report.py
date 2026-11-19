@@ -291,6 +291,10 @@ def audit_tables():
         fields = ('rows', 'frauds', 'reviews', 'found')
         check('GMM group' if key == 'groups' else 'Membership group', [[label, *[groups[key][name][field] for field in fields]]
                             for name, label in labels])
+    methods = supplement['context_anomaly']['methods']
+    check('Ranking', [[label, methods[name]['reviews'], methods[name]['found'], f"{methods[name]['AP']:.4f}"]
+                      for name, label in [('amount', 'Absolute amount'),
+                                          ('customer_ratio', 'Customer-relative amount')]])
     return checked
 
 
