@@ -101,6 +101,7 @@ html, body { color:var(--text-primary); background:var(--bg-screen); font-family
 .figure img { display:block; width:100%; }
 .figure .figure-inset { width:96%; margin-inline:auto; }
 .caption { font-size:var(--fs-2); color:var(--text-secondary); line-height:1.24; margin-top:calc(3 * var(--u)); }
+.roadmap p + p { margin-top:calc(2 * var(--u)); }
 .takeaway { padding:calc(5 * var(--u)) calc(8 * var(--u)); }
 .takeaway .section-title, .takeaway .body-text { display:inline; }
 .result-table { border-collapse:collapse; width:100%; font:var(--fs-3)/1.22 var(--font-sans); margin-top:calc(4 * var(--u)); }
@@ -139,12 +140,13 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
 }
 @media print {
   .screen-only, dialog { display:none !important; }
-  :root { --u:.846mm; }
+  :root { --u:.827mm; }
   html, body { margin:0; background:var(--bg-page); print-color-adjust:exact; -webkit-print-color-adjust:exact; }
   .poster { width:800mm; height:1000mm; margin:0; }
-  .body-grid { grid-template-columns:.98fr 1.02fr; }
-  .column + .column { gap:calc(12.65 * var(--u)); }
+  .body-grid { grid-template-columns:1.013fr .987fr; }
+  .column + .column { gap:calc(14 * var(--u)); }
   .figure img, .figure .figure-inset { width:90%; margin-inline:auto; }
+  .column + .column .figure img { width:92%; }
 }
 </style>
 </head>
@@ -174,8 +176,8 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
   <div class="body-grid" data-measure-role="body">
     <div class="column" data-measure-role="column">
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">Give each model the same review slots</h2>
-        <p class="body-text">On ULB, we remove duplicates and choose models on earlier data. On the held-out test set, every model gets the same 1% review budget.</p>
+        <h2 class="section-title">How the experiments fit together</h2>
+        <div class="roadmap body-text"><p><strong>Build:</strong> Fit models on earlier transactions, then rank later ones.</p><p><strong>Compare:</strong> Give each ranking the same review capacity on ULB.</p><p><strong>Recheck:</strong> Vary capacity, information and transaction setting.</p></div>
       </section>
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Which list finds the most fraud?</h2>
@@ -183,28 +185,28 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
           <thead><tr><th scope="col">Method</th><th scope="col">Found</th><th scope="col">Recall</th></tr></thead>
           <tbody><tr><td>Weighted LR</td><td>64</td><td>86.49%</td></tr><tr><td>Isolation Forest</td><td>41</td><td>55.41%</td></tr><tr><td>K-means distance</td><td>37</td><td>50.00%</td></tr></tbody>
         </table>
-        <p class="caption">The 1% review list contains 568 of 56,746 test transactions.</p>
+        <p class="caption">Each method gets 568 of 56,746 test transactions. LR learns from fraud labels. IF scores how unusual a transaction is without labels.</p>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">What if we can review more?</h2>
+        <h2 class="section-title">Capacity: what if we can review more?</h2>
         <figure class="figure"><img src="assets/budget.png" data-source="paper" data-asset-id="budget" alt="ULB test curves for fraud recall and review precision across four review budgets">
           <figcaption class="caption">ULB formal test. Recall counts the share of frauds found. Precision counts the share of reviews that are fraud.</figcaption></figure>
         <p class="body-text">At 0.5%, weighted logistic regression (LR) found 63 frauds in 284 reviews. At 1%, it found 64 in 568. That is one extra detection for 284 more reviews.</p>
         <p class="body-text">Could we combine the lists? They shared 40 detections. Their union found 65 frauds but needed 1,036 reviews. The policy selected before testing used LR alone.</p>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">What if training labels are scarce?</h2>
-        <p class="body-text">At the same 1% budget, LR found 55–58 frauds with 5% of training labels visible, and 60–63 with 25% visible. Each range comes from three label masks.</p>
-        <p class="body-text">An Apriori rule flagged 3,846 transactions, including 52 frauds. Its 10.37 lift signals concentrated risk, but its 1.35% confidence makes it too broad for the 568 review slots.</p>
+        <h2 class="section-title">Fewer labels and missed cases</h2>
+        <p class="body-text">At 1%, LR found 55–58 frauds with 5% of labels and 60–63 with 25%. IF provides a reference that fits without labels.</p>
+        <p class="body-text"><strong>Diagnose misses:</strong> An Apriori rule flagged 3,846 transactions, including 52 frauds. Its 10.37 lift signals concentrated risk, but its 1.35% confidence makes it too broad for the 568 review slots.</p>
       </section>
     </div>
     <div class="column" data-measure-role="column">
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">What if we add customer history?</h2>
-        <p class="body-text">On Handbook, each model gets 1,458 reviews to find 1,280 frauds. We vary which transaction histories and connections it sees.</p>
+        <h2 class="section-title">Information: adding past activity</h2>
+        <p class="body-text">On Handbook, each model gets 1,458 reviews out of 145,739 transactions. We vary its input to see how LR and IF respond to the same history features.</p>
         <figure class="figure"><img src="assets/context.png" data-source="paper" data-asset-id="context" alt="Handbook test average precision and recall at 1 percent for five feature views">
           <figcaption class="caption">Handbook formal test. AP measures the full ranking. Recall at 1% measures the share of frauds found at the chosen workload.</figcaption></figure>
-        <p class="body-text">Adding both histories lowered detections from 346 to 334 for LR and from 334 to 139 for Isolation Forest (IF). A larger feature set did not improve the review list.</p>
+        <p class="body-text">Adding both histories lowered detections from 346 to 334 for LR and from 334 to 139 for Isolation Forest (IF). Adding context can change which transactions look unusual to IF. Here the extra features led to fewer frauds in its review list.</p>
       </section>
       <section class="card" data-measure-role="card">
         <h2 class="section-title">Missing history hurts IF more</h2>
@@ -212,7 +214,7 @@ dialog img { display:block; max-width:100%; max-height:78vh; object-fit:contain;
           <figcaption class="caption">With 30% of history omitted, IF fell from 139 to 77–82 detections. LR found 334–337. Shading shows the range over three removal seeds.</figcaption></figure>
       </section>
       <section class="card" data-measure-role="card">
-        <h2 class="section-title">What if we change the dataset?</h2>
+        <h2 class="section-title">Setting: a different dataset</h2>
         <p class="body-text">At 1,289 PaySim reviews, IF found the most fraud. Amount led in AP, which summarizes the full ranking.</p>
         <table class="result-table">
           <thead><tr><th scope="col">Method</th><th scope="col">Frauds found</th><th scope="col">AP</th></tr></thead>

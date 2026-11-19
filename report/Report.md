@@ -47,9 +47,13 @@ AIAA 3111 Course Project · Group 20
 
 Missing fraud can mean financial losses, and manually checking alerts takes staff time. A review team therefore needs a shortlist. Suppose B and E are the two frauds among six transactions and staff can check only two. A ranking that puts B and E first finds both. A ranking that puts B and C first finds one, even if E is third. We use known labels after ranking to measure what the team would find.
 
-The first question is which ranking produces the strongest shortlist at the same capacity. On the real ULB data, we compare classification, cluster distance and Isolation Forest, then ask whether their discoveries complement one another. We vary review capacity and label availability to see when the result changes. We use mined rules and error cases to explain which parts of the data the models miss.
+The experiments follow the decisions a review team faces:
 
-The second question is whether that decision carries over to other settings. The Handbook simulator lets us test customer and terminal histories and diagnose fraud mechanisms. PaySim provides a separate transaction setting in which to compare the shortlist and overall ranking [1–4].
+- **Build and compare the lists (Sections 3 and 4.1).** Fit the models on earlier transactions and rank later ones. On ULB [1], give each method the same review capacity and count the frauds its list finds.
+- **Check when the choice changes (Sections 4.2–4.6).** Compare overlap and vary review capacity, access to labels and the information available at review time. Handbook [2] tests customer and terminal histories under controlled changes in the inputs.
+- **Explain misses and check another setting (Section 4.7).** Use rules and fraud mechanisms to investigate missed cases. On PaySim [3,4], ask whether the same method would lead in a different transaction setting.
+
+Isolation Forest (IF) is a recurring comparison because it can score transactions without fraud labels. Weighted logistic regression learns from known frauds, while IF scores how unusual a transaction is. Comparing them shows when the two signals overlap and how they respond to changing inputs.
 
 # 2. Problem formulation
 
