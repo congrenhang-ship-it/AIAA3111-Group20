@@ -238,22 +238,6 @@ def audit_tables():
         m=p['metrics'][name];q=budget(m)
         rows.append([label,f"{m['AP']:.4f}",q['TP'],f"{q['precision_at_k']*100:.2f}",f"{q['recall_at_k']*100:.2f}"])
     check('PaySim method',rows)
-    structure=read('c_baseline')['training_structure'];rows=[]
-    for k in [3,5,8]:
-        items=[r for r in structure if r['k']==k]
-        rows.append([k,f"{np.mean([r['inertia'] for r in items]):,.0f}",f"{np.mean([r['sample_silhouette'] for r in items]):.4f}",f"{items[0]['seed_stability_ARI']:.4f}"])
-    check('k',rows)
-    rows=[]
-    for name,source in [('ULB R001',u['E04']),('Handbook R001',d['E15'])]:
-        first=source['cumulative'][0];a,j=first['transactions'],first['frauds'];n,f=source['n_transactions'],source['n_fraud']
-        rows.append([name,f'{100*a/n:.4f}',f'{100*j/n:.4f}',f'{100*j/a:.4f}',f'{j*n/(a*f):.4f}',f'{.5*(j/a+j/f):.4f}'])
-    check('Rule',rows)
-    ulb=json.loads((ROOT/'report/d_validation/manifest.json').read_text())['schemes']
-    handbook=read('handbook_d')['frozen_rules']['schemes'];rows=[]
-    for name,schemes in [('ULB',ulb),('Handbook',handbook)]:
-        for scheme in ['equal_width','equal_frequency']:
-            m=schemes[scheme];rows.append([name,scheme.replace('_','-'),m['candidate_count'] if name=='ULB' else len(m['candidates']),len(m['retained_rule_ids']) if name=='ULB' else len(m['rules'])])
-    check('Dataset', rows, 'Binning')
     supplement = read('review_supplement')
     check('Budget', [
         [f"{100*r['budget']:g}%", r['reviews'], r['found'], r['normal_reviews'],
@@ -284,13 +268,10 @@ def audit_tables():
         rows.append([label, result['reviews'], result['found'], f"{result['AP']:.4f}"])
     check('History features', rows)
 
-    groups = supplement['probabilistic_groups']
-    for key, labels in [('groups', [(f'component_{i}', f'Component {i}') for i in range(1,4)]),
-                        ('membership', [('less_than_0.8', 'Max membership < 0.8'),
-                                        ('at_least_0.8', 'Max membership ≥ 0.8')])]:
-        fields = ('rows', 'frauds', 'reviews', 'found')
-        check('GMM group' if key == 'groups' else 'Membership group', [[label, *[groups[key][name][field] for field in fields]]
-                            for name, label in labels])
+    groups = supplement['probabilistic_groups']['groups']
+    fields = ('rows', 'frauds', 'reviews', 'found')
+    check('GMM group', [[f'Component {i}', *[groups[f'component_{i}'][field]
+                                             for field in fields]] for i in range(1, 4)])
     methods = supplement['context_anomaly']['methods']
     check('Ranking', [[label, methods[name]['reviews'], methods[name]['found'], f"{methods[name]['AP']:.4f}"]
                       for name, label in [('amount', 'Absolute amount'),

@@ -144,7 +144,7 @@ K-means groups provide a second view of the ranking. Table 3 allocates each meth
 | 1 | 48335 | 58 | 514 / 49 | 360 / 28 |
 | 2 | 0 | 0 | 0 / 0 | 0 / 0 |
 
-The shared list reaches the two occupied groups unevenly. Appendix D gives the training cluster diagnostics. Appendix C tests an alternative grouping with probabilistic membership.
+The shared list reaches the two occupied groups unevenly. Appendix C gives the training cluster diagnostics. Appendix B tests an alternative grouping with probabilistic membership.
 
 A separate question is how many alerts a fixed validation threshold produces later. Table 4 applies the original thresholds without changing them.
 
@@ -177,7 +177,7 @@ To see whether the supervised shortlist remains useful with fewer labels, we fit
 
 The 5% setting has an AP range of 0.4397–0.7059, showing sensitivity to the few sampled frauds. By 25%, all three fits have AP above 0.76, and TP ranges from 60 to 63. Full labels recover 64 frauds, while the mean AP at 25% and 50% exceeds the full-label fit on this segment. More labels increase TP here, while AP is not monotonic across the fitted subsets.
 
-Amount has the largest permutation effect, lowering test AP by 0.3695 on average when shuffled. Appendix D gives the other feature effects and ranked error examples.
+Amount has the largest permutation effect, lowering test AP by 0.3695 on average when shuffled. Appendix C gives the other feature effects and ranked error examples.
 
 \clearpage
 
@@ -189,7 +189,7 @@ At 1%, weighted LR covers 86.49% of fraud transactions and 69.59% of their amoun
 
 Under the 50:1 cost scenario, weighted LR has loss 771 at a 0.5% budget and 1,004 at 1%. The larger list gains one detected fraud but adds many normal reviews. With a different assumed error cost, the balance changes. These calculations compare the declared scenarios; the primary experimental budget stays at 1%. Fraud amount is a transaction quantity rather than a measured recovery amount.
 
-**Table C1. What changes when the review budget grows? Weighted LR on ULB.**
+**Table 6. What changes when the review budget grows? Weighted LR on ULB.**
 
 | Budget | Reviews | Frauds found | Normal reviews | Fraud amount (%) | Added fraud / normal |
 | --- | --- | --- | --- | --- | --- |
@@ -198,7 +198,7 @@ Under the 50:1 cost scenario, weighted LR has loss 771 at a 0.5% budget and 1,00
 | 1% | 568 | 64 | 504 | 69.59 | +1 / +283 |
 | 2% | 1135 | 65 | 1070 | 69.69 | +1 / +566 |
 
-From 0.5% to 1%, the team would review 283 more normal transactions to find one additional fraud. Fraud-amount coverage rises from 69.37% to 69.59%. The paired interval estimates for the main LR comparison are in Appendix D.
+From 0.5% to 1%, the team would review 283 more normal transactions to find one additional fraud. Fraud-amount coverage rises from 69.37% to 69.59%. The paired interval estimates for the main LR comparison are in Appendix C.
 
 \clearpage
 
@@ -218,9 +218,9 @@ Handbook tests whether additional information improves the shortlist for the sam
 
 ![Handbook formal test: AP and recall for the same LR and IF settings across feature views. “+Relation” extends the both-history view.](../results/figures/report_context.pdf){width=100%}
 
-The current-transaction LR finds 346 frauds. Adding both histories reduces that to 334, and adding relationships reduces it to 333. An amount-only ranking also finds 346, suggesting a strong amount-driven component in this simulator. The parallel IF comparison shows a larger decline with the tested histories. A supplemental ranking based only on the ratio to a customer’s past mean finds 255 frauds. It identifies 46 frauds outside the amount ranking’s list (Appendix C.4).
+The current-transaction LR finds 346 frauds. Adding both histories reduces that to 334, and adding relationships reduces it to 333. An amount-only ranking also finds 346, suggesting a strong amount-driven component in this simulator. The parallel IF comparison shows a larger decline with the tested histories. A supplemental ranking based only on the ratio to a customer’s past mean finds 255 frauds. It identifies 46 frauds outside the amount ranking’s list (Appendix B).
 
-We then test whether the order of a customer's last three transactions helps beyond the same information in an unordered representation. Both representations raise the both-history LR from 334 to 351 detections. This experiment finds a gain from the recent amount pattern and no additional detections from preserving its order. Appendix C gives the matched comparison. Its probabilistic grouping also identifies a lower-amount component with 141 frauds and no detections in the original both-history LR list, a specific group to inspect for misses.
+We then test whether the order of a customer's last three transactions helps beyond the same information in an unordered representation. Both representations raise the both-history LR from 334 to 351 detections. This experiment finds a gain from the recent amount pattern and no additional detections from preserving its order. Appendix B gives the matched comparison. Its probabilistic grouping also identifies a lower-amount component with 141 frauds and no detections in the original both-history LR list, a specific group to inspect for misses.
 
 \clearpage
 
@@ -228,7 +228,7 @@ We then test whether the order of a customer's last three transactions helps bey
 
 Once a team reviews a list, its findings can become training labels. We replay Handbook in closed daily batches of 100 reviews. All policies start with the same weighted LR. Updates use only reviewed labels after the delay. The two exploration policies reserve 10 of the 100 slots for random or uncertain transactions.
 
-**Table C2. Supplemental replay on Handbook days 45–59.**
+**Table 8. Supplemental replay on Handbook days 45–59.**
 
 | Feedback policy | Reviews | Frauds found | Ranking-only top 100 |
 | --- | --- | --- | --- |
@@ -237,11 +237,11 @@ Once a team reviews a list, its findings can become training labels. We replay H
 | Risk + random | 1500 | 343–344 | 345 |
 | Risk + uncertainty | 1500 | 344 | 345 |
 
-The static policy finds 346 frauds, versus 343–345 for the updating policies. Even if all 100 slots were assigned by score after an update, the resulting rankings find 345. This replay gives no evidence of a gain from allocating some reviews to collect different labels. Appendix C details the timing and scoring.
+The static policy finds 346 frauds, versus 343–345 for the updating policies. Even if all 100 slots were assigned by score after an update, the resulting rankings find 345. This replay gives no evidence of a gain from allocating some reviews to collect different labels. Appendix B details the timing and scoring.
 
 ![Handbook formal test under missing event histories. Each condition rebuilds past-only features for the same test transactions and scores the same frozen models. Shading is the range across seeds 42/43/44.](../results/figures/report_stress.pdf){width=100%}
 
-Deleting 30% of past events reduces both-history IF detections from 139 to 77–82, while LR finds 334–337. The original pre-test rolling and cold-start diagnostics are in Appendix D.
+Deleting 30% of past events reduces both-history IF detections from 139 to 77–82, while LR finds 334–337. The original pre-test rolling and cold-start diagnostics are in Appendix C.
 
 \clearpage
 
@@ -304,125 +304,44 @@ The project used OpenAI Codex/ChatGPT assistance for implementation and refactor
 
 \clearpage
 
-# Appendix A. Parameters and numerical sources
+# Appendix A. Reproducing the results
 
-## A.1 Reproduction
-
-The environment is Python 3.12.14 with the exact dependency pins in requirements.txt. A fresh clone can download ULB, generate the pinned Handbook data, obtain the author's PaySim v2 ZIP, and run:
+Follow the repository README to prepare ULB, Handbook and PaySim with the pinned Python dependencies. From the repository root:
 
 ```bash
 python code/main.py --reproduce-final --output data/reproduction
 ```
 
-The independent Linux run rebuilds all snapshots and compares the published tests. The supplementary ULB random forest has AP 0.7840486 on Linux versus 0.7845347 in the original run; eight amount-group allocation entries differ by 1–5 reviews, while overall budget/TP/FP and amount coverage match. The output records those differences. Following the structural refactor and directory reorganization, local scoring of the original snapshots reproduced all eight aggregate tables numerically, all 48 prediction/case CSVs byte-for-byte, and all 17 test PNGs byte-for-byte. The 98 public checks and 11 classification checks pass.
-
-The first formal run stopped at a cold-start aggregation call. The missing budget argument was corrected and the same frozen models were used for the successful run. The ULB prediction files match across those runs. These records are retained with the freeze and reproduction evidence.
-
-## A.2 Bounded settings
-
-| Component | Fixed settings and selection |
-|---|---|
-| ULB LR | max_iter=1000, C=1, lbfgs; original / balanced / 1:1 undersampling; seed 42 |
-| ULB tree / naive Bayes | DecisionTreeClassifier seed 42; GaussianNB defaults |
-| ULB random forest | 100 trees, seed 42, one job |
-| K-means structure | k=3/5/8, seeds 42/43, 1,000-row silhouette/ARI sample; selected k=3, n_init=10 |
-| K-means representations | Standard / no Time / log Amount / both changes / Robust / both changes + Robust; raw and training-IQR relative distances |
-| IF variants | Base; no Time; log Amount; both changes; samples 1,024/4,096; 300 trees; combined transform + 300 trees + 1,024 samples |
-| IF selection | Inner chronological train split; seeds 42/43/44; retained base transform, 100 trees, 4,096 samples, contamination=auto |
-| E03 labels | 5/10/25/50/100%; class-stratified nested masks, seeds 42/43/44; LR seed 42, fixed IF256 reference |
-| E05 permutation | Fixed full-label weighted LR, AP, 30 features × 5 repeats, seed 42 |
-| Rules | Three bins; maximum 2 antecedents; coverage >=20, frauds >=5, lift >1 in training and validation; at most 50 candidates per scheme |
-| Handbook | Fixed LR and 100-tree IF256; four views plus 3 relation features; seed 42 |
-| E11 / E14 | Updates every 7 days in development, 30-day window, 0/1/7-day delay; missing history 0/10/30%, three seeds |
-| PaySim | Fixed label-independent sample, one-hot type and Amount, weighted LR and IF256; separate amount ranking |
-
-\clearpage
-
-## A.3 Result-to-source map
-
-| Report content | Canonical source in results/tables/ |
-|---|---|
-| Dataset versions, parameters, frozen thresholds | group_freeze.json; handbook_a.json; paysim_a.json |
-| ULB methods and fixed-threshold test | ulb_test.json |
-| Cluster allocation and same-budget overlap | c_test.json |
-| All label masks and test importance repeats | b_extensions_test.json |
-| Amount, costs, 500 row / 200 block draws | c_extensions_test.json |
-| History, relation, rolling, cold-start and missing-history tests | handbook_test.json |
-| Semantic rule intervals, union and mechanism counts | handbook_d_test.json |
-| PaySim formal comparison | paysim_test.json |
-| Test consistency and independent reconstruction | project_test.json; reproduction.json |
-
-Figures 1–5 are rebuilt directly from these formal JSON files by report/build_report.py. Their PDF versions are stored in results/figures/ with the prefix report_. The underlying scientific outputs are unchanged. Every reported method uses the original split and its predeclared fit policy; all conditions, including unsuccessful changes, remain available in the JSON tables.
-
-The main text emphasizes the primary comparison and the most informative controlled contrasts. Full 20-score ULB ablations, all budgets, three-seed conditions, time windows, individual rule metrics and error associations are supplied by the same source files. Row-level predictions and fitted models remain in the local data/ directory; a fresh clone rebuilds them from the documented sources.
-
-The original ULB validation had been examined before the second C protocol. Its inner training split limits further use of that validation segment for the anomaly selection, and this development history remains part of the method record.
-
-
-\clearpage
-
-# Appendix B. Supporting calculations
-
-## B.1 Why SSE alone does not select k
-
-**Table B1. Original training-structure experiment; mean across seeds 42/43.**
-
-| k | Mean training SSE | Mean sample silhouette | Seed ARI |
-| --- | ---: | ---: | ---: |
-| 3 | 4,699,495 | 0.1537 | 0.5558 |
-| 5 | 4,409,757 | 0.0669 | 0.1530 |
-| 8 | 3,994,957 | 0.0614 | 0.1317 |
-
-SSE falls as k grows, but silhouette and agreement deteriorate. The selected k=3 is supported by cohesion/separation and initialization stability within the declared range. Here ARI compares the two seeded cluster assignments on the same unlabeled sample.
-
-## B.2 Reading an association rule under a rare consequent
-
-**Table B2. Individual R001 test metrics, derived from the frozen rules’ stored counts.**
-
-| Rule | Coverage (%) | Support (%) | Confidence (%) | Lift | Kulczynski |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| ULB R001 | 6.7776 | 0.0916 | 1.3521 | 10.3681 | 0.3581 |
-| Handbook R001 | 19.8965 | 0.3527 | 1.7726 | 2.0183 | 0.2096 |
-
-Coverage is A/N; rule support is J/N, where A is the antecedent count and J the covered-fraud count. The two differ because many covered transactions are normal. Confidence J/A answers how often a fired rule is correct, whereas J/F measures the share of frauds it covers. Their average is Kulczynski. Each rule in Table B2 is first in the fixed training order, so its individual counts equal the first cumulative step.
-
-Holding A, J and F fixed while adding transactions with neither antecedent nor fraud leaves confidence and Kulczynski unchanged. Lift JN/(AF) rises with N. This explains why lift should be read alongside conditional precision and coverage in this rare-class task.
-
-## B.3 Comparing the declared discretizations
-
-**Table B3. Development-only rule comparison. “Retained” means passing the same validation count/lift gates.**
-
-| Dataset | Binning | Training candidates | Validation retained |
-| --- | ---: | ---: | ---: |
-| ULB | equal-width | 38 | 15 |
-| ULB | equal-frequency | 25 | 21 |
-| Handbook | equal-width | 16 | 6 |
-| Handbook | equal-frequency | 24 | 19 |
-
-Equal-frequency retains more rules for both datasets under the fixed gates, so it supplies the frozen 21-rule ULB and 19-rule Handbook sets. Equal-width and equal-frequency create different interval occupancies from the same training values. For ULB, 21/25 equal-frequency candidates (84.0%) survive validation, versus 15/38 equal-width candidates (39.5%). This makes the representation comparison concrete: fewer training candidates can yield more patterns that persist into the next time segment. The formal test then applies the selected bins and rules.
-
-
-\clearpage
-
-# Appendix C. Supplemental review-list analyses
-
-These analyses use the existing chronological partitions and do not change any frozen model or policy in the formal results. The experiments were added after inspecting those results, and the supplementary test segment has already been used by the project. Treat the findings as exploratory. No new data source is used. Table C1 is a restatement of the frozen ULB ranking. The three Handbook experiments are run together with:
+To rebuild the supplemental results, give the runner the pinned 60-day Handbook CSV:
 
 ```bash
-python report/build_supplement.py data/handbook/c_acceptance_20261116/transactions.csv
+python report/build_supplement.py path/to/transactions.csv
 ```
 
-### C.1 Daily review feedback
+| Evidence | Repository source |
+|---|---|
+| Dataset versions, split boundaries, frozen configurations and model selection | results/tables/group_freeze.json |
+| ULB rankings, fixed thresholds and rule coverage | results/tables/ulb_test.json |
+| ULB training cluster geometry and test list allocation | results/tables/c_baseline.json; c_test.json |
+| ULB label budgets, failure examples, amount, costs and uncertainty | results/tables/b_extensions_test.json; c_extensions_test.json |
+| Handbook features, delays, missing histories and cold start | results/tables/handbook_test.json |
+| Rule settings, redundancy and scenario diagnostics | report/d_validation/manifest.json; results/tables/handbook_d.json; handbook_d_test.json |
+| PaySim test and full reconstruction checks | results/tables/paysim_test.json; reproduction.json |
+| Supplemental daily records, sequence scores, GMM groups and list overlap | results/tables/review_supplement.json |
 
-Each policy starts with the same weighted LR and labeled days 0–29. It scores every transaction at the close of each daily batch from day 30. The random and uncertainty policies reserve ten slots from the same 100 reviews. Random selection samples without replacement outside the first 90. Uncertainty queries the ten remaining scores closest to 0.5, using row ID for ties. The score is used as a decision-boundary heuristic. Labels for day $d$ can first be used on day $d+2$. Every third day, the updating models refit on the initial training set and all newly available labels from reviewed transactions. Labels outside reviewed lists serve only to evaluate the results. All rankings use the same Amount and cyclical time inputs.
+The figure and table build is `python report/build_report.py`. The independent Linux reconstruction and any platform differences are recorded in `reproduction.json`. The original experiment grid and implementation parameters are in `report/EXTENSION_PROPOSALS.md`.
 
-The 15 evaluation days contain 1,280 frauds. Table C2 totals actual detections and separately counts how many the updated scores would find if all 100 slots were filled by rank. The random policy reports the range across seeds 42, 43 and 44. The replay measures one simulated label-return process and does not estimate production gains.
+\clearpage
 
-### C.2 Does preserving order help?
+# Appendix B. Supplemental review-list analyses
 
-Each customer's last three strictly earlier transactions, within seven days, are encoded as above or below the training median amount (45.34 units, with equality in the high bin). The unordered representation counts the number of high transactions, and the ordered representation uses all eight binary sequences. Both use identical events and the same existing features and LR setup. A row without three eligible prior events has all pattern indicators unset. The patterns are available for 143,440 of 145,739 test transactions and 1,261 of 1,280 frauds.
+The Handbook additions reuse the previously examined time split and are exploratory.
 
-**Table C3. Handbook static LR with and without recent amount patterns.**
+**Review feedback (Table 8).** Start with labeled days 0–29 and review 100 transactions per day from day 30. Exploration assigns ten slots to a random draw or the scores closest to 0.5 outside the first 90. Labels from day $d$ become available on day $d+2$. Refitting every third day uses the initial training rows and only the available reviewed labels. Evaluate on days 45–59. The random-policy range uses three seeds.
+
+**Ordered history.** Encode the last three strictly earlier customer transactions within seven days using the training median amount. The unordered version counts high amounts. The ordered version uses eight binary patterns. Rows with fewer than three eligible events have no pattern indicator. Both use the same model and base features.
+
+**Table B1. Handbook static LR with and without recent amount patterns.**
 
 | History features | Reviews | Frauds found | AP |
 | --- | --- | --- | --- |
@@ -430,15 +349,9 @@ Each customer's last three strictly earlier transactions, within seven days, are
 | Histories + unordered pattern | 1458 | 351 | 0.2268 |
 | Histories + ordered pattern | 1458 | 351 | 0.2255 |
 
-The two pattern representations both find 351 frauds. Their AP values are close. The order representation does not provide an observed lift at this capacity beyond the unordered information. These tests compare one window and one simple encoding.
+**Missed groups.** Fit a three-component Gaussian mixture on training log amounts and 1-day customer and terminal counts after scaling. Assign by highest membership and order components by increasing training mean log amount. All rows share the original 1% review list.
 
-\clearpage
-
-### C.3 Which transaction groups does the fixed list miss?
-
-A three-component Gaussian mixture with diagonal covariances fits only on the training segment. Its inputs are standardized log amounts and 1-day customer and terminal counts, each transformed with `log1p`. EM yields membership probabilities, which express uncertainty about the component, not fraud risk. We label the components by their increasing training mean log amount and assign each row to its most probable component. The underlying 1,458-slot both-history LR list is unchanged. The group rows partition the same list, with no separate group budgets.
-
-**Table C4. Global list allocation by most probable component.**
+**Table B2. Global list allocation by most probable component.**
 
 | GMM group | Transactions | Frauds | Reviews | Found |
 | --- | --- | --- | --- | --- |
@@ -446,54 +359,37 @@ A three-component Gaussian mixture with diagonal covariances fits only on the tr
 | Component 2 | 53800 | 480 | 465 | 115 |
 | Component 3 | 69423 | 659 | 991 | 219 |
 
-**Table C5. Global list allocation by membership confidence.**
+**Customer-relative amount.** Divide current amount by the customer’s mean amount over strictly earlier transactions in the last seven days. Put rows without a positive historical mean last and break ties by row ID.
 
-| Membership group | Transactions | Frauds | Reviews | Found |
-| --- | --- | --- | --- | --- |
-| Max membership < 0.8 | 18148 | 133 | 4 | 0 |
-| Max membership ≥ 0.8 | 127591 | 1147 | 1454 | 334 |
-
-The lowest-amount component contains 141 frauds but receives only two reviews, with no detections. Separately, the low-membership-confidence group contains 133 frauds and receives four reviews, also with no detections. These are overlapping views of the same test set. The groups identify where to inspect misses. They do not establish that assigning extra reviews to either group would improve detection.
-
-### C.4 Does unusual spending help prioritize reviews?
-
-We compare absolute amount with the current amount divided by the customer’s mean amount over the preceding seven days. The mean uses only transactions strictly earlier than the one being scored. Rows without a positive historical mean are placed last, and row ID breaks ties for both rankings. The ratio is available for 145,352 of 145,739 transactions and 1,277 of 1,280 frauds. Every reviewed row in the ratio list has a usable baseline.
-
-**Table C6. Absolute amount versus customer-relative amount on Handbook.**
+**Table B3. Absolute amount versus customer-relative amount on Handbook.**
 
 | Ranking | Reviews | Frauds found | AP |
 | --- | ---: | ---: | ---: |
 | Absolute amount | 1458 | 346 | 0.2693 |
 | Customer-relative amount | 1458 | 255 | 0.1034 |
 
-The lists share 390 transactions and 209 frauds. Absolute amount finds 137 frauds unique to its list, and the ratio finds 46 unique to its list. Their union yields 392 frauds at a cost of 2,526 reviews. Unusual spending provides a different signal, with lower yield at the original budget. The overlap identifies cases for investigation and does not establish a benefit from mixing the lists at 1%.
+The two lists share 209 frauds. Relative amount finds 46 outside the absolute-amount list. Combining them would find 392 frauds in 2,526 reviews.
 
 \clearpage
 
-# Appendix D. Additional diagnostics from the formal tests
+# Appendix C. Additional formal-test diagnostics
 
-### D.1 Cluster geometry and ranked errors
+**Cluster geometry.** On the fixed training sample, $k=3$ has silhouette 0.1537 and seed-agreement ARI 0.5558 versus 0.0669 and 0.1530 at $k=5$. SSE decreases with more clusters. The seed comparison measures agreement on the same unlabeled sample.
 
-Training k=3 had mean silhouette 0.1537 and seed-agreement ARI 0.5558 on the fixed 1,000-row sample; k=5 gave 0.0669 and 0.1530. Silhouette measures cohesion/separation, while this ARI measures agreement between seeded partitions. These favor k=3 within the tested choices, with limited separation. In test cluster 0, LR finds 15/16 frauds in 54 reviews versus IF’s 13 in 208; in cluster 1, it finds 49/58 versus 28. The third test group is empty. Scaling also changes the ranking: raw RobustScaler distance detects 10 frauds at 1%, versus 37 with StandardScaler. These groups supply geometric diagnostics, while fraud detection remains a separate evaluation.
+**Ranked errors.** Shuffling Amount, V14 and V2 produces the three largest mean AP decreases. One normal transaction ranks third, while a missed fraud ranks 783rd under the selected ULB LR. The shortlist contains ranks 1–568.
 
-Amount has the largest permutation effect: shuffling it lowers test AP by 0.3695 on average; V14 and V2 follow at approximately 0.1503 and 0.0879. This identifies the fitted model's dependence on inputs. The deterministic error samples include a false positive at rank 568 (score 0.7573), a missed fraud at rank 783 (0.6875), and a normal transaction ranked third (score approximately 1.0000). Raising capacity could include the rank-783 fraud, while the high-ranked false positive remains a confident error. Scores are used for ranking; this experiment does not calibrate them as event probabilities.
+**Rule checks.** Equal-frequency binning retains 21 ULB and 19 Handbook rules, versus 15 and 6 under equal-width binning. High lift can coexist with low confidence when fraud is rare. The rule metrics and binning candidates are available in the sources listed in Appendix A.
 
-### D.2 Paired uncertainty for the primary comparison
-
-**Table 6. Paired test differences, weighted LR minus IF4096 at 1%.**
+**Table C1. Paired test differences, weighted LR minus IF4096 at 1%.**
 
 | Resampling | AP gap | 95% interval | Recall gap (pp) | 95% interval (pp) |
 | --- | ---: | ---: | ---: | ---: |
 | Paired rows (500) | 0.6815 | [0.5763, 0.7710] | 31.08 | [20.83, 41.78] |
 | Time blocks (200) | 0.6815 | [0.5469, 0.7926] | 31.08 | [18.69, 44.24] |
 
-Both resampling schemes retain a positive LR advantage in AP and recall. The block analysis gives wider recall limits, consistent with less independent information when transactions are grouped in time. The intervals describe this fixed-model comparison on the observed test segment. The small test fraud count also makes individual detections visible: one of 74 frauds corresponds to about 1.35 recall percentage points.
+The block interval is wider for this fixed-model comparison. It accounts for some time dependence by resampling transactions together within blocks.
 
-\clearpage
-
-### D.3 Pre-test snapshots and new entities
-
-**Table 8. Handbook test using pre-test rolling snapshots, K=1,458.**
+**Table C2. Handbook test using pre-test rolling snapshots, K=1,458.**
 
 | History LR snapshot | AP | TP at 1% | Recall (%) |
 | --- | ---: | ---: | ---: |
@@ -502,6 +398,4 @@ Both resampling schemes retain a positive LR advantage in AP and recall. The blo
 | Weekly, delay 1 day | 0.2138 | 339 | 26.48 |
 | Weekly, delay 7 days | 0.2156 | 340 | 26.56 |
 
-The original rolling snapshots use only labels available at each development cutoff and are held fixed for test. The 0-, 1- and 7-day configurations detect seven, five and six more frauds than the static both-history baseline. The current-only LR finds 346 in the same test segment.
-
-The initial-training cold-start groups contain 26 transactions from unseen customers and none from unseen terminals. The 26 include no frauds, so this split cannot test detection on new fraud-positive entities.
+The rolling snapshots only use labels available at their development cutoff. The initial-training cold-start groups include 26 transactions from new customers and no fraud positives, so they do not support a fraud-detection comparison on new entities.
