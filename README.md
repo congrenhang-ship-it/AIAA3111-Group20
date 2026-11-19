@@ -4,7 +4,7 @@ AIAA 3111 · Group 20
 
 在有限人工审核容量下，比较分类、聚类/异常检测与规则解释，并研究标签不足、历史与关系信息、标签延迟、冷启动和缺失历史对结果的影响。ULB 是真实匿名交易主线，Handbook 用于受控上下文实验，PaySim 用于轻量外部复核。各数据集分别训练和评价，不平均跨数据集 AP。
 
-E01–E16、测试前 G2 冻结、三套数据正式测试、17 张测试图和 Linux 独立重建均已完成。[报告 PDF](report/Report.pdf)已整合正式测试，正文 10 页，披露/参考文献/附录另计；[可编辑正文](report/Report.md)的成员姓名与学号留空待填写。[海报 PDF](poster/Poster.pdf)已整合正式结果，[HTML 版](poster/Poster.html)支持切换审核预算和特征组合，剩余事项见 [TASKS.md](TASKS.md)。成员分支保留，日常使用 main。
+E01–E16、测试前 G2 冻结、三套数据正式测试、17 张测试图和 Linux 独立重建均已完成。[报告 PDF](report/Report.pdf)已整合正式测试，正文 10 页，披露/参考文献/附录另计；[公开版正文](report/Report.md)保留空白成员栏；含成员信息的课程提交版仅存本地。[海报 PDF](poster/Poster.pdf)已整合正式结果，[HTML 版](poster/Poster.html)支持切换审核预算和特征组合，剩余事项见 [TASKS.md](TASKS.md)。成员分支保留，日常使用 main。
 
 ## 目录
 
@@ -134,10 +134,4 @@ python report/build_report.py
 
 课程要求最终提交 **Group_20_Project.zip**，包含 Report.pdf、代码、README 和数据或下载说明；Poster.pdf 单独提交，不要求放入最终 ZIP。报告正文 6–10 页，图表计入；参考文献、Disclosures 和附录不计入正文。组员需核对内容并如实披露外部协作及 AIGC 使用。
 
-本地技术包可由以下命令生成。它已通过无 Git 环境的完整 ULB 验证，但缺少最终 Report.pdf，因此不是完整课程提交包。
-
-```bash
-python -c "import sys; sys.path.insert(0, 'code'); from workflows.finalize import package_technical; print(package_technical('data/Group_20_Code.zip'))"
-```
-
-技术包不含原始数据、模型、逐行预测或报告/海报；保留必要训练规则及 C 操作说明作为运行依赖。报告已生成，填写成员信息并核对后加入最终课程包；演练和 Canvas 提交仍见 TASKS.md。
+提交文件在 Git 忽略的本地 `data/submission/`。其中 `Group_20_Project.zip` 包含填写成员信息的 `Report.pdf`、代码、README 和三套数据的获取说明，`Poster.pdf` 单独提交。公开仓库中的报告保留空白成员栏。小组审核、现场展示及 Canvas 操作见 [TASKS.md](TASKS.md)。
