@@ -36,10 +36,10 @@ AIAA 3111 Course Project · Group 20
 
 | Group member | Student ID |
 |---|---|
-| __________________________ | __________________ |
-| __________________________ | __________________ |
-| __________________________ | __________________ |
-| __________________________ | __________________ |
+| Jingyang YI | 50027058 |
+| Shuhan SHEN | 50025347 |
+| Congren HANG | 50025402 |
+| Zhanlin CHEN | 50024707 |
 
 **Abstract.** Fraud teams must decide which transactions to inspect when they can review only a fraction of all alerts. We compare the lists produced by different rankings at the same review capacity. On the chronological ULB test set, weighted logistic regression finds 64 of 74 frauds from 568 reviews, leaving 10 frauds outside the list. Doubling the weighted model’s reviews from 284 to 568 finds one additional fraud. In Handbook, the tested histories reduce detections and missing history affects Isolation Forest more strongly. In PaySim, the method with the most detections at 1% differs from the method with the highest average precision. These results motivate choosing a ranking at the available review capacity and retesting it when the available information or transaction setting changes.
 

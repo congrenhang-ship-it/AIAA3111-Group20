@@ -420,11 +420,11 @@
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
     "poster_unchanged": true,
-    "PDF_sha256": "87b145124a8dc45fe74ded2977b3f71400ca121e0f88c7835a1f7d0cc6f6aa0c",
-    "Markdown_sha256": "1dc70f584a8803b4f85ce9a7e731fca65edfd96dd52a66f0aa5a18a663727d29",
+    "PDF_sha256": "6a71e630aa636a06b87431a985f70e3fda74749e8fae194bee7e628b50b388d0",
+    "Markdown_sha256": "ea0d2f8eef0318c86a95b95dfcf1b38ee01b5d051a1ca01f8f0779583b62d8f8",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
-    "member_fields": "Names/IDs left blank for group completion as requested previously.",
+    "member_fields": "Four names and student IDs verified against the Group 20 proposal.",
     "main_text_numerical_tables": 10,
     "appendix_numerical_tables": 5,
     "numeric_figure_values_match_previous_release": true
@@ -491,7 +491,7 @@
       "L7 Clustering Basic (1029)"
     ],
     "course_mapping": "The report retains the applied course concepts in methods and analysis.",
-    "member_fields": "Names and IDs remain blank for members; personal disclosures need member confirmation.",
+    "member_fields": "Names and IDs are filled in; personal disclosures need member confirmation.",
     "visual_review": "Changed main-text pages 3, 5, 10 and new appendix pages 14, 15 checked after rendering; no overflow or missing glyph warnings in the build."
   },
   "poster_build_verification": {
