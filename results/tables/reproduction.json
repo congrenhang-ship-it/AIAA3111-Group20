@@ -411,22 +411,22 @@
     }
   },
   "report_build_verification": {
-    "date": "2026-11-18",
+    "date": "2026-11-19",
     "main_text_pages": 10,
-    "total_PDF_pages": 14,
-    "result_tables_checked": 13,
+    "total_PDF_pages": 18,
+    "result_tables_checked": 18,
     "test_figures": 5,
     "formal_result_files_unchanged": 8,
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
-    "poster_unchanged": true,
-    "PDF_sha256": "a66e05204abf96e92f9bd9d3c4f4e078d1eb9c5329974ba37a7fdd3748256d90",
-    "Markdown_sha256": "5ee6820c7da1e1c9f6ba439fe7202001ca3c8a86cdc1f5bb9e04069054f449f4",
+    "poster_unchanged": false,
+    "PDF_sha256": "626ce69a0a894fea3683979fedaa321084ef6ce0ad0ee5aca732d11ebf782821",
+    "Markdown_sha256": "119a100fbb81a10d0c51f6370ec68e65836b8d06ce17297b5efcf40a919d28de",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
     "member_fields": "Names/IDs left blank for group completion as requested previously.",
     "main_text_numerical_tables": 10,
-    "appendix_numerical_tables": 3,
+    "appendix_numerical_tables": 8,
     "numeric_figure_values_match_previous_release": true
   },
   "course_report_review": {
@@ -498,7 +498,7 @@
     "pages": 1,
     "layout": "80 cm wide × 100 cm high, portrait",
     "source": "poster/Poster.html",
-    "PDF_sha256": "145077f6a4fcb2067d169dbba2976ea8437d7e5ef537682383b690bac0a86ea2",
+    "PDF_sha256": "0271f6f0a7a4b428a054598648a540b2fe9a1fe60a4b7044e83b4f4c1ea2cff7",
     "formal_results_reviewed_against_report_sections": [
       "4.1",
       "4.2",
@@ -529,6 +529,14 @@
       "print_hides_controls": true
     },
     "independent_review": "Poster claims were independently checked before resizing. The resized 80 × 100 cm PDF was visually inspected and the browser interactions were retested.",
-    "narrative_revision": "The toy ranking and experiment roadmap lead into the review-budget decision. Model names appear where needed to read the comparisons."
+    "narrative_revision": "The toy ranking and experiment roadmap lead into the review-budget decision. Model names appear where needed to read the comparisons.",
+    "supplemental_feedback_result": "Visually checked against the supplemental replay result."
+  },
+  "review_supplement_verification": {
+    "source": "results/tables/review_supplement.json",
+    "sha256": "9af8fa1f9489eba79ca5d232fd6d1d38b37bfeb6ff2289a8d596eb0c5e0ca50a",
+    "same_environment_repeat_byte_identical": true,
+    "frozen_test_files_unchanged": true,
+    "scope": "Exploratory Handbook analyses and a workload table from the frozen ULB ranking."
   }
 }

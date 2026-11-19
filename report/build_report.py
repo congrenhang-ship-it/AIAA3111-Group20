@@ -254,6 +254,43 @@ def audit_tables():
         for scheme in ['equal_width','equal_frequency']:
             m=schemes[scheme];rows.append([name,scheme.replace('_','-'),m['candidate_count'] if name=='ULB' else len(m['candidates']),len(m['retained_rule_ids']) if name=='ULB' else len(m['rules'])])
     check('Dataset', rows, 'Binning')
+    supplement = read('review_supplement')
+    check('Budget', [
+        [f"{100*r['budget']:g}%", r['reviews'], r['found'], r['normal_reviews'],
+         f"{100*r['amount_coverage']:.2f}",
+         '—' if i == 0 else f"+{r['extra_frauds']} / +{r['extra_normal_reviews']}"]
+        for i, r in enumerate(supplement['ulb_workload'])
+    ])
+
+    def span(records, field):
+        values = [record[field] for record in records]
+        low, high = min(values), max(values)
+        return str(low) if low == high else f'{low}–{high}'
+
+    feedback = supplement['review_feedback']['runs']
+    rows = []
+    for policy, label in [('static', 'Static ranking'), ('top_risk', 'Risk-only updates'),
+                          ('random', 'Risk + random'), ('uncertainty', 'Risk + uncertainty')]:
+        records = [run['test_totals'] for run in feedback if run['policy'] == policy]
+        rows.append([label, records[0]['reviews'], span(records, 'policy_found'),
+                     span(records, 'ranking_found')])
+    check('Feedback policy', rows)
+    sequence = supplement['sequence']['results']
+    rows = []
+    for name, label in [('history', 'Existing histories'),
+                        ('unordered', 'Histories + unordered pattern'),
+                        ('ordered', 'Histories + ordered pattern')]:
+        result = sequence[name]
+        rows.append([label, result['reviews'], result['found'], f"{result['AP']:.4f}"])
+    check('History features', rows)
+
+    groups = supplement['probabilistic_groups']
+    for key, labels in [('groups', [(f'component_{i}', f'Component {i}') for i in range(1,4)]),
+                        ('membership', [('less_than_0.8', 'Max membership < 0.8'),
+                                        ('at_least_0.8', 'Max membership ≥ 0.8')])]:
+        fields = ('rows', 'frauds', 'reviews', 'found')
+        check('GMM group' if key == 'groups' else 'Membership group', [[label, *[groups[key][name][field] for field in fields]]
+                            for name, label in labels])
     return checked
 
 

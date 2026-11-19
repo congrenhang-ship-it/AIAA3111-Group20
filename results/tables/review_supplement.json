@@ -1,0 +1,1467 @@
+{
+  "scope": "Supplemental controlled analyses on the existing chronological split",
+  "handbook_sha256": "cf359432b7ca090e4d8614793e100a59c8fd0bb18c9cf11f414fc61644ae4ab7",
+  "ulb_workload": [
+    {
+      "budget": 0.001,
+      "reviews": 57,
+      "found": 50,
+      "normal_reviews": 7,
+      "amount_coverage": 0.5727457306018502,
+      "extra_reviews": 57,
+      "extra_frauds": 50,
+      "extra_normal_reviews": 7
+    },
+    {
+      "budget": 0.005,
+      "reviews": 284,
+      "found": 63,
+      "normal_reviews": 221,
+      "amount_coverage": 0.6936618670310716,
+      "extra_reviews": 227,
+      "extra_frauds": 13,
+      "extra_normal_reviews": 214
+    },
+    {
+      "budget": 0.01,
+      "reviews": 568,
+      "found": 64,
+      "normal_reviews": 504,
+      "amount_coverage": 0.6959122219245905,
+      "extra_reviews": 284,
+      "extra_frauds": 1,
+      "extra_normal_reviews": 283
+    },
+    {
+      "budget": 0.02,
+      "reviews": 1135,
+      "found": 65,
+      "normal_reviews": 1070,
+      "amount_coverage": 0.6968944067228543,
+      "extra_reviews": 567,
+      "extra_frauds": 1,
+      "extra_normal_reviews": 566
+    }
+  ],
+  "review_feedback": {
+    "daily_budget": 100,
+    "exploration_slots": 10,
+    "initial_labeled_days": [
+      0,
+      29
+    ],
+    "first_replay_day": 30,
+    "test_days": [
+      45,
+      59
+    ],
+    "label_arrival_days_after_review": 2,
+    "refit_interval_days": 3,
+    "runs": [
+      {
+        "policy": "static",
+        "seed": 42,
+        "test_totals": {
+          "reviews": 1500,
+          "policy_found": 346,
+          "ranking_found": 346,
+          "available_fraud": 1280
+        },
+        "daily": [
+          {
+            "day": 30,
+            "reviews": 100,
+            "policy_found": 27,
+            "ranking_found": 27,
+            "available_fraud": 93
+          },
+          {
+            "day": 31,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 88
+          },
+          {
+            "day": 32,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 87
+          },
+          {
+            "day": 33,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 68
+          },
+          {
+            "day": 34,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 24,
+            "available_fraud": 82
+          },
+          {
+            "day": 35,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 71
+          },
+          {
+            "day": 36,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 80
+          },
+          {
+            "day": 37,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 72
+          },
+          {
+            "day": 38,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 81
+          },
+          {
+            "day": 39,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 87
+          },
+          {
+            "day": 40,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 99
+          },
+          {
+            "day": 41,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 91
+          },
+          {
+            "day": 42,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 108
+          },
+          {
+            "day": 43,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 97
+          },
+          {
+            "day": 44,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 87
+          },
+          {
+            "day": 45,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 92
+          },
+          {
+            "day": 46,
+            "reviews": 100,
+            "policy_found": 29,
+            "ranking_found": 29,
+            "available_fraud": 84
+          },
+          {
+            "day": 47,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 84
+          },
+          {
+            "day": 48,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 98
+          },
+          {
+            "day": 49,
+            "reviews": 100,
+            "policy_found": 31,
+            "ranking_found": 31,
+            "available_fraud": 103
+          },
+          {
+            "day": 50,
+            "reviews": 100,
+            "policy_found": 26,
+            "ranking_found": 26,
+            "available_fraud": 91
+          },
+          {
+            "day": 51,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 70
+          },
+          {
+            "day": 52,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 66
+          },
+          {
+            "day": 53,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 67
+          },
+          {
+            "day": 54,
+            "reviews": 100,
+            "policy_found": 26,
+            "ranking_found": 26,
+            "available_fraud": 97
+          },
+          {
+            "day": 55,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 74
+          },
+          {
+            "day": 56,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 88
+          },
+          {
+            "day": 57,
+            "reviews": 100,
+            "policy_found": 28,
+            "ranking_found": 28,
+            "available_fraud": 89
+          },
+          {
+            "day": 58,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 94
+          },
+          {
+            "day": 59,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 83
+          }
+        ]
+      },
+      {
+        "policy": "top_risk",
+        "seed": 42,
+        "test_totals": {
+          "reviews": 1500,
+          "policy_found": 345,
+          "ranking_found": 345,
+          "available_fraud": 1280
+        },
+        "daily": [
+          {
+            "day": 30,
+            "reviews": 100,
+            "policy_found": 27,
+            "ranking_found": 27,
+            "available_fraud": 93
+          },
+          {
+            "day": 31,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 88
+          },
+          {
+            "day": 32,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 87
+          },
+          {
+            "day": 33,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 68
+          },
+          {
+            "day": 34,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 24,
+            "available_fraud": 82
+          },
+          {
+            "day": 35,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 71
+          },
+          {
+            "day": 36,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 80
+          },
+          {
+            "day": 37,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 72
+          },
+          {
+            "day": 38,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 81
+          },
+          {
+            "day": 39,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 87
+          },
+          {
+            "day": 40,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 99
+          },
+          {
+            "day": 41,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 91
+          },
+          {
+            "day": 42,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 108
+          },
+          {
+            "day": 43,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 97
+          },
+          {
+            "day": 44,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 87
+          },
+          {
+            "day": 45,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 92
+          },
+          {
+            "day": 46,
+            "reviews": 100,
+            "policy_found": 29,
+            "ranking_found": 29,
+            "available_fraud": 84
+          },
+          {
+            "day": 47,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 84
+          },
+          {
+            "day": 48,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 98
+          },
+          {
+            "day": 49,
+            "reviews": 100,
+            "policy_found": 31,
+            "ranking_found": 31,
+            "available_fraud": 103
+          },
+          {
+            "day": 50,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 91
+          },
+          {
+            "day": 51,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 70
+          },
+          {
+            "day": 52,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 66
+          },
+          {
+            "day": 53,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 67
+          },
+          {
+            "day": 54,
+            "reviews": 100,
+            "policy_found": 26,
+            "ranking_found": 26,
+            "available_fraud": 97
+          },
+          {
+            "day": 55,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 74
+          },
+          {
+            "day": 56,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 88
+          },
+          {
+            "day": 57,
+            "reviews": 100,
+            "policy_found": 28,
+            "ranking_found": 28,
+            "available_fraud": 89
+          },
+          {
+            "day": 58,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 94
+          },
+          {
+            "day": 59,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 83
+          }
+        ]
+      },
+      {
+        "policy": "random",
+        "seed": 42,
+        "test_totals": {
+          "reviews": 1500,
+          "policy_found": 344,
+          "ranking_found": 345,
+          "available_fraud": 1280
+        },
+        "daily": [
+          {
+            "day": 30,
+            "reviews": 100,
+            "policy_found": 27,
+            "ranking_found": 27,
+            "available_fraud": 93
+          },
+          {
+            "day": 31,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 88
+          },
+          {
+            "day": 32,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 25,
+            "available_fraud": 87
+          },
+          {
+            "day": 33,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 68
+          },
+          {
+            "day": 34,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 24,
+            "available_fraud": 82
+          },
+          {
+            "day": 35,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 71
+          },
+          {
+            "day": 36,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 25,
+            "available_fraud": 80
+          },
+          {
+            "day": 37,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 72
+          },
+          {
+            "day": 38,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 81
+          },
+          {
+            "day": 39,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 87
+          },
+          {
+            "day": 40,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 23,
+            "available_fraud": 99
+          },
+          {
+            "day": 41,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 91
+          },
+          {
+            "day": 42,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 108
+          },
+          {
+            "day": 43,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 22,
+            "available_fraud": 97
+          },
+          {
+            "day": 44,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 87
+          },
+          {
+            "day": 45,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 92
+          },
+          {
+            "day": 46,
+            "reviews": 100,
+            "policy_found": 30,
+            "ranking_found": 29,
+            "available_fraud": 84
+          },
+          {
+            "day": 47,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 84
+          },
+          {
+            "day": 48,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 98
+          },
+          {
+            "day": 49,
+            "reviews": 100,
+            "policy_found": 30,
+            "ranking_found": 31,
+            "available_fraud": 103
+          },
+          {
+            "day": 50,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 91
+          },
+          {
+            "day": 51,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 70
+          },
+          {
+            "day": 52,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 66
+          },
+          {
+            "day": 53,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 67
+          },
+          {
+            "day": 54,
+            "reviews": 100,
+            "policy_found": 26,
+            "ranking_found": 26,
+            "available_fraud": 97
+          },
+          {
+            "day": 55,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 74
+          },
+          {
+            "day": 56,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 88
+          },
+          {
+            "day": 57,
+            "reviews": 100,
+            "policy_found": 28,
+            "ranking_found": 28,
+            "available_fraud": 89
+          },
+          {
+            "day": 58,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 94
+          },
+          {
+            "day": 59,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 23,
+            "available_fraud": 83
+          }
+        ]
+      },
+      {
+        "policy": "random",
+        "seed": 43,
+        "test_totals": {
+          "reviews": 1500,
+          "policy_found": 343,
+          "ranking_found": 345,
+          "available_fraud": 1280
+        },
+        "daily": [
+          {
+            "day": 30,
+            "reviews": 100,
+            "policy_found": 27,
+            "ranking_found": 27,
+            "available_fraud": 93
+          },
+          {
+            "day": 31,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 88
+          },
+          {
+            "day": 32,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 25,
+            "available_fraud": 87
+          },
+          {
+            "day": 33,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 68
+          },
+          {
+            "day": 34,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 24,
+            "available_fraud": 82
+          },
+          {
+            "day": 35,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 71
+          },
+          {
+            "day": 36,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 25,
+            "available_fraud": 80
+          },
+          {
+            "day": 37,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 72
+          },
+          {
+            "day": 38,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 81
+          },
+          {
+            "day": 39,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 87
+          },
+          {
+            "day": 40,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 23,
+            "available_fraud": 99
+          },
+          {
+            "day": 41,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 91
+          },
+          {
+            "day": 42,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 108
+          },
+          {
+            "day": 43,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 22,
+            "available_fraud": 97
+          },
+          {
+            "day": 44,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 87
+          },
+          {
+            "day": 45,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 92
+          },
+          {
+            "day": 46,
+            "reviews": 100,
+            "policy_found": 29,
+            "ranking_found": 29,
+            "available_fraud": 84
+          },
+          {
+            "day": 47,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 84
+          },
+          {
+            "day": 48,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 98
+          },
+          {
+            "day": 49,
+            "reviews": 100,
+            "policy_found": 30,
+            "ranking_found": 31,
+            "available_fraud": 103
+          },
+          {
+            "day": 50,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 91
+          },
+          {
+            "day": 51,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 70
+          },
+          {
+            "day": 52,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 66
+          },
+          {
+            "day": 53,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 67
+          },
+          {
+            "day": 54,
+            "reviews": 100,
+            "policy_found": 26,
+            "ranking_found": 26,
+            "available_fraud": 97
+          },
+          {
+            "day": 55,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 74
+          },
+          {
+            "day": 56,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 88
+          },
+          {
+            "day": 57,
+            "reviews": 100,
+            "policy_found": 28,
+            "ranking_found": 28,
+            "available_fraud": 89
+          },
+          {
+            "day": 58,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 94
+          },
+          {
+            "day": 59,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 23,
+            "available_fraud": 83
+          }
+        ]
+      },
+      {
+        "policy": "random",
+        "seed": 44,
+        "test_totals": {
+          "reviews": 1500,
+          "policy_found": 344,
+          "ranking_found": 345,
+          "available_fraud": 1280
+        },
+        "daily": [
+          {
+            "day": 30,
+            "reviews": 100,
+            "policy_found": 27,
+            "ranking_found": 27,
+            "available_fraud": 93
+          },
+          {
+            "day": 31,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 88
+          },
+          {
+            "day": 32,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 25,
+            "available_fraud": 87
+          },
+          {
+            "day": 33,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 68
+          },
+          {
+            "day": 34,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 24,
+            "available_fraud": 82
+          },
+          {
+            "day": 35,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 71
+          },
+          {
+            "day": 36,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 25,
+            "available_fraud": 80
+          },
+          {
+            "day": 37,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 72
+          },
+          {
+            "day": 38,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 81
+          },
+          {
+            "day": 39,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 87
+          },
+          {
+            "day": 40,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 23,
+            "available_fraud": 99
+          },
+          {
+            "day": 41,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 91
+          },
+          {
+            "day": 42,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 108
+          },
+          {
+            "day": 43,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 22,
+            "available_fraud": 97
+          },
+          {
+            "day": 44,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 87
+          },
+          {
+            "day": 45,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 92
+          },
+          {
+            "day": 46,
+            "reviews": 100,
+            "policy_found": 29,
+            "ranking_found": 29,
+            "available_fraud": 84
+          },
+          {
+            "day": 47,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 84
+          },
+          {
+            "day": 48,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 98
+          },
+          {
+            "day": 49,
+            "reviews": 100,
+            "policy_found": 30,
+            "ranking_found": 31,
+            "available_fraud": 103
+          },
+          {
+            "day": 50,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 91
+          },
+          {
+            "day": 51,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 70
+          },
+          {
+            "day": 52,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 66
+          },
+          {
+            "day": 53,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 67
+          },
+          {
+            "day": 54,
+            "reviews": 100,
+            "policy_found": 26,
+            "ranking_found": 26,
+            "available_fraud": 97
+          },
+          {
+            "day": 55,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 74
+          },
+          {
+            "day": 56,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 23,
+            "available_fraud": 88
+          },
+          {
+            "day": 57,
+            "reviews": 100,
+            "policy_found": 28,
+            "ranking_found": 28,
+            "available_fraud": 89
+          },
+          {
+            "day": 58,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 94
+          },
+          {
+            "day": 59,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 23,
+            "available_fraud": 83
+          }
+        ]
+      },
+      {
+        "policy": "uncertainty",
+        "seed": 42,
+        "test_totals": {
+          "reviews": 1500,
+          "policy_found": 344,
+          "ranking_found": 345,
+          "available_fraud": 1280
+        },
+        "daily": [
+          {
+            "day": 30,
+            "reviews": 100,
+            "policy_found": 27,
+            "ranking_found": 27,
+            "available_fraud": 93
+          },
+          {
+            "day": 31,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 88
+          },
+          {
+            "day": 32,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 25,
+            "available_fraud": 87
+          },
+          {
+            "day": 33,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 68
+          },
+          {
+            "day": 34,
+            "reviews": 100,
+            "policy_found": 24,
+            "ranking_found": 24,
+            "available_fraud": 82
+          },
+          {
+            "day": 35,
+            "reviews": 100,
+            "policy_found": 19,
+            "ranking_found": 19,
+            "available_fraud": 71
+          },
+          {
+            "day": 36,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 25,
+            "available_fraud": 80
+          },
+          {
+            "day": 37,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 72
+          },
+          {
+            "day": 38,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 81
+          },
+          {
+            "day": 39,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 87
+          },
+          {
+            "day": 40,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 23,
+            "available_fraud": 99
+          },
+          {
+            "day": 41,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 91
+          },
+          {
+            "day": 42,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 108
+          },
+          {
+            "day": 43,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 22,
+            "available_fraud": 97
+          },
+          {
+            "day": 44,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 87
+          },
+          {
+            "day": 45,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 92
+          },
+          {
+            "day": 46,
+            "reviews": 100,
+            "policy_found": 29,
+            "ranking_found": 29,
+            "available_fraud": 84
+          },
+          {
+            "day": 47,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 84
+          },
+          {
+            "day": 48,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 98
+          },
+          {
+            "day": 49,
+            "reviews": 100,
+            "policy_found": 30,
+            "ranking_found": 31,
+            "available_fraud": 103
+          },
+          {
+            "day": 50,
+            "reviews": 100,
+            "policy_found": 25,
+            "ranking_found": 25,
+            "available_fraud": 91
+          },
+          {
+            "day": 51,
+            "reviews": 100,
+            "policy_found": 21,
+            "ranking_found": 21,
+            "available_fraud": 70
+          },
+          {
+            "day": 52,
+            "reviews": 100,
+            "policy_found": 20,
+            "ranking_found": 20,
+            "available_fraud": 66
+          },
+          {
+            "day": 53,
+            "reviews": 100,
+            "policy_found": 16,
+            "ranking_found": 16,
+            "available_fraud": 67
+          },
+          {
+            "day": 54,
+            "reviews": 100,
+            "policy_found": 27,
+            "ranking_found": 26,
+            "available_fraud": 97
+          },
+          {
+            "day": 55,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 22,
+            "available_fraud": 74
+          },
+          {
+            "day": 56,
+            "reviews": 100,
+            "policy_found": 23,
+            "ranking_found": 23,
+            "available_fraud": 88
+          },
+          {
+            "day": 57,
+            "reviews": 100,
+            "policy_found": 28,
+            "ranking_found": 28,
+            "available_fraud": 89
+          },
+          {
+            "day": 58,
+            "reviews": 100,
+            "policy_found": 18,
+            "ranking_found": 18,
+            "available_fraud": 94
+          },
+          {
+            "day": 59,
+            "reviews": 100,
+            "policy_found": 22,
+            "ranking_found": 23,
+            "available_fraud": 83
+          }
+        ]
+      }
+    ]
+  },
+  "sequence": {
+    "training_amount_cut": 45.34,
+    "eligible_test_rows": 143440,
+    "eligible_test_frauds": 1261,
+    "results": {
+      "history": {
+        "reviews": 1458,
+        "found": 334,
+        "total_frauds": 1280,
+        "AP": 0.21298377642655464
+      },
+      "unordered": {
+        "reviews": 1458,
+        "found": 351,
+        "total_frauds": 1280,
+        "AP": 0.22675171678369893
+      },
+      "ordered": {
+        "reviews": 1458,
+        "found": 351,
+        "total_frauds": 1280,
+        "AP": 0.2255043774866746
+      }
+    }
+  },
+  "probabilistic_groups": {
+    "features": [
+      "Amount",
+      "customer_count_1d",
+      "terminal_count_1d"
+    ],
+    "groups": {
+      "component_1": {
+        "rows": 22516,
+        "frauds": 141,
+        "reviews": 2,
+        "found": 0
+      },
+      "component_2": {
+        "rows": 53800,
+        "frauds": 480,
+        "reviews": 465,
+        "found": 115
+      },
+      "component_3": {
+        "rows": 69423,
+        "frauds": 659,
+        "reviews": 991,
+        "found": 219
+      }
+    },
+    "membership": {
+      "less_than_0.8": {
+        "rows": 18148,
+        "frauds": 133,
+        "reviews": 4,
+        "found": 0
+      },
+      "at_least_0.8": {
+        "rows": 127591,
+        "frauds": 1147,
+        "reviews": 1454,
+        "found": 334
+      }
+    },
+    "fixed_global_list": {
+      "reviews": 1458,
+      "found": 334,
+      "total_frauds": 1280,
+      "AP": 0.21298377642655464
+    }
+  }
+}

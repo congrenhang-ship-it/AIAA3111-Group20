@@ -144,7 +144,7 @@ K-means groups provide a second view of the ranking. Table 3 allocates each meth
 | 1 | 48335 | 58 | 514 / 49 | 360 / 28 |
 | 2 | 0 | 0 | 0 / 0 | 0 / 0 |
 
-Training k=3 had mean silhouette 0.1537 and seed-agreement ARI 0.5558 on the fixed 1,000-row sample; k=5 gave 0.0669 and 0.1530. Silhouette measures cohesion/separation, while this ARI measures agreement between seeded partitions. These favor k=3 within the tested choices, with limited separation. In test cluster 0, LR finds 15/16 frauds in 54 reviews versus IF’s 13 in 208; in cluster 1, it finds 49/58 versus 28. The third test group is empty. Scaling also changes the ranking: raw RobustScaler distance detects 10 frauds at 1%, versus 37 with StandardScaler. These groups supply geometric diagnostics, while fraud detection remains a separate evaluation.
+The shared list reaches the two occupied groups unevenly. Appendix D gives the training cluster diagnostics. Appendix C tests an alternative grouping with probabilistic membership.
 
 A separate question is how many alerts a fixed validation threshold produces later. Table 4 applies the original thresholds without changing them.
 
@@ -155,9 +155,7 @@ A separate question is how many alerts a fixed validation threshold produces lat
 | Weighted LR | 0.8043 | 453 | 63 | 0.80 |
 | IF4096 | 0.5318 | 374 | 36 | 0.66 |
 
-The LR threshold produces 453 reviews and detects 63 frauds, compared with 568 and 64 under test top-K. The IF threshold produces 374 reviews and detects 36, compared with 568 and 41. Both review rates fall below 1%. A score threshold therefore carries a different workload interpretation from a capacity rule, even when calibrated to 1% on validation.
-
-Hourly diagnostics use the same relative-time origin and frozen models. Each window has its own top-K capacity; the whole-segment list allocates reviews across hours. The final ULB segment spans fewer than eight hours, so the windows describe short-run variation.
+The fixed LR threshold uses 453 reviews to find 63 frauds. A threshold fixes the score cutoff, so workload can change over time. The top-$K$ rule fixes the number of reviews. Hourly outputs distinguish each hour’s own top-$K$ list from the portion of the global list allocated to that hour.
 
 \clearpage
 
@@ -179,7 +177,7 @@ To see whether the supervised shortlist remains useful with fewer labels, we fit
 
 The 5% setting has an AP range of 0.4397–0.7059, showing sensitivity to the few sampled frauds. By 25%, all three fits have AP above 0.76, and TP ranges from 60 to 63. Full labels recover 64 frauds, while the mean AP at 25% and 50% exceeds the full-label fit on this segment. More labels increase TP here, while AP is not monotonic across the fitted subsets.
 
-Amount has the largest permutation effect: shuffling it lowers test AP by 0.3695 on average; V14 and V2 follow at approximately 0.1503 and 0.0879. This identifies the fitted model's dependence on inputs. The deterministic error samples include a false positive at rank 568 (score 0.7573), a missed fraud at rank 783 (0.6875), and a normal transaction ranked third (score approximately 1.0000). Raising capacity could include the rank-783 fraud, while the high-ranked false positive remains a confident error. Scores are used for ranking; this experiment does not calibrate them as event probabilities.
+Amount has the largest permutation effect, lowering test AP by 0.3695 on average when shuffled. Appendix D gives the other feature effects and ranked error examples.
 
 \clearpage
 
@@ -191,16 +189,16 @@ At 1%, weighted LR covers 86.49% of fraud transactions and 69.59% of their amoun
 
 Under the 50:1 cost scenario, weighted LR has loss 771 at a 0.5% budget and 1,004 at 1%. The larger list gains one detected fraud but adds many normal reviews. With a different assumed error cost, the balance changes. These calculations compare the declared scenarios; the primary experimental budget stays at 1%. Fraud amount is a transaction quantity rather than a measured recovery amount.
 
-**Table 6. Paired test differences, weighted LR minus IF4096 at 1%.**
+**Table C1. What changes when the review budget grows? Weighted LR on ULB.**
 
-| Resampling | AP gap | 95% interval | Recall gap (pp) | 95% interval (pp) |
-| --- | ---: | ---: | ---: | ---: |
-| Paired rows (500) | 0.6815 | [0.5763, 0.7710] | 31.08 | [20.83, 41.78] |
-| Time blocks (200) | 0.6815 | [0.5469, 0.7926] | 31.08 | [18.69, 44.24] |
+| Budget | Reviews | Frauds found | Normal reviews | Fraud amount (%) | Added fraud / normal |
+| --- | --- | --- | --- | --- | --- |
+| 0.1% | 57 | 50 | 7 | 57.27 | — |
+| 0.5% | 284 | 63 | 221 | 69.37 | +13 / +214 |
+| 1% | 568 | 64 | 504 | 69.59 | +1 / +283 |
+| 2% | 1135 | 65 | 1070 | 69.69 | +1 / +566 |
 
-Both resampling schemes retain a positive LR advantage in AP and recall. The block analysis gives wider recall limits, consistent with less independent information when transactions are grouped in time. The intervals describe this fixed-model comparison on the observed test segment. The small test fraud count also makes individual detections visible: one of 74 frauds corresponds to about 1.35 recall percentage points.
-
-The frozen classifier/IF policy equals LR, so its paired AP and recall differences are zero in every resampling draw. The extra anomaly scores leave the selected review list unchanged.
+From 0.5% to 1%, the team would review 283 more normal transactions to find one additional fraud. Fraud-amount coverage rises from 69.37% to 69.59%. The paired interval estimates for the main LR comparison are in Appendix D.
 
 \clearpage
 
@@ -220,34 +218,30 @@ Handbook tests whether additional information improves the shortlist for the sam
 
 ![Handbook formal test: AP and recall for the same LR and IF settings across feature views. “+Relation” extends the both-history view.](../results/figures/report_context.pdf){width=100%}
 
-Current-transaction LR has AP 0.2692 and detects 346 frauds. Adding both histories lowers AP to 0.2130 and detections to 334. The relational extension lowers them further to 0.2064 and 333. Customer-only and terminal-only LR also remain below the current-only model. The descending-Amount reference detects the same 346 frauds as current LR, suggesting a strong amount-driven component in this simulator setting.
+The current-transaction LR finds 346 frauds. Adding both histories reduces that to 334, and adding relationships reduces it to 333. An amount-only ranking also finds 346, suggesting a strong amount-driven component in this simulator. The parallel IF comparison shows a larger decline with the tested histories.
 
-The IF results change more sharply. Current-only IF detects 334 frauds, customer-history IF 222, terminal-history IF 55 and both-history IF 139. Additional relational features reduce both-history IF to 104. Adding dimensions alters what is unusual: atypical entity activity need not coincide with the labeled fraud patterns. Historical counts and amounts describe behavior, while some simulator fraud comes from compromised terminals whose activity may otherwise look ordinary.
-
-The controlled comparison supports a practical finding: the value of context depends on the information it encodes and the model using it. Here, a compact current-transaction view preserves useful amount structure; the tested historical and relational summaries do not improve detection. The mechanism breakdown in Section 4.7 helps explain which fraud types remain missed.
+We then test whether the order of a customer's last three transactions helps beyond the same information in an unordered representation. Both representations raise the both-history LR from 334 to 351 detections. This experiment finds a gain from the recent amount pattern and no additional detections from preserving its order. Appendix C gives the matched comparison. Its probabilistic grouping also identifies a lower-amount component with 141 frauds and no detections in the original both-history LR list, a specific group to inspect for misses.
 
 \clearpage
 
-## 4.6 Reliability: delayed labels, missing history and new entities
+## 4.6 Review feedback and reliability
 
-Weekly LR models are fitted during development using only labels available at each cutoff. The saved day-44 snapshots then score the test without further updates. Table 8 compares them with the static both-history LR.
+Once a team reviews a list, its findings can become training labels. We replay Handbook in closed daily batches of 100 reviews. All policies start with the same weighted LR. Updates use only reviewed labels after the delay. The two exploration policies reserve 10 of the 100 slots for random or uncertain transactions.
 
-**Table 8. Handbook test using pre-test rolling snapshots, K=1,458.**
+**Table C2. Supplemental replay on Handbook days 45–59.**
 
-| History LR snapshot | AP | TP at 1% | Recall (%) |
-| --- | ---: | ---: | ---: |
-| Static | 0.2130 | 334 | 26.09 |
-| Weekly, delay 0 days | 0.2134 | 341 | 26.64 |
-| Weekly, delay 1 day | 0.2138 | 339 | 26.48 |
-| Weekly, delay 7 days | 0.2156 | 340 | 26.56 |
+| Feedback policy | Reviews | Frauds found | Ranking-only top 100 |
+| --- | --- | --- | --- |
+| Static ranking | 1500 | 346 | 346 |
+| Risk-only updates | 1500 | 345 | 345 |
+| Risk + random | 1500 | 343–344 | 345 |
+| Risk + uncertainty | 1500 | 344 | 345 |
 
-The 0-day model adds seven detections over static, the 1-day model adds five and the 7-day model adds six. AP changes are small and are not ordered monotonically by delay. The tested update policy offers a modest improvement over static history LR, but it still detects fewer than the 346 frauds found by current-only LR.
+The static policy finds 346 frauds, versus 343–345 for the updating policies. Even if all 100 slots were assigned by score after an update, the resulting rankings find 345. This replay gives no evidence of a gain from allocating some reviews to collect different labels. Appendix C details the timing and scoring.
 
 ![Handbook formal test under missing event histories. Each condition rebuilds past-only features for the same test transactions and scores the same frozen models. Shading is the range across seeds 42/43/44.](../results/figures/report_stress.pdf){width=100%}
 
-At 30% missing history, both-history IF falls from 139 detections to 77–82; AP falls from 0.0294 to approximately 0.0204–0.0209. LR AP also falls, from 0.2130 to 0.1927–0.1989, while its fixed-budget detections remain 334–337. AP and Recall@K thus respond differently to the same information loss. The IF ordering is more sensitive to incomplete event histories in this experiment.
-
-The cold-start partition is defined by whether a customer and terminal appeared in initial training. Of the test transactions, 145,713 involve entities seen in training; all 1,280 frauds occur there. Only 26 transactions involve new customers, with no fraud, and the new-terminal groups are empty. The group output therefore documents exposure and history availability, but provides no fraud-positive new-entity test. A fraud-positive new-entity dataset is the next useful cold-start test.
+Deleting 30% of past events reduces both-history IF detections from 139 to 77–82, while LR finds 334–337. The original pre-test rolling and cold-start diagnostics are in Appendix D.
 
 \clearpage
 
@@ -281,7 +275,7 @@ On PaySim, IF finds the most fraud at 1%, while the amount ranking leads AP. The
 
 # 5. Conclusion and limitations
 
-Set the review capacity first and compare how many frauds each shortlist finds. At the ULB 1% budget, the selected weighted LR finds 64/74, and the selected combination adds no detections at the same workload. Expanding from 284 to 568 reviews adds only one. The Handbook results show that adding or losing history can change shortlist quality. PaySim shows that a new transaction setting can change the preferred method. Use rules to diagnose missed cases and retest each ranking at the capacity and with the information available in the new setting.
+Set the review capacity first and compare how many frauds each shortlist finds. At the ULB 1% budget, the selected weighted LR finds 64/74, and the selected combination adds no detections at the same workload. Expanding from 284 to 568 reviews adds only one. The Handbook results show that adding or losing history can change shortlist quality. PaySim shows that a new transaction setting can change the preferred method. The daily replay finds no gain from the tested review feedback policies. The sequence comparison finds a gain from a recent amount pattern, with equal detections whether or not it preserves order. Use rules and transaction groups to diagnose misses, then retest the ranking in the new setting.
 
 The evidence comes from one chronological split with only 74 ULB test frauds and from two simulated sources. Label masks use known class proportions, costs are assumed, and the new-entity groups contain no test fraud. These settings define the scope of the findings. Future work should prioritize fraud-positive new-entity evaluation, calibrated review costs and additional time periods.
 
@@ -406,3 +400,95 @@ Holding A, J and F fixed while adding transactions with neither antecedent nor f
 | Handbook | equal-frequency | 24 | 19 |
 
 Equal-frequency retains more rules for both datasets under the fixed gates, so it supplies the frozen 21-rule ULB and 19-rule Handbook sets. Equal-width and equal-frequency create different interval occupancies from the same training values. For ULB, 21/25 equal-frequency candidates (84.0%) survive validation, versus 15/38 equal-width candidates (39.5%). This makes the representation comparison concrete: fewer training candidates can yield more patterns that persist into the next time segment. The formal test then applies the selected bins and rules.
+
+
+\clearpage
+
+# Appendix C. Supplemental review-list analyses
+
+These analyses use the existing chronological partitions and do not change any frozen model or policy in the formal results. The experiments were added after inspecting those results, and the supplementary test segment has already been used by the project. Treat the findings as exploratory. No new data source is used. Table C1 is a restatement of the frozen ULB ranking. The three Handbook experiments are run together with:
+
+```bash
+python report/build_supplement.py data/handbook/c_acceptance_20261116/transactions.csv
+```
+
+### C.1 Daily review feedback
+
+Each policy starts with the same weighted LR and labeled days 0–29. It scores every transaction at the close of each daily batch from day 30. The random and uncertainty policies reserve ten slots from the same 100 reviews. Random selection samples without replacement outside the first 90. Uncertainty queries the ten remaining scores closest to 0.5, using row ID for ties. The score is used as a decision-boundary heuristic. Labels for day $d$ can first be used on day $d+2$. Every third day, the updating models refit on the initial training set and all newly available labels from reviewed transactions. Labels outside reviewed lists serve only to evaluate the results. All rankings use the same Amount and cyclical time inputs.
+
+The 15 evaluation days contain 1,280 frauds. Table C2 totals actual detections and separately counts how many the updated scores would find if all 100 slots were filled by rank. The random policy reports the range across seeds 42, 43 and 44. The replay measures one simulated label-return process and does not estimate production gains.
+
+### C.2 Does preserving order help?
+
+Each customer's last three strictly earlier transactions, within seven days, are encoded as above or below the training median amount (45.34 units, with equality in the high bin). The unordered representation counts the number of high transactions, and the ordered representation uses all eight binary sequences. Both use identical events and the same existing features and LR setup. A row without three eligible prior events has all pattern indicators unset. The patterns are available for 143,440 of 145,739 test transactions and 1,261 of 1,280 frauds.
+
+**Table C3. Handbook static LR with and without recent amount patterns.**
+
+| History features | Reviews | Frauds found | AP |
+| --- | --- | --- | --- |
+| Existing histories | 1458 | 334 | 0.2130 |
+| Histories + unordered pattern | 1458 | 351 | 0.2268 |
+| Histories + ordered pattern | 1458 | 351 | 0.2255 |
+
+The two pattern representations both find 351 frauds. Their AP values are close. The order representation does not provide an observed lift at this capacity beyond the unordered information. These tests compare one window and one simple encoding.
+
+\clearpage
+
+### C.3 Which transaction groups does the fixed list miss?
+
+A three-component Gaussian mixture with diagonal covariances fits only on the training segment. Its inputs are standardized log amounts and 1-day customer and terminal counts, each transformed with `log1p`. EM yields membership probabilities, which express uncertainty about the component, not fraud risk. We label the components by their increasing training mean log amount and assign each row to its most probable component. The underlying 1,458-slot both-history LR list is unchanged. The group rows partition the same list, with no separate group budgets.
+
+**Table C4. Global list allocation by most probable component.**
+
+| GMM group | Transactions | Frauds | Reviews | Found |
+| --- | --- | --- | --- | --- |
+| Component 1 | 22516 | 141 | 2 | 0 |
+| Component 2 | 53800 | 480 | 465 | 115 |
+| Component 3 | 69423 | 659 | 991 | 219 |
+
+**Table C5. Global list allocation by membership confidence.**
+
+| Membership group | Transactions | Frauds | Reviews | Found |
+| --- | --- | --- | --- | --- |
+| Max membership < 0.8 | 18148 | 133 | 4 | 0 |
+| Max membership ≥ 0.8 | 127591 | 1147 | 1454 | 334 |
+
+The lowest-amount component contains 141 frauds but receives only two reviews, with no detections. Separately, the low-membership-confidence group contains 133 frauds and receives four reviews, also with no detections. These are overlapping views of the same test set. The groups identify where to inspect misses. They do not establish that assigning extra reviews to either group would improve detection.
+
+\clearpage
+
+# Appendix D. Additional diagnostics from the formal tests
+
+### D.1 Cluster geometry and ranked errors
+
+Training k=3 had mean silhouette 0.1537 and seed-agreement ARI 0.5558 on the fixed 1,000-row sample; k=5 gave 0.0669 and 0.1530. Silhouette measures cohesion/separation, while this ARI measures agreement between seeded partitions. These favor k=3 within the tested choices, with limited separation. In test cluster 0, LR finds 15/16 frauds in 54 reviews versus IF’s 13 in 208; in cluster 1, it finds 49/58 versus 28. The third test group is empty. Scaling also changes the ranking: raw RobustScaler distance detects 10 frauds at 1%, versus 37 with StandardScaler. These groups supply geometric diagnostics, while fraud detection remains a separate evaluation.
+
+Amount has the largest permutation effect: shuffling it lowers test AP by 0.3695 on average; V14 and V2 follow at approximately 0.1503 and 0.0879. This identifies the fitted model's dependence on inputs. The deterministic error samples include a false positive at rank 568 (score 0.7573), a missed fraud at rank 783 (0.6875), and a normal transaction ranked third (score approximately 1.0000). Raising capacity could include the rank-783 fraud, while the high-ranked false positive remains a confident error. Scores are used for ranking; this experiment does not calibrate them as event probabilities.
+
+### D.2 Paired uncertainty for the primary comparison
+
+**Table 6. Paired test differences, weighted LR minus IF4096 at 1%.**
+
+| Resampling | AP gap | 95% interval | Recall gap (pp) | 95% interval (pp) |
+| --- | ---: | ---: | ---: | ---: |
+| Paired rows (500) | 0.6815 | [0.5763, 0.7710] | 31.08 | [20.83, 41.78] |
+| Time blocks (200) | 0.6815 | [0.5469, 0.7926] | 31.08 | [18.69, 44.24] |
+
+Both resampling schemes retain a positive LR advantage in AP and recall. The block analysis gives wider recall limits, consistent with less independent information when transactions are grouped in time. The intervals describe this fixed-model comparison on the observed test segment. The small test fraud count also makes individual detections visible: one of 74 frauds corresponds to about 1.35 recall percentage points.
+
+\clearpage
+
+### D.3 Pre-test snapshots and new entities
+
+**Table 8. Handbook test using pre-test rolling snapshots, K=1,458.**
+
+| History LR snapshot | AP | TP at 1% | Recall (%) |
+| --- | ---: | ---: | ---: |
+| Static | 0.2130 | 334 | 26.09 |
+| Weekly, delay 0 days | 0.2134 | 341 | 26.64 |
+| Weekly, delay 1 day | 0.2138 | 339 | 26.48 |
+| Weekly, delay 7 days | 0.2156 | 340 | 26.56 |
+
+The original rolling snapshots use only labels available at each development cutoff and are held fixed for test. The 0-, 1- and 7-day configurations detect seven, five and six more frauds than the static both-history baseline. The current-only LR finds 346 in the same test segment.
+
+The initial-training cold-start groups contain 26 transactions from unseen customers and none from unseen terminals. The 26 include no frauds, so this split cannot test detection on new fraud-positive entities.
