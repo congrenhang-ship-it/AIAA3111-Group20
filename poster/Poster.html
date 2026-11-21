@@ -69,7 +69,7 @@
 }
 * { box-sizing:border-box; margin:0; padding:0; }
 html, body { color:var(--text-primary); background:var(--bg-screen); font-family:var(--font-serif); }
-.poster { width:calc(800 * var(--u)); margin:0 auto; padding:calc(19 * var(--u)) calc(22 * var(--u)) calc(10 * var(--u)); background:var(--bg-page); display:grid; grid-template-rows:auto auto auto auto; gap:calc(9 * var(--u)); }
+.poster { width:calc(800 * var(--u)); margin:0 auto; padding:calc(16 * var(--u)) calc(22 * var(--u)) calc(10 * var(--u)); background:var(--bg-page); display:grid; grid-template-rows:auto auto auto auto; gap:calc(9 * var(--u)); }
 .header { border-top:calc(2 * var(--u)) solid var(--accent); padding-top:calc(6 * var(--u)); }
 .masthead { display:grid; grid-template-columns:1fr auto; align-items:center; gap:calc(8 * var(--u)); }
 .repo-link { display:grid; justify-items:center; font:650 var(--fs-2)/1.15 var(--font-sans); }
@@ -87,9 +87,10 @@ html, body { color:var(--text-primary); background:var(--bg-screen); font-family
 .toy-table .reviewed { background:var(--accent-light); color:var(--accent-deep); font-weight:700; }
 .toy-table .hit { background:var(--gold-soft); }
 .body-grid { display:grid; grid-template-columns:1fr 1fr; gap:calc(12 * var(--u)); align-items:stretch; }
-.column { display:grid; grid-auto-rows:max-content; gap:calc(8 * var(--u)); min-width:0; align-content:start; }
-.card { padding-top:calc(5 * var(--u)); border-top:calc(.65 * var(--u)) solid var(--accent); min-width:0; }
+.column { display:grid; grid-auto-rows:max-content; gap:calc(6 * var(--u)); min-width:0; align-content:start; }
+.card { padding-top:calc(4 * var(--u)); border-top:calc(.65 * var(--u)) solid var(--accent); min-width:0; }
 .section-title, .subhead { font-family:var(--font-sans); font-weight:750; line-height:1.12; color:var(--accent-deep); }
+.card-purpose { font-size:var(--fs-3); line-height:1.2; margin-bottom:calc(2 * var(--u)); }
 .section-title { font-size:var(--fs-7); margin-bottom:calc(3 * var(--u)); }
 .subhead { font-size:var(--fs-5); margin-top:calc(6 * var(--u)); }
 .body-text { font-size:var(--fs-4); line-height:1.24; }
@@ -98,13 +99,13 @@ html, body { color:var(--text-primary); background:var(--bg-screen); font-family
 .figure img { display:block; width:92%; margin-inline:auto; }
 .caption { font-size:var(--fs-2); color:var(--text-secondary); line-height:1.23; margin-top:calc(3 * var(--u)); }
 .pipeline { display:grid; grid-template-columns:repeat(3, 1fr); gap:calc(2.6 * var(--u)); list-style:none; margin-bottom:calc(5 * var(--u)); }
-.pipeline li { background:var(--accent-light); color:var(--accent-deep); font:var(--fs-3)/1.18 var(--font-sans); padding:calc(4.5 * var(--u)); }
-.finding { margin-top:calc(4 * var(--u)); padding:calc(3.5 * var(--u)) calc(5 * var(--u)); background:var(--accent-light); }
+.pipeline li { background:var(--accent-light); color:var(--accent-deep); font:var(--fs-3)/1.18 var(--font-sans); padding:calc(3.5 * var(--u)); }
+.finding { margin-top:calc(3 * var(--u)); padding:calc(3 * var(--u)) calc(5 * var(--u)); background:var(--accent-light); }
 .takeaway { padding:calc(5 * var(--u)) calc(8 * var(--u)); }
 .takeaway .section-title { display:inline; margin-right:calc(2 * var(--u)); }
 .takeaway .body-text { display:inline; }
 .result-table { border-collapse:collapse; width:100%; font:var(--fs-3)/1.16 var(--font-sans); font-variant-numeric:tabular-nums; }
-.result-table th, .result-table td { border-bottom:1px solid var(--border-soft); text-align:right; padding:calc(2.4 * var(--u)) calc(1.9 * var(--u)); }
+.result-table th, .result-table td { border-bottom:1px solid var(--border-soft); text-align:right; padding:calc(1.6 * var(--u)) calc(1.9 * var(--u)); }
 .result-table th:first-child, .result-table td:first-child { text-align:left; }
 .result-table tbody th { font-weight:500; }
 .result-table thead { background:var(--accent-light); color:var(--accent-deep); }
@@ -173,6 +174,7 @@ a { color:var(--accent); }
     <div class="column" data-measure-role="column">
       <section class="card" data-measure-role="card">
         <h2 class="section-title">1. How we build the review list</h2>
+        <p class="card-purpose">We use earlier payments to build the rankings, then see how they work on later payments.</p>
         <ol class="pipeline" aria-label="Evaluation workflow">
           <li><strong>Train</strong><br>Fit features and models on earlier transactions</li>
           <li><strong>Validate</strong><br>Choose configurations on the next period</li>
@@ -192,6 +194,7 @@ a { color:var(--accent); }
 
       <section class="card" data-measure-role="card">
         <h2 class="section-title">2. Three models tie at 568 reviews</h2>
+        <p class="card-purpose">We give every model 568 slots to see which finds the most fraud with the same work.</p>
         <table class="result-table" id="ulb-main-results">
           <thead><tr><th scope="col">ULB ranking</th><th scope="col">AP</th><th scope="col">Found</th><th scope="col">Normal</th><th scope="col">Recall</th></tr></thead>
           <tbody>
@@ -211,6 +214,7 @@ a { color:var(--accent); }
 
       <section class="card" data-measure-role="card">
         <h2 class="section-title">3. At 0.5%, the queue finds 63 of 74</h2>
+        <p class="card-purpose">We change how many payments staff can check to see what extra reviews buy.</p>
         <figure class="figure"><img src="assets/budget.png" data-source="paper" data-asset-id="budget" alt="ULB test recall and review precision across four review budgets">
           <figcaption class="caption">Figure 1. ULB test at 0.1%, 0.5%, 1% and 2%. Weighted LR finds 50, 63, 64 and 65 frauds within 57, 284, 568 and 1,135 reviews.</figcaption></figure>
         <p class="finding body-text"><strong>Doubling the 0.5% queue adds one detection.</strong> Of the 284 extra reviews, 283 are normal transactions.</p>
@@ -219,6 +223,7 @@ a { color:var(--accent); }
 
       <section class="card" data-measure-role="card">
         <h2 class="section-title">4. How large is the recall gap?</h2>
+        <p class="card-purpose">We check whether the gap between two models could be smaller or larger on similar data.</p>
         <p class="body-text">On ULB at 1%, weighted LR finds 23 more frauds than Isolation Forest, a recall gap of 31.08 percentage points. The 95% interval is 18.69–44.24 points when resampling 30-minute blocks with the fitted models held fixed.</p>
       </section>
     </div>
@@ -226,7 +231,8 @@ a { color:var(--accent); }
     <div class="column" data-measure-role="column">
       <section class="card" data-measure-role="card">
         <h2 class="section-title">5. Does transaction history help?</h2>
-        <p class="body-text">On Handbook, rank 145,739 transactions using the current payment, earlier activity at its customer or terminal, or past links between the two. Each view gets 1,458 reviews.</p>
+        <p class="card-purpose">We test whether earlier activity helps find fraud and what happens when some of it is missing.</p>
+        <p class="caption">Rank 145,739 Handbook payments using current details, customer or terminal history, or past links between them. Each view gets 1,458 reviews.</p>
         <figure class="figure"><img src="assets/context.png" data-source="paper" data-asset-id="context" alt="Handbook test average precision and recall at 1 percent for five feature views">
           <figcaption class="caption">Figure 2. At the same review budget, adding both histories changes detections from 346 to 334 for LR and from 334 to 139 for Isolation Forest.</figcaption></figure>
         <h3 class="subhead">Removing 30% of historical events</h3>
@@ -237,6 +243,7 @@ a { color:var(--accent); }
 
       <section class="card" data-measure-role="card">
         <h2 class="section-title">6. PaySim changes the leading ranking</h2>
+        <p class="card-purpose">We switch to mobile money to see whether the same ranking still finds the most fraud.</p>
         <table class="result-table" id="paysim-main-results">
           <thead><tr><th scope="col">PaySim ranking</th><th scope="col">AP</th><th scope="col">Found / 413</th></tr></thead>
           <tbody>
@@ -251,6 +258,7 @@ a { color:var(--accent); }
 
       <section class="card" data-measure-role="card">
         <h2 class="section-title">7. How far do labels and rules help?</h2>
+        <p class="card-purpose">We test what staff can learn from known frauds, patterns and cases the list misses.</p>
         <table class="result-table label-table" id="label-results">
           <thead><tr><th scope="col">ULB training labels</th><th scope="col">5%</th><th scope="col">25%</th><th scope="col">100%</th></tr></thead>
           <tbody><tr><th scope="row">Frauds found at 1%</th><td>55–58</td><td>60–63</td><td>64</td></tr></tbody>
