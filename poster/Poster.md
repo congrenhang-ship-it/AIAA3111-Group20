@@ -4,7 +4,7 @@
 
 The course requires one portrait page, 80 cm wide × 100 cm high. The PDF page size is 800 × 1000 mm.
 
-Open `Poster.html` in a browser with the `assets/` folder beside it. Use the link below the headline to compare four ULB review budgets or five Handbook feature sets. The ULB control switches the bars between recall and precision. Each report chart can be enlarged, and the metric explanations can be expanded. These controls run offline. Use `Poster.pdf` for printing.
+Use `Poster.pdf` for viewing, printing and submission. The static HTML source is used to rebuild the PDF.
 
 The opening six-transaction example illustrates how equal-length review lists work. The right-side headline gives the held-out ULB result. The poster uses a two-column layout, with the protocol and ULB comparisons on the left and the feature, dataset and diagnostic studies on the right.
 
@@ -17,7 +17,7 @@ The opening six-transaction example illustrates how equal-length review lists wo
 | PaySim leaderboard | Table 10 |
 | Label availability, Apriori example, review feedback and group allocation | Sections 4.3 and 4.7 and Tables 8 and B2 |
 
-The offline controls use aggregate values embedded from `ulb_test.json` and `handbook_test.json` in `results/tables/`. The printed QR code points to the project repository.
+The printed QR code points to the project repository.
 
 ## Rebuild the poster
 

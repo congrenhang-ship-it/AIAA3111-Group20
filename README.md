@@ -4,7 +4,7 @@ AIAA 3111 · Group 20
 
 在有限人工审核容量下，比较分类、聚类/异常检测与规则解释，并研究标签不足、历史与关系信息、标签延迟、冷启动和缺失历史对结果的影响。ULB 是真实匿名交易主线，Handbook 用于受控上下文实验，PaySim 用于轻量外部复核。各数据集分别训练和评价，不平均跨数据集 AP。
 
-E01–E16、测试前 G2 冻结、三套数据正式测试、17 张测试图和 Linux 独立重建均已完成。[报告 PDF](report/Report.pdf)已整合正式测试，正文 10 页，披露/参考文献/附录另计；[报告源文件](report/Report.md)已填写组员姓名与学号。[海报 PDF](poster/Poster.pdf)已整合正式结果，[HTML 版](poster/Poster.html)支持切换审核预算和特征组合，剩余事项见 [TASKS.md](TASKS.md)。成员分支保留，日常使用 main。
+E01–E16、测试前 G2 冻结、三套数据正式测试、17 张测试图和 Linux 独立重建均已完成。[报告 PDF](report/Report.pdf)已整合正式测试，正文 10 页，披露/参考文献/附录另计；[报告源文件](report/Report.md)已填写组员姓名与学号。[海报 PDF](poster/Poster.pdf)已整合正式结果和人工审核的决策结论，剩余事项见 [TASKS.md](TASKS.md)。成员分支保留，日常使用 main。
 
 ## 目录
 

@@ -498,7 +498,7 @@
     "pages": 1,
     "layout": "80 cm wide × 100 cm high, portrait",
     "source": "poster/Poster.html",
-    "PDF_sha256": "e1dacb92affa29b1981c84fcd06cea3dd58970fd655c6a0c74b5e2623b9437ee",
+    "PDF_sha256": "e2cf5966b988e51b58c1b440fc920cc587366c214aa7c488daabb26bfa6782d0",
     "formal_results_reviewed_against_report_sections": [
       "3.1",
       "4.1",
@@ -520,20 +520,13 @@
     "skill_gate_status": "All five checks passed",
     "column_bottom_spread_px": 0.7,
     "footer_gap_px": [
-      35.36,
-      36.06
+      36.45,
+      37.16
     ],
-    "interactive_verification": {
-      "ULB_budgets": 4,
-      "ULB_display_metrics": 2,
-      "Handbook_feature_sets": 5,
-      "figure_zoom_controls": 3,
-      "offline_mobile_and_keyboard_close_verified": true,
-      "print_hides_controls": true
-    },
-    "independent_review": "Independent audit confirmed print readiness and agreement with report claims. The final PDF was inspected again after clarifying the Handbook group diagnostic.",
-    "narrative_revision": "A compact two-column poster pairs the six-transaction example with the held-out headline. It includes the experimental protocol, all eight ULB baselines, budget trade-offs, a time-block interval, and tests of feature availability and dataset setting.",
-    "supplemental_feedback_result": "Recomputed the reported detection range from the stored replay totals."
+    "independent_review": "The preceding evidence layout was independently reviewed. The static PDF revision was checked for print layout and the wording of the main findings.",
+    "narrative_revision": "A single-line question heads a plain-language description of ranking for human reviewers. The six-transaction example leads into the held-out ULB result and a workload-based recommendation.",
+    "supplemental_feedback_result": "Recomputed the reported detection range from the stored replay totals.",
+    "single_line_title_verified": true
   },
   "review_supplement_verification": {
     "source": "results/tables/review_supplement.json",
