@@ -498,7 +498,7 @@
     "pages": 1,
     "layout": "80 cm wide × 100 cm high, portrait",
     "source": "poster/Poster.html",
-    "PDF_sha256": "f4ac207529d3aee54c1194c15a9079cec45c94e85556faa58ec051016c51bfad",
+    "PDF_sha256": "706e399b13d35eaea0c8d799bda143380be8fba4d1aecdd3ff792ab5a704d285",
     "formal_results_reviewed_against_report_sections": [
       "3.1",
       "4.1",
@@ -511,22 +511,16 @@
       "Appendices B and C"
     ],
     "report_figures_reused": [
-      "report_budget.pdf",
       "report_context.pdf",
-      "report_stress.pdf"
+      "report_stress.pdf",
+      "report_supervision.pdf"
     ],
     "rendered_page_reviewed": true,
     "figure_manifest": "poster/FIGURE_MANIFEST.json",
-    "skill_gate_status": "All five checks passed",
-    "column_bottom_spread_px": 1.45,
-    "footer_gap_px": [
-      34.02,
-      35.47
-    ],
-    "independent_review": "The preceding evidence layout was independently reviewed. The static PDF revision was checked for print layout and the wording of the main findings.",
-    "narrative_revision": "A single-line question heads a plain-language description of ranking for human reviewers. The six-transaction example leads into the held-out ULB result and a workload-based recommendation. Each of the seven evidence sections opens with a plain-language purpose.",
+    "narrative_revision": "The six-payment example leads into the held-out ULB result. Seven reading guides connect the modular panels to their evidence. The closing panel explains how a team can set its review capacity, compare shortlists and retest after changes.",
     "supplemental_feedback_result": "Recomputed the reported detection range from the stored replay totals.",
-    "single_line_title_verified": true
+    "single_line_title_verified": true,
+    "release_verification": "The published PDF matches the reviewed local draft byte for byte. Page size, all figure-source hashes, and a fresh rendering from the repository HTML were checked."
   },
   "review_supplement_verification": {
     "source": "results/tables/review_supplement.json",

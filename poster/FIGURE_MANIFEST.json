@@ -1,26 +1,6 @@
 {
   "figures": [
     {
-      "asset_id": "budget",
-      "file": "assets/budget.png",
-      "from_paper": true,
-      "page": 4,
-      "bbox": [
-        0,
-        0,
-        475.2,
-        190.8
-      ],
-      "dpi": 750,
-      "sha256": "94bebbca10d14762c4c6125cc0dc7b87f90c06db293cbcfddc7f39305fb4a9f2",
-      "natural_px": [
-        4950,
-        1988
-      ],
-      "source": "results/figures/report_budget.pdf",
-      "source_sha256": "b118f4619acdd8dae46ad8dc69acb953caa57204c50a8e11ad8e4ad469f814b4"
-    },
-    {
       "asset_id": "context",
       "file": "assets/context.png",
       "from_paper": true,
@@ -59,6 +39,26 @@
       ],
       "source": "results/figures/report_stress.pdf",
       "source_sha256": "a3b7e1570ad30bd589a3ca658c197da8ff6a39bd94c9a6a35e340352084d163c"
+    },
+    {
+      "asset_id": "supervision",
+      "file": "assets/supervision.png",
+      "from_paper": true,
+      "page": 6,
+      "bbox": [
+        0.0,
+        0.0,
+        475.20001220703125,
+        190.8000030517578
+      ],
+      "dpi": 750,
+      "sha256": "baabfb8296f8635ca8c74f77f78b9d68275ba8f9c3cb0ff3dc4f90810a00eac7",
+      "natural_px": [
+        4950,
+        1988
+      ],
+      "source": "results/figures/report_supervision.pdf",
+      "source_sha256": "091145597b8c95fb36bfca9c715928e3177dbb97c9db82710716a9a76ff15854"
     }
   ]
 }
