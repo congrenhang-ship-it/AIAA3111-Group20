@@ -498,14 +498,17 @@
     "pages": 1,
     "layout": "80 cm wide × 100 cm high, portrait",
     "source": "poster/Poster.html",
-    "PDF_sha256": "0271f6f0a7a4b428a054598648a540b2fe9a1fe60a4b7044e83b4f4c1ea2cff7",
+    "PDF_sha256": "e1dacb92affa29b1981c84fcd06cea3dd58970fd655c6a0c74b5e2623b9437ee",
     "formal_results_reviewed_against_report_sections": [
+      "3.1",
       "4.1",
       "4.2",
       "4.3",
+      "4.4",
       "4.5",
       "4.6",
-      "4.7"
+      "4.7",
+      "Appendices B and C"
     ],
     "report_figures_reused": [
       "report_budget.pdf",
@@ -515,10 +518,10 @@
     "rendered_page_reviewed": true,
     "figure_manifest": "poster/FIGURE_MANIFEST.json",
     "skill_gate_status": "All five checks passed",
-    "column_bottom_spread_px": 0.0,
+    "column_bottom_spread_px": 0.7,
     "footer_gap_px": [
-      44.5,
-      44.5
+      35.36,
+      36.06
     ],
     "interactive_verification": {
       "ULB_budgets": 4,
@@ -528,9 +531,9 @@
       "offline_mobile_and_keyboard_close_verified": true,
       "print_hides_controls": true
     },
-    "independent_review": "Poster claims were independently checked before resizing. The resized 80 × 100 cm PDF was visually inspected and the browser interactions were retested.",
-    "narrative_revision": "The toy ranking and experiment roadmap lead into the review-budget decision. Model names appear where needed to read the comparisons.",
-    "supplemental_feedback_result": "Visually checked against the supplemental replay result."
+    "independent_review": "Independent audit confirmed print readiness and agreement with report claims. The final PDF was inspected again after clarifying the Handbook group diagnostic.",
+    "narrative_revision": "A compact two-column poster pairs the six-transaction example with the held-out headline. It includes the experimental protocol, all eight ULB baselines, budget trade-offs, a time-block interval, and tests of feature availability and dataset setting.",
+    "supplemental_feedback_result": "Recomputed the reported detection range from the stored replay totals."
   },
   "review_supplement_verification": {
     "source": "results/tables/review_supplement.json",

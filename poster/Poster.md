@@ -6,7 +6,18 @@ The course requires one portrait page, 80 cm wide × 100 cm high. The PDF page s
 
 Open `Poster.html` in a browser with the `assets/` folder beside it. Use the link below the headline to compare four ULB review budgets or five Handbook feature sets. The ULB control switches the bars between recall and precision. Each report chart can be enlarged, and the metric explanations can be expanded. These controls run offline. Use `Poster.pdf` for printing.
 
-The opening six-transaction example illustrates how comparing equal-length review lists works. The example uses hypothetical rankings. The evidence that follows uses Figures 1, 4 and 5 from the report. Its ULB results come from Sections 4.1–4.3 and 4.7. The Handbook comparisons and supplemental review replay come from Sections 4.5–4.6. The PaySim results come from Table 10. The HTML controls use aggregate values embedded from `ulb_test.json` and `handbook_test.json` in `results/tables/`.
+The opening six-transaction example illustrates how equal-length review lists work. The right-side headline gives the held-out ULB result. The poster uses a two-column layout, with the protocol and ULB comparisons on the left and the feature, dataset and diagnostic studies on the right.
+
+| Poster section | Evidence in the report |
+| --- | --- |
+| Evaluation workflow and data partitions | Sections 2–3 and Table 1 |
+| Eight ULB rankings at 568 reviews | Table 2 |
+| Capacity, union of two lists and recall interval | Figure 1, Sections 4.2 and 4.4, and Table C1 |
+| Handbook feature sets and missing history | Figures 4–5 and Sections 4.5–4.6 |
+| PaySim leaderboard | Table 10 |
+| Label availability, Apriori example, review feedback and group allocation | Sections 4.3 and 4.7 and Tables 8 and B2 |
+
+The offline controls use aggregate values embedded from `ulb_test.json` and `handbook_test.json` in `results/tables/`. The printed QR code points to the project repository.
 
 ## Rebuild the poster
 
