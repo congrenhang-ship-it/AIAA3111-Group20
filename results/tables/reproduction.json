@@ -498,7 +498,7 @@
     "pages": 1,
     "layout": "80 cm wide × 100 cm high, portrait",
     "source": "poster/Poster.html",
-    "PDF_sha256": "706e399b13d35eaea0c8d799bda143380be8fba4d1aecdd3ff792ab5a704d285",
+    "PDF_sha256": "2f268a3606ffa34312071dff96c1d41e63d29d30d9501aa95881e0af241a11a0",
     "formal_results_reviewed_against_report_sections": [
       "3.1",
       "4.1",
@@ -517,7 +517,7 @@
     ],
     "rendered_page_reviewed": true,
     "figure_manifest": "poster/FIGURE_MANIFEST.json",
-    "narrative_revision": "The six-payment example leads into the held-out ULB result. Seven reading guides connect the modular panels to their evidence. The closing panel explains how a team can set its review capacity, compare shortlists and retest after changes.",
+    "narrative_revision": "Seven plain-language reading guides connect the modular panels. The local banking context motivates the review queue. The ULB comparison introduces Isolation Forest as a model fitted without fraud labels, and the final diagnostics explain Apriori rule coverage and the GMM low-amount group.",
     "supplemental_feedback_result": "Recomputed the reported detection range from the stored replay totals.",
     "single_line_title_verified": true,
     "release_verification": "The published PDF matches the reviewed local draft byte for byte. Page size, all figure-source hashes, and a fresh rendering from the repository HTML were checked."

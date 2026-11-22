@@ -70,7 +70,7 @@
 * { box-sizing:border-box; margin:0; padding:0; }
 html, body { color:var(--text-primary); background:var(--bg-screen); font-family:var(--font-serif); }
 a { color:inherit; }
-.poster { width:calc(800 * var(--u)); margin:auto; padding:calc(12 * var(--u)) calc(18 * var(--u)) calc(12 * var(--u)); background:var(--bg-page); display:grid; gap:calc(4.7 * var(--u)); align-content:start; }
+.poster { width:calc(800 * var(--u)); margin:auto; padding:calc(12 * var(--u)) calc(18 * var(--u)) calc(12 * var(--u)); background:var(--bg-page); display:grid; gap:calc(4.3 * var(--u)); align-content:start; }
 .header { border-top:calc(2 * var(--u)) solid var(--accent); padding-top:calc(5 * var(--u)); }
 .masthead { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:calc(6 * var(--u)); }
 .course { font:750 var(--fs-3)/1.1 var(--font-sans); letter-spacing:.07em; color:var(--accent); }
@@ -186,7 +186,7 @@ h3 { color:var(--accent-deep); font:750 var(--fs-4)/1.13 var(--font-sans); }
     <p class="authors">Jingyang Yi · Shuhan Shen · Congren Hang · Zhanlin Chen</p></div>
     <a class="repo-link" href="https://github.com/congrenhang-ship-it/AIAA3111-Group20"><img src="assets/repository-qr.png" alt="QR code for the Group 20 project repository">Report and code</a>
   </div>
-  <p class="intro body-text">Fraud investigators can check only a small share of payments. We score each payment and send the highest-ranked ones to staff. Each model gets the same number of review slots.</p>
+  <p class="intro body-text">Card issuers use automated checks to spot risky payments, and staff can look into selected cases. We test which payments staff should check first when time is limited.</p>
   <div class="hero-row">
     <section class="toy">
       <h2 class="section-title">Six payments. Two slots.</h2>
@@ -207,7 +207,7 @@ h3 { color:var(--accent-deep); font:750 var(--fs-4)/1.13 var(--font-sans); }
 </header>
 <div class="benchmark-row">
 <section class="panel design">
-  <h2 class="section-title">1. Build the list</h2> <p class="card-purpose">Read <b>Train → Validation → Test</b> left to right: fit on earlier payments, choose settings, then test on later ones.</p>
+  <h2 class="section-title">1. Build the list</h2> <p class="card-purpose">Clean the data (<b>preprocessing</b>), train on early payments and test on later ones.</p>
   <ol class="flow"><li><strong>Train</strong> Fit models</li><li><strong>Validate</strong> Choose settings</li><li><strong>Test</strong> Rank later payments</li></ol>
   <table class="result-table split-table"><thead><tr><th scope="col">Dataset</th><th scope="col">Train</th><th scope="col">Validation</th><th scope="col">Test</th></tr></thead><tbody>
 <tr><th scope="row">ULB</th><td>170,235 / 342</td><td>56,745 / 57</td><td>56,746 / 74</td></tr>
@@ -215,12 +215,12 @@ h3 { color:var(--accent-deep); font:750 var(--fs-4)/1.13 var(--font-sans); }
 <tr><th scope="row">PaySim</th><td>379,109 / 326</td><td>127,377 / 64</td><td>128,873 / 413</td></tr>
 </tbody></table>
   <p class="caption">Payments / frauds. ULB: deduplicated card data. Handbook: simulated card payments. PaySim: sampled mobile transfers.</p>
-  <p>Sort by risk score; break ties by row ID. Every ranking sends its top 1% to review, rounded up.</p>
-  <p class="caption">Classifiers learn from labels. K-means scores distance to a cluster center. Isolation Forest scores ease of isolation; larger subsamples raised ULB detections from 26 to 41.</p>
+  <p>The highest scores get the review slots. Break ties by row ID. The main test reviews 1%, rounded up.</p>
+  <p class="caption">Classifiers learn from known fraud and normal examples. K-means scores distance from a group center. <b>Isolation Forest (IF)</b> ranks unusually easy-to-isolate payments without using fraud labels to fit.</p>
 </section>
 <section class="panel comparison">
   <h2 class="section-title">2. Same 568 reviews. Which list finds more?</h2>
-  <p class="card-purpose">Every row gets 568 slots. Compare <b>Found</b> and <b>Normal</b> to see how many frauds and normal payments each list sends to staff.</p>
+  <p class="card-purpose">On those later payments, each model gets 568 review slots. <b>Found</b> counts known frauds in the list. <b>Normal</b> counts other payments staff would check.</p>
   <table class="result-table "><thead><tr><th scope="col">ULB ranking</th><th scope="col">AP</th><th scope="col">Found</th><th scope="col">Normal</th><th scope="col">Recall</th></tr></thead><tbody>
 <tr class="selected"><th scope="row">Weighted LR†</th><td>0.7475</td><td>64</td><td>504</td><td>86.49%</td></tr>
 <tr><th scope="row">Logistic regression</th><td>0.6909</td><td>64</td><td>504</td><td>86.49%</td></tr>
@@ -237,7 +237,7 @@ h3 { color:var(--accent-deep); font:750 var(--fs-4)/1.13 var(--font-sans); }
 
 <section class="panel budget">
   <h2 class="section-title">3. Is a longer list worth the extra reviews?</h2>
-  <p class="card-purpose">Compare the bars at <b>284 and 568 reviews</b>. The table adds the share of fraudulent spend covered at each budget.</p>
+  <p class="card-purpose">Keep the same ranking and change how many payments staff can check (<b>Top-K</b>). Compare the 284 and 568 bars, then see how much fraudulent spending each list covers.</p>
   <div class="budget-grid">
     <div>
       <figure class="queue-comparison" aria-label="At 284 reviews, 63 frauds and 221 normal payments. At 568 reviews, 64 frauds and 504 normal payments.">
@@ -270,23 +270,23 @@ h3 { color:var(--accent-deep); font:750 var(--fs-4)/1.13 var(--font-sans); }
 <div class="conditions-row">
 <section class="panel uncertainty">
     <span class="route-arrow" aria-hidden="true">→</span>
-    <h2 class="section-title">4. How stable is the gap?</h2>
-    <p class="card-purpose">Read the <b>time-block recall interval</b> to see how far apart the models could be in the share of frauds they catch.</p>
+    <h2 class="section-title">4. How steady is LR’s lead?</h2>
+    <p class="card-purpose">ULB: LR found <b>64</b>; IF found <b>41</b>. How much does that gap vary across samples?</p>
     <table class="result-table "><thead><tr><th scope="col">Weighted LR − IF</th><th scope="col">Gap</th><th scope="col">95% interval</th></tr></thead><tbody>
 <tr><th scope="row">Recall, rows</th><td>31.08 pp</td><td>20.83–41.78</td></tr>
 <tr><th scope="row">Recall, time blocks</th><td>31.08 pp</td><td>18.69–44.24</td></tr>
 <tr><th scope="row">AP, time blocks</th><td>0.6815</td><td>0.5469–0.7926</td></tr>
 </tbody></table>
-    <p class="caption">Same fixed models, 500 paired row draws and 200 draws of 30-minute blocks. pp = percentage points.</p>
+    <p class="caption">Both recall intervals favor LR. The fitted models stay fixed across 500 row draws and 200 half-hour block draws. pp = percentage points.</p>
   </section>
 <section class="panel history">
-  <h2 class="section-title">5. Does looking back help?</h2>
-  <p class="card-purpose">Read the <b>Fixed review capacity</b> panels: compare feature sets on the left, then see what changes when past records go missing on the right.</p>
+  <h2 class="section-title">5. Do past payments help the rankings?</h2>
+  <p class="card-purpose">On <b>Handbook</b>, keep IF as a comparison that can train without fraud labels. Add past activity on the left (<b>feature ablation</b>); hide some on the right.</p>
   <div class="history-plots"><figure class="figure"><img src="assets/context.png" data-source="paper" data-asset-id="context" alt="Handbook performance across five feature sets."><figcaption class="caption">Handbook · 1,458 reviews. LR finds 346 frauds with current details, 334 with both histories, and 333 after adding past links.</figcaption></figure><figure class="figure"><img src="assets/stress.png" data-source="paper" data-asset-id="stress" alt="Handbook AP and recall as event history is removed."><figcaption class="caption">With 30% of past events missing, LR finds 334–337. Isolation Forest drops from 139 to 77–82. Shading spans three repeats.</figcaption></figure></div>
   <div class="history-checks">
-    <div><h3>Recent activity</h3>
+    <div><h3>Do recent payments help?</h3>
     <p>Three-payment patterns raise both-history LR from 334 to 351 detections with or without their order. Relative amount finds 255 versus 346 by amount alone, with 46 unique detections.</p></div>
-    <div><h3>Late labels and new accounts</h3>
+    <div><h3>Late labels and first-time customers</h3>
     <table class="result-table "><thead><tr><th scope="col">Handbook LR snapshot</th><th scope="col">Static</th><th scope="col">0d</th><th scope="col">1d</th><th scope="col">7d</th></tr></thead><tbody>
 <tr><th scope="row">Frauds found / 1,458 reviews</th><td>334</td><td>341</td><td>339</td><td>340</td></tr>
 </tbody></table>
@@ -295,50 +295,51 @@ h3 { color:var(--accent-deep); font:750 var(--fs-4)/1.13 var(--font-sans); }
 </section>
 <section class="panel market">
     <span class="route-arrow" aria-hidden="true">←</span>
-    <h2 class="section-title">6. Does the winner change?</h2>
-    <p class="card-purpose">Compare <b>Found</b> at 1,289 reviews. <b>AP</b> scores the whole list.</p>
+    <h2 class="section-title">6. What changes on PaySim?</h2>
+    <p class="card-purpose">Fit the models on mobile payments. Which finds more fraud in the <b>top 1%</b>?</p>
     <table class="result-table "><thead><tr><th scope="col">PaySim ranking</th><th scope="col">AP</th><th scope="col">Found / 413</th></tr></thead><tbody>
 <tr><th scope="row">Isolation Forest</th><td>0.0447</td><td><strong>102</strong></td></tr>
 <tr><th scope="row">Amount</th><td><strong>0.0798</strong></td><td>94</td></tr>
 <tr><th scope="row">Weighted LR</th><td>0.0634</td><td>80</td></tr>
 </tbody></table>
-    <p class="finding"><strong>102 frauds in 1,289 reviews.</strong> Isolation Forest leads at 1%. Amount leads in AP. Models were fitted separately on PaySim.</p>
+    <p class="finding"><strong>IF finds 102; LR finds 80.</strong> IF leads at 1% (1,289 reviews). Sorting by amount leads by AP across the full list.</p>
   </section>
 </div>
 
 <section class="panel diagnosis">
-  <h2 class="section-title">7. What can missed cases teach us?</h2>
-  <p class="card-purpose">Read left to right: compare detections with fewer labels, compare rule flags and frauds found after feedback, then check which frauds escape the list.</p>
+  <h2 class="section-title">7. What does the review list miss?</h2>
+  <p class="card-purpose">From left to right: check what the model learns from, use <b>Apriori</b> to flag patterns, then use <b>GMM</b> to find groups the list overlooks.</p>
   <div class="diagnosis-grid">
-    <div><h3>Learn with fewer labels</h3>
-    <table class="result-table "><thead><tr><th scope="col">Labels</th><th scope="col">5%</th><th scope="col">10%</th><th scope="col">25%</th><th scope="col">50%</th><th scope="col">100%</th></tr></thead><tbody>
+    <div><h3>What does the model learn from?</h3>
+    <table class="result-table "><thead><tr><th scope="col">Training labels used</th><th scope="col">5%</th><th scope="col">10%</th><th scope="col">25%</th><th scope="col">50%</th><th scope="col">100%</th></tr></thead><tbody>
 <tr><th scope="row">Found</th><td>55–58</td><td>55–60</td><td>60–63</td><td>63–64</td><td>64</td></tr>
-</tbody></table><figure class="figure"><img src="assets/supervision.png" data-source="paper" data-asset-id="supervision" alt="Label-availability curves and permutation importance for ULB."><figcaption class="caption">ULB, top 1%. Three training subsets per label fraction. Bars show how much AP drops when a feature is shuffled.</figcaption></figure>
-    <p>Amount matters most (AP falls 0.3695 when shuffled). A normal payment ranks 3rd; a fraud at rank 783 misses the 568-slot cutoff.</p></div>
-    <div><h3>Use rules to investigate</h3>
-    <table class="result-table "><thead><tr><th scope="col">ULB rules, combined</th><th scope="col">Flagged</th><th scope="col">Frauds</th><th scope="col">New frauds</th></tr></thead><tbody>
+</tbody></table><figure class="figure"><img src="assets/supervision.png" data-source="paper" data-asset-id="supervision" alt="Label-availability curves and permutation importance for ULB."><figcaption class="caption">ULB, top 1%. Three samples per label share. In the bar chart, shuffle one column at a time and see how much the whole ranking worsens (AP drop).</figcaption></figure>
+    <p>Shuffling amount hurts the ranking most (AP drops 0.3695). The model puts a normal payment 3rd and a fraud 783rd, outside the 568 review slots.</p></div>
+    <div><h3>Apriori: Which patterns flag fraud?</h3>
+    <p class="caption">Apriori combines common conditions to find patterns linked to fraud.</p>
+    <table class="result-table "><thead><tr><th scope="col">ULB rules added</th><th scope="col">Flagged</th><th scope="col">Frauds</th><th scope="col">Extra frauds</th></tr></thead><tbody>
 <tr><th scope="row">First rule</th><td>3,846</td><td>52</td><td>52</td></tr>
 <tr><th scope="row">First two</th><td>21,161</td><td>71</td><td>19</td></tr>
 <tr><th scope="row">First three</th><td>22,794</td><td>71</td><td>0</td></tr>
 <tr><th scope="row">All 21</th><td>56,053</td><td>74</td><td>—</td></tr>
 </tbody></table>
-    <p class="caption">Distinct payments, in fixed rule order. Rule 1 has a 1.35% fraud rate (10.37× baseline).</p>
-    <p>All rules flag all 10 LR misses and 504 false alarms, across 56,053 payments. One Handbook spending rule flags 514 frauds in 28,997 payments.</p>
+    <p class="caption">Count each flagged payment once. Rule 1: 1.35% confidence, 10.37× lift.</p>
+    <p>56,053 flags exceed 568 slots. They include all 10 LR misses and 504 false alarms. A Handbook rule flags amounts ≥65.22 and ≥1.2× the customer’s 7-day mean (514 frauds in 28,997 flags).</p>
     <section class="follow-up">
-    <h3>Learn from daily reviews</h3>
+    <h3>Can checking more kinds of cases help?</h3>
     <table class="result-table "><thead><tr><th scope="col">Handbook feedback</th><th scope="col">Static</th><th scope="col">Updates</th><th scope="col">Updates + exploration</th></tr></thead><tbody>
 <tr><th scope="row">Frauds found</th><td>346</td><td>345</td><td>343–344</td></tr>
 </tbody></table>
-    <p class="caption">Follow-up replay: 100 reviews a day, labels after two days. Trying random or uncertain cases gave no gain.</p>
+    <p class="caption">In this simulation, staff check 100 a day and get labels two days later. Exploring cases found no extra frauds.</p>
     </section></div>
-    <div><h3>Find the blind spots</h3>
-    <table class="result-table "><thead><tr><th scope="col">Handbook scenario</th><th scope="col">Frauds</th><th scope="col">LR found</th><th scope="col">IF found</th><th scope="col">Rule hits</th></tr></thead><tbody>
+    <div><h3>Who gets left out of the list?</h3>
+    <table class="result-table "><thead><tr><th scope="col">Handbook scenario</th><th scope="col">Frauds</th><th scope="col">LR found</th><th scope="col">IF found</th><th scope="col">Rule matches</th></tr></thead><tbody>
 <tr><th scope="row">1</th><td>73</td><td>70</td><td>7</td><td>73</td></tr>
 <tr><th scope="row">2 · terminal compromise</th><td>800</td><td>4</td><td>9</td><td>650</td></tr>
 <tr><th scope="row">3</th><td>407</td><td>260</td><td>123</td><td>399</td></tr>
 </tbody></table>
-    <p class="miss-example"><strong>4 of 800 found</strong>History LR catches very few frauds in the compromised-terminal scenario.<span class="miss-meter" aria-hidden="true"><span></span></span></p>
-    <p class="miss-example"><strong>0 of 141 found</strong>In a separate low-amount group identified by a Gaussian mixture, the same ranking sends only two payments to review.<span class="miss-meter" aria-hidden="true"></span></p>
+    <p class="miss-example"><strong>4 of 800 found</strong>LR found four frauds linked to compromised terminals. Rules matched 650 with no review limit.<span class="miss-meter" aria-hidden="true"><span></span></span></p>
+    <p class="miss-example"><strong>0 of 141 found</strong>GMM (Gaussian mixture model) groups similar payments by amount and recent activity. The LR list gave this low-amount group two slots. Both were normal.<span class="miss-meter" aria-hidden="true"></span></p>
 </div>
   </div>
 </section>
@@ -347,12 +348,13 @@ h3 { color:var(--accent-deep); font:750 var(--fs-4)/1.13 var(--font-sans); }
   <h2 class="section-title">What should the review team do?</h2>
   <ul class="decision-steps">
     <li><b>Set the queue size from staffing.</b><br>Ask how many cases staff can finish per shift. On ULB, moving from 284 to 568 reviews adds one fraud and 283 normal payments.</li>
-    <li><b>Measure the value of each review.</b><br>At the same workload, compare frauds found, normal reviews and fraud amount covered. Use local review and missed-fraud costs to choose the cutoff.</li>
+    <li><b>Measure the value of each review.</b><br>At the same workload, compare frauds found, normal reviews and fraud amount covered. Weigh the cost of a normal review against the cost of missing fraud.</li>
     <li><b>Watch for changes and blind spots.</b><br>Retest on later payments when history is missing or payment types change. PaySim had a different leader; the Handbook list missed most terminal fraud.</li>
   </ul>
 </section>
 <footer class="footer">
   <p>One ULB test period and two simulations. Cost ratios are assumed.</p>
+  <a href="https://www.hkma.gov.hk/media/eng/img/key-functions/banking-stability/supervisory-policy-manual/CR-S-5.pdf#page=32">Banking context: HKMA CR-S-5 §5.4 ↗</a>
   <a href="https://github.com/congrenhang-ship-it/AIAA3111-Group20">Report, code and data instructions ↗</a>
 </footer>
 </main>
