@@ -411,7 +411,7 @@
     }
   },
   "report_build_verification": {
-    "date": "2026-11-19",
+    "date": "2026-11-22",
     "main_text_pages": 10,
     "total_PDF_pages": 14,
     "result_tables_checked": 15,
@@ -420,14 +420,15 @@
     "fonts": "Embedded Times-style 11pt main text, vector data figures",
     "no_LaTeX_overflow_or_missing_glyph_warnings": true,
     "poster_unchanged": true,
-    "PDF_sha256": "6a71e630aa636a06b87431a985f70e3fda74749e8fae194bee7e628b50b388d0",
-    "Markdown_sha256": "ea0d2f8eef0318c86a95b95dfcf1b38ee01b5d051a1ca01f8f0779583b62d8f8",
+    "PDF_sha256": "bdccaeabd3549237ff2cd18477e62e54198c05940d304ab29740831f54a708a9",
+    "Markdown_sha256": "67b38d772b9086fd4ea5c5350950a4e31c25588c7af4f76a1ef513d0d0a952b0",
     "source": "report/Report.md",
     "build_command": "python report/build_report.py",
     "member_fields": "Four names and student IDs verified against the Group 20 proposal.",
     "main_text_numerical_tables": 10,
     "appendix_numerical_tables": 5,
-    "numeric_figure_values_match_previous_release": true
+    "numeric_figure_values_match_previous_release": true,
+    "narrative_revision": "The report follows the same review-list decisions as the poster and explains the roles of Isolation Forest, history features, Apriori, GMM and the separate PaySim comparison. All numerical tables and figure assets match the previous report."
   },
   "course_report_review": {
     "date": "2026-11-18",
