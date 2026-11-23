@@ -4,17 +4,14 @@ No report/poster editing. Models, row predictions and cases stay in data/;
 versioned aggregate evidence and figures use the existing results layout.
 """
 import copy
-import hashlib
 import importlib.metadata
 import json
 import platform
-import subprocess
 from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
-from threadpoolctl import threadpool_limits
 
 from classification import score_model, train_model, cold_start_groups, fixed_error_cases
 from evaluation import (DEFAULT_BUDGETS, partition_description, make_prediction_frame,
@@ -22,10 +19,10 @@ from evaluation import (DEFAULT_BUDGETS, partition_description, make_prediction_
                         save_figures, save_c_extension_figures, save_handbook_c_figures,
                         save_review_policy_figure, evaluate_c_extensions,
                         evaluate_improved_frozen, publish_frozen_c_results)
-from handbook import load_handbook_development, METADATA_COLUMNS, CONTEXT_COLUMNS
+from handbook import load_handbook_development, CONTEXT_COLUMNS
 from pattern_mining import fit_handbook_rules, evaluate_handbook_rules
 from paysim import load_paysim_sample, run_paysim_validation, _scores as paysim_scores
-from preprocessing import DEFAULT_DATA_PATH, get_features, load_data, split_data, data_sha256, source_commit
+from preprocessing import get_features, load_data, split_data, data_sha256, source_commit, source_sha256
 from validation.run_b_validation import run_handbook_b, compact_metrics, save_b_extension_figure
 from validation.run_d_validation import evaluate_rule_extensions, rule_training_metrics
 from temporal import (handbook_history_builder, run_handbook_rolling,
@@ -52,7 +49,7 @@ def source_hashes():
                               "results/tables/c_improved.json", "results/tables/c_extensions.json",
                               "results/tables/d_freeze.json", "results/tables/handbook_a.json",
                               "report/d_validation/train_validation_rules.csv"]]
-    return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest() for p in paths}
+    return {str(p.relative_to(ROOT)): source_sha256(p) for p in paths}
 
 
 def provenance():
@@ -256,7 +253,7 @@ def run_final_test(args, *, freeze_path=None, destination=None):
         values,_=score_configuration(fitted,get_features(data))
         predictions.update({n:make_prediction_frame(data,v,n) for n,v in values.items()})
     ulb=_assessment(data,predictions,u['extension_config']['amount_bins'],u['thresholds'],output/'ulb')
-    core=evaluate_improved_frozen(u['bundle'],data,output/'ulb_core',phase='test')
+    evaluate_improved_frozen(u['bundle'],data,output/'ulb_core',phase='test')
     publish_frozen_c_results(output/'ulb_core',results,provenance={**proof,'command':'python code/main.py --run-final-test','dataset_sha256':freeze['data']['ulb']['sha256']})
     cp={n:predictions[n] for n in [u['extension_config']['classifier'],*u['extension_config']['selected_candidates'].values()]}
     ext=evaluate_c_extensions(cp,data,u['extension_config'],phase='test')
@@ -358,18 +355,3 @@ def reproduce_final(args):
     write(base/'reproduction.json',result)
     print(json.dumps(result),flush=True)
     return result
-
-
-def package_technical(output):
-    """Reproducible technical handoff; final Report.pdf is intentionally absent."""
-    from zipfile import ZipFile, ZIP_DEFLATED
-    output=Path(output);output.parent.mkdir(parents=True,exist_ok=True)
-    paths=[]
-    for folder in ['code','tests','results','report/d_validation']:
-        paths += [p for p in (ROOT/folder).rglob('*') if p.is_file() and '__pycache__' not in p.parts]
-    paths += [ROOT/p for p in ['README.md','requirements.txt','data/README.md','report/C_IMPROVEMENTS.md']]
-    with ZipFile(output,'w',ZIP_DEFLATED) as archive:
-        for path in sorted(paths):archive.write(path,path.relative_to(ROOT).as_posix())
-        archive.writestr('SOURCE_COMMIT',source_commit(ROOT)+'\n')
-        archive.writestr('PACKAGE_STATUS.txt','Technical payload only. Add the final reviewed Report.pdf to form Group_20_Project.zip. Poster.pdf is submitted separately.\n')
-    return {'file':str(output),'sha256':data_sha256(output),'files':len(paths)+2,'contains_report_or_poster':False}

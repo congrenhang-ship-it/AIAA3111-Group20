@@ -15,7 +15,7 @@ from workflows import download_data as downloader
 from main import REVIEW_FRACTIONS, run_validation, split_summary
 from preprocessing import DEFAULT_DATA_PATH, FEATURE_COLUMNS, ULB_SHA256, audit_data, data_sha256
 from preprocessing import get_features, load_data, split_data
-from temporal import DAY_SECONDS, evaluate_time_windows, handbook_history_builder, summarize_time_windows
+from temporal import DAY_SECONDS, evaluate_time_windows, handbook_history_builder
 from temporal import evaluate_review_threshold, select_review_threshold
 
 
@@ -249,7 +249,7 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(evaluator.call_args_list[1].kwargs["row_ids"].tolist(), [3])
         self.assertEqual(evaluator.call_args_list[1].kwargs["threshold"], 0.5)
         with self.assertRaisesRegex(ValueError, "same row_id"):
-            summarize_time_windows(predictions.iloc[:-1], 10)
+            evaluate_time_windows(predictions.iloc[:-1], 10)
 
     def test_g1_routes_training_validation_and_reports_dependencies(self):
         train = pd.DataFrame(0.0, index=range(2), columns=FEATURE_COLUMNS)

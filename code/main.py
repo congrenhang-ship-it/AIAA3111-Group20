@@ -16,6 +16,7 @@ from preprocessing import (
     data_sha256,
     source_commit,
     source_dirty,
+    source_sha256,
     get_features,
     load_data,
     split_data,
@@ -305,9 +306,6 @@ def run_team_validation(data_path, output):
 
     def write_json(path, value):
         path.write_text(json.dumps(value, indent=2, allow_nan=False) + "\n", encoding="utf-8")
-
-    def source_sha256(path):
-        return sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
     output = output.resolve()
     if DEFAULT_DATA_PATH.parent.resolve() not in output.parents:

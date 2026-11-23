@@ -10,7 +10,6 @@ import importlib.metadata
 import json
 from pathlib import Path
 import platform
-import subprocess
 from time import perf_counter
 import warnings
 
@@ -23,7 +22,7 @@ from threadpoolctl import threadpool_limits
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from classification import MODEL_NAMES, EXPERIMENTS, SELECTION_RULE, select_method, score_model, train_model
+from classification import EXPERIMENTS, SELECTION_RULE, select_method, score_model, train_model
 from evaluation import DEFAULT_BUDGETS, PRIMARY_REVIEW_FRACTION, evaluate_scores, make_prediction_frame, save_figures
 from main import split_summary
 from preprocessing import DEFAULT_DATA_PATH, FEATURE_COLUMNS, ULB_SHA256, data_sha256, get_features, load_data, split_data, source_commit, source_dirty

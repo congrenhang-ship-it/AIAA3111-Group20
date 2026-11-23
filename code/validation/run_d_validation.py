@@ -8,7 +8,6 @@ import importlib.util
 import json
 from pathlib import Path
 import platform
-import subprocess
 import sys
 
 import numpy as np
@@ -16,6 +15,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from preprocessing import data_sha256, source_commit
 from pattern_mining import (mine_rules, validate_rules, public_metrics, reliable,
                             evaluate_rule_extensions, rule_training_metrics)
 
@@ -26,16 +26,6 @@ EXPECTED_FINGERPRINTS = {
     "validation": "2b3d3d2dd89b8a07a411d51d5d2afdf04b44922551bb7e6aad90aaef7a876de1",
     "test": "4909103f5579d282c4faa1ca32c3c57fdf328e5d2ade9533a297d3e0254ca5c9",
 }
-
-
-def digest(path):
-    with Path(path).open("rb") as stream:
-        return hashlib.file_digest(stream, "sha256").hexdigest()
-
-
-def commit_at(directory):
-    from preprocessing import source_commit
-    return source_commit(directory)
 
 
 def select_features(train):
@@ -116,11 +106,11 @@ def run(args):
         "status": "D_candidate_frozen_pending_A3_merge_and_G2",
         "test_rule_evaluation": False,
         "data_sha256": data_hash,
-        "preprocessing_commit": commit_at(source.parent),
-        "d_commit": commit_at(ROOT),
-        "source_sha256": {"preprocessing.py": digest(source),
-                          "pattern_mining.py": digest(ROOT / "code/pattern_mining.py"),
-                          "run_d_validation.py": digest(__file__)},
+        "preprocessing_commit": source_commit(source.parent),
+        "d_commit": source_commit(ROOT),
+        "source_sha256": {"preprocessing.py": data_sha256(source),
+                          "pattern_mining.py": data_sha256(ROOT / "code/pattern_mining.py"),
+                          "run_d_validation.py": data_sha256(__file__)},
         "environment": {"python": platform.python_version(), "numpy": np.__version__,
                         "pandas": pd.__version__},
         "command": [sys.executable, *sys.argv],
@@ -210,8 +200,8 @@ def run_extensions(args):
     fig.savefig(figures / "d_validation_rule_cumulative.png", dpi=180)
     plt.close(fig)
     result = {"phase": "validation", "group_G2_complete": False, "test_scored": False,
-              "source_commit": commit_at(ROOT), "dependency_commit": commit_at(args.preprocessing_code),
-              "source_sha256": {p.name: digest(p) for p in [Path(__file__), ROOT/"code/pattern_mining.py",
+              "source_commit": source_commit(ROOT), "dependency_commit": source_commit(args.preprocessing_code),
+              "source_sha256": {p.name: data_sha256(p) for p in [Path(__file__), ROOT/"code/pattern_mining.py",
                   args.preprocessing_code/"classification.py", args.preprocessing_code/"unsupervised.py",
                   args.preprocessing_code/"evaluation.py"]},
               "python": platform.python_version(), "data_sha256": ULB_SHA256,
@@ -225,8 +215,8 @@ def run_extensions(args):
                   "primary_budget": .01, "ranking": "score descending; row_id ascending; ceil(N*q)",
                   "fixed_classifier": "class-weighted LR seed42", "fixed_IF": "100 trees, sample4096, seed42",
                   "test_set": "all original 21 rules, not only display subset"},
-              "predictions_sha256": digest(args.output/"predictions.csv"),
-              "freeze_sha256": digest(ROOT/"results/tables/d_freeze.json"),
+              "predictions_sha256": data_sha256(args.output/"predictions.csv"),
+              "freeze_sha256": data_sha256(ROOT/"results/tables/d_freeze.json"),
               "model_validation": model_metrics, "E04": summary}
     destination = ROOT/"results/tables/d_extensions.json"
     destination.write_text(json.dumps(result, indent=2, allow_nan=False)+"\n", encoding="utf-8")

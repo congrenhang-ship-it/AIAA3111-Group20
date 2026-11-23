@@ -5,7 +5,6 @@ Scaling and distance calibration use training data; frozen scoring never refits.
 import itertools
 import numpy as np
 import copy
-import math
 import pandas as pd
 import hashlib
 import importlib.metadata
@@ -42,16 +41,16 @@ from evaluation import (
     write_summary,
     save_diagnostic_figures,
     COMBINATION_SHARES,
+    aggregate_comparisons,
+    save_ablation_figure,
     select_combination,
 )
 from time import perf_counter
 from datetime import datetime, timezone
-from temporal import evaluate_time_windows
-from evaluation import save_ablation_figure
 
 ROOT = Path(__file__).resolve().parents[1]
 SEEDS = (42, 43, 44)
-SHARES = (0.0, 0.25, 0.5, 0.75, 1.0)
+SHARES = COMBINATION_SHARES
 
 
 def _features(X, allow_empty=False):
@@ -207,27 +206,6 @@ def compare_kmeans_candidates(
         for row in records[-len(seeds) :]:
             row["seed_stability_ARI"] = stability
     return records
-
-
-def score_frozen_unsupervised(bundle, X):
-    """A's final scoring hook: reuse persisted training pipelines, never select/refit.
-
-    bundle is the local joblib artifact written by the baseline validation workflow. Load only
-    your own trusted artifact. Caller supplies features only; labels are unused.
-    Whole-group G2 and permission to evaluate the test partition belong to A.
-    """
-    _features(X, allow_empty=True)
-    config = bundle["config"]
-    if hasattr(X, "columns") and list(X.columns) != config["feature_columns"]:
-        raise ValueError("Frozen feature order does not match scoring input")
-    if bundle["kmeans"].named_steps["model"].n_clusters != config["n_clusters"]:
-        raise ValueError("Frozen K-means configuration disagrees with fitted model")
-    groups, distance = score_kmeans(bundle["kmeans"], X)
-    return {
-        "cluster_ids": groups,
-        "kmeans_distance": distance,
-        "isolation_forest": score_isolation_forest(bundle["isolation_forest"], X),
-    }
 
 
 class TransactionFeatures(TransformerMixin, BaseEstimator):
@@ -696,16 +674,7 @@ def run_validation(
     save_error_examples(predictions, output / "private_error_examples.csv",
                         false_positive_label="reviewed_false_positive")
     save_diagnostic_figures(candidates, groups, output / "figures", label)
-    from temporal import evaluate_time_windows
-
     windows = compact_time_windows(predictions)
-
-    def digest(path):
-        h = hashlib.sha256()
-        with open(path, "rb") as stream:
-            for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-                h.update(chunk)
-        return h.hexdigest()
 
     commit = source_commit(ROOT)
     dirty = source_dirty(ROOT)
@@ -715,9 +684,8 @@ def run_validation(
         "source_commit": commit,
         "source_dirty": dirty,
         "code_sha256": {
-            p.name: digest(p)
+            p.name: data_sha256(p)
             for p in [
-                Path(__file__),
                 ROOT / "code/evaluation.py",
                 ROOT / "code/unsupervised.py",
                 ROOT / "code/main.py",
@@ -725,7 +693,7 @@ def run_validation(
                 ROOT / "code/temporal.py",
             ]
         },
-        "input_sha256": {str(p): digest(p) for p in source_files},
+        "input_sha256": {str(p): data_sha256(p) for p in source_files},
         "versions": {
             package: importlib.metadata.version(package)
             for package in ["numpy", "pandas", "scikit-learn", "matplotlib"]
@@ -792,17 +760,6 @@ def _dump(value, path):
     Path(path).write_text(json.dumps(value, indent=2, allow_nan=False) + "\n")
 
 
-def _safe_comparisons(rows):
-    return [
-        {
-            k: v
-            for k, v in row.items()
-            if k not in {"classifier_ids", "anomaly_ids", "combined_ids"}
-        }
-        for row in rows
-    ]
-
-
 def _source():
     paths = [
         ROOT / "code" / name
@@ -828,15 +785,6 @@ def _source():
         },
         "python": platform.python_version(),
     }
-
-
-def _outcomes(predictions):
-    metrics = {}
-    for name, p in predictions.items():
-        m = evaluate_scores(p.Class, p.score, row_ids=p.row_id)
-        m.pop("pr_curve", None)
-        metrics[name] = m
-    return metrics
 
 
 def run_experiment(
@@ -980,7 +928,7 @@ def run_experiment(
         "candidate_specifications": specs,
         "inner_summary": aggregates,
         "inner_per_seed": inner_rows,
-        "inner_pair_comparisons": _safe_comparisons(inner_pairs),
+        "inner_pair_comparisons": aggregate_comparisons(inner_pairs),
     }
     # Persist the actual choices BEFORE any full-training fit or validation score.
     _dump(selection_record, private / "selection_locked_before_validation.json")
@@ -1023,7 +971,6 @@ def run_experiment(
         for family, name in selected.items()
     }
     bundle = {"config": config, "models": selected_models}
-    metrics = _outcomes(predictions)
     comparisons = pair_comparisons(predictions, selected, chosen_share)
     all_shares = []
     for share in SHARES:
@@ -1047,9 +994,8 @@ def run_experiment(
         ):
             raise ValueError("Invalid/conflicting classifier name")
         c = make_prediction_frame(classifier, classifier.score, name)
-        compare_review_lists(c, predictions[overall], 1)
-        c = c.set_index("row_id").loc[validation.row_id].reset_index()
         B_comparisons = compare_budget_quotas(c, predictions[overall], shares=SHARES)
+        c = c.set_index("row_id").loc[validation.row_id].reset_index()
         chosen_B = select_combination(B_comparisons)
         config["B_combination"] = {
             "status": "validation_selected_requires_B5_provenance",
@@ -1060,11 +1006,14 @@ def run_experiment(
             c.to_csv(index=False).encode()
         ).hexdigest()
         display[name] = c
-        metrics[name] = evaluate_scores(c.Class, c.score, row_ids=c.row_id)
-        metrics[name].pop("pr_curve", None)
-    display_metrics = {
+    full_metrics = {
         name: evaluate_scores(p.Class, p.score, row_ids=p.row_id)
-        for name, p in display.items()
+        for name, p in {**predictions, **display}.items()
+    }
+    display_metrics = {name: full_metrics[name] for name in display}
+    metrics = {
+        name: {key: value for key, value in metric.items() if key != "pr_curve"}
+        for name, metric in full_metrics.items()
     }
     group_metrics = {
         name: evaluate_groups(p, group_ids, DEFAULT_BUDGETS, group_values=range(3))
@@ -1173,9 +1122,9 @@ def run_experiment(
         "inner_summary": aggregates,
         "groups": group_metrics,
         "time_windows": windows,
-        "frozen_pair_comparisons": _safe_comparisons(comparisons),
-        "all_pair_shares_diagnostic_only": _safe_comparisons(all_shares),
-        "B_comparisons": _safe_comparisons(B_comparisons),
+        "frozen_pair_comparisons": aggregate_comparisons(comparisons),
+        "all_pair_shares_diagnostic_only": aggregate_comparisons(all_shares),
+        "B_comparisons": aggregate_comparisons(B_comparisons),
     }
     _dump(result, public / "summary.json")
     # Verify saved scores and source stability before declaring the run complete.

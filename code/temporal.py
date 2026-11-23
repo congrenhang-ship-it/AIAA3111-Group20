@@ -58,11 +58,6 @@ def _time_windows(predictions, window_seconds, origin):
             }, rows
 
 
-def summarize_time_windows(predictions, window_seconds=3600, origin=0):
-    """Return window counts without invoking the public evaluator."""
-    return [summary for summary, _ in _time_windows(predictions, window_seconds, origin)]
-
-
 def evaluate_time_windows(
     predictions, window_seconds=3600, origin=0,
     review_fractions=(0.001, 0.005, 0.01, 0.02), threshold=None,

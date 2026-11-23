@@ -202,20 +202,26 @@ def compare_review_lists(
     Endpoint shares 0/1 reproduce the pure rankings. All selection ignores labels.
     Input table order may differ; ID, label and Time must agree exactly.
     """
-    c = _single_method(classification_predictions)
-    a = _single_method(anomaly_predictions)
-    n = len(c)
-    k = _integer(k, "k", 1, n)
-    share = float(_vector([classifier_share], "classifier_share")[0])
-    if not 0 <= share <= 1:
-        raise ValueError("classifier_share must be in [0, 1]")
+    rankings = _rank_review_pair(classification_predictions, anomaly_predictions)
+    return _compare_ranked_lists(*rankings, k, classifier_share)
+
+
+def _rank_review_pair(first, second):
+    c, a = _single_method(first), _single_method(second)
     if set(c.row_id) != set(a.row_id):
         raise ValueError("Prediction tables must have identical row IDs")
     a = a.set_index("row_id").loc[c.row_id].reset_index()
     if not np.array_equal(c.Class, a.Class) or not np.array_equal(c.Time, a.Time):
         raise ValueError("Labels/Time disagree for matching row IDs")
-    y, ids = c.Class.to_numpy(), c.row_id.to_numpy()
-    co, ao = _order(c.score.to_numpy(), ids), _order(a.score.to_numpy(), ids)
+    ids = c.row_id.to_numpy()
+    return c.Class.to_numpy(), ids, _order(c.score.to_numpy(), ids), _order(a.score.to_numpy(), ids)
+
+
+def _compare_ranked_lists(y, ids, co, ao, k, classifier_share):
+    k = _integer(k, "k", 1, len(y))
+    share = float(_vector([classifier_share], "classifier_share")[0])
+    if not 0 <= share <= 1:
+        raise ValueError("classifier_share must be in [0, 1]")
     cq = math.floor(k * share)
     selected = list(co[:cq])
     used = set(selected)
@@ -249,11 +255,14 @@ def compare_review_lists(
 
 def compare_budget_quotas(first, second, budgets=DEFAULT_BUDGETS,
                           shares=COMBINATION_SHARES):
-    """Evaluate the same budget-major, quota-minor comparison sequence."""
+    """Reuse both rankings across the budget-major, quota-minor comparisons."""
     rows = []
+    rankings = None
     for fraction in budgets:
         for share in shares:
-            row = compare_review_lists(first, second, math.ceil(len(first) * fraction), share)
+            if rankings is None:
+                rankings = _rank_review_pair(first, second)
+            row = _compare_ranked_lists(*rankings, math.ceil(len(first) * fraction), share)
             row["review_fraction"] = fraction
             rows.append(row)
     return rows
@@ -665,15 +674,21 @@ def build_freeze(report):
     }
 
 
+def aggregate_comparisons(rows):
+    """Keep comparison results without publishing individual review IDs."""
+    private_keys = {"classifier_ids", "anomaly_ids", "combined_ids"}
+    return [{key: value for key, value in row.items() if key not in private_keys}
+            for row in rows]
+
+
 def compact_report(report):
     """Strip per-transaction lists and long PR point arrays from public summaries."""
     public = copy.deepcopy(report)
     for metric in public["metrics"].values():
         metric.pop("pr_curve", None)
-    for rows in [public.get("comparisons", []), public.get("anomaly_comparisons", [])]:
-        for row in rows:
-            for key in ["classifier_ids", "anomaly_ids", "combined_ids"]:
-                row.pop(key, None)
+    for field in ("comparisons", "anomaly_comparisons"):
+        if field in public:
+            public[field] = aggregate_comparisons(public[field])
     public["metadata"]["input_sha256"] = {
         Path(path).name: value
         for path, value in public["metadata"].get("input_sha256", {}).items()
@@ -767,7 +782,6 @@ def save_diagnostic_figures(candidates, groups, output, label):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     table = pd.DataFrame(candidates)
-    table.to_csv(output.parent / "kmeans_training_structure.csv", index=False)
     means = table.groupby("k").sample_silhouette.agg(["mean", "min", "max"])
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
     axes[0].errorbar(
@@ -873,104 +887,6 @@ def save_error_examples(predictions, output, *, false_positive_label):
     pd.concat(cases, ignore_index=True).to_csv(output, index=False)
 
 
-def evaluate_frozen_c(bundle, data, output, classifier=None, phase="test"):
-    """A8 hook: score existing models and apply existing quotas, without selecting.
-
-    A calls this after whole-group G2. It neither approves G2 nor refits models.
-    Output is a private run folder (predictions contain row IDs). If a classifier
-    is supplied, its name and quota must already be present in bundle['config'].
-    Use phase='validation_replay' to check persistence before any final test.
-    """
-    from unsupervised import score_frozen_unsupervised
-
-    if phase not in {"test", "validation_replay"}:
-        raise ValueError("phase must identify test or validation_replay")
-    output = Path(output)
-    if output.exists() and any(output.iterdir()):
-        raise ValueError("Frozen evaluation output must be new or empty")
-    config = copy.deepcopy(bundle["config"])
-    combination = config["combination"]
-    if classifier is not None and (
-        combination["classifier_share"] is None
-        or combination["classifier_method"] is None
-    ):
-        raise ValueError("Classifier combination must be frozen on validation first")
-    scored = score_frozen_unsupervised(bundle, data[config["feature_columns"]])
-    groups = scored.pop("cluster_ids")
-    predictions = {
-        name: make_prediction_frame(data, score, name, groups)
-        for name, score in scored.items()
-    }
-    comparisons = []
-    if classifier is not None:
-        name = combination["classifier_method"]
-        if not classifier["method"].eq(name).all() or classifier.empty:
-            raise ValueError("Classifier method does not match frozen combination")
-        classifier = make_prediction_frame(classifier, classifier.score, name)
-        compare_review_lists(classifier, predictions[combination["anomaly_method"]], 1)
-        classifier = classifier.set_index("row_id").loc[data.row_id].reset_index()
-        predictions[name] = classifier
-        for q in config["review_fractions"]:
-            row = compare_review_lists(
-                classifier,
-                predictions[combination["anomaly_method"]],
-                math.ceil(len(data) * q),
-                combination["classifier_share"],
-            )
-            row["review_fraction"] = q
-            comparisons.append(row)
-    metrics = {
-        name: evaluate_scores(
-            frame.Class, frame.score, config["review_fractions"], row_ids=frame.row_id
-        )
-        for name, frame in predictions.items()
-    }
-    group_metrics = {
-        name: evaluate_groups(
-            frame,
-            groups,
-            config["review_fractions"],
-            group_values=range(config["n_clusters"]),
-        )
-        for name, frame in predictions.items()
-    }
-    output.mkdir(parents=True, exist_ok=True)
-    label = (
-        "Final test - frozen C configuration"
-        if phase == "test"
-        else "Validation replay - frozen C configuration"
-    )
-    save_figures({"methods": metrics, "label": label}, output / "figures")
-    save_group_figures(
-        group_metrics[config["selected_anomaly_method"]], output / "figures", label
-    )
-    if comparisons:
-        save_comparison_figures(
-            comparisons,
-            output / "figures",
-            label,
-            method_labels={
-                "classifier": combination["classifier_method"],
-                "anomaly": combination["anomaly_method"],
-                "combined": "Frozen combination",
-            },
-        )
-    save_prediction_tables(predictions, output)
-    result = {
-        "phase": phase,
-        "config": config,
-        "metrics": metrics,
-        "groups": group_metrics,
-        "comparisons": comparisons,
-        "configuration_reselected": False,
-        "partition": partition_description(data),
-    }
-    (output / "frozen_evaluation.json").write_text(
-        json.dumps(result, indent=2, allow_nan=False) + "\n"
-    )
-    return result
-
-
 def evaluate_improved_frozen(
     bundle, data, output, *, classifier=None, phase="test",
     window_seconds=3600, window_origin=0, scored_unsupervised=None,
@@ -981,9 +897,7 @@ def evaluate_improved_frozen(
     this low-level function does not approve or infer whole-group freeze status.
     Full predictions stay in output; publish_frozen_c_results exports aggregates.
     """
-    import json
     from unsupervised import score_improved_bundle, pair_comparisons
-    from temporal import evaluate_time_windows
 
     if phase not in {"test", "validation_replay"}:
         raise ValueError("Invalid evaluation phase")
@@ -1046,13 +960,8 @@ def evaluate_improved_frozen(
             raise ValueError("Classifier does not match frozen method")
         c = make_prediction_frame(classifier, classifier.score, b["method"])
         anomaly = predictions[config["selected_anomaly"]]
-        compare_review_lists(c, anomaly, 1)
-        c = c.set_index("row_id").loc[data.row_id].reset_index()
-        predictions[b["method"]] = c
-        for q in DEFAULT_BUDGETS:
-            row = compare_review_lists(c, anomaly, math.ceil(len(data) * q), b["share"])
-            row["review_fraction"] = q
-            b_rows.append(row)
+        b_rows = compare_budget_quotas(c, anomaly, shares=(b["share"],))
+        predictions[b["method"]] = c.set_index("row_id").loc[data.row_id].reset_index()
     metrics = {
         n: evaluate_scores(p.Class, p.score, row_ids=p.row_id)
         for n, p in predictions.items()
@@ -1239,10 +1148,8 @@ def publish_frozen_c_results(run, destination, *, provenance):
     public = copy.deepcopy(result)
     for metric in public["metrics"].values():
         metric.pop("pr_curve", None)
-    for key in ["comparisons", "B_comparisons"]:
-        for row in public[key]:
-            for field in ["classifier_ids", "anomaly_ids", "combined_ids"]:
-                row.pop(field, None)
+    for key in ("comparisons", "B_comparisons"):
+        public[key] = aggregate_comparisons(public[key])
     public["publication"] = {
         "provenance": {key: provenance[key] for key in required},
         "evaluation_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
@@ -1726,10 +1633,9 @@ def evaluate_c_extensions(predictions, data, config, *, phase="validation", prog
     policy_metrics["ranking_rule"] = "classifier floor(K*share), anomaly scan skipping selected instances"
     policy_metrics["budgets"] = []
     id_positions = pd.Series(np.arange(len(reference)), index=reference.row_id)
-    for q in qs:
-        row = compare_review_lists(c, a, math.ceil(len(reference) * q), policy["share"])
+    for row in compare_budget_quotas(c, a, qs, (policy["share"],)):
         selected = id_positions.loc[row["combined_ids"]].to_numpy()
-        entry = {"review_fraction": q, "actual_review_fraction": row["K"] / len(reference), **row["combined"]}
+        entry = {"review_fraction": row["review_fraction"], "actual_review_fraction": row["K"] / len(reference), **row["combined"]}
         entry["precision_lift"] = entry["precision_at_k"] / metrics[policy["classifier"]]["prevalence"] if y.sum() else None
         entry.update(_amount_budget(y, amount, groups, selected, len(bins["cuts"]) + 1))
         policy_metrics["budgets"].append(entry)
@@ -1881,8 +1787,7 @@ def run_c_extensions(bundle, data, config, output, *, phase="validation", proven
     output.mkdir(parents=True, exist_ok=True)
     (output / "extension_config.json").write_text(json.dumps(config, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     (output / "c_extensions.json").write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
-    for name, frame in predictions.items():
-        frame.to_csv(output / f"{name}_predictions.csv", index=False, float_format="%.17g")
+    save_prediction_tables(predictions, output, float_format="%.17g")
     if results is not None:
         paths = save_c_extension_figures(result, results / "figures")
         result["publication"] = {"figure_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}}

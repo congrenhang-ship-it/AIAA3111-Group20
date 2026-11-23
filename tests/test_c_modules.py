@@ -4,9 +4,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "code"))
-from pathlib import Path
 import subprocess
-import sys
 import tempfile
 import unittest
 import numpy as np
@@ -33,7 +31,6 @@ from unittest.mock import patch
 import joblib
 from evaluation import choose_anomaly, select_combination, compact_report, build_freeze
 from unsupervised import _demo, run_validation
-from unsupervised import score_frozen_unsupervised
 from main import run_validation as run_g1
 from preprocessing import FEATURE_COLUMNS
 import copy
@@ -550,68 +547,16 @@ class IntegratedWorkflowTests(unittest.TestCase):
             bundle = joblib.load(private / "c_models.joblib")
             _, val = _demo()
             before = bundle["kmeans"].named_steps["scaler"].mean_.copy()
-            scores = score_frozen_unsupervised(bundle, val[FEATURE_COLUMNS])
+            features = val[FEATURE_COLUMNS]
+            _, distances = score_kmeans(bundle["kmeans"], features)
+            scores = {
+                "kmeans_distance": distances,
+                "isolation_forest": score_isolation_forest(bundle["isolation_forest"], features),
+            }
             for name in ["kmeans_distance", "isolation_forest"]:
                 prediction = pd.read_csv(private / f"{name}_predictions.csv")
                 assert_allclose(scores[name], prediction.score, rtol=1e-12, atol=1e-12)
             assert_allclose(before, bundle["kmeans"].named_steps["scaler"].mean_)
-            from evaluation import evaluate_frozen_c
-
-            with (
-                patch(
-                    "evaluation.choose_anomaly",
-                    side_effect=AssertionError("must not select on replay"),
-                ),
-                patch(
-                    "evaluation.select_combination",
-                    side_effect=AssertionError("must not select quotas on replay"),
-                ),
-            ):
-                replay = evaluate_frozen_c(
-                    bundle, val, Path(folder) / "replay", phase="validation_replay"
-                )
-            self.assertFalse(replay["configuration_reselected"])
-            self.assertEqual(replay["config"], bundle["config"])
-            self.assertEqual(
-                replay["metrics"]["isolation_forest"]["AP"],
-                summary["metrics"]["isolation_forest"]["AP"],
-            )
-            classifier = pd.read_csv(private / "synthetic_proxy_predictions.csv")
-            with (
-                patch(
-                    "evaluation.choose_anomaly",
-                    side_effect=AssertionError("no selection"),
-                ),
-                patch(
-                    "evaluation.select_combination",
-                    side_effect=AssertionError("no selection"),
-                ),
-            ):
-                combined = evaluate_frozen_c(
-                    bundle,
-                    val,
-                    Path(folder) / "combined_replay",
-                    classifier,
-                    phase="validation_replay",
-                )
-            self.assertEqual(len(combined["comparisons"]), 4)
-            self.assertTrue(
-                all(
-                    c["classifier_share"]
-                    == bundle["config"]["combination"]["classifier_share"]
-                    for c in combined["comparisons"]
-                )
-            )
-            pending = __import__("copy").deepcopy(bundle)
-            pending["config"]["combination"]["classifier_share"] = None
-            with self.assertRaises(ValueError):
-                evaluate_frozen_c(pending, val, Path(folder) / "blocked", classifier)
-
-            with self.assertRaises(ValueError):
-                score_frozen_unsupervised(bundle, val[list(reversed(FEATURE_COLUMNS))])
-            bundle["config"]["n_clusters"] += 1
-            with self.assertRaises(ValueError):
-                score_frozen_unsupervised(bundle, val[FEATURE_COLUMNS])
             # A verified real partition can freeze C models, never assert whole-group G2.
             summary["metadata"].update(
                 mode="validation", verified_ulb_split=True, classifier_method=None

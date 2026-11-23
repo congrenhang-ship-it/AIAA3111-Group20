@@ -24,7 +24,7 @@ poster/                   Poster.pdf、可编辑 HTML、图源清单及构建说
 .github/workflows/        Linux 独立重建与检查
 ```
 
-算法代码集中在 classification.py、unsupervised.py、pattern_mining.py；preprocessing.py、handbook.py、paysim.py 和 temporal.py 负责数据及时间接口；evaluation.py 统一指标，main.py 提供统一命令。workflows/finalize.py 负责冻结、正式评分、独立复现和技术打包；validation/ 中的 run_* 与 check_d_freeze.py 用于开发验证及规则复核。共享选择规则和规则诊断保留在核心模块，算法不依赖验证脚本。
+算法代码集中在 classification.py、unsupervised.py、pattern_mining.py；preprocessing.py、handbook.py、paysim.py 和 temporal.py 负责数据及时间接口；evaluation.py 统一指标，main.py 提供统一命令。workflows/finalize.py 负责冻结、正式评分和独立复现；validation/ 中的 run_* 与 check_d_freeze.py 用于开发验证及规则复核。共享选择规则和规则诊断保留在核心模块，算法不依赖验证脚本。
 
 ## 安装和获取数据
 

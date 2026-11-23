@@ -1,6 +1,6 @@
 """Verified data loading, stable row IDs and chronological train/validation/test splits."""
 
-from hashlib import file_digest
+from hashlib import file_digest, sha256
 from math import isclose, isfinite
 from pathlib import Path
 
@@ -16,9 +16,14 @@ SPLIT_FRACTIONS = (0.60, 0.20, 0.20)
 
 
 def data_sha256(path: Path):
-    """Return the SHA-256 of the original CSV bytes."""
+    """Return the SHA-256 of a file’s original bytes."""
     with Path(path).open("rb") as source:
         return file_digest(source, "sha256").hexdigest()
+
+
+def source_sha256(path: Path):
+    """Hash source bytes using LF line endings on every platform."""
+    return sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def load_data(path: Path):
